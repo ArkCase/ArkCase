@@ -45,6 +45,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
+import com.armedia.acm.services.holiday.service.DateTimeService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
@@ -52,6 +53,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -74,6 +77,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private boolean shouldDeleteCalendarFolder;
     private List<String> caseFileStatusClosed;
     private ObjectConverter objectConverter;
+    private DateTimeService dateTimeService;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
@@ -165,6 +169,17 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                         "from " + existing.getStatus() + " to " + updatedCaseFile.getStatus());
 
                         }
+                        if (updatedCaseFile.getDueDate() != null && existing.getDueDate() != null)
+                        {
+                            if (isDueDateChanged(updatedCaseFile, existing))
+                            {
+                                String newDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(updatedCaseFile.getDueDate()));
+                                String oldDate = getDateString(getDateTimeService().fromDateToClientLocalDateTime(existing.getDueDate()));
+                                String timeZone = getDateTimeService().getDefaultClientZoneId().getId();
+
+                                getCaseFileEventUtility().raiseDueDateUpdatedEvent(updatedCaseFile, oldDate, newDate, timeZone, event.getIpAddress());
+                            }
+                        }
                     }
                 }
 
@@ -213,6 +228,11 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         assignment.setObjectType(CaseFileConstants.OBJECT_TYPE);
 
         return assignment;
+    }
+
+    private boolean isDueDateChanged(CaseFile caseFile, CaseFile updatedCaseFile)
+    {
+        return !caseFile.getDueDate().equals(updatedCaseFile.getDueDate());
     }
 
     private boolean isPriorityChanged(CaseFile caseFile, CaseFile updatedCaseFile)
@@ -303,8 +323,18 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
     private boolean checkExecution(String objectType)
     {
-
         return objectType.equals(CaseFileConstants.OBJECT_TYPE);
+    }
+
+    private String getDateString(LocalDateTime date)
+    {
+        if (date != null)
+        {
+            DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+            return date.format(datePattern);
+        }
+
+        return "None";
     }
 
     public AcmObjectHistoryService getAcmObjectHistoryService()
@@ -402,5 +432,13 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    public DateTimeService getDateTimeService() {
+        return dateTimeService;
+    }
+
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
     }
 }

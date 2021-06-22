@@ -29,6 +29,7 @@ package com.armedia.acm.services.exemption.service;
 
 import java.util.List;
 
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.exemption.exception.GetExemptionCodeException;
 import com.armedia.acm.services.exemption.exception.SaveExemptionCodeException;
 import com.armedia.acm.services.exemption.model.ExemptionCode;
@@ -43,4 +44,5 @@ public interface DocumentExemptionService
 
     void saveExemptionCodesManually(Long realFileId, List<String> tags, String user) throws SaveExemptionCodeException;
 
+    void saveExemptionCodeAndNumberForFile(EcmFile file, String exemptionValue, Integer exemptionNumber);
 }

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>2021.01</version>
+        <version>2021.02</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-notification</artifactId>
+            <artifactId>acm-service-correspondence</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>

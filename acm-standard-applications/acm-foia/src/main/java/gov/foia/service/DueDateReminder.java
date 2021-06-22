@@ -33,6 +33,8 @@ import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -53,6 +55,7 @@ public class DueDateReminder
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TranslationService translationService;
+    private CorrespondenceTemplateManager templateManager;
 
     public void sendDueDateReminder()
     {
@@ -76,7 +79,12 @@ public class DueDateReminder
                     AcmUser user = request.getAssigneeLdapId() != null ? userDao.findByUserId(request.getAssigneeLdapId()) : null;
 
                     String dueDateRemainingDays = daysDiffOneDay == 0 ? "1" : "5";
-
+                    String emailSubject = "";
+                    Template template = templateManager.findTemplate("requestAssigneeDueDateReminder.html");
+                    if (template != null)
+                    {
+                        emailSubject = template.getEmailSubject();
+                    }
                     Notification notification = new Notification();
                     notification.setNote(dueDateRemainingDays);
                     notification.setTitle(String.format(translationService.translate(NotificationConstants.REQUEST_ASSIGNED),
@@ -89,6 +97,7 @@ public class DueDateReminder
                     notification.setEmailAddresses(user != null ? user.getMail() : "");
                     notification.setTemplateModelName("requestAssigneeDueDateReminder");
                     notification.setAttachFiles(false);
+                    notification.setSubject(emailSubject);
                     notificationDao.save(notification);
                 }
             }
@@ -153,5 +162,15 @@ public class DueDateReminder
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI"></bean>
 
@@ -274,6 +274,10 @@
     <bean id="documentUploadPolicyConfigurationAPIController"
         class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
         <property name="documentUploadPolicyConfigurationService" ref="documentUploadPolicyConfigurationService"/>
+    </bean>
+
+    <bean id="outgoingIncomingEmailConversionConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.OutgoingIncomingEmailConversionAPIController">
+        <property name="outgoingIncomingEmailConversionConfigurationService" ref="outgoingIncomingEmailConversionConfigurationService"/>
     </bean>
 
     <bean id="missingLabelCheckController" class="com.armedia.acm.plugins.admin.web.api.MissingLabelCheckControllerAPI">

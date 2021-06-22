@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -39,14 +40,33 @@ public class AcmSpringActiveProfile
     @Autowired
     private Environment environment;
 
+    private final List<String> externalAuthProfiles = Arrays.asList("externalAuth", "externalOidc", "externalSaml");
+
     public boolean isSAMLEnabledEnvironment()
     {
-        String[] activeProfiles = getActiveProfiles();
         Predicate<String> isSamlProfile = it -> it.equals("externalSaml");
         Predicate<String> isExternalSamlProfile = it -> it.equals("ssoSaml");
+        return isProfileActivated(isSamlProfile.or(isExternalSamlProfile));
+    }
 
+    public boolean isLdapEnabledEnvironment()
+    {
+        Predicate<String> isLdapProfile = it -> it.equals("ldap");
+        Predicate<String> isExternalAuthProfile = it -> it.equals("externalAuth");
+        return isProfileActivated(isLdapProfile.or(isExternalAuthProfile));
+    }
+
+    public boolean isExternalAuthEnabledEnvironment()
+    {
+        Predicate<String> isExternalAuthProfile = externalAuthProfiles::contains;
+        return isProfileActivated(isExternalAuthProfile);
+    }
+
+    private boolean isProfileActivated(Predicate<String> matchProfile)
+    {
+        String[] activeProfiles = getActiveProfiles();
         return Arrays.stream(activeProfiles)
-                .anyMatch(isSamlProfile.or(isExternalSamlProfile));
+                .anyMatch(matchProfile);
     }
 
     public String[] getActiveProfiles()

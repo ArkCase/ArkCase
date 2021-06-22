@@ -9,26 +9,15 @@ angular.module('people')
                 return contactMethodTypes;
             });
 
-            $scope.email = params.email;
-            $scope.isEdit = params.isEdit;
-            $scope.isDefault = params.isDefault;
+            $scope.model = params;
+            $scope.model.emailAddress = [];
+            $scope.model.usersMentioned = [];
             $scope.hideNoField = params.isDefault;
-            $scope.isPortalPerson = params.isPortalPerson;
-
-            // --------------  mention --------------
-            $scope.params = {
-                emailAddresses: [],
-                usersMentioned: []
-            };
 
             $scope.checkExistingEmail = function () {
-                if ($scope.email.value)
-                    PersonInfoService.queryByEmail($scope.email.value).then(function (result) {
-                        if (result.data.response.numFound > 0) {
-                            $scope.isEmailTaken = true;
-                        } else {
-                            $scope.isEmailTaken = false;
-                        }
+                if ($scope.model.email.value)
+                    PersonInfoService.queryByEmail($scope.model.email.value).then(function (result) {
+                        $scope.isEmailTaken = result.data.response.numFound > 0;
                     });
             };
 
@@ -37,12 +26,6 @@ angular.module('people')
             };
 
             $scope.onClickOk = function () {
-                $modalInstance.close({
-                    email: $scope.email,
-                    isDefault: $scope.isDefault,
-                    isEdit: $scope.isEdit,
-                    emailAddresses: $scope.params.emailAddresses,
-                    usersMentioned: $scope.params.usersMentioned
-                });
+                $modalInstance.close($scope.model);
             };
         }]);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="complaintExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
@@ -43,6 +43,7 @@
         <property name="notificationSender" ref="notificationSender"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
 
@@ -64,9 +65,7 @@
 
     <bean id="filesystemTemplateConfigurationService"
           class="com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService">
-        <property name="templateConfigurations" value="file:${user.home}/.arkcase/acm/mailTemplatesConfiguration.json"/>
         <property name="templateFolderPath" value="${user.home}/.arkcase/acm/templates"/>
-        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="configurableEmailSenderService" class="com.armedia.acm.services.email.service.AcmConfigurableEmailSenderService">
@@ -86,7 +85,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
-    <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
+    <bean id="templatingEngine" class="com.armedia.acm.services.templateconfiguration.TemplatingEngine">
         <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 

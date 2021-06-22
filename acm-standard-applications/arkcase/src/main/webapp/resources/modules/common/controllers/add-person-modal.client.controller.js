@@ -127,9 +127,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
         $scope.isNew = true;
 
         var params = {};
-        var defaultAddress = $scope.objectInfo ? $scope.objectInfo.defaultAddress : null;
-        params.isOrganizationLocation = true;
-        params.personLocations = defaultAddress ? defaultAddress : null;
 
         var modalInstance = $modal.open({
             scope: $scope,

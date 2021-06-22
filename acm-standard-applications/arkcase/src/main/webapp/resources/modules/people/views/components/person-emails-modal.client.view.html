@@ -14,9 +14,9 @@
 
                 <label for="emails" translate>people.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
 
-                <input id="emails" class="input-md form-control" type="{{email.type}}" ng-model="email.value" required="required"
+                <input id="emails" class="input-md form-control" type="{{email.type}}" ng-model="model.email.value" required="required"
                         placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}"
-                        ng-blur="checkExistingEmail(email.value)">
+                        ng-blur="checkExistingEmail(model.email.value)">
 
                 <span class="text-danger" ng-if="isEmailTaken" translate>
                                 people.comp.emails.modal.validation.emailTaken</span>
@@ -25,21 +25,21 @@
             <div class="col-sm-6 form-group">
 
                 <label for="emailTypes" translate>people.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
-                <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subLookup"
+                <select id="emailTypes" class="input-md form-control" required="required" ng-model="model.email.subLookup"
                         ng-options="item.key as item.value | translate for item in emailTypes"></select>
 
             </div>
         </div>
-        <div class="row" ng-if="!isPortalPerson">
+        <div class="row" ng-if="!model.isPortalPerson">
             <div class="col-sm-12 form-group">
 
                 <label translate>people.comp.emails.modal.setPrimary</label><span class="required-asterisk">*</span><br />
                 <label>
-                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <input type="radio" ng-model="model.isDefault" ng-value="true">
                     <translate>people.comp.emails.modal.yes</translate>
                 </label>
                 <label ng-hide="hideNoField">
-                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <input type="radio" ng-model="model.isDefault" ng-value="false">
                     <translate>people.comp.emails.modal.no</translate>
                 </label>
             </div>
@@ -48,7 +48,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label translate>people.comp.emails.modal.description</label>
-                <mention-textarea ng-model="email.description" params="params"></mention-textarea>
+                <mention-textarea ng-model="model.email.description" params="params"></mention-textarea>
             </div>
         </div>
 

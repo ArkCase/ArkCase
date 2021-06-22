@@ -27,40 +27,19 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.activiti.services.AcmBpmnService;
-import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
-import com.armedia.acm.core.AcmNotifiableEntity;
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.data.AcmNotificationDao;
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.data.BuckslipFutureTask;
-import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.NumberOfDays;
-import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.plugins.task.model.TaskOutcome;
-import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
-import com.armedia.acm.plugins.task.service.TaskDao;
-import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
-import com.armedia.acm.services.participants.dao.AcmParticipantDao;
-import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.ParticipantTypes;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.persistence.TypedQuery;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
@@ -95,21 +74,44 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.TypedQuery;
+import com.armedia.acm.activiti.services.AcmBpmnService;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNameDao;
+import com.armedia.acm.data.AcmNotificationDao;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.plugins.task.model.TaskOutcome;
+import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao
+public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao, AcmNameDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -260,7 +262,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
-    private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
+    public AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
     {
         activitiTask.setAssignee(in.getAssignee());
         activitiTask.setOwner(in.getOwner());
@@ -1125,6 +1127,12 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         retval.setTitle(hti.getName());
         retval.setAssignee(hti.getAssignee());
 
+        if (retval.isCompleted())
+        {
+            retval.setContainer(getContainerFolderDao().findByObjectTypeAndIdOrCreate(TaskConstants.OBJECT_TYPE, retval.getTaskId(), null,
+                    retval.getTitle()));
+        }
+
         // set Candidate Groups if there are any
         List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
         retval.setCandidateGroups(candidateGroups);
@@ -1145,8 +1153,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 }
                 else
                 {
-                    retval.setReviewDocumentPdfRenditionId(
-                            ((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID)).toString());
+                    retval.setReviewDocumentPdfRenditionId(getReviewDocumentPdfRenditionIdFromVariables(hti));
                 }
             }
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
@@ -1259,6 +1266,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
+    public List<Task> findAllTasksByVariable(String variableName, String variableValue)
+    {
+        return getActivitiTaskService()
+                .createTaskQuery()
+                .taskVariableValueEquals(variableName, variableValue)
+                .list();
+    }
+
+    public void updateVariableForTask(Task activitiTask, String variableName, String variableValue)
+    {
+        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName,variableValue);
+    }
+
     private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
     {
         // check for selected task outcome
@@ -1336,7 +1356,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
-    private void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
+    public void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
     {
         if (acmTask.getAttachedToObjectId() == null)
         {
@@ -1777,6 +1797,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
     }
 
+    private String getReviewDocumentPdfRenditionIdFromVariables(HistoricTaskInstance hti)
+    {
+        Object renditionId = hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
+        if (renditionId instanceof Long)
+        {
+            return ((Long) renditionId).toString();
+        }
+        else
+        {
+            return (String) renditionId;
+        }
+    }
+
     public RuntimeService getActivitiRuntimeService()
     {
         return activitiRuntimeService;
@@ -2025,5 +2058,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     public TypedQuery<AcmTask> getSortedQuery(String sort)
     {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AcmObject findByName(String name)
+    {
+        return findById(Long.valueOf(name));
     }
 }

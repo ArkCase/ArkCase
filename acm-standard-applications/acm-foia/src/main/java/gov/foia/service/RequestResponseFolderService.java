@@ -43,6 +43,7 @@ import java.util.Date;
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.ResponseInstallmentDao;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 import gov.foia.model.ResponseInstallment;
 
 public class RequestResponseFolderService
@@ -55,9 +56,34 @@ public class RequestResponseFolderService
     private ResponseFolderNotifyService responseFolderNotifyService;
     private CaseFileDao caseFileDao;
     private PortalConfig portalConfig;
+    private ResponseFolderService responseFolderService;
     private HolidayConfigurationService holidayConfigurationService;
     private ResponseInstallmentDao responseInstallmentDao;
+    private FoiaConfig foiaConfig;
 
+    public void compressAndSendResponseSubFolderToPortal(Long requestId, Long folderId, String userName)
+            throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
+    {
+        if (!getFoiaConfig().getEnableStagedRelease())
+        {
+            log.debug("Staged releases are disabled, main response folder [{}] will be used", folderId);
+            folderId = getResponseFolderService().getResponseFolder(requestId).getId();
+        }
+
+        log.debug("Converting response folder [{}] for the request [{}]", folderId, requestId);
+        getResponseFolderConverterService().convertResponseSubFolder(folderId, userName);
+
+        log.debug("Compressing response folder [{}] for the request [{}]", folderId, requestId);
+        String filePath = getResponseFolderCompressorService().compressResponseFolder(requestId, folderId);
+
+        log.debug("Sending the compressed Response folder file to outbound message queue the request [{}]", requestId);
+        getFoiaRequestFileBrokerClient().sendReleaseFile(requestId, filePath);
+
+        log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
+        getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);
+    }
+
+    @Deprecated
     public void compressAndSendResponseFolderToPortal(Long requestId, String userName)
             throws ConversionException, AcmUserActionFailedException, AcmFolderException, AcmObjectNotFoundException
     {
@@ -79,7 +105,8 @@ public class RequestResponseFolderService
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
 
         Date today = new Date();
-        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDate(today, getPortalConfig().getNumOfAvailableDays());
+        Date dueDate = getHolidayConfigurationService().addWorkingDaysToDateAndSetTimeToBusinessHours(today,
+                getPortalConfig().getNumOfAvailableDays());
 
         ResponseInstallment responseInstallment = new ResponseInstallment();
 
@@ -168,5 +195,25 @@ public class RequestResponseFolderService
     public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
     {
         this.holidayConfigurationService = holidayConfigurationService;
+    }
+
+    public ResponseFolderService getResponseFolderService()
+    {
+        return responseFolderService;
+    }
+
+    public void setResponseFolderService(ResponseFolderService responseFolderService)
+    {
+        this.responseFolderService = responseFolderService;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 }

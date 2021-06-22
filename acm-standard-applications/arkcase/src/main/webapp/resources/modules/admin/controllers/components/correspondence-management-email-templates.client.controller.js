@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMEmailTemplatesController',
-    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate',
-        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate) {
+    [ '$rootScope', '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', 'Admin.CMMergeFieldsService', '$translate', 'Admin.ApplicationSettingsService',
+        function($rootScope, $scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService, correspondenceMergeFieldsService, $translate, ApplicationSettingsService) {
+
+            ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
+                $scope.templateGuideUrl = response.data["application.properties.templateGuideUrl"];
+            });
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -158,7 +162,9 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
                 getTemplateContentPromise.then(function (response) {
                     $scope.templateContent = response.data.templateContent;
                     var params = {
-                      templateContent: $scope.templateContent
+                        templateContent: $scope.templateContent,
+                        templateName: $scope.selectedRows[0].templateFilename,
+                        objectType: $scope.selectedRows[0].objectType
                     };
                     var modalInstance = $modal.open({
                         templateUrl: 'modules/admin/views/components/correspondence-management-email-template-preview-modal.client.view.html',
@@ -186,8 +192,17 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
 
             };
 
-
-
+            $scope.emailSubjectChanged = function(rowEntity) {
+                var template = angular.copy(rowEntity);
+                template.emailSubject = rowEntity.emailSubject;
+                correspondenceService.saveTemplateData(template).then(function() {
+                    clearCachedForms(template);
+                    messageService.succsessAction();
+                    reloadGrid();
+                }, function() {
+                    messageService.errorAction();
+                });
+            };
 
             $scope.activate = function(rowEntity) {
                 var template = angular.copy(rowEntity);
@@ -235,6 +250,10 @@ angular.module('admin').controller('Admin.CMEmailTemplatesController',
 
                 ObjectLookupService.getLookupByLookupName('emailTemplatesObjectTypes').then(function(emailTemplatesObjectTypes) {
                     $scope.correspondenceObjectTypes = emailTemplatesObjectTypes;
+                });
+
+                ObjectLookupService.getLookupByLookupName('emailTemplatesParentTypes').then(function(emailTemplatesParentTypes) {
+                    $scope.correspondenceParentTypes = emailTemplatesParentTypes;
                 });
             }
 

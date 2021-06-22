@@ -32,6 +32,7 @@ import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
+import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryUsedDao;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
@@ -41,18 +42,17 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceContext;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -76,6 +76,8 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     private String packagesToScan;
 
     private AcmSequenceGeneratorManager sequenceGeneratorManager;
+
+    private AcmSequenceRegistryUsedDao usedSequenceRegistryDao;
 
     @Override
     public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName, FlushModeType flushModeType)
@@ -225,20 +227,22 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      * java.lang.String)
      */
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
     public AcmSequenceRegistry getAndUpdateSequenceRegistry(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag, FlushModeType flushModeType) throws AcmSequenceException
+           FlushModeType flushModeType) throws AcmSequenceException
     {
         log.info("Getting Sequence Registry for [{}] [{}]", sequenceName, sequencePartName);
         try
         {
-            AcmSequenceRegistry sequenceRegistry =  getSequenceRegistryDao().getSequenceRegistry(sequenceName, sequencePartName, sequencePartValueUsedFlag,
+            AcmSequenceRegistry sequenceRegistry =  getSequenceRegistryDao().getSequenceRegistry(sequenceName, sequencePartName,
                     flushModeType);
-            if(sequenceRegistry != null){
-                sequenceRegistry.setSequencePartValueUsedFlag(true);
-                saveSequenceRegistry(sequenceRegistry);
-            }
             return sequenceRegistry;
+        }
+        catch (TransactionSystemException e) {
+            //we catch this TransactionSystemException caused by long wait for the pessimistic lock ,
+            // because we want to continue and generate new sequence from sequence entity
+            // if doesn't succeed to get the lock and look for unused sequence in the registry
+            log.debug("Error updating sequence registry", e);
+            return null;
         }
         catch (Exception e)
         {
@@ -283,17 +287,31 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Integer updateSequenceRegistryAsUnused(String sequenceValue) throws AcmSequenceException
+    public void updateSequenceRegistryAsUnused(String sequenceValue) throws AcmSequenceException
     {
-        log.info("Updating Sequence Registry [{}]", sequenceValue);
+        log.info("Moving Sequence from Used Sequence Registry to Unused Sequence Registry [{}]", sequenceValue);
         try
         {
-            return getSequenceRegistryDao().updateSequenceRegistryAsUnused(sequenceValue);
+            //looking for sequence in Used Sequence Registry
+            AcmSequenceRegistryUsed acmSequenceRegistryUsed = getUsedSequenceRegistryDao().getUsedSequenceRegistry(sequenceValue);
+
+            if(acmSequenceRegistryUsed != null){
+                AcmSequenceRegistry sequenceRegistry = new AcmSequenceRegistry();
+                sequenceRegistry.setSequenceValue(acmSequenceRegistryUsed.getSequenceValue());
+                sequenceRegistry.setSequenceName(acmSequenceRegistryUsed.getSequenceName());
+                sequenceRegistry.setSequencePartName(acmSequenceRegistryUsed.getSequencePartName());
+                sequenceRegistry.setSequencePartValue(acmSequenceRegistryUsed.getSequencePartValue());
+                //if such sequence is found move it in the Sequence Registry with other unused sequences
+                saveSequenceRegistry(sequenceRegistry);
+                // and remove it from Used Sequence Registry
+                getUsedSequenceRegistryDao().removeUsedSequenceRegistry(sequenceValue);
+            }
+
         }
         catch (Exception e)
         {
             throw new AcmSequenceException(
-                    String.format("Unable to update Sequence Registry for [%s]", sequenceValue), e);
+                    String.format("Moving sequence didn't succeed [%s]", sequenceValue), e);
         }
     }
 
@@ -440,6 +458,59 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         }
     }
 
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void removeUsedSequenceRegistry(String sequenceValue) throws AcmSequenceException {
+        log.info("Removing sequence [{}] from Used Sequence Registry", sequenceValue);
+        try
+        {
+            getUsedSequenceRegistryDao().removeUsedSequenceRegistry(sequenceValue);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to remove sequence [{}] from Used Sequence Registry", sequenceValue),
+                    e);
+
+        }
+
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Integer removeUsedSequenceRegistry(String sequenceName, String sequencePartName) throws AcmSequenceException
+    {
+        log.info("Removing Sequence Registry for [{}] [{}]", sequenceName, sequencePartName);
+        try
+        {
+            return getUsedSequenceRegistryDao().removeUsedSequenceRegistry(sequenceName, sequencePartName);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to remove Sequence Registry for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public AcmSequenceRegistryUsed saveUsedSequenceRegistry(AcmSequenceRegistryUsed sequenceRegistry) throws AcmSequenceException
+    {
+        log.info("Saving sequence in to Used Sequence Registry for [{}] [{}] [{}]", sequenceRegistry.getSequenceValue(),
+                sequenceRegistry.getSequenceName(), sequenceRegistry.getSequencePartName());
+        try
+        {
+            return getUsedSequenceRegistryDao().save(sequenceRegistry);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to save Sequence Registry [%s] [%s] [%s]", sequenceRegistry.getSequenceValue(),
+                            sequenceRegistry.getSequenceName(), sequenceRegistry.getSequencePartName()),
+                    e);
+        }
+    }
+
     /**
      * @return the sequenceDao
      */
@@ -509,5 +580,15 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     public void setSequenceGeneratorManager(AcmSequenceGeneratorManager sequenceGeneratorManager)
     {
         this.sequenceGeneratorManager = sequenceGeneratorManager;
+    }
+
+    public AcmSequenceRegistryUsedDao getUsedSequenceRegistryDao()
+    {
+        return usedSequenceRegistryDao;
+    }
+
+    public void setUsedSequenceRegistryDao(AcmSequenceRegistryUsedDao usedSequenceRegistryDao)
+    {
+        this.usedSequenceRegistryDao = usedSequenceRegistryDao;
     }
 }

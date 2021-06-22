@@ -55,8 +55,11 @@ public class CreateAdHocTaskAPIController
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public AcmTask createAdHocTask(@RequestPart(name = "task") AcmTask in,
-            @RequestPart(name = "files") List<MultipartFile> filesToUpload, Authentication authentication, HttpSession httpSession)
-            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException, AcmObjectNotFoundException {
+            @RequestPart(name = "files", required = false) List<MultipartFile> filesToUpload,
+            Authentication authentication, HttpSession httpSession)
+            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException, AcmUserActionFailedException, LinkAlreadyExistException,
+            AcmObjectNotFoundException
+    {
 
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         return createAdHocTaskService.createAdHocTask(in, filesToUpload, authentication, ipAddress);

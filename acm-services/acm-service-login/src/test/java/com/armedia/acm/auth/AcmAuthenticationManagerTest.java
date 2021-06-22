@@ -37,7 +37,6 @@ import static org.junit.Assert.fail;
 
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -53,10 +52,8 @@ import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -71,7 +68,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private AuthenticationProvider mockFirstProvider;
     private AuthenticationProvider mockSecondProvider;
-    private AcmGrantedAuthoritiesMapper mockAuthoritiesMapper;
+    private AcmAuthenticationMapper mockAuthenticationMapper;
     private DefaultAuthenticationEventPublisher mockEventPublisher;
     private UserDao mockUserDao;
 
@@ -82,16 +79,16 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
         mockFirstProvider = createMock(AuthenticationProvider.class);
         mockSecondProvider = createMock(AuthenticationProvider.class);
-        mockAuthoritiesMapper = createMock(AcmGrantedAuthoritiesMapper.class);
         mockEventPublisher = createMock(DefaultAuthenticationEventPublisher.class);
         mockUserDao = createMock(UserDao.class);
+        mockAuthenticationMapper = createMock(AcmAuthenticationMapper.class);
 
         unit = new AcmAuthenticationManager();
 
         unit.setSpringContextHolder(mockContextHolder);
-        unit.setAuthoritiesMapper(mockAuthoritiesMapper);
         unit.setAuthenticationEventPublisher(mockEventPublisher);
         unit.setUserDao(mockUserDao);
+        unit.setAuthenticationMapper(mockAuthenticationMapper);
     }
 
     @Test
@@ -111,31 +108,17 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         AcmAuthentication successAuthentication = new AcmAuthentication(authsFromProvider, null, null,
                 true, user.getUserId(), user.getIdentifier());
 
-        Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(
-                new AcmGrantedGroupAuthority("ADHOC_ADMINISTRATOR", 1L),
-                new AcmGrantedGroupAuthority("LDAP_ADMINISTRATOR", 2L)));
-
-        AcmGroup ldapGroup = new AcmGroup();
-        ldapGroup.setName("LDAP_ADMINISTRATOR");
-
-        AcmGroup adhocGroup = new AcmGroup();
-        adhocGroup.setName("ADHOC_ADMINISTRATOR");
-
-        List<AcmGroup> groups = new ArrayList<>();
-        groups.add(ldapGroup);
-        groups.add(adhocGroup);
+        AcmAuthentication authenticationFromMapper = new AcmAuthentication(authsFromMapper, null, null,
+                true, user.getUserId(), user.getIdentifier());
 
         expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
-        expect(mockFirstProvider.authenticate(mockAuthentication)).andReturn(successAuthentication);
-        expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
-        expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
-        expect(mockAuthoritiesMapper.getAuthorityGroups(user)).andReturn(authsGroups);
-        expect(mockAuthoritiesMapper.mapAuthorities(authsGroups)).andReturn(authsGroups);
         expect(mockAuthentication.getName()).andReturn(user.getUserId());
+        expect(mockFirstProvider.authenticate(mockAuthentication)).andReturn(successAuthentication);
+        expect(mockAuthenticationMapper.getAcmAuthentication(successAuthentication)).andReturn(authenticationFromMapper);
 
         replayAll();
 
-       Authentication found = unit.authenticate(mockAuthentication);
+        Authentication found = unit.authenticate(mockAuthentication);
 
         verifyAll();
 

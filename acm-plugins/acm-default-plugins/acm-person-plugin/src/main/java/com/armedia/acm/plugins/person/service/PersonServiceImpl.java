@@ -58,9 +58,9 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.exception.TikaException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.tika.exception.TikaException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -222,11 +222,13 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public EcmFile changeDescriptionForImage(Long personId, Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException, AcmCreateObjectFailedException {
+    public EcmFile changeDescriptionForImage(Long personId, Long imageId, Boolean isDefault, String imageDescription, Authentication auth)
+            throws AcmObjectNotFoundException, AcmUpdateObjectFailedException, PipelineProcessException, AcmCreateObjectFailedException
+    {
         EcmFile imageFile = ecmFileService.findById(imageId);
         if (imageFile == null)
         {
-            throw new AcmObjectNotFoundException("Image",  imageId, "Image not found with ID:[{}];");
+            throw new AcmObjectNotFoundException("Image", imageId, "Image not found with ID:[{}];");
         }
         if (isDefault)
         {
@@ -307,7 +309,6 @@ public class PersonServiceImpl implements PersonService
         return uploaded;
     }
 
-
     @Override
     public EcmFile insertImageForPortalPerson(Person person, MultipartFile image, String imageContentType, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
@@ -355,7 +356,6 @@ public class PersonServiceImpl implements PersonService
         {
             FileUtils.deleteQuietly(pictureFile);
         }
-
 
     }
 
@@ -552,6 +552,7 @@ public class PersonServiceImpl implements PersonService
             PipelineProcessException
     {
         Person savedPerson = savePerson(person, authentication);
+        getPersonDao().getEm().flush();
         return uploadPicturesForPerson(savedPerson, pictures, authentication);
     }
 
@@ -612,7 +613,8 @@ public class PersonServiceImpl implements PersonService
         this.personDao = personDao;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 

@@ -7,7 +7,7 @@
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.lastModified.label</span>
-                    {{objectInfo.modified | date: 'shortDate' }}
+                    {{objectInfo.modified | date: ('common.defaultDateTimeUIFormat' | translate) }}
                 </small>
             </div>
             <div class="col-xs-12 col-md-6">

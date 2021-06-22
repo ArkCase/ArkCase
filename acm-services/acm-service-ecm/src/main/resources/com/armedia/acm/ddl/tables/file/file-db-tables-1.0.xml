@@ -764,5 +764,42 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="files-74-add-custodian" author="aleksandar.acevski">
+        <addColumn tableName="acm_file">
+            <column name="cm_custodian" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-75-add-zylab-file-metadata" author="aleksandar.acevski">
+        <addColumn tableName="acm_file">
+            <column name="cm_zylab_file_metadata" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="76-change_cm_file_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_file" columnName="cm_file_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_file" columnName="cm_file_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="77-change_cm_container_folder_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_container" columnName="cm_container_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_container" columnName="cm_container_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="78-change_cm_folder_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_folder" columnName="cm_folder_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_folder" columnName="cm_folder_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="79-change_cm_folder_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_file_version" columnName="cm_file_version_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_file_version" columnName="cm_file_version_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_file_version" columnName="cm_media_created_date" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="80-change_cm_recycle_bin_item_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>
 

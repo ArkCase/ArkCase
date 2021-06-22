@@ -29,22 +29,7 @@ package com.armedia.acm.convertfolder;
 
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 
-import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.File;
-import java.io.InputStream;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,6 +37,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2018
@@ -73,8 +70,10 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     private Map<String, List<FileConverter>> convertersByType;
 
     private List<String> supportedTypes;
-    
+
     private EcmFileDao ecmFileDao;
+
+    private EcmFileService ecmFileService;
 
     public DefaultFolderAndFileConverter(List<FileConverter> converters)
     {
@@ -111,7 +110,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                     }
                     else
                     {
-                        if(!EcmFile.class.cast(obj).getFileActiveVersionNameExtension().equals(".pdf"))
+                        if (!EcmFile.class.cast(obj).getFileActiveVersionNameExtension().equals(".pdf"))
                         {
                             obj = checkDuplicateFileName(obj, folderId);
                         }
@@ -171,7 +170,8 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         return convertFile(file, version, "", true);
     }
 
-    private File convertFile(EcmFile file, String version, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
+    private File convertFile(EcmFile file, String version, String username, Boolean skipUploadAndReturnConvertedFile)
+            throws ConversionException
     {
         List<FileConverter> converters = convertersByType.get(file.getFileExtension().toLowerCase());
         if (converters == null)
@@ -189,7 +189,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                 log.debug("Using converter of type [{}] to convert file [{}] of type [{}].", converter.getClass().getName(),
                         file.getFileName() + "." + file.getFileExtension(), file.getFileExtension());
 
-                if(skipUploadAndReturnConvertedFile)
+                if (skipUploadAndReturnConvertedFile)
                 {
                     return converter.convertAndReturnConvertedFile(file, version);
                 }
@@ -236,17 +236,49 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         String fileName = EcmFile.class.cast(file).getFileName();
         List<EcmFile> pdfFiles = getEcmFileDao().findByFolderId(folderId).stream()
                 .filter(obj -> obj.getFileActiveVersionNameExtension().equals(".pdf"))
-                .filter(obj -> obj.getFileName().equals(fileName))
+                .filter(obj -> obj.getFileName().contains(fileName + "-converted-"))
                 .collect(Collectors.toList());
-        if(pdfFiles.size() > 0)
+        if (pdfFiles.size() > 0)
         {
-            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-            String timestampName = formatter.format(date);
-            EcmFile.class.cast(file).setFileName(fileName + "-" + timestampName);
+            String pdfFileName[] = pdfFiles.get(0).getFileName().split("-");
+            String pdfVersion = pdfFileName[pdfFileName.length - 1];
+            if (!pdfVersion.equals(EcmFile.class.cast(file).getActiveVersionTag()))
+            {
+                ecmFileDao.deleteFile(pdfFiles.get(0).getId());
+                EcmFile.class.cast(file).setFileName(fileName + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag());
+            }
+            else
+            {
+                return pdfFiles.get(0);
+            }
         }
+        else
+        {
+            EcmFile.class.cast(file).setFileName(fileName);
+        }
+
         return file;
     }
+
+    private EcmFile renamePdfFile(Long objectId, String newFileName)
+    {
+        try
+        {
+            EcmFile renamedFile = getEcmFileService().renameFile(objectId, newFileName);
+            log.info("File with id: {} successfully renamed to: {}", objectId, newFileName);
+            return renamedFile;
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            log.error("Exception occurred while trying to rename file with id: {}. Exception msg: {}", objectId, e.getMessage());
+        }
+        return null;
+    }
+
     /**
      * @param folderService
      *            the folderService to set
@@ -256,13 +288,23 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         this.folderService = folderService;
     }
 
-    public EcmFileDao getEcmFileDao() 
+    public EcmFileDao getEcmFileDao()
     {
         return ecmFileDao;
     }
 
-    public void setEcmFileDao(EcmFileDao ecmFileDao) 
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
     }
 }

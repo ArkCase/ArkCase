@@ -57,6 +57,22 @@ public class TaskConfig implements SupportsFileTypes, AcmPluginConfigBean
     @Value("${task.plugin.sendCompleteEmail}")
     private Boolean sendCompleteEmail;
 
+    @JsonProperty("task.plugin.email.folder.relative.path")
+    @Value("${task.plugin.email.folder.relative.path}")
+    private String emailFolderRelativePath;
+
+    @JsonProperty("task.plugin.email.regex.task_id")
+    @Value("${task.plugin.email.regex.task_id}")
+    private String emailRegexTaskId;
+
+    @JsonProperty("task.plugin.email.regex.object_type")
+    @Value("${task.plugin.email.regex.object_type}")
+    private String emailRegexObjectType;
+
+    @JsonProperty("task.plugin.email.handler.enabled")
+    @Value("${task.plugin.email.handler.enabled}")
+    private Boolean emailHandlerEnabled;
+
     public void setSearchTreeFilter(String searchTreeFilter)
     {
         this.searchTreeFilter = searchTreeFilter;
@@ -114,5 +130,45 @@ public class TaskConfig implements SupportsFileTypes, AcmPluginConfigBean
     public String getSearchTreeSort()
     {
         return searchTreeSort;
+    }
+
+    public String getEmailFolderRelativePath()
+    {
+        return emailFolderRelativePath;
+    }
+
+    public void setEmailFolderRelativePath(String emailFolderRelativePath)
+    {
+        this.emailFolderRelativePath = emailFolderRelativePath;
+    }
+
+    public String getEmailRegexTaskId()
+    {
+        return emailRegexTaskId;
+    }
+
+    public void setEmailRegexTaskId(String emailRegexTaskId)
+    {
+        this.emailRegexTaskId = emailRegexTaskId;
+    }
+
+    public String getEmailRegexObjectType()
+    {
+        return emailRegexObjectType;
+    }
+
+    public void setEmailRegexObjectType(String emailRegexObjectType)
+    {
+        this.emailRegexObjectType = emailRegexObjectType;
+    }
+
+    public Boolean getEmailHandlerEnabled()
+    {
+        return emailHandlerEnabled;
+    }
+
+    public void setEmailHandlerEnabled(Boolean emailHandlerEnabled)
+    {
+        this.emailHandlerEnabled = emailHandlerEnabled;
     }
 }

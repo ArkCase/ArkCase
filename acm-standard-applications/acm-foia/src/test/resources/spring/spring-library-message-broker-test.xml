@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:beans>
 
@@ -15,6 +15,8 @@
             <beans:property name="keyStorePassword" value="#{foiaRequestBrokerConfig.keystorePassword}"/>
             <beans:property name="trustStore" value="#{foiaRequestBrokerConfig.truststore}"/>
             <beans:property name="trustStorePassword" value="#{foiaRequestBrokerConfig.truststorePassword}"/>
+            <beans:property name="userName" value="#{foiaRequestBrokerConfig.userName}"/>
+            <beans:property name="password" value="#{foiaRequestBrokerConfig.password}"/>
         </beans:bean>
 
         <beans:bean id="portalEntity" class="gov.foia.model.PortalFOIARequest"/>

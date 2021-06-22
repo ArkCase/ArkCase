@@ -51,7 +51,7 @@ public class ExtractPersonInfoUtils
 
         if (person.getTitle() != null && !person.getTitle().isEmpty())
         {
-            nameBuilder.append(person.getTitle());
+            nameBuilder.append(person.getTitleTranslated());
         }
         if (person.getGivenName() != null && !person.getGivenName().isEmpty())
         {

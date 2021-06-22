@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
@@ -128,6 +128,7 @@
         <property name="fileConverterFactory" ref="fileConverterFactory"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -173,7 +174,7 @@
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
-        <property name="allowedUploadFileTypes" ref="allowedUploadFileTypes"/>
+        <property name="allowedUploadFileTypesConfig" ref="allowedUploadFileTypes"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
@@ -239,8 +240,9 @@
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
         <property name="camelContextManager" ref="camelContextManager"/>
-        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="emailAttachmentExtractorComponent" ref="emailAttachmentExtractorComponent"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -250,7 +252,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="acmDataService" ref="acmDataService"/>
-
+        <property name="fileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -447,23 +449,25 @@
     </bean>
 
 
-    <bean id="ecmFileAddedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedDuplicationListener">
+    <bean id="ecmFileAddedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAddedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileUpdatedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedDuplicationListener">
+    <bean id="ecmFileUpdatedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileUpdatedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFileCopiedDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedDuplicationListener">
+    <bean id="ecmFileCopiedListener" class="com.armedia.acm.plugins.ecm.service.EcmFileCopiedListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="ecmFIleMovedToRecycleBinDuplicationListener" class="com.armedia.acm.plugins.ecm.service.EcmFIleMovedToRecycleBinDuplicationListener">
+    <bean id="ecmFIleMovedToRecycleBinListener" class="com.armedia.acm.plugins.ecm.service.EcmFileMovedToRecycleBinListener">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="ecmFileEditingEnabledConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileEditingEnabledConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="emailAttachmentExtractorComponent" class="com.armedia.acm.plugins.ecm.service.impl.EmailAttachmentExtractorComponent"/>
 </beans>

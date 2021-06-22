@@ -36,8 +36,11 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.labels.service.ObjectLabelConfig;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 
+import java.util.Arrays;
 /**
  * Created by manoj.dhungana on 7/14/2017.
  */
@@ -49,6 +52,9 @@ public class AcmEmailContentGeneratorService
     private EcmFileDao ecmFileDao;
     private ObjectLabelConfig objectLabelConfig;
     private TranslationService translationService;
+
+    @Value("${tokenExpiration.fileLinks}")
+    private Long tokenExpiry;
 
 
     public String generateEmailBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
@@ -70,15 +76,17 @@ public class AcmEmailContentGeneratorService
 
         if (emailDTO.getFileIds() != null)
         {
+            String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
+            String relativePaths = "/api/latest/service/email/send/plainEmail" + "__comma__" + "/api/latest/plugin/notification/manualEmail";
             for (Long fileId : emailDTO.getFileIds())
             {
                 EcmFile ecmFile = getEcmFileDao().find(fileId);
-                String token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
                 body.append(fileId).append("&version=").append(ecmFile.getActiveVersionTag()).append("&acm_email_ticket=").append(token)
                         .append("<br/>");
                 emailDTO.getTokens().add(token);
                 emailDTO.setFileVersion(ecmFile.getActiveVersionTag());
             }
+            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePaths.split("__comma__")), token, tokenExpiry, emailAddress);
         }
         return messageBodyFactory.buildMessageBodyFromTemplate(body.toString(), emailDTO.getHeader(), emailDTO.getFooter());
     }

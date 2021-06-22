@@ -37,18 +37,19 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmFolderDownloadedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.web.api.MDCConstants;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -63,19 +64,18 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderDownloadedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.web.api.MDCConstants;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 14, 2016
@@ -176,6 +176,7 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedResponseFolder.getId()).andReturn(101l).atLeastOnce();
         expect(mockedResponseFolder.getParentFolder()).andReturn(null);
         expect(mockedFolderService.getFolderChildren(101l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1Folder, mockedLevel1File)));
+        expect(mockedFolderService.isFolderOrParentFolderWithName(mockedResponseFolder, "03 Response")).andReturn(false);
         expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
         expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         File folder_level_1 = null;
@@ -184,7 +185,7 @@ public class FolderCompressorTest extends EasyMockSupport
             if (child.isDirectory())
             {
                 folder_level_1 = child;
-                expect(mockedLevel1Folder.getName()).andReturn(child.getName());
+                expect(mockedLevel1Folder.getName()).andReturn(child.getName()).anyTimes();
             }
             else
             {
@@ -199,6 +200,7 @@ public class FolderCompressorTest extends EasyMockSupport
         }
         expect(mockedLevel1Folder.getId()).andReturn(102l);
         expect(mockedFolderService.getFolderChildren(102l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel2Folder, mockedLevel2File)));
+        expect(mockedFolderService.isFolderOrParentFolderWithName(mockedLevel1Folder, "03 Response")).andReturn(false);
         expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
         expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         File folder_level_2 = null;
@@ -207,7 +209,7 @@ public class FolderCompressorTest extends EasyMockSupport
             if (child.isDirectory())
             {
                 folder_level_2 = child;
-                expect(mockedLevel2Folder.getName()).andReturn(child.getName());
+                expect(mockedLevel2Folder.getName()).andReturn(child.getName()).anyTimes();
             }
             else
             {
@@ -222,6 +224,7 @@ public class FolderCompressorTest extends EasyMockSupport
         }
         expect(mockedLevel2Folder.getId()).andReturn(103l);
         expect(mockedFolderService.getFolderChildren(103l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel3File)));
+        expect(mockedFolderService.isFolderOrParentFolderWithName(mockedLevel2Folder, "03 Response")).andReturn(false);
         expect(mockedLevel3File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         for (File child : folder_level_2.listFiles())
         {
@@ -350,6 +353,7 @@ public class FolderCompressorTest extends EasyMockSupport
 
         expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container).anyTimes();
         expect(mockedFolderService.findById(folderId)).andReturn(mockedResponseFolder);
+        expect(mockedFolderService.isFolderOrParentFolderWithName(mockedResponseFolder, "03 Response")).andReturn(false);
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));

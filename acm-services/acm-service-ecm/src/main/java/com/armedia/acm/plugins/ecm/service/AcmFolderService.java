@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service;
 import java.util.Date;
 import java.util.List;
 
+import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import org.json.JSONArray;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -65,6 +66,11 @@ public interface AcmFolderService
 
     AcmFolder renameFolder(Long folderId, String newFolderName)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
+
+    AcmFolder getSubfolderByName(AcmFolder parentFolder, String folderName)
+            throws AcmFolderException;
+
+    boolean isFolderOrParentFolderWithName(AcmFolder folder, String folderName);
 
     List<EcmFile> getFilesInFolderAndSubfolders(Long folderId);
 
@@ -150,10 +156,10 @@ public interface AcmFolderService
     AcmFolder saveFolder(AcmFolder folder);
 
     AcmFolder copyFolderAsLink(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
-            throws AcmObjectNotFoundException, LinkAlreadyExistException;
+            throws AcmObjectNotFoundException, LinkAlreadyExistException, AcmUserActionFailedException;
 
     AcmFolder copyFolderAsLink(AcmFolder originalFolder, AcmFolder copyDstFolder, Long targetObjectId, String targetObjectType,
-            String newFolderName) throws AcmObjectNotFoundException;
+            String newFolderName) throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)

@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>2021.01</version>
+        <version>2021.02</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -45,22 +45,8 @@
         </dependency>
 
         <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-net</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.projectreactor.spring</groupId>
-            <artifactId>reactor-spring-context</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
         </dependency>
 
         <!-- testing -->

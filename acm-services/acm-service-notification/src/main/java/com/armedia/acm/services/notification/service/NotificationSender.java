@@ -1,9 +1,7 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.correspondence.model.Template;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -20,10 +18,12 @@ import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationIOException;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -78,7 +78,7 @@ import freemarker.template.TemplateException;
 /**
  * @author riste.tutureski
  */
-public abstract class NotificationSender implements ApplicationListener<ApplicationEvent>
+public abstract class NotificationSender
 {
     private final Logger LOG = LogManager.getLogger(getClass());
 
@@ -94,9 +94,7 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
     private TemplatingEngine templatingEngine;
     private AcmMailTemplateConfigurationService templateService;
     private NotificationConfig notificationConfig;
-    private Resource templatesConfiguration;
-    private ObjectConverter objectConverter;
-    private List<Template> templateConfigurations = new ArrayList<>();
+    private TemplateConfigurationManager templateConfigurationManager;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -127,9 +125,17 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
             String templateName = String.format("%s.html", notification.getTemplateModelName());
             try
             {
-                String template = templateService.getTemplate(templateName);
+                String template = notification.getEmailContent();
+                if (template == null || template.isEmpty())
+                {
+                    template = templateService.getTemplate(templateName);
+                }
                 String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                 in.setBody(body);
+                String subject = notification.getSubject() != null && !notification.getSubject().isEmpty() ? notification.getSubject()
+                        : notification.getTitle();
+                subject = getTemplatingEngine().process(subject, notification.getTemplateModelName(), object);
+                in.setSubject(subject);
             }
             catch (AcmEmailConfigurationIOException e)
             {
@@ -156,8 +162,12 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
                 in.setAttachmentIds(notificationFileIds);
             }
 
-            in.setSubject(notification.getSubject() != null ? notification.getSubject() : notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
+            in.setCcEmailAddresses(notification.getCcEmailAddresses() != null ? Arrays.asList(notification.getCcEmailAddresses().split(","))
+                    : new ArrayList<>());
+            in.setBccEmailAddresses(
+                    notification.getBccEmailAddresses() != null ? Arrays.asList(notification.getBccEmailAddresses().split(","))
+                            : new ArrayList<>());
             in.setEmailGroup(notification.getEmailGroup());
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
@@ -178,14 +188,14 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
                     : null;
 
             AcmUser acmUser = notification.getUser() != null ? userDao.findByUserId(notification.getUser()) : null;
-            if(isEnabledSendingEmails(notification))
+            if (isEnabledSendingEmails(notification))
             {
                 getEmailSenderService().sendEmail(in, authentication, acmUser);
                 if (in.getMailSent())
                 {
                     notification.setState(NotificationConstants.STATE_SENT);
                 }
-                else 
+                else
                 {
                     notification.setState(NotificationConstants.STATE_NOT_SENT);
                 }
@@ -222,54 +232,13 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
 
         in.setBody(new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", ""));
     }
-    
+
     private Boolean isEnabledSendingEmails(Notification notification)
     {
-        return templateConfigurations.stream()
-                .filter(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled())
-                .findAny().isPresent();
+        return getTemplateConfigurationManager().getTemplateConfigurations().stream()
+                .anyMatch(t -> t.getTemplateFilename().equals(notification.getTemplateModelName() + ".html") && t.isEnabled()
+                        && t.isTemplateVersionActive());
 
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationEvent event)
-    {
-        if (event instanceof ConfigurationFileChangedEvent && (((ConfigurationFileChangedEvent) event).getConfigFile().equals("templates-configuration.json")))
-        {
-            try
-            {
-                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
-            }
-            catch (Exception e)
-            {
-                LOG.error("Error while reading from config file [{}]", e.getMessage(), e);
-            }
-        }
-        else if (event instanceof ContextRefreshedEvent)
-        {
-            try
-            {
-                File file = templatesConfiguration.getFile();
-                if (!file.exists())
-                {
-                    file.createNewFile();
-                }
-
-                String resource = FileUtils.readFileToString(file);
-                if (resource.isEmpty())
-                {
-                    resource = "[]";
-                }
-
-                templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-                        .unmarshallCollection(FileUtils.readFileToString(templatesConfiguration.getFile()), List.class, Template.class);
-            }
-            catch (IOException ioe)
-            {
-                throw new IllegalStateException("Error while reading from config file [{}]",ioe);
-            }
-        }
     }
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
@@ -406,28 +375,13 @@ public abstract class NotificationSender implements ApplicationListener<Applicat
         this.templateService = templateService;
     }
 
-    public void setTemplatesConfiguration(Resource templatesConfiguration) 
+    public TemplateConfigurationManager getTemplateConfigurationManager()
     {
-        this.templatesConfiguration = templatesConfiguration;
+        return templateConfigurationManager;
     }
 
-    public ObjectConverter getObjectConverter() 
+    public void setTemplateConfigurationManager(TemplateConfigurationManager templateConfigurationManager)
     {
-        return objectConverter;
-    }
-
-    public void setObjectConverter(ObjectConverter objectConverter) 
-    {
-        this.objectConverter = objectConverter;
-    }
-
-    public List<Template> getTemplateConfigurations()
-    {
-        return templateConfigurations;
-    }
-
-    public void setTemplateConfigurations(List<Template> templateConfigurations)
-    {
-        this.templateConfigurations = templateConfigurations;
+        this.templateConfigurationManager = templateConfigurationManager;
     }
 }

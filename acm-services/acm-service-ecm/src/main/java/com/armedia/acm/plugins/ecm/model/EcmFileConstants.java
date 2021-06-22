@@ -120,4 +120,7 @@ public interface EcmFileConstants
 
     String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
     String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";
+
+    String FILE_EXTENSION_MSG = ".msg";
+    String FILE_EXTENSION_EML = ".eml";
 }

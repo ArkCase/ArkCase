@@ -1255,7 +1255,7 @@
                     "name": "identificationYearIssued",
                     "displayName": "people.comp.ids.table.columns.yearIssued",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date:('common.defaultDateUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modifier",

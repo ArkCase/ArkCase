@@ -30,8 +30,8 @@ package com.armedia.acm.service.objectlock.service;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.Map;
@@ -45,9 +45,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultObjectLockingProvider implements ObjectLockingProvider
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
-    private Map<String, Object> locks = new ConcurrentHashMap<>();
+    private final Map<String, Object> locks = new ConcurrentHashMap<>();
 
     private AcmObjectLockService objectLockService;
     private Long expiryTimeInMilliseconds;
@@ -56,7 +56,7 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
             throws AcmObjectLockException
     {
-        log.trace("Checking if object lock[objectId={}, objectType={}, lockType={}] can be aquired for user: [{}]", objectId, objectType,
+        log.trace("Checking if object lock[objectId={}, objectType={}, lockType={}] can be acquired for user: [{}]", objectId, objectType,
                 lockType, userId);
 
         AcmObjectLock existingLock = objectLockService.findLock(objectId, objectType);
@@ -66,20 +66,19 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
         {
             // lock has expired and will be removed
             objectLockService.removeLock(existingLock);
-            existingLock = null;
         }
-        if (existingLock != null)
+        else if (existingLock != null)
         {
             // if current user is different then the creator throw an exception
             if (!existingLock.getCreator().equals(userId))
             {
                 throw new AcmObjectLockException(String.format(
-                        "[{}] not able to aquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
+                        "[%s] not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object lock already exists for: [%s]",
                         userId, objectId, objectType, lockType, existingLock.getCreator()));
             }
         }
 
-        log.trace("Object lock[objectId={}, objectType={}, lockType={}] can be aquired for user: [{}]", objectId, objectType,
+        log.trace("Object lock[objectId={}, objectType={}, lockType={}] can be acquired for user: [{}]", objectId, objectType,
                 lockType, userId);
     }
 
@@ -112,7 +111,7 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
                 else
                 {
                     throw new AcmObjectLockException(String.format(
-                            "[{}] not able to aquire object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
+                            "[%s] not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object lock already exists for: [%s]",
                             userId, objectId, objectType, lockType, existingLock.getCreator()));
                 }
             }
@@ -153,14 +152,8 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
 
     private synchronized Object getLock(String lockKey)
     {
-        Object lock = locks.get(lockKey);
-        if (lock == null)
-        {
-            // we're the only one looking for this
-            lock = new Object();
-            locks.put(lockKey, lock);
-        }
-        return lock;
+        // we're the only one looking for this
+        return locks.computeIfAbsent(lockKey, k -> new Object());
     }
 
     public AcmObjectLockService getObjectLockService()

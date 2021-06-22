@@ -31,9 +31,11 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalConfigurationService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -61,6 +63,7 @@ import java.util.Objects;
 
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.model.FOIAFile;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFileUpdatedEvent>
 {
@@ -72,6 +75,7 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     private CaseFileDao caseFileDao;
     private PortalAdminService portalAdminService;
     private PortalConfigurationService portalConfigurationService;
+    private FileEventPublisher fileEventPublisher;
 
     @Override
     public void onApplicationEvent(EcmFileUpdatedEvent ecmFileUpdatedEvent)
@@ -79,6 +83,8 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
 
         EcmFile updatedEcmFile;
         EcmFile oldEcmFile;
+
+        String ipAddress = ecmFileUpdatedEvent.getIpAddress();
 
         updatedEcmFile = Objects.nonNull(ecmFileUpdatedEvent.getSource()) ? (EcmFile) ecmFileUpdatedEvent.getSource() : null;
         oldEcmFile = Objects.nonNull(ecmFileUpdatedEvent.getEventProperties())
@@ -91,10 +97,15 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
             {
                 FOIAFile updatedFoiaFile = (FOIAFile) updatedEcmFile;
                 FOIAFile oldFoiaFile = (FOIAFile) oldEcmFile;
-                if (oldFoiaFile.getPublicFlag() == false && updatedFoiaFile.getPublicFlag() == true)
+                if (!oldFoiaFile.getPublicFlag() && updatedFoiaFile.getPublicFlag())
                 {
                     publishEcmFile(updatedFoiaFile);
                     addPortalUserAsReader(updatedFoiaFile);
+                    getFileEventPublisher().raiseFileMadePublicEvent(updatedEcmFile, ipAddress, "Public", SecurityContextHolder.getContext().getAuthentication());
+                }
+                if (oldFoiaFile.getPublicFlag() && !updatedFoiaFile.getPublicFlag())
+                {
+                    getFileEventPublisher().raiseFileMadePublicEvent(updatedEcmFile, ipAddress, "NonPublic", SecurityContextHolder.getContext().getAuthentication());
                 }
 
             }
@@ -220,5 +231,15 @@ public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFile
     public void setPortalConfigurationService(PortalConfigurationService portalConfigurationService)
     {
         this.portalConfigurationService = portalConfigurationService;
+    }
+
+    public FileEventPublisher getFileEventPublisher()
+    {
+        return fileEventPublisher;
+    }
+
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
+    {
+        this.fileEventPublisher = fileEventPublisher;
     }
 }

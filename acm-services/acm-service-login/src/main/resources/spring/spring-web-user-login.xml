@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.armedia.acm.auth.web"/>
 
     <bean id="resetPasswordUiController" class="com.armedia.acm.auth.web.ResetPasswordUIController">
         <property name="ldapUserService" ref="ldapUserService"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="passwordValidationService" ref="passwordValidationService"/>
-    </bean>
-
-    <bean id="forgotUsernamePasswordUiController" class="com.armedia.acm.auth.web.ForgotUsernamePasswordUIController">
-        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="getAuthProfileAPIController" class="com.armedia.acm.auth.okta.web.api.GetAuthProfileAPIController"/>

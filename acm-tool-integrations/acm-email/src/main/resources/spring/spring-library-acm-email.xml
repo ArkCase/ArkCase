@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
@@ -25,7 +25,6 @@
 
     <bean id="loggingHandlerCaseFile" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
-        <property name="expression" value="payload.message"/>
     </bean>
 
     <int:chain input-channel="mailErrorChannelCaseFile">
@@ -50,7 +49,6 @@
 
     <bean id="loggingHandlerComplaint" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
-        <property name="expression" value="payload.message"/>
     </bean>
 
     <int:chain input-channel="mailErrorChannelComplaint">
@@ -58,6 +56,29 @@
     </int:chain>
 
     <util:properties id="javaMailPropertiesComplaint">
+        <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+        <prop key="mail.imap.socketFactory.fallback">false</prop>
+        <prop key="mail.store.protocol">#{emailReceiverConfig.protocol}</prop>
+        <prop key="mail.debug">#{emailReceiverConfig.debug}</prop>
+    </util:properties>
+
+    <!-- Sender-Receiver mail channel -->
+    <int:publish-subscribe-channel id="mailChannelReceiver"/>
+
+    <bean id="senderImapMailReceiver" class="org.springframework.integration.mail.ImapMailReceiver" scope="refresh">
+        <constructor-arg index="0"
+                         value="imaps://#{emailSenderConfig.getUsernameEncoded}:#{emailSenderConfig.password}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"/>
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="loggingHandlerSender" class="org.springframework.integration.handler.LoggingHandler">
+        <constructor-arg value="ERROR"/>
+    </bean>
+
+    <int:chain input-channel="mailErrorChannelReceiver">
+        <int:service-activator ref="loggingHandlerSender" method="handleMessage"/>
+    </int:chain>
+    <util:properties id="javaMailPropertiesReceiver">
         <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
         <prop key="mail.imap.socketFactory.fallback">false</prop>
         <prop key="mail.store.protocol">#{emailReceiverConfig.protocol}</prop>

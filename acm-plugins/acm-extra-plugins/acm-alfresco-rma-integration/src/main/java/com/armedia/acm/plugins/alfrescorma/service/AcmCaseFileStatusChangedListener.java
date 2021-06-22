@@ -28,14 +28,14 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -54,7 +54,7 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     private transient Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private List<String> caseClosedStatuses = new ArrayList<>();
-    private AcmAuthenticationManager authenticationManager;
+    private AcmAuthenticationMapper authenticationMapper;
 
     @Override
     public void onApplicationEvent(CaseFileModifiedEvent event)
@@ -80,7 +80,7 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
             {
                 try
                 {
-                    authentication = authenticationManager.getAcmAuthentication(
+                    authentication = authenticationMapper.getAcmAuthentication(
                             new UsernamePasswordAuthenticationToken(principal, principal));
                 }
                 catch (AuthenticationServiceException e)
@@ -147,13 +147,13 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
         this.caseClosedStatuses = caseClosedStatuses;
     }
 
-    public AcmAuthenticationManager getAuthenticationManager()
+    public AcmAuthenticationMapper getAuthenticationMapper()
     {
-        return authenticationManager;
+        return authenticationMapper;
     }
 
-    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    public void setAuthenticationMapper(AcmAuthenticationMapper authenticationMapper)
     {
-        this.authenticationManager = authenticationManager;
+        this.authenticationMapper = authenticationMapper;
     }
 }

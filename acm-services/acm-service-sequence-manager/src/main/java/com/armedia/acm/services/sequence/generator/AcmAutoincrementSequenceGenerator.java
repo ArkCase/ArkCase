@@ -32,6 +32,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import javax.persistence.FlushModeType;
@@ -39,7 +40,6 @@ import javax.persistence.FlushModeType;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author sasko.tanaskoski
@@ -63,18 +63,18 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
      */
     @Override
     public String generatePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+           AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         String autoIncrementPartValue = "";
         Long nextValue = 0L;
-        acmSequenceRegistry.setSequenceName(sequenceName);
-        acmSequenceRegistry.setSequencePartName(sequencePart.getSequencePartName());
+        usedSequenceRegistry.setSequenceName(sequenceName);
+        usedSequenceRegistry.setSequencePartName(sequencePart.getSequencePartName());
         AcmSequenceEntity sequenceEntity = getSequenceService().getSequenceEntity(sequenceName, sequencePart.getSequencePartName(),
                 FlushModeType.COMMIT);
         // Create and use new sequence if not exists
         if (sequenceEntity == null)
         {
-            nextValue = createSequence(sequenceName, sequencePart, acmSequenceRegistry);
+            nextValue = createSequence(sequenceName, sequencePart, usedSequenceRegistry);
         }
         else
         {
@@ -84,7 +84,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
             if (sequenceResetList != null && !sequenceResetList.isEmpty())
             {
-                nextValue = resetSequence(sequenceResetList, sequenceEntity, sequencePart, acmSequenceRegistry);
+                nextValue = resetSequence(sequenceResetList, sequenceEntity, sequencePart, usedSequenceRegistry);
             }
             else
             {
@@ -92,19 +92,19 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
                 if (sequencePart.getSequenceFillBlanks() != null && sequencePart.getSequenceFillBlanks())
                 {
                     AcmSequenceRegistry sequenceRegistry = getSequenceService()
-                            .getAndUpdateSequenceRegistry(sequenceName, sequencePart.getSequencePartName(), Boolean.FALSE, FlushModeType.COMMIT);
+                            .getAndUpdateSequenceRegistry(sequenceName, sequencePart.getSequencePartName(), FlushModeType.COMMIT);
                     if (sequenceRegistry != null)
                     {
-                        nextValue = updateSequenceRegistry(sequenceRegistry, sequencePart,  acmSequenceRegistry);
+                        nextValue = updateSequenceRegistry(sequenceRegistry, sequencePart, usedSequenceRegistry);
                     }
                     else
                     {
-                        nextValue = updateSequence(sequenceEntity, sequenceName, sequencePart,  acmSequenceRegistry);
+                        nextValue = updateSequence(sequenceEntity, sequenceName, sequencePart, usedSequenceRegistry);
                     }
                 }
                 else
                 {
-                    nextValue = updateSequence(sequenceEntity, sequenceName, sequencePart, acmSequenceRegistry);
+                    nextValue = updateSequence(sequenceEntity, sequenceName, sequencePart, usedSequenceRegistry);
                 }
             }
         }
@@ -123,13 +123,13 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
     @Override
     public String getGeneratePartValue(String sequenceName, AcmSequencePart sequencePart, Object object,
-                                       AcmSequenceRegistry acmSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
+                                       AcmSequenceRegistryUsed usedSequenceRegistry, AcmSequenceEntity acmSequenceEntity)
     {
         String autoIncrementPartValue = "";
 
         Long nextValue = 0L;
 
-        nextValue = getNextGeneratedSequence(acmSequenceEntity, sequenceName, sequencePart, acmSequenceRegistry);
+        nextValue = getNextGeneratedSequence(acmSequenceEntity, sequenceName, sequencePart, usedSequenceRegistry);
 
         if (sequencePart.getSequenceNumberLength() != null && sequencePart.getSequenceNumberLength() > 0)
         {
@@ -143,7 +143,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         return autoIncrementPartValue;
     }
 
-    private Long createSequence(String sequenceName, AcmSequencePart sequencePart, AcmSequenceRegistry sequenceRegistry)
+    private Long createSequence(String sequenceName, AcmSequencePart sequencePart, AcmSequenceRegistryUsed usedSequenceRegistry)
             throws AcmSequenceException
     {
         AcmSequenceEntity sequenceEntity = new AcmSequenceEntity();
@@ -152,47 +152,39 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         sequenceEntity.setSequencePartValue(Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
         AcmSequenceEntity saved = getSequenceService().saveSequenceEntity(sequenceEntity);
         Long partValue = saved.getSequencePartValue();
-        sequenceRegistry.setSequenceName(saved.getSequenceName());
-        sequenceRegistry.setSequencePartName(saved.getSequencePartName());
-        sequenceRegistry.setSequencePartValue(saved.getSequencePartValue());
-        sequenceRegistry.setSequencePartValueUsedFlag(false);
+        usedSequenceRegistry.setSequencePartValue(saved.getSequencePartValue());
         return partValue;
     }
 
     private Long updateSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         AcmSequenceEntity updated = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, false);
         Long partValue = updated.getSequencePartValue();
-        acmSequenceRegistry.setSequencePartValue(updated.getSequencePartValue());
-        acmSequenceRegistry.setSequencePartValueUsedFlag(false);
+        usedSequenceRegistry.setSequencePartValue(updated.getSequencePartValue());
         return partValue;
     }
 
     private Long getNextGeneratedSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
-            AcmSequenceRegistry acmSequenceRegistry)
+            AcmSequenceRegistryUsed usedSequenceRegistry)
     {
         AcmSequenceEntity updated = getSequenceService().getNextGeneratedSequence(sequenceEntity, sequencePart);
         Long partValue = updated.getSequencePartValue();
-        acmSequenceRegistry.setSequenceName(updated.getSequenceName());
-        acmSequenceRegistry.setSequencePartName(updated.getSequencePartName());
-        acmSequenceRegistry.setSequencePartValue(updated.getSequencePartValue());
-        acmSequenceRegistry.setSequencePartValueUsedFlag(false);
+        usedSequenceRegistry.setSequencePartValue(updated.getSequencePartValue());
         return partValue;
     }
 
     private Long updateSequenceRegistry(AcmSequenceRegistry sequenceRegistry, AcmSequencePart sequencePart,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
         Long partValue = sequenceRegistry.getSequencePartValue();
-        acmSequenceRegistry.setSequenceValue(sequenceRegistry.getSequenceValue());
-        acmSequenceRegistry.setSequencePartValue(sequenceRegistry.getSequencePartValue());
-        acmSequenceRegistry.setSequencePartValueUsedFlag(true);
+        usedSequenceRegistry.setSequenceValue(sequenceRegistry.getSequenceValue());
+        usedSequenceRegistry.setSequencePartValue(sequenceRegistry.getSequencePartValue());
         return partValue;
     }
 
     private Long resetSequence(List<AcmSequenceReset> sequenceResetList, AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart,
-            AcmSequenceRegistry acmSequenceRegistry) throws AcmSequenceException
+            AcmSequenceRegistryUsed usedSequenceRegistry) throws AcmSequenceException
     {
 
         boolean resetFlag = false;
@@ -204,6 +196,8 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
                 resetFlag = true;
                 // Remove unused sequences from registry, not needed anymore since we reset the respective sequence
                 getSequenceService().removeSequenceRegistry(sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
+                // Remove used sequences from used sequence registry if there is any left, not needed anymore since we reset the respective sequence
+                getSequenceService().removeUsedSequenceRegistry(sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
 
                 // Update sequence reset configuration with executed time and executed flag
                 sequenceReset.setResetExecutedDate(currentDateTime);
@@ -229,8 +223,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
         // Save sequence entity with reset value
         AcmSequenceEntity savedSequenceEntity = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, resetFlag);
-        acmSequenceRegistry.setSequencePartValue(savedSequenceEntity.getSequencePartValue());
-        acmSequenceRegistry.setSequencePartValueUsedFlag(false);
+        usedSequenceRegistry.setSequencePartValue(savedSequenceEntity.getSequencePartValue());
         return savedSequenceEntity.getSequencePartValue();
     }
 

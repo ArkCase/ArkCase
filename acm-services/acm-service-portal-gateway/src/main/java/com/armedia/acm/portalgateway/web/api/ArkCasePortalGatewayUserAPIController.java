@@ -115,7 +115,6 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestHeader(value = "X-Arkcase-User-Password") String password)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Registering [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
         return portalUserService.registerUser(portalId, registrationId, user, password);
     }
 
@@ -209,7 +208,6 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestBody PortalUser user)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Updating [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
         return portalUserService.updateUser(portalId, user);
     }
 
@@ -219,7 +217,6 @@ public class ArkCasePortalGatewayUserAPIController
     public PortalUser retrieveUser(@PortalId @PathVariable(value = "portalId") String portalId,
             @PathVariable(value = "portalUserId") String portalUserId) throws PortalUserServiceException
     {
-        log.debug("Retrieve [{}] user for portal with [{}] ID.", portalUserId, portalId);
         return portalUserService.retrieveUser(portalUserId, portalId);
     }
 

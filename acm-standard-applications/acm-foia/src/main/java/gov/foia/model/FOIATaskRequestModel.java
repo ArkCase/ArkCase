@@ -27,12 +27,18 @@ package gov.foia.model;
  * #L%
  */
 
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.AcmTask;
 
 public class FOIATaskRequestModel
 {
     private AcmTask task;
     private FOIARequest request;
+    private Person taskContact;
+    private FormattedMergeTerm exemptionCodesAndDescription;
+    private FormattedMergeTerm redactions;
+    private FormattedMergeTerm exemptions;
 
     public FOIARequest getRequest()
     {
@@ -52,5 +58,45 @@ public class FOIATaskRequestModel
     public void setTask(AcmTask task)
     {
         this.task = task;
+    }
+
+    public Person getTaskContact()
+    {
+        return taskContact;
+    }
+
+    public void setTaskContact(Person taskContact)
+    {
+        this.taskContact = taskContact;
+    }
+
+    public FormattedMergeTerm getExemptionCodesAndDescription()
+    {
+        return exemptionCodesAndDescription;
+    }
+
+    public void setExemptionCodesAndDescription(FormattedMergeTerm exemptionCodesAndDescription)
+    {
+        this.exemptionCodesAndDescription = exemptionCodesAndDescription;
+    }
+
+    public FormattedMergeTerm getRedactions()
+    {
+        return redactions;
+    }
+
+    public void setRedactions(FormattedMergeTerm redactions)
+    {
+        this.redactions = redactions;
+    }
+
+    public FormattedMergeTerm getExemptions()
+    {
+        return exemptions;
+    }
+
+    public void setExemptions(FormattedMergeTerm exemptions)
+    {
+        this.exemptions = exemptions;
     }
 }

@@ -32,7 +32,9 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
+import com.armedia.acm.services.templateconfiguration.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
@@ -70,6 +72,7 @@ public class AcknowledgementDocumentService
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
     private NotificationDao notificationDao;
+    private CorrespondenceTemplateManager templateManager;
 
     public void emailAcknowledgement(Long requestId)
     {
@@ -86,6 +89,12 @@ public class AcknowledgementDocumentService
                 EcmFileVersion ecmFileVersion = letter.getVersions().stream()
                         .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
 
+                String emailSubject = "";
+                Template template = templateManager.findTemplate("requestDocumentAttached.html");
+                if (template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
                 Notification notification = new Notification();
                 notification.setTemplateModelName("requestDocumentAttached");
                 notification.setEmailAddresses(emailAddress);
@@ -95,6 +104,7 @@ public class AcknowledgementDocumentService
                 notification.setParentType(request.getObjectType());
                 notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
                 notification.setUser(request.getCreator());
+                notification.setSubject(emailSubject);
                 notificationDao.save(notification);
             }
         }
@@ -235,5 +245,15 @@ public class AcknowledgementDocumentService
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

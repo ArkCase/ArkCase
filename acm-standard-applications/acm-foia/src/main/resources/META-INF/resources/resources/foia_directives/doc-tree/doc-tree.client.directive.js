@@ -113,8 +113,9 @@ angular
             'Websockets.MessageHandler',
             'Admin.FoiaConfigService',
             'ObjectService',
+            'Admin.ZylabIntegrationService',
             function ($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService, ObjectService) {
+                      PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, DeDuplicationConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, LookupService, MessageService, ObjectLookupService, $timeout, MessageHandler, AdminFoiaConfigService, ObjectService, ZylabIntegrationService) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -185,6 +186,10 @@ angular
                     }
                 }
 
+                ZylabIntegrationService.getConfiguration().then(function (response) {
+                    DocTree.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                });
+
                 AdminFoiaConfigService.getFoiaConfig().then(function (response) {
                     DocTree.limitedDeliveryToSpecificPageCountEnabled = response.data.limitedDeliveryToSpecificPageCountEnabled;
                     DocTree.limitedDeliveryToSpecificPageCount = response.data.limitedDeliveryToSpecificPageCount;
@@ -240,6 +245,7 @@ angular
                 });
 
                 var DocTree = {
+                    reloading: false,
                     CLIPBOARD: null
 
                     ,
@@ -747,91 +753,93 @@ angular
                      * @description Refresh tree and try to keep current open branches
                      */
                     ,
-                    refreshTree: function (nodeToExpand) {
-                        var objType = DocTree.getObjType();
-                        var objId = DocTree.getObjId();
-                        if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
-                            //remove tree cache for current obj
-                            DocTree.cacheTree.remove(objType + "." + objId);
-                            //remove individual folder cache for current obj
-                            var keys = DocTree.cacheFolderList.keys();
-                            _.each(keys, function (key) {
-                                // cache key has following format :
-                                // ojType.objId.folderId. (...)
-                                if (!Util.isEmpty(key)) {
-                                    var tokens = key.split(".");
-                                    if (1 < tokens.length) {
-                                        var keyObjId = tokens[1];
-                                        if (Util.compare(objId, keyObjId)) {
-                                            DocTree.cacheFolderList.remove(key);
+                    refreshTree: function(nodeToExpand) {
+                        if (!DocTree.reloading) {
+                            var objType = DocTree.getObjType();
+                            var objId = DocTree.getObjId();
+                            if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
+                                //remove tree cache for current obj
+                                DocTree.cacheTree.remove(objType + "." + objId);
+                                //remove individual folder cache for current obj
+                                var keys = DocTree.cacheFolderList.keys();
+                                _.each(keys, function(key) {
+                                    // cache key has following format :
+                                    // ojType.objId.folderId. (...)
+                                    if (!Util.isEmpty(key)) {
+                                        var tokens = key.split(".");
+                                        if (1 < tokens.length) {
+                                            var keyObjId = tokens[1];
+                                            if (Util.compare(objId, keyObjId)) {
+                                                DocTree.cacheFolderList.remove(key);
+                                            }
                                         }
                                     }
-                                }
-                            });
-                            //var cacheFolderList = DocTree.cacheFolderList.cache;
-                            //if (!Util.isEmpty(cacheFolderList)) {
-                            //    for (var cacheKey in cacheFolderList) {
-                            //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
-                            //            var cacheKeySplit = cacheKey.split(".");
-                            //            if (Util.isArray(cacheKeySplit)) {
-                            //                // cache keys have following format :
-                            //                // CASE_FILE.1258.0.0.name.ASC.16
-                            //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
-                            //                var cacheKeyObjId = cacheKeySplit[1];
-                            //                if (!Util.isEmpty(cacheKeyObjId)) {
-                            //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
-                            //                        DocTree.cacheFolderList.remove(cacheKey);
-                            //                    }
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                        }
+                                });
+                                //var cacheFolderList = DocTree.cacheFolderList.cache;
+                                //if (!Util.isEmpty(cacheFolderList)) {
+                                //    for (var cacheKey in cacheFolderList) {
+                                //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
+                                //            var cacheKeySplit = cacheKey.split(".");
+                                //            if (Util.isArray(cacheKeySplit)) {
+                                //                // cache keys have following format :
+                                //                // CASE_FILE.1258.0.0.name.ASC.16
+                                //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
+                                //                var cacheKeyObjId = cacheKeySplit[1];
+                                //                if (!Util.isEmpty(cacheKeyObjId)) {
+                                //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
+                                //                        DocTree.cacheFolderList.remove(cacheKey);
+                                //                    }
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
+                            }
 
-                        var setting = DocTree.Config.getSetting();
-                        if (setting.search.enabled) {
-                            DocTree.tree.reload(DocTree.Source.source()).then(function () {
-                                DocTree.expandTopNode().then(function () {
-                                    var rootNode = DocTree.getTopNode();
-                                    DocTree.expandAfterRefresh(rootNode.children, []);
+                            var setting = DocTree.Config.getSetting();
+                            if (setting.search.enabled) {
+                                DocTree.tree.reload(DocTree.Source.source()).then(function() {
+                                    DocTree.expandTopNode().then(function() {
+                                        var rootNode = DocTree.getTopNode();
+                                        DocTree.expandAfterRefresh(rootNode.children, []);
+                                        DocTree.reloading = false;
+                                    });
                                 });
-                            });
-                        } else if (nodeToExpand) {
-                            DocTree.tree.reload(DocTree.Source.source()).then(
-                                function () {
-                                    DocTree.expandTopNode().then(
-                                        function () {
-                                            var rootNode = DocTree.getTopNode();
-                                            var theChild;
-                                            _.forEach(rootNode.children, function (child) {
-                                                if (child.data.objectId == nodeToExpand.data.objectId
-                                                    && child.data.objectType == nodeToExpand.data.objectType) {
-                                                    theChild = child;
-                                                }
-                                            });
-                                            if (theChild) {
-                                                theChild.load(true).done(function () {
-                                                    theChild.setExpanded();
-                                                });
+                            } else if (nodeToExpand) {
+                                DocTree.tree.reload(DocTree.Source.source()).then(function() {
+                                    DocTree.expandTopNode().then(function() {
+                                        var rootNode = DocTree.getTopNode();
+                                        var theChild;
+                                        _.forEach(rootNode.children, function(child) {
+                                            if (child.data.objectId == nodeToExpand.data.objectId && child.data.objectType == nodeToExpand.data.objectType) {
+                                                theChild = child;
                                             }
-                                            DocTree.expandAfterRefresh(rootNode.children, []);
                                         });
+                                        if (theChild) {
+                                            theChild.load(true).done(function() {
+                                                theChild.setExpanded();
+                                            });
+                                        }
+                                        DocTree.expandAfterRefresh(rootNode.children, []);
+                                        DocTree.reloading = false;
+                                    });
                                 });
-                        } else {
-                            var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
-                            var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
-                            DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
-                            DocTree.tree.reload(DocTree.Source.source()).then(function () {
-                                if (rootNode.expanded) {
-                                    DocTree.expandTopNode().then(function () {
+                            } else {
+                                DocTree.reloading = true;
+                                var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
+                                var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
+                                DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
+                                DocTree.tree.reload(DocTree.Source.source()).then(function() {
+                                    DocTree.expandTopNode().then(function() {
                                         var rootNode = DocTree.getTopNode();
                                         DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
+                                        DocTree.reloading = false;
                                     });
-                                }
-                            });
+                                });
+                            }
                         }
                     }
+
                     /**
                      * @description Refresh a tree node.
                      *
@@ -1543,6 +1551,11 @@ angular
                                     renderer: function (element, node, columnDef, isReadOnly) {
                                         $(element).text(node.data.status);
                                     }
+                                }, {
+                                    name: "custodian",
+                                    renderer: function (element, node, columnDef, isReadOnly) {
+                                        $(element).text(node.data.custodian);
+                                    }
                                 },
                                 {
                                     name: "public",
@@ -1902,7 +1915,7 @@ angular
                                         }
                                         var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/"
                                             + parentNode.containerObjectType + "/" + encodeURIComponent(node.data.name)
-                                            + "/" + selectedIdsList;
+                                            + "/" + selectedIdsList + "/" + node.data.status;
                                         window.open(baseUrl + '!/viewer/' + urlArgs);
                                     }
                                 }, {
@@ -2020,12 +2033,13 @@ angular
                                     name: "generateZipFile",
                                     execute: function (nodes, args) {
                                         var objectInfo = DocTree.objectInfo;
+                                        var node = nodes[0];
                                         if (DocTree.limitedDeliveryToSpecificPageCountEnabled) {
                                             var deferred = $q.defer();
                                             openLimitedPageReleaseModal(deferred);
                                             deferred.promise.then(function () {
                                                 saveCaseAndSelectLimitedDeliveryFlag(DocTree.limitedDeliveryFlag).then(function () {
-                                                    RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                                    RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id, node.data.objectId).then(
                                                         function (response) {
                                                             MessageService.succsessAction();
                                                         },
@@ -2035,7 +2049,7 @@ angular
                                                 });
                                             });
                                         } else {
-                                            RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                            RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id, node.data.objectId).then(
                                                 function (response) {
                                                     MessageService.succsessAction();
                                                 },
@@ -2327,7 +2341,7 @@ angular
                                 if (menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu) {
                                     return emptyArray;
                                 }
-                                menu = _.clone(menu);
+                                menu = _.cloneDeep(menu);
                                 var menuFileTypes = _.find(menu, {
                                     "cmd": "subMenuFileTypes"
                                 });
@@ -2343,6 +2357,7 @@ angular
                                     menuCorrespondenceForms.children = this.makeSubMenu(_.filter(DocTree.correspondenceForms, function(ct) {
                                         return ct.templateType ==  ObjectService.ObjectTypes.CORRESPONDENCE_TEMPLATE;
                                     }));
+                                    menuCorrespondenceForms.children = _.sortBy(menuCorrespondenceForms.children, 'title');
                                 }
                                 // On active search disable Cut & Copy
                                 var cutMenu = _.find(menu, {
@@ -2366,13 +2381,21 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                //} else {
-                                //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                                //    menu = [{
-                                //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                                //        cmd: "noop",
-                                //        uiIcon: ""
-                                //    }];
+
+                                // disable commands based on locks
+                                var currentNode = nodes[0];
+                                var lock = currentNode.data.lock;
+                                if (lock && lock !== "" && DocTree.treeConfig.disabledFileCommandsOnLock) {
+                                    var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
+                                    _.each(disableCommands, function(dc) {
+                                        var cmdMenu = _.find(menu, {
+                                            cmd: dc
+                                        });
+                                        if (cmdMenu) {
+                                            cmdMenu.disabledExpression = true;
+                                        }
+                                    });
+                                }
                             }
 
                             //Check to see if there is a global handling, if there is, it would override specific handler
@@ -2392,15 +2415,6 @@ angular
 
                                 } else {
                                     if (item.cmd) {
-                                        if (item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename") {
-                                            var folderStructure = DocTree.treeConfig.folderStructure;
-                                            if (folderStructure && _.find(folderStructure.data, function (folderName) {
-                                                return folderName === nodes[0].data.name;
-                                            })) {
-                                                item.disabled = true;
-                                                item.disabledExpression = true;
-                                            }
-                                        }
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
@@ -2855,6 +2869,9 @@ angular
                                             files: uploadedFiles,
                                             nodes: fileNodes
                                         });
+
+                                        //sleep for 1.5s, for waiting back-end update record ACFP-515
+                                        setTimeout(DocTree.refreshTree, 1500);
                                     }
                                 }, function (errorData) {
                                     DocTree.refreshTree();
@@ -2934,7 +2951,6 @@ angular
 
                             var dfd = $.Deferred();
 
-                            //var toFolderNode = DocTree.isFolderNode(toNode)? toNode : toNode.parent;
                             var toFolderNode = toNode;
                             if (DocTree.isFileNode(toNode) || "after" == mode || "before" == mode) {
                                 toFolderNode = toNode.parent;
@@ -2951,16 +2967,9 @@ angular
                                 if (DocTree.isFolderNode(toNode)) {
                                     newNode = toNode.addChildren(frNode);
                                 } else {
-                                    //toNode = node.addNode(frNode, "after")
                                     newNode = toNode.addNode(frNode, mode)
                                 }
                                 newNode.setActive();
-
-                                //todo: copy to same parent, need to rename a "fn" to "fn (n)"
-                                //                if (frNode.parent == toFolderNode) {
-                                //                    //copy to another folder name
-                                //
-                                //                } else {}
 
                                 DocTree.markNodePending(newNode);
                                 var subFolderId = frNode.data.objectId;
@@ -3015,7 +3024,12 @@ angular
                                     newNode.renderTitle();
                                     dfd.resolve(copyFolderInfo);
                                 }, function (errorData) {
-                                    MessageService.error(errorData.data)
+                                    if (errorData.data && errorData.data.message)
+                                    {
+                                        MessageService.error(errorData.data.message);
+                                    } else if (errorData.data) {
+                                        MessageService.error(errorData.data)
+                                    }
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
                                 });
@@ -3096,6 +3110,14 @@ angular
                                     DocTree._fileDataToNodeData(copyFileInfo, newNode);
                                     DocTree.markNodeOk(newNode);
                                     newNode.renderTitle();
+                                    if (actionName === 'pasteAsLink') {
+                                        newNode.data.link = true;
+                                        var newAcmIcon = "<i class='fa fa-link'></i>";
+                                        var newSpan = newNode.span;
+                                        var $newSpanIcon = $(newSpan.children[1]);
+                                        $newSpanIcon.removeClass("fancytree-icon");
+                                        $newSpanIcon.html(newAcmIcon);
+                                    }
                                     dfd.resolve(copyFileInfo);
                                 }, function (errorData) {
                                     DocTree.markNodeError(newNode);
@@ -3488,14 +3510,7 @@ angular
                             }
                             return dfd.promise();
                         },
-                        fileRemove: function (dfd, node, parent, fileWithLinks) {
-                            var cacheKey = DocTree.getCacheKeyByNode(parent);
-                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                            node.remove();
-                            if (refNode) {
-                                refNode.setActive();
-                            }
-
+                        fileRemove: function (dfd, node, parent) {
                             var fileId = node.data.objectId;
                             Util.serviceCall({
                                 service: Ecm.deleteFileTemporary,
@@ -3506,6 +3521,12 @@ angular
                                 onSuccess: function (data) {
                                     if (Validator.validateDeletedFile(data)) {
                                         if (data.deletedFileId == fileId) {
+                                            var cacheKey = DocTree.getCacheKeyByNode(parent);
+                                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                                            node.remove();
+                                            if (refNode) {
+                                                refNode.setActive();
+                                            }
                                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                                             if (Validator.validateFolderList(folderList)) {
                                                 var deleted = DocTree.findFolderItemIdx(fileId, folderList);
@@ -3518,16 +3539,16 @@ angular
                                             }
                                         }
                                     }
-                                },
-                                onError: function (error) {
-                                    MessageService.error(error.data.message);
-                                    dfd.reject();
                                 }
                             }).then(function (deletedFileId) {
                                 dfd.resolve(deletedFileId);
                             }, function (errorData) {
-                                MessageService.error(errorData.data);
-                                DocTree.markNodeError(node);
+                                if (errorData.data && errorData.data.message)
+                                {
+                                    MessageService.error(errorData.data.message);
+                                } else {
+                                    MessageService.errorAction();
+                                }
                                 dfd.reject();
                             });
                             return dfd.promise();
@@ -3537,6 +3558,12 @@ angular
                             if (Util.isArrayEmpty(nodes)) {
                                 dfd.resolve();
 
+                            } else if (nodes.length === 1) {
+                                if (DocTree.isFolderNode(nodes[0])) {
+                                    return DocTree.Op.deleteFolder(nodes[0]);
+                                } else if (DocTree.isFileNode(nodes[0])) {
+                                    return DocTree.Op.deleteFile(nodes[0]);
+                                }
                             } else {
                                 var removeNodes = DocTree.getTopMostNodes(nodes);
 
@@ -4065,6 +4092,7 @@ angular
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
                             nodeData.data.duplicate = Util.goodValue(fileData.duplicate);
+                            nodeData.data.custodian = Util.goodValue(fileData.custodian);
 
                             for (var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
                                 if (fileData.versionList[versionIndex].versionTag === fileData.version) {
@@ -5373,6 +5401,19 @@ angular
                             function (moduleConfig) {
                                 var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
                                 DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
+
+                                if (DocTree.documentReviewEnabled) {
+                                    DocTree.treeConfig.columnDefs.push({
+                                        "name": "custodian",
+                                        "displayName": "common.directive.docTree.table.columns.custodian",
+                                        "headTemplate": "<label id='custodian' class='doc-tree-header' style='cursor: pointer;'></label>",
+                                        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+                                        "enableColumnMenu": false,
+                                        "__todo__cellTemplate": "<div>{{ row.entity.custodian }}</div>",
+                                        "index": DocTree.treeConfig.columnDefs.length,
+                                        "width": "16%",
+                                    });
+                                }
 
                                 var extensions = Util.goodMapValue(treeConfig, "extensions", []);
                                 for (var i = 0; i < extensions.length; i++) {

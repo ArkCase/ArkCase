@@ -114,6 +114,12 @@ public interface NotificationConstants
      */
     String USER_LABEL = "${userLabel}";
 
+    /**
+     * When this string appears in notification's title it will be replaced with the id of COMPLAINT, CASE_FILE
+     * or TASK appropriate
+     */
+    String ID_LABEL = "${idLabel}";
+
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";
 

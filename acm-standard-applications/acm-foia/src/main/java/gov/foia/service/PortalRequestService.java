@@ -35,18 +35,32 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
-
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIAReadingRoom;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
+import gov.foia.model.PortalFOIARequestStatus;
+import gov.foia.model.WithdrawRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -75,25 +89,15 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIAReadingRoom;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
-import gov.foia.model.PortalFOIARequestStatus;
-import gov.foia.model.WithdrawRequest;
 
 /**
  * @author sasko.tanaskoski
@@ -131,15 +135,17 @@ public class PortalRequestService
 
     private CreateAdHocTaskService createAdHocTaskService;
 
+    private HolidayConfigurationService holidayConfigurationService;
+
     private final String WITHDRAW_REQUEST_TITLE = "Withdraw Request";
+
+    private CorrespondenceTemplateManager templateManager;
 
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus portalRequestStatus) throws AcmObjectNotFoundException
     {
         List<PortalFOIARequestStatus> responseRequests = getRequestDao().getExternalRequests(portalRequestStatus);
         if (responseRequests.isEmpty())
         {
-            log.info("FOIA Requests not found for the caseNumber [{}], lastName [{}]", portalRequestStatus.getRequestId(),
-                    portalRequestStatus.getLastName());
             throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
                     "FOIA Requests not found for the caseNumber [" + portalRequestStatus.getRequestId() + "], and lastName ["
                             + portalRequestStatus.getLastName() + "]");
@@ -188,7 +194,6 @@ public class PortalRequestService
 
     public void populateResponseRequest(FOIARequest foiaRequest, PortalFOIARequest portalFOIARequest)
     {
-
         FOIAPerson person = (FOIAPerson) foiaRequest.getOriginator().getPerson();
         portalFOIARequest.setOriginalRequestNumber(foiaRequest.getCaseNumber());
         portalFOIARequest.setTitle(foiaRequest.getTitle());
@@ -200,7 +205,9 @@ public class PortalRequestService
         portalFOIARequest.setFirstName(person.getGivenName());
         portalFOIARequest.setMiddleName(person.getMiddleName());
         portalFOIARequest.setLastName(person.getFamilyName());
-        portalFOIARequest.setPosition(person.getPosition());
+        String position = person.getDefaultOrganization() != null ?
+                person.getDefaultOrganization().getPersonToOrganizationAssociationType() : "unknown";
+        portalFOIARequest.setPosition(position);
         portalFOIARequest.setOrganization(person.getCompany());
 
         if (person.getDefaultEmail() != null)
@@ -328,6 +335,12 @@ public class PortalRequestService
             OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
             String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
 
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("requestDownloaded.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("requestDownloaded",
                             String.format(translationService.translate(NotificationConstants.REQUEST_DOWNLOADED), request.getCaseNumber()),
@@ -336,6 +349,7 @@ public class PortalRequestService
                     .forObjectWithTitle(StringUtils.left(request.getDetails(), 1000))
                     .withEmailAddresses(emailAddresses)
                     .withNote(downloadedDateTimeFormatted)
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -376,18 +390,7 @@ public class PortalRequestService
 
         AcmTask requestWithdrawalTask = populateWithdrawalTask(withdrawRequestDetails, request);
 
-        List<MultipartFile> files = new ArrayList<>();
-        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
-        {
-            try
-            {
-                files.add(convertPortalRequestFileToMultipartFile(portalFile));
-            }
-            catch (IOException e)
-            {
-                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
-            }
-        }
+        List<MultipartFile> files = addWithdrawalFiles(withdrawRequestDetails);
 
         try
         {
@@ -406,13 +409,34 @@ public class PortalRequestService
 
     }
 
-    private AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
+    private List<MultipartFile> addWithdrawalFiles(WithdrawRequest withdrawRequestDetails)
+    {
+        if (withdrawRequestDetails.getDocuments() == null || withdrawRequestDetails.getDocuments().isEmpty())
+        {
+            return new ArrayList<>();
+        }
+
+        List<MultipartFile> files = new ArrayList<>();
+        for (PortalFOIARequestFile portalFile : withdrawRequestDetails.getDocuments())
+        {
+            try
+            {
+                files.add(convertPortalRequestFileToMultipartFile(portalFile));
+            } catch (IOException e)
+            {
+                log.error("Failed to receive file {}, {}", portalFile.getFileName(), e.getMessage());
+            }
+        }
+        return files;
+    }
+
+    protected AcmTask populateWithdrawalTask(WithdrawRequest withdrawRequestDetails, FOIARequest request)
     {
         AcmTask requestWithdrawalTask = new AcmTask();
 
         String requestTitle = withdrawRequestDetails.getSubject() != null ?
                 String.format("%s %s: %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber(),
-                withdrawRequestDetails.getSubject()) :
+                        withdrawRequestDetails.getSubject()) :
                 String.format("%s %s", WITHDRAW_REQUEST_TITLE, withdrawRequestDetails.getOriginalRequestNumber());
         requestWithdrawalTask.setTitle(requestTitle);
         requestWithdrawalTask.setType("web-portal-withdrawal");
@@ -424,6 +448,18 @@ public class PortalRequestService
         requestWithdrawalTask.setAdhocTask(true);
         requestWithdrawalTask.setCompleted(false);
         requestWithdrawalTask.setPriority("High");
+        requestWithdrawalTask.setAssignee(request.getAssigneeLdapId());
+
+
+        //Setting the request owning group as the request withdrawal task owning group
+        List<AcmParticipant> owningGroup = request.getParticipants().stream()
+                .filter(part -> part.getParticipantType().equals("owning group")).collect(Collectors.toList());
+        requestWithdrawalTask.setParticipants(owningGroup);
+        requestWithdrawalTask.setCandidateGroups(Arrays.asList(owningGroup.get(0).getParticipantLdapId()));
+
+        //Setting task due date
+        requestWithdrawalTask.setDueDate(getHolidayConfigurationService().addWorkingDaysAndWorkingHoursToDateWithBusinessHours(new Date(), 3));
+
 
         if (request != null)
         {
@@ -626,4 +662,23 @@ public class PortalRequestService
     {
         this.personAssociationDao = personAssociationDao;
     }
+
+    public HolidayConfigurationService getHolidayConfigurationService() {
+        return holidayConfigurationService;
+    }
+
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService) {
+        this.holidayConfigurationService = holidayConfigurationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
+    }
+
 }

@@ -27,11 +27,11 @@ package com.armedia.acm.plugins.alfrescorma.model;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AlfrescoRmaConfig
 {
@@ -102,6 +102,31 @@ public class AlfrescoRmaConfig
     @JsonProperty("alfresco_rma_case_closed_statuses")
     @Value("${alfresco_rma_case_closed_statuses}")
     private String closedStatuses;
+
+    /**
+     * Setting this property to true will result in adding the records for case files into a base category folder with
+     * the same name as the base folder where the case file resides. This will allow the use of separate folders for
+     * case files (based on the criteria set in the drools-case-file-rules.xlsx file) both when they're active and as
+     * records.
+     * <br>
+     * <br>
+     * ex. <br>
+     * /Sites/acm/documentLibrary/<strong>Case Files</strong>/CASE_101 -> /Sites/rm/documentLibrary/ACM/<strong>Case
+     * Files</strong>/CASE_101
+     * <br>
+     * <br>
+     * /Sites/acm/documentLibrary/<strong>Case File Subtype</strong>/CASE_101 ->
+     * /Sites/rm/documentLibrary/ACM/<strong>Case
+     * File Subtype</strong>/CASE_101
+     * <br>
+     * <br>
+     * <strong>NOTE: Doing this will circumvent the use of record management category folders by object type, for the
+     * CASE_FILE objects. The matching base record category folders need to be created beforehand same as the active
+     * site folders</strong>
+     */
+    @JsonProperty("rma_use_same_category_folder_path_CASE_FILE")
+    @Value("${rma_use_same_category_folder_path_CASE_FILE}")
+    private Boolean rmaUseSameCategoryFolderPathForCaseFiles;
 
     public String getCategoryFolderForObject(String objectType)
     {
@@ -288,5 +313,15 @@ public class AlfrescoRmaConfig
     public void setDeclareFolderRecordOnDeclareRequest(Boolean declareFolderRecordOnDeclareRequest)
     {
         this.declareFolderRecordOnDeclareRequest = declareFolderRecordOnDeclareRequest;
+    }
+
+    public Boolean getRmaUseSameCategoryFolderPathForCaseFiles()
+    {
+        return rmaUseSameCategoryFolderPathForCaseFiles;
+    }
+
+    public void setRmaUseSameCategoryFolderPathForCaseFiles(Boolean rmaUseSameCategoryFolderPathForCaseFiles)
+    {
+        this.rmaUseSameCategoryFolderPathForCaseFiles = rmaUseSameCategoryFolderPathForCaseFiles;
     }
 }

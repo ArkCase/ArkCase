@@ -27,20 +27,24 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.DocumentLinkedModel;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class DocumentLinkedTemplateModelProvider implements TemplateModelProvider<DocumentLinkedModel>
 {
 
     private AuthenticationTokenService authenticationTokenService;
+    private ApplicationConfig applicationConfig;
+
+    @Value("${tokenExpiration.fileLinks}")
+    private Long tokenExpiry;
 
     @Override
     public DocumentLinkedModel getModel(Object object)
@@ -49,18 +53,22 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         List<EcmFileVersion> fileVersions = notification.getFiles();
         List<String> links = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
-        if (fileVersions.size() > 0)
+        if (fileVersions != null)
         {
-            fileVersions = fileVersions.stream()
-                    .filter(filversion -> filversion.getVersionTag().equals(filversion.getFile().getActiveVersionTag()))
-                    .collect(Collectors.toList());
+            String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
+            String requestUrl = applicationConfig.getBaseUrl() + "/api/latest/plugin/ecm/download?";
+            String relativePath = "";
             for (int i = 0; i < fileVersions.size(); i++)
             {
-                fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
-                links.add("ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket="
-                        + authenticationTokenService.generateAndSaveAuthenticationToken(fileVersions.get(i).getId(),
-                                notification.getEmailAddresses(), null));
+                if (fileVersions.get(i).getVersionTag().equals(fileVersions.get(i).getFile().getActiveVersionTag()))
+                {
+                    fileNames.add(fileVersions.get(i).getFile().getFileName() + fileVersions.get(i).getFile().getFileActiveVersionNameExtension());
+                    String url = "ecmFileId=" + fileVersions.get(i).getFile().getFileId() + "&version=&acm_email_ticket=" + token;
+                    links.add(url);
+                    relativePath += requestUrl + url + "__comma__";
+                }
             }
+            authenticationTokenService.addTokenToRelativePaths(Arrays.asList(relativePath.split("__comma__")), token, tokenExpiry, notification.getEmailAddresses());
         }
         return new DocumentLinkedModel(links, fileNames, notification.getRelatedObjectType(), notification.getRelatedObjectNumber());
     }
@@ -74,5 +82,15 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

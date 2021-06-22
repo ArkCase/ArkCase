@@ -137,6 +137,10 @@ public class EcmFileConfig implements InitializingBean
     @Value("${ecm.viewer.snowbound.enableOCR}")
     private Boolean snowboundEnableOcr;
 
+    @JsonProperty("ecm.documentSizeBytesLimit")
+    @Value("${ecm.documentSizeBytesLimit}")
+    private Long documentSizeBytesLimit;
+
     private Map<String, String> documentsParticipantTypesFileMappings = new HashMap<>();
 
     private Map<String, String> arkcaseAlfrescoDocumentsParticipantTypesFileMappings = new HashMap<>();
@@ -474,5 +478,15 @@ public class EcmFileConfig implements InitializingBean
     public void setDefaultPathBusinessProcess(String defaultPathBusinessProcess)
     {
         this.defaultPathBusinessProcess = defaultPathBusinessProcess;
+    }
+
+    public Long getDocumentSizeBytesLimit()
+    {
+        return documentSizeBytesLimit;
+    }
+
+    public void setDocumentSizeBytesLimit(Long documentSizeBytesLimit)
+    {
+        this.documentSizeBytesLimit = documentSizeBytesLimit;
     }
 }

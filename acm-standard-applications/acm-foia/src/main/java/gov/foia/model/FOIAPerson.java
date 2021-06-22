@@ -48,24 +48,4 @@ public class FOIAPerson extends Person
 
     private static final long serialVersionUID = -5025159640218061551L;
 
-    @Column(name = "fo_position")
-    private String position;
-
-    /**
-     * @return the position
-     */
-    public String getPosition()
-    {
-        return position;
-    }
-
-    /**
-     * @param position
-     *            the position to set
-     */
-    public void setPosition(String position)
-    {
-        this.position = position;
-    }
-
 }

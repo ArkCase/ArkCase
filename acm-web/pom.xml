@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>2021.01</version>
+        <version>2021.02</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia.acm</groupId>
@@ -19,6 +19,11 @@
         <dependency>
             <groupId>com.armedia.acm</groupId>
             <artifactId>acm-core-api</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

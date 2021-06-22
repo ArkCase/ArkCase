@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.service.EMLToPDFConverter;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -44,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,6 +70,7 @@ import java.io.OutputStream;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -91,10 +94,14 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     private ApplicationEventPublisher eventPublisher;
     private EcmFileDao ecmFileDao;
     private EmailReceiverConfig emailReceiverConfig;
+    private EMLToPDFConverter emlToPDFConverter;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
     private boolean enabled;
+
+    @Value("${convertEmailsToPDF.incomingEmailToPdf:false}")
+    private Boolean convertFileToPdf;
 
     public AcmObjectMailHandler(AcmNameDao dao)
     {
@@ -160,13 +167,35 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                 mailFile = ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+                if(convertFileToPdf)
+                {
+                    try
+                    {
+                        log.debug("Converting file [{}] to PDF started!", messageFileName);
+                        File pdfConvertedFile = emlToPDFConverter.convert(new FileInputStream(messageFile), messageFileName);
+                        if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0)
+                        {
+                            try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile))
+                            {
+                                mailFile.setFileActiveVersionNameExtension(".pdf");
+                                mailFile.setFileActiveVersionMimeType("application/pdf");
+                                ecmFileService.update(mailFile, pdfConvertedFileIs, auth);
+                                mailFile.getVersions().get(1).setFile(mailFile);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.debug("Converting file [{}] to PDF failed!", messageFileName, e);
+                    }
+                }
 
             }
 
         }
         catch (Exception e)
         {
-            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage());
+            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage(), e);
             exception = e;
         }
 
@@ -224,18 +253,19 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                         continue;
                     }
 
+                    String fileName = base64DecodeForAttachmentFile(bodyPart.getFileName());
                     try (InputStream is = bodyPart.getInputStream())
                     {
                         Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-                        getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
-                                bodyPart.getFileName(), auth,
+                        getEcmFileService().upload(fileName, "attachment", "Document", is, bodyPart.getContentType(),
+                                fileName, auth,
                                 emailReceivedFolder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
                     }
                     catch (Exception e)
                     {
                         log.error("Error processing attachment with name '{}'. Exception msg: '{}' ", bodyPart.getFileName(),
-                                e.getMessage());
+                                e.getMessage(), e);
                     }
                 }
             }
@@ -269,7 +299,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String fileAndFolderName = emailSender + "-" + currentDate + "-" + message.getSubject().replaceAll("\\W+", "");
+        String fileAndFolderName = message.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailSender;
         return fileAndFolderName;
     }
     
@@ -278,6 +308,27 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         Address[] froms = message.getFrom();
         String emailSender = froms == null ? "" : ((InternetAddress) froms[0]).getAddress();
         return emailSender;
+    }
+
+    /**
+     *
+     * @param fileName file name from message
+     * @return
+     */
+    private String base64DecodeForAttachmentFile(String fileName){
+        //Solve the problem of Yahoo mail filename encode issue
+        if(fileName.startsWith("=?UTF-8?b?")) {
+            fileName = fileName.substring(10);
+            fileName = fileName.substring(0,fileName.indexOf('='));
+
+            byte[] decodedBytes = Base64.getDecoder().decode(fileName.getBytes());
+
+            fileName = new String(decodedBytes);
+            log.debug("FileName after Decode: " + fileName);
+
+        }
+
+        return fileName;
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
@@ -363,5 +414,15 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig) 
     {
         this.emailReceiverConfig = emailReceiverConfig;
+    }
+
+    public EMLToPDFConverter getEmlToPDFConverter()
+    {
+        return emlToPDFConverter;
+    }
+
+    public void setEmlToPDFConverter(EMLToPDFConverter emlToPDFConverter)
+    {
+        this.emlToPDFConverter = emlToPDFConverter;
     }
 }

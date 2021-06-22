@@ -186,7 +186,7 @@ release_all:
     - export PORTAL_BACKEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || ([[ $CI_COMMIT_REF_NAME = "`echo -e "$CI_COMMIT_REF_NAME\n3.3.10" | sort -V | head -n1`" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME))
     - export PORTAL_FRONTEND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "develop" || ([[ $CI_COMMIT_REF_NAME = "`echo -e "$CI_COMMIT_REF_NAME\n3.3.10" | sort -V | head -n1`" ]] && echo $CI_COMMIT_REF_NAME || echo "foia-"$CI_COMMIT_REF_NAME))
     - export CONFIG_SERVER_TAG=$CI_COMMIT_REF_NAME
-    - export SNOWBOUND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "snowbound-5.2" || echo "snowbound-"$CI_COMMIT_REF_NAME)
+    - export SNOWBOUND_TAG=$([[ $CI_COMMIT_REF_NAME = "develop" ]] && echo "snowbound-5.6.2" || echo "snowbound-"$CI_COMMIT_REF_NAME)
     - export FOIA_REPORTS_TAG=$CI_COMMIT_REF_NAME
     # Trigger other project releases:
     # Configuration

@@ -71,7 +71,6 @@
             </column>
         </createTable>
     </changeSet>
-
     <changeSet id="02-create-cost-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_cost">
             <column name="cm_cost_id" type="${idType}">
@@ -258,5 +257,16 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="16-change_cm_cost_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_cost" columnName="cm_cost_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_cost" columnName="cm_cost_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_cost" columnName="cm_cost_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="17-change_cm_costsheet_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_costsheet" columnName="cm_costsheet_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_costsheet" columnName="cm_costsheet_modified" newDataType="DATETIME"/>
     </changeSet>
 </databaseChangeLog>

@@ -445,6 +445,8 @@ public interface EcmFileService
     @Transactional
     void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException;
 
+    void updateLinkTargetFile(EcmFile file) throws EcmFileLinkException;
+
     String addDateInPath(String folderPath, Boolean flag) throws AcmCreateObjectFailedException;
 
     LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException;

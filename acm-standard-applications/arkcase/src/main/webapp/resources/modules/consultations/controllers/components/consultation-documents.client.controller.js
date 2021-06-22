@@ -25,9 +25,8 @@ angular.module('consultations').controller(
         'Admin.CMTemplatesService',
         'DocTreeExt.Email',
         'ModalDialogService',
-        'MultiCorrespondence.Service',
         function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ConsultationInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                 DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, MultiCorrespondenceService) {
+                 DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService) {
             Authentication.queryUserInfo().then(function(userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
@@ -203,23 +202,6 @@ angular.module('consultations').controller(
 
             $scope.$bus.subscribe('removeSearchFilter', function() {
                 $scope.searchFilter = null;
-            });
-
-            $scope.$bus.subscribe('multi-correspondence-requested', function(payload) {
-                var requestData = payload;
-                var names = [ requestData.args.label ];
-                var template = requestData.args.templateType;
-
-                var modalInstance = $modal.open({
-                    animation: false,
-                    templateUrl: 'modules/common/views/multi-correspondence.modal.client.view.html',
-                    controller: 'Common.MultiCorrespondenceModalController',
-                    size: 'lg'
-                });
-
-                modalInstance.result.then(function(modalResult) {
-                    MultiCorrespondenceService.createMultiTemplateCorrespondence(requestData, names, template, modalResult.selectedTemplates, modalResult.multiCorrespondenceDocumentName);
-                });
             });
 
         } ]);

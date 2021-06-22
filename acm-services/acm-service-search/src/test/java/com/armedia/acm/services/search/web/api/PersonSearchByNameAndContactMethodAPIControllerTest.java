@@ -111,13 +111,15 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
 
         MvcResult result = mockMvc
                 .perform(get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod).principal(mockAuthentication))
-                .andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=ISO-8859-1")).andReturn();
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         verifyAll();
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON: [{}]", jsonString);
 
         assertEquals(solrResponse, jsonString);
 
@@ -153,7 +155,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
 
         String response = result.getResponse().getContentAsString();
 
-        log.debug("Got error: " + response);
+        log.debug("Got error: [{}]", response);
 
     }
 

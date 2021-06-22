@@ -49,6 +49,8 @@ public class EmailWithAttachmentsDTO implements AttachmentsProcessableDTO
     private String body;
     private List<String> users;
     private List<String> emailAddresses;
+    private List<String> ccEmailAddresses;
+    private List<String> bccEmailAddresses;
     private Boolean mailSent = false;
     private String emailGroup;
     private String modelReferenceName;
@@ -107,6 +109,26 @@ public class EmailWithAttachmentsDTO implements AttachmentsProcessableDTO
     public void setEmailAddresses(List<String> emailAddresses)
     {
         this.emailAddresses = emailAddresses;
+    }
+
+    public List<String> getCcEmailAddresses()
+    {
+        return ccEmailAddresses;
+    }
+
+    public void setCcEmailAddresses(List<String> ccEmailAddresses)
+    {
+        this.ccEmailAddresses = ccEmailAddresses;
+    }
+
+    public List<String> getBccEmailAddresses()
+    {
+        return bccEmailAddresses;
+    }
+
+    public void setBccEmailAddresses(List<String> bccEmailAddresses)
+    {
+        this.bccEmailAddresses = bccEmailAddresses;
     }
 
     public String getObjectType()

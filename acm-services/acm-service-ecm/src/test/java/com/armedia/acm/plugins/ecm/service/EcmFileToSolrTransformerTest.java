@@ -1,27 +1,35 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -30,6 +38,7 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
@@ -43,6 +52,7 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,13 +61,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by maksud.sharif on 6/19/2017.
@@ -93,6 +96,10 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
 
         solrConfig = new SolrConfig();
         unit.setSolrConfig(solrConfig);
+
+        EcmFileConfig fileConfig = new EcmFileConfig();
+        fileConfig.setDocumentSizeBytesLimit(5000L);
+        unit.setFileConfig(fileConfig);
     }
 
     private void setupEcmFile(EcmFile in)
@@ -145,7 +152,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         version.setFile(in);
         version.setModified(now);
         version.setModifier(userId);
-        version.setVersionTag("VERSION_TAG");
+        version.setVersionTag("ACTIVE_TAG");
         version.setVersionFileNameExtension(".txt");
         version.setVersionMimeType("text/plain");
         in.setVersions(Collections.singletonList(version));
@@ -197,6 +204,21 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     }
 
     @Test
+    public void toContentFileIndexWhenFileTooLarge()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(5001L);
+
+        replayAll();
+
+        SolrContentDocument result = unit.toContentFileIndex(in);
+
+        verifyAll();
+
+        assertNull("Content for large files is not indexed!", result);
+    }
+
+    @Test
     public void toSolrAdvancedSearch()
     {
         solrConfig.setEnableContentFileIndexing(false);
@@ -212,6 +234,38 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         verifyAll();
 
         validateResult(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearchWhenLargeFile()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(5001L);
+
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        expectLastCall();
+
+        expect(mockUserDao.quietFindByUserId(eq("user"))).andReturn(user).times(2);
+        expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
+
+        replayAll();
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        validateResult(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearchWhenFileSizeLowerThanLimit()
+    {
+        solrConfig.setEnableContentFileIndexing(true);
+        in.getVersions().get(0).setFileSizeBytes(0L);
+
+        replayAll();
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        assertNull("Content index will index file metadata as well", result);
     }
 
     @Test
@@ -250,7 +304,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileType(), result.getType_lcs());
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(12, result.getAdditionalProperties().size());
+        assertEquals(13, result.getAdditionalProperties().size());
     }
 
     private void validateResult(SolrDocument result)
@@ -264,7 +318,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
         assertEquals(in.getFileName(), result.getTitle_parseable());
         assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-        assertEquals(8, result.getAdditionalProperties().size());
+        assertEquals(9, result.getAdditionalProperties().size());
     }
 
     private void validateResult(SolrContentDocument result)
@@ -287,7 +341,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileType(), result.getType_lcs());
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(12, result.getAdditionalProperties().size());
+        assertEquals(13, result.getAdditionalProperties().size());
     }
 
 }

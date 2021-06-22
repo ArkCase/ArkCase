@@ -74,8 +74,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -243,6 +243,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
+    @Column(name = "cm_ldap_user_id")
+    private String ldapUserId;
+
     @Transient
     private static LookupDao lookupDao;
 
@@ -265,6 +268,10 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("ACTIVE");
+        }
+        if (getTitle() == null || getTitle().trim().isEmpty())
+        {
+            setTitle("-");
         }
 
         setupChildPointers();
@@ -297,7 +304,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
-
         if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getId());
@@ -353,6 +359,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Transient
     @JsonIgnore
     private String requesterPositionTranslated;
+
     public String getRequesterPositionTranslated()
     {
         requesterPositionTranslated = translatedPersonTitle();
@@ -361,16 +368,18 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @Transient
     @JsonIgnore
-    private String requesterTitleTranslated;
-    public String getRequesterTitleTranslated()
+    private String titleTranslated;
+
+    public String getTitleTranslated()
     {
-        requesterTitleTranslated = translatedPersonTitle();
-        return requesterTitleTranslated;
+        titleTranslated = translatedPersonTitle();
+        return titleTranslated;
     }
 
     public String translatedPersonTitle()
     {
-        if(Strings.isNull(getTitle())) return null;
+        if (Strings.isBlank(getTitle()))
+            return null;
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
         String labelKey = lookupEntries.stream()
                 .filter(standardLookupEntry -> standardLookupEntry.getKey().equals(getTitle()))
@@ -390,11 +399,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public String getFullName()
     {
         StringBuilder sb = new StringBuilder();
-        if (getTitle() != null)
-        {
-            String translatedTitle = translatedPersonTitle();
-            sb.append(translatedTitle).append(" ");
-        }
+
         if (getGivenName() != null)
         {
             sb.append(getGivenName()).append(" ");
@@ -797,6 +802,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    public String getLdapUserId()
+    {
+        return ldapUserId;
+    }
+
+    public void setLdapUserId(String ldapUserId)
+    {
+        this.ldapUserId = ldapUserId;
     }
 
     @Override

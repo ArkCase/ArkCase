@@ -33,6 +33,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
 
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -40,6 +42,8 @@ import org.springframework.context.ApplicationListener;
 public class NoteAddedNotifier implements ApplicationListener<ApplicationNoteEvent>
 {
     private NotificationService notificationService;
+
+    private CorrespondenceTemplateManager templateManager;
 
     private static final Logger logger = LogManager.getLogger(NoteAddedNotifier.class);
 
@@ -52,13 +56,19 @@ public class NoteAddedNotifier implements ApplicationListener<ApplicationNoteEve
             logger.debug("On 'Note added' event create notification for participants.");
 
             Note note = (Note) event.getSource();
-
+            String emailSubject = "";
+            Template template = templateManager.findTemplate("noteAdded.html");
+            if (template != null)
+            {
+                emailSubject = template.getEmailSubject();
+            }
             Notification notification = notificationService.getNotificationBuilder()
                     .newNotification("noteAdded", NotificationConstants.NOTE_ADDED, note.getObjectType(), note.getId(), event.getUserId())
                     .withNote(note.getNote())
                     .forRelatedObjectTypeAndId(note.getParentObjectType(), note.getParentObjectId())
                     .forRelatedObjectWithNumber(note.getParentTitle())
                     .withEmailAddressesForNonPortalParticipantsForObject(note.getParentType(), note.getParentId())
+                    .withSubject(emailSubject)
                     .build();
 
             notificationService.saveNotification(notification);
@@ -73,5 +83,15 @@ public class NoteAddedNotifier implements ApplicationListener<ApplicationNoteEve
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

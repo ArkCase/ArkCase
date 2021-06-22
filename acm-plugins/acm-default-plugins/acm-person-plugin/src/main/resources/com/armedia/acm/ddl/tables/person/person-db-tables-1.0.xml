@@ -1,5 +1,5 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+                   xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="upperFunctionName" value="UPPER" dbms="oracle,mysql"/>
@@ -359,7 +359,7 @@
 
     <changeSet id="17-rename-and-change-constraints-personAssoc-table" author="tsedalu">
         <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id"
-            columnDataType="${fkIdType}"/>
+                      columnDataType="${fkIdType}"/>
         <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc" columnDataType="VARCHAR(4000)"/>
     </changeSet>
 
@@ -397,8 +397,9 @@
         </createTable>
         <addPrimaryKey tableName="acm_person_assoc_tag" columnNames="cm_person_assoc_id, cm_tag"/>
         <addForeignKeyConstraint baseTableName="acm_person_assoc_tag" baseColumnNames="cm_person_assoc_id"
-            constraintName="fk_person_assoc_tag_assoc_id" referencedTableName="acm_person_assoc" referencedColumnNames="cm_person_assoc_id"
-            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+                                 constraintName="fk_person_assoc_tag_assoc_id" referencedTableName="acm_person_assoc"
+                                 referencedColumnNames="cm_person_assoc_id"
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="25-add-new-table-acm_person_identification" author="marst" dbms="oracle,postgresql,mssql">
@@ -432,8 +433,8 @@
         </createTable>
 
         <addForeignKeyConstraint baseTableName="acm_person_identification" baseColumnNames="cm_person" constraintName="fk_person_person_id"
-            referencedTableName="acm_person" referencedColumnNames="cm_person_id" deferrable="${deferrable}"
-            initiallyDeferred="${initially.deferred}"/>
+                                 referencedTableName="acm_person" referencedColumnNames="cm_person_id" deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="25-add-new-table-acm_person_identification" author="marst" dbms="mysql">
@@ -467,8 +468,8 @@
         </createTable>
 
         <addForeignKeyConstraint baseTableName="acm_person_identification" baseColumnNames="cm_person" constraintName="fk_person_person_id"
-            referencedTableName="acm_person" referencedColumnNames="cm_person_id" deferrable="${deferrable}"
-            initiallyDeferred="${initially.deferred}"/>
+                                 referencedTableName="acm_person" referencedColumnNames="cm_person_id" deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="26-acm_person-id" author="nebojsha.davidovikj">
@@ -555,19 +556,19 @@
     <changeSet id="30-rename-person-identification" author="nebojsha.davidovikj" dbms="mysql">
         <renameTable oldTableName="acm_person_identification" newTableName="acm_identification"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id" newColumnName="cm_identification_id"
-            columnDataType="${fkIdType}"/>
+                      columnDataType="${fkIdType}"/>
         <sql>
             ALTER TABLE acm_identification
             CHANGE cm_person_id_created cm_created TIMESTAMP default CURRENT_TIMESTAMP;
         </sql>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_creator" newColumnName="cm_creator"
-            columnDataType="VARCHAR(1024)"/>
+                      columnDataType="VARCHAR(1024)"/>
         <sql>
             ALTER TABLE acm_identification
             CHANGE cm_person_id_modified cm_modified TIMESTAMP default CURRENT_TIMESTAMP;
         </sql>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modifier" newColumnName="cm_modifier"
-            columnDataType="VARCHAR(1024)"/>
+                      columnDataType="VARCHAR(1024)"/>
         <!--rename ID generator -->
         <renameTable oldTableName="acm_person_identification_id" newTableName="acm_identification_id"/>
         <!--change value of the id generator-->
@@ -758,6 +759,32 @@
 
     <changeSet id="48-change_cm_year_issued_type_to_date" author="aleksandar.bujaroski">
         <modifyDataType tableName="acm_identification" columnName="cm_year_issued" newDataType="DATE"/>
+    </changeSet>
+
+    <changeSet id="49-change_cm_person_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person" columnName="cm_person_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person" columnName="cm_person_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="50-change_cm_person_alias_type_lu_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_alias_type_lu" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_alias_type_lu" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="51-change_cm_person_assoc_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_person_assoc" columnName="cm_person_assoc_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_assoc" columnName="cm_person_assoc_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="52-change_cm_person_identification_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_identification" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_identification" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="53-add-ldap_user_id_assoc_with_person" author="ana.serafimoska">
+        <addColumn tableName="acm_person">
+            <column name="cm_ldap_user_id" type="VARCHAR(1024)"></column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

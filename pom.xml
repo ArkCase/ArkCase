@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>2021.01</version>
+    <version>2021.02</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -25,16 +26,18 @@
         <amazon.sdk.version>1.11.543</amazon.sdk.version>
         <amazon.comprehend.medical.sdk.version>1.11.775</amazon.comprehend.medical.sdk.version>
         <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
-        <apache-commons-codec>1.9</apache-commons-codec>
+        <apache-commons-codec>1.13</apache-commons-codec>
         <apache-commons-exec.version>1.3</apache-commons-exec.version>
-        <apache-commons-file-upload.version>1.3.1</apache-commons-file-upload.version>
+        <apache-commons-file-upload.version>1.4</apache-commons-file-upload.version>
         <apache-commons-io.version>2.4</apache-commons-io.version>
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
+        <apache-commons-csv.version>1.8</apache-commons-csv.version>
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-commons-validator.version>1.6</apache-commons-validator.version>
+        <apache-commons-email.version>1.5</apache-commons-email.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
@@ -86,11 +89,10 @@
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
-	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
-	<milton.version>2.7.3.5</milton.version>
-        <mockito.version>1.10.19</mockito.version>
+        <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
+        <milton.version>2.8.0.3</milton.version>
+        <mockito.core.version>3.7.7</mockito.core.version>
         <mysql.version>5.1.35</mysql.version>
-        <netty.version>4.1.7.Final</netty.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
@@ -101,21 +103,20 @@
         <org.mvel.version>2.4.7.Final</org.mvel.version>
         <pdfbox.version>2.0.22</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
-        <powermock.version>1.7.0</powermock.version>
+        <powermock.version>2.0.9</powermock.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
-        <reactor.version>2.0.8.RELEASE</reactor.version>
-        <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
+        <reactor-netty.version>1.0.3</reactor-netty.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.30</slf4j.version>
         <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
         <spring.integration.version>4.3.22.RELEASE</spring.integration.version>
-        <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
+        <spring.ldap.version>2.3.3.RELEASE</spring.ldap.version>
         <spring.security.kerberos.version>1.0.1.RELEASE</spring.security.kerberos.version>
-        <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
-        <spring.security.version>3.2.7.RELEASE</spring.security.version>
-        <spring.version>4.3.27.RELEASE</spring.version>
-        <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
+        <spring.security.saml2.core.version>1.0.10.RELEASE</spring.security.saml2.core.version>
+        <spring.security.version>5.4.2</spring.security.version>
+        <spring.version>5.3.2</spring.version>
+        <spring-retry-version>1.3.1</spring-retry-version>
         <springfox-version>2.5.0</springfox-version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <sqlserver.version>4.0</sqlserver.version>
@@ -126,11 +127,9 @@
         <zt-exec.version>1.8</zt-exec.version>
         <docx4j.core>3.3.7</docx4j.core>
         <docx4j.export.fo>3.3.6</docx4j.export.fo>
-        <snakeyaml.version>1.11</snakeyaml.version>
+        <snakeyaml.version>1.27</snakeyaml.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <cdi-api.version>1.0</cdi-api.version>
-        <mockito.core.version>2.20.0</mockito.core.version>
-        <powermock.version2>2.0.0</powermock.version2>
         <hazelcast.version>3.11.2</hazelcast.version>
         <quartz.version>2.3.2</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
@@ -145,7 +144,7 @@
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
-        <nimbusds.version>5.8</nimbusds.version>
+        <nimbusds.version>9.5</nimbusds.version>
         <openpdf.version>1.2.10</openpdf.version>
         <javax-jms.version>1.1</javax-jms.version>
     </properties>
@@ -446,6 +445,31 @@
                 <version>${sqlserver.version}</version>
                 <scope>runtime</scope>
             </dependency>
+            
+            <!-- Touchnet -->
+            <dependency>
+                <groupId>com.touchnet</groupId>
+                <artifactId>tlink-client</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxrpc-api</artifactId>
+                <version>1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis</groupId>
+                <artifactId>axis</artifactId>
+                <version>1.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-discovery</groupId>
+                <artifactId>commons-discovery</artifactId>
+                <version>0.5</version>
+            </dependency>
 
             <!-- swagger -->
             <dependency>
@@ -464,6 +488,13 @@
                 <groupId>io.milton</groupId>
                 <artifactId>milton-server-ent</artifactId>
                 <version>${milton.version}</version>
+                <!-- exclude org.slf4j » slf4j-log4j12 since it's Log4jMDCAdapter class doesn't support null values in the map -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- frevvo forms -->
             <dependency>
@@ -640,24 +671,9 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>${reactor.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-net</artifactId>
-                <version>${reactor.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor.spring</groupId>
-                <artifactId>reactor-spring-context</artifactId>
-                <version>${reactor-spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty.version}</version>
+                <groupId>io.projectreactor.netty</groupId>
+                <artifactId>reactor-netty</artifactId>
+                <version>${reactor-netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
@@ -685,6 +701,16 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-client</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-jose</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
             <dependency>
@@ -940,6 +966,11 @@
                 <version>${apache-commons-lang3.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${apache-commons-csv.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${apache-commons-beanutils.version}</version>
@@ -978,6 +1009,11 @@
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
                 <version>${apache-commons-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-email</artifactId>
+                <version>${apache-commons-email.version}</version>
             </dependency>
             <!-- json -->
             <dependency>
@@ -1314,8 +1350,8 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.core.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1339,7 +1375,7 @@
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
+                <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
                 <exclusions>
@@ -1361,6 +1397,12 @@
                         <artifactId>cglib-nodep</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-core</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- end of testing -->
             <dependency>

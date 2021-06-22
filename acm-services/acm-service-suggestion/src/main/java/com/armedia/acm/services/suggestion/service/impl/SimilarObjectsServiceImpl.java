@@ -237,14 +237,12 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
     private SuggestedObject populateSuggestedObject(JSONObject objectDocFile) throws ParseException
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
         SuggestedObject suggestedObject = new SuggestedObject();
 
         suggestedObject.setId(Long.valueOf(objectDocFile.getString("object_id_s")));
         suggestedObject.setName(objectDocFile.getString("name"));
         suggestedObject.setTitle(objectDocFile.getString("title_parseable"));
-        suggestedObject.setModifiedDate(formatter.parse(objectDocFile.getString("modified_date_tdt")));
+        suggestedObject.setModifiedDate(objectDocFile.getString("modified_date_tdt"));
         suggestedObject.setStatus(objectDocFile.getString("status_lcs"));
         suggestedObject.setDescription("");
         suggestedObject.setType(objectDocFile.getString("object_type_s"));

@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -107,7 +108,7 @@ public class DeleteFileAPIController
     @RequestMapping(value = "/file/deleteTemporary/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg
+            throws AcmAppErrorJsonMsg
     {
         log.info("File with id: {} will be temporary deleted, by user: {}", objectId, authentication.getName());
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
@@ -120,11 +121,17 @@ public class DeleteFileAPIController
             getFileEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId, source.getFileName());
         }
-        catch (AcmUserActionFailedException e)
+        catch (AcmObjectLockException e)
         {
-            log.error("Exception occurred while trying to temporary delete file with id: {}, reason {}", objectId, e.getMessage(), e);
+            log.error("Exception occurred while trying to temporary delete file with id: {}, reason {}", objectId, e.getMessage());
             getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, false);
-            throw e;
+            throw new AcmAppErrorJsonMsg("File is locked and can't be deleted", EcmFileConstants.FILE, Long.toString(objectId), e);
+        }
+        catch (AcmUserActionFailedException | AcmCreateObjectFailedException e)
+        {
+            log.error("Exception occurred while trying to temporary delete file with id: {}, reason {}", objectId, e.getMessage());
+            getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, false);
+            throw new AcmAppErrorJsonMsg("File can't be deleted", EcmFileConstants.FILE, Long.toString(objectId), e);
         }
         catch (AcmObjectNotFoundException e)
         {

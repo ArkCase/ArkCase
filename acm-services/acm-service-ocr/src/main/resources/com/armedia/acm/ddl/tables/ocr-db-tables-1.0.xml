@@ -54,4 +54,15 @@
         </insert>
     </changeSet>
 
+    <changeSet id="01-change_cm_ocr_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_ocr" columnName="cm_ocr_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_ocr" columnName="cm_ocr_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="02-add_ocr_retry_attempt" author="denys.kotovyi">
+        <addColumn tableName="acm_ocr">
+            <column name="ocr_retry_attempt" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

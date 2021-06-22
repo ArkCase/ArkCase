@@ -44,7 +44,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setMaxDaysInHoldQueue(foiaConfiguration.getMaxDaysInHoldQueue());
         foiaConfig.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfig.setRequestExtensionWorkingDays(foiaConfiguration.getRequestExtensionWorkingDays());
-        foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setComplexRequestTrackOptionEnabled(foiaConfiguration.getComplexRequestTrackOptionEnabled());
@@ -65,6 +64,9 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfiguration.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfig.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfiguration.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
+        foiaConfig.setDeclareRequestAsRecordsEnabled(foiaConfiguration.getDeclareRequestAsRecordsEnabled());
+        foiaConfig.setDeclareRequestAsRecordsDaysDelay(foiaConfiguration.getDeclareRequestAsRecordsDaysDelay());
+        foiaConfig.setEnableStagedRelease(foiaConfiguration.getEnableStagedRelease());
 
         configurationPropertyService.updateProperties(foiaConfig);
     }
@@ -77,7 +79,6 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setMaxDaysInHoldQueue(foiaConfig.getMaxDaysInHoldQueue());
         foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfig.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
         foiaConfiguration.setRequestExtensionWorkingDays(foiaConfig.getRequestExtensionWorkingDays());
-        foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
         foiaConfiguration.setComplexRequestTrackOptionEnabled(foiaConfig.getComplexRequestTrackOptionEnabled());
@@ -98,8 +99,10 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setCreateNewPortalUserOptionOnArkcaseRequestForm(foiaConfig.getCreateNewPortalUserOptionOnArkcaseRequestForm());
         foiaConfiguration.setAutomaticCreationOfRequestWhenAppealIsRemandedEnabled(
                 foiaConfig.getAutomaticCreationOfRequestWhenAppealIsRemandedEnabled());
-        foiaConfiguration.setDojYearlyReports(
-                foiaConfig.getDojYearlyReports());
+        foiaConfiguration.setDojYearlyReports(foiaConfig.getDojYearlyReports());
+        foiaConfiguration.setDeclareRequestAsRecordsEnabled(foiaConfig.getDeclareRequestAsRecordsEnabled());
+        foiaConfiguration.setDeclareRequestAsRecordsDaysDelay(foiaConfig.getDeclareRequestAsRecordsDaysDelay());
+        foiaConfiguration.setEnableStagedRelease(foiaConfig.getEnableStagedRelease());
 
         return foiaConfiguration;
     }

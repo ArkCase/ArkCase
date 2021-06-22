@@ -316,9 +316,9 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return null;
     }
 
-    public AcmUser findByPrefixAndEmailAddress(String userPrefix, String email)
+    public AcmUser findByPrefixAndEmailAddressAndValidState(String userPrefix, String email)
     {
-        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email AND user.userState = :state";
         if (StringUtils.isNotBlank(userPrefix))
         {
             select += " AND user.userId LIKE :userId";
@@ -326,6 +326,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
         query.setParameter("email", email.toLowerCase());
+        query.setParameter("state", AcmUserState.VALID);
         if (StringUtils.isNotBlank(userPrefix))
         {
             query.setParameter("userId", userPrefix.toLowerCase() + "%");
@@ -341,9 +342,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NonUniqueResultException e)
         {
-            log.warn("There is no unique user found with prefix [{}] and email [{}]. More than one user has this name or address",
-                    userPrefix,
-                    email);
+            throw e;
         }
         catch (Exception e)
         {
@@ -442,9 +441,20 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         query.setParameter("email", email.toLowerCase());
         query.setParameter("directoryName", directoryName);
 
-        Optional<AcmUser> optionalUser = Optional.of(query.getSingleResult());
-
-        return optionalUser;
+        try
+        {
+            return Optional.of(query.getSingleResult());
+        }
+         catch (NoResultException e)
+        {
+            log.warn("User with email [{}] from directory [{}] not found!", email, directoryName);
+            return Optional.empty();
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is more than one user with email [{}] from directory [{}].", email, directoryName);
+            return Optional.empty();
+        }
     }
 
     public EntityManager getEntityManager()

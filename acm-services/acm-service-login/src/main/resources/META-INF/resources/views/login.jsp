@@ -193,23 +193,23 @@ Time: 12:44
     </div>
 
 
-    <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
+    <form id="login-form" action="<%= request.getContextPath()%>/login_post" method="post">
         <div class="list-group">
             <div class="list-group-item">
-                <input id="j_username"
+                <input id="username_input"
                        type="text"
                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                        title="You must provide a domain, for example user@example.com"
-                       name="j_username"
+                       name="username"
                        value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"
                        placeholder="Username"
                        class="form-control no-border">
             </div>
             <div class="list-group-item">
                 <input
-                        id="j_password"
+                        id="password_input"
                         type="password"
-                        name="j_password"
+                        name="password"
                         placeholder="Password"
                         class="form-control no-border"
                 >

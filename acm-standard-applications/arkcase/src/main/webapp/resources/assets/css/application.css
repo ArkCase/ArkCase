@@ -1105,7 +1105,7 @@ a.editable.editable-click {
     overflow-y: hidden;
 }
 
-.reports-iframe, .audit-iframe {
+.audit-iframe {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -1113,6 +1113,15 @@ a.editable.editable-click {
     overflow-y: hidden;
     padding-bottom: 60px;
     padding-right: 500px;
+}
+.reports-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 530px;
 
 }
 
@@ -1927,10 +1936,12 @@ textarea {
 
 
 /* Adjust IFRAME padding when user collapses left navigation */
-.page-wrapper.collapsed .new-iframe, .page-wrapper.collapsed .reports-iframe, .page-wrapper.collapsed .audit-iframe {
+.page-wrapper.collapsed .new-iframe, .page-wrapper.collapsed .audit-iframe {
     padding-right: 15px;
 }
-
+.page-wrapper.collapsed .reports-iframe {
+    padding-right: 365px;
+}
 
 .page-wrapper.collapsed .analytics-iframe { 
 	padding-right: 65px;

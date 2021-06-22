@@ -122,14 +122,14 @@
                     "displayName": "admin.correspondenceManagement.mergefields.grid.correspondenceFieldValue",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.correspondenceFieldValue}}</a>"
+                    "cellTemplate": "<a href='#' editable-text='row.entity.correspondenceFieldValue'>{{ row.entity.correspondenceFieldValue}}</a>"
                 },
                 {
                     "name": "emailFieldValue",
                     "displayName": "admin.correspondenceManagement.mergefields.grid.emailFieldValue",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.emailFieldValue}}</a>"
+                    "cellTemplate": "<a href='#' editable-text='row.entity.emailFieldValue'>{{ row.entity.emailFieldValue}}</a>"
                 },
                 {
                     "name": "fieldDescription",
@@ -197,7 +197,7 @@
                     "name": "modified",
                     "displayName": "admin.correspondenceManagement.templates.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate",
                     "width": 120
                 },
@@ -285,7 +285,7 @@
                     "name": "modified",
                     "displayName": "admin.correspondenceManagement.templates.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate",
                     "width": 100
                 },
@@ -320,20 +320,23 @@
                     "name": "id",
                     "displayName": "admin.correspondenceManagement.templates.grid.id",
                     "visible": false,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "label",
                     "displayName": "admin.correspondenceManagement.templates.grid.label",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "templateFilename",
                     "displayName": "admin.correspondenceManagement.templates.grid.title",
                     "visible": true,
                     "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
                 },
                 {
                     "name": "objectType",
@@ -341,6 +344,16 @@
                     "visible": true,
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "width": 120
+                },
+                {
+                    "name": "parentType",
+                    "displayName": "admin.correspondenceManagement.templates.grid.parentType",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceParentTypes, row.entity.parentType) | translate }}</div>",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -349,14 +362,16 @@
                     "visible": true,
                     "headerCellFilter": "translate",
                     "width": 320,
+                    "enableCellEdit": false,
                     "cellTemplate": "<div><span>{{ row.entity.templateModelProvider.substr(row.entity.templateModelProvider.lastIndexOf(\".\") + 1) }}</span> <i class='fa fa-info-circle' style='cursor :pointer' ng-click='grid.appScope.getNavBarTree(row.entity.templateModelProvider)'></i> </div>"
                 },
                 {
                     "name": "modified",
                     "displayName": "admin.correspondenceManagement.templates.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
@@ -364,24 +379,36 @@
                     "displayName": "admin.correspondenceManagement.templates.grid.modifier",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
+                    "lookup": "userFullNames",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "emailSubject",
+                    "displayName": "admin.correspondenceManagement.templates.grid.emailSubject",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<input class='ui-grid-cell-contents' type='text' ng-change='grid.appScope.emailSubjectChanged(row.entity)' ng-paste='grid.appScope.emailSubjectChanged(row.entity)' ng-input='row.entity.emailSubject' ng-model='row.entity.emailSubject'/>",
+                    "enableCellEdit": true,
+                    "width": 150
                 },
                 {
                     "name": "activated",
-                    "displayName": "admin.correspondenceManagement.templates.grid.activated",
+                    "displayName": "admin.correspondenceManagement.templates.grid.manualEmails",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDeactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusActivated</span></div>'",
                     "cellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 },
                 {
                     "name": "enabled",
-                    "displayName": "admin.correspondenceManagement.templates.grid.enabled",
+                    "displayName": "admin.correspondenceManagement.templates.grid.automatedEmails",
                     "visible": true,
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div align='center'><span ng-if='!row.entity.enabled' class='label label-danger' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDisabled</span><span ng-if='row.entity.enabled' class='label label-success' ng-click='grid.appScope.enable(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusEnabled</span></div>'",
                     "cellFilter": "translate",
+                    "enableCellEdit": false,
                     "width": 120
                 }
             ],
@@ -440,10 +467,17 @@
                     "width": 100
                 },
                 {
+                    "name": "parentType",
+                    "displayName": "admin.correspondenceManagement.templates.grid.parentType",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": 100
+                },
+                {
                     "name": "modified",
                     "displayName": "admin.correspondenceManagement.templates.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate",
                     "width": 100
                 },
@@ -537,14 +571,14 @@
                     "name": "startDate",
                     "displayName": "admin.reports.schedule.table.columns.startDate",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "endDate",
                     "displayName": "admin.reports.schedule.table.columns.endDate",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.jobTrigger.endTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.endTime | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -672,13 +706,13 @@
                     "name": "created",
                     "displayName": "Created",
                     "visible": false,
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "name": "modified",
                     "displayName": "admin.workflows.config.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -742,7 +776,7 @@
                     "name": "modified",
                     "displayName": "admin.workflows.config.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -784,7 +818,7 @@
                     "name": "modified",
                     "displayName": "admin.workflows.config.grid.modified",
                     "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -833,7 +867,7 @@
                     "name": "modified_date_tdt",
                     "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 }
             ],
             "selectedItemsGrid": {
@@ -1007,7 +1041,7 @@
                     "visible": false,
                     "displayName": "admin.security.emailTemplates.table.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                    "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>"
                 },
                 {
                     "width": 150,
@@ -1421,12 +1455,6 @@
                     "displayName": "admin.application.sequenceRegistry.sequencePartValue",
                     "visible": true,
                     "headerCellFilter": "translate"
-                },
-                {
-                    "name": "sequencePartValueUsedFlag",
-                    "displayName": "admin.application.sequenceRegistry.sequencePartValueUsedFlag",
-                    "visible": true,
-                    "headerCellFilter": "translate"
                 }
             ]
         },
@@ -1506,6 +1534,14 @@
                     "cellTemplate": "<div>{{ row.entity.nextRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
                     "visible": true,
                     "width": "20%"
+                },
+                {
+                    "name": "triggerState",
+                    "displayName": "admin.application.scheduled.jobs.column.triggerState.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div><span>{{ row.entity.triggerState | translate}}</span> <i class='fa fa-play-circle-o' style='cursor :pointer' ng-click='grid.appScope.restoreTriggerState(row.entity)' title='Restore State'></i>  </div>",
+                    "visible": true,
+                    "width": "10%"
                 },
                 {
                     "name": "act",
@@ -1634,6 +1670,13 @@
                 "label": "admin.security.documentUploadPolicy.title",
                 "components": [
                     "document-upload-policy-configuration"
+                ]
+            },
+            {
+                "type": "p/security/outgoingIncomingEmailConversion",
+                "label": "admin.security.outgoingIncomingEmailConversion.title",
+                "components": [
+                    "outgoing-incoming-email-conversion-configuration"
                 ]
             },
             {

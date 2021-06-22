@@ -36,9 +36,8 @@ import org.springframework.ldap.core.DirContextAdapter;
 
 public class AcmUserContextMapper implements ContextMapper
 {
-    private static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
-    private Logger log = LogManager.getLogger(getClass());
-    private AcmLdapSyncConfig acmLdapSyncConfig;
+    private final Logger log = LogManager.getLogger(getClass());
+    private final AcmLdapSyncConfig acmLdapSyncConfig;
 
     public AcmUserContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {

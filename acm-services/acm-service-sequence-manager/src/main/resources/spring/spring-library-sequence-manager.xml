@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="sequenceConfigurationFile" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/acmSequenceConfiguration.json"/>
@@ -53,6 +53,8 @@
     <bean id="acmSequenceDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceDao"/>
     
     <bean id="acmSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao"/>
+
+    <bean id="acmUsedSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceRegistryUsedDao"/>
     
     <bean id="acmSequenceResetDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceResetDao"/>
     
@@ -64,6 +66,7 @@
         <property name="sequenceResetDao" ref="acmSequenceResetDao"/>
         <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
         <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+        <property name="usedSequenceRegistryDao" ref="acmUsedSequenceRegistryDao"/>
     </bean>
 
     <bean id="acmSequenceConfigurationService" class="com.armedia.acm.services.sequence.service.AcmSequenceConfigurationServiceImpl">

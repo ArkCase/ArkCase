@@ -47,7 +47,7 @@ public class AcmEmailReceiverAdapter
     private Properties javaMailPropertiesComplaint;
 
     @Bean
-    @InboundChannelAdapter(channel = "mailChannelCaseFile", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelCaseFile"))
+    @InboundChannelAdapter(channel = "mailChannelCaseFile", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelCaseFile"), autoStartup = "${email.create.case.enabled}")
     public MessageSource caseMailMessageSource(ImapMailReceiver caseImapMailReceiver)
     {
         caseImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
@@ -58,7 +58,7 @@ public class AcmEmailReceiverAdapter
     }
 
     @Bean
-    @InboundChannelAdapter(channel = "mailChannelComplaint", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelComplaint"))
+    @InboundChannelAdapter(channel = "mailChannelComplaint", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelComplaint"), autoStartup = "${email.create.complaint.enabled}")
     public MessageSource complaintMailMessageSource(ImapMailReceiver complaintImapMailReceiver)
     {
         complaintImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
@@ -66,6 +66,17 @@ public class AcmEmailReceiverAdapter
         complaintImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesComplaint());
         complaintImapMailReceiver.setMaxFetchSize(1);
         return new MailReceivingMessageSource(complaintImapMailReceiver);
+    }
+
+    @Bean
+    @InboundChannelAdapter(channel = "mailChannelReceiver", poller = @Poller(fixedRate = "${email.fixed-rate}", maxMessagesPerPoll = "${email.max-messages-per-poll}", errorChannel = "mailErrorChannelReceiver"))
+    public MessageSource senderReceiverMessageSource(ImapMailReceiver senderImapMailReceiver)
+    {
+        senderImapMailReceiver.setShouldDeleteMessages(emailReceiverConfig.getShouldDeleteMessages());
+        senderImapMailReceiver.setShouldMarkMessagesAsRead(emailReceiverConfig.getShouldMarkMessagesAsRead());
+        senderImapMailReceiver.setJavaMailProperties(getJavaMailPropertiesCaseFile());
+        senderImapMailReceiver.setMaxFetchSize(1);
+        return new MailReceivingMessageSource(senderImapMailReceiver);
     }
 
     public EmailReceiverConfig getEmailReceiverConfig()

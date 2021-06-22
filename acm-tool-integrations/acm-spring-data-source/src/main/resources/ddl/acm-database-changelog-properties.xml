@@ -44,7 +44,9 @@
     <property name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql,mssql"/>
 
     <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <!-- TIMESTAMP  should not be used as it is limited to 2038-01-19 03:14:07 -->
     <property name="timestampType" value="TIMESTAMP" dbms="mysql,mssql"/>
+    <property name="datetime" value="DATETIME" dbms="mysql,mssql"/>
 
     <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
     <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>

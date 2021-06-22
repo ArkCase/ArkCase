@@ -28,6 +28,9 @@ package com.armedia.acm.plugins.ecm.model;
  */
 
 import com.armedia.acm.configuration.annotations.MapValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,10 @@ public class AcmAallowedUploadFileTypesConfig
 {
     private Map<String, List<String>> allowedUploadFileTypes = new HashMap<>();
 
+    @JsonProperty("restrictFileTypesUpload")
+    @Value("${restrictFileTypesUpload}")
+    private Boolean restrictFileTypesUpload;
+
     @MapValue(value = "allowedUploadFileTypes")
     public Map<String, List<String>> getAllowedUploadFileTypes()
     {
@@ -49,5 +56,13 @@ public class AcmAallowedUploadFileTypesConfig
     public void setAllowedUploadFileTypes(Map<String, List<String>> allowedUploadFileTypes)
     {
         this.allowedUploadFileTypes = allowedUploadFileTypes;
+    }
+
+    public Boolean getRestrictFileTypesUpload() {
+        return restrictFileTypesUpload;
+    }
+
+    public void setRestrictFileTypesUpload(Boolean restrictFileTypesUpload) {
+        this.restrictFileTypesUpload = restrictFileTypesUpload;
     }
 }

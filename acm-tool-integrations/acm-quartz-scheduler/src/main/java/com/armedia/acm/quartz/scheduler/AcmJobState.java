@@ -51,6 +51,8 @@ public class AcmJobState
 
     private boolean isPaused;
 
+    private String triggerState;
+
     public AcmJobState(String jobName, String triggerName)
     {
         this.jobName = jobName;
@@ -64,7 +66,8 @@ public class AcmJobState
         this(jobName, triggerName, lastRun, nextRun, isRunning, false);
     }
 
-    public AcmJobState(String jobName, String triggerName, Date lastRun, Date nextRun, boolean isRunning, boolean isPaused)
+    public AcmJobState(String jobName, String triggerName, Date lastRun, Date nextRun, boolean isRunning,
+            boolean isPaused)
     {
         this.jobName = jobName;
         this.triggerName = triggerName;
@@ -152,6 +155,16 @@ public class AcmJobState
     public void setPaused(boolean paused)
     {
         isPaused = paused;
+    }
+
+    public String getTriggerState()
+    {
+        return triggerState;
+    }
+
+    public void setTriggerState(String triggerState)
+    {
+        this.triggerState = triggerState;
     }
 
     @Override

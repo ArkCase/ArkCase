@@ -49,7 +49,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -93,6 +92,7 @@ import java.util.Date;
         "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-labels-service.xml",
         "/spring/spring-test-quartz-scheduler.xml"
 })
 @Rollback(true)

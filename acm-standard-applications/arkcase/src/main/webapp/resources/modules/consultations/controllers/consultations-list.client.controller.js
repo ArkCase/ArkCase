@@ -15,9 +15,10 @@ angular.module('consultations').controller(
                 if (data.objectType === ObjectService.ObjectTypes.CONSULTATION) {
 
                     var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
+                    var objectNumber = data.objectNumber;
                     var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
                         objectTypeString: objectTypeString,
-                        objectId: data.objectId
+                        objectId: objectNumber !== null ? objectNumber : data.objectId
                     });
                     MessageService.info(objectWasCreatedMessage);
                 }

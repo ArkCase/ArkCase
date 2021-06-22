@@ -40,10 +40,6 @@ public class FoiaConfig
     @Value("${maxDaysInHoldQueue}")
     private Integer maxDaysInHoldQueue;
 
-    @JsonProperty("dashboard.banner.enable")
-    @Value("${dashboard.banner.enable}")
-    private Boolean dashboardBannerEnabled;
-
     @JsonProperty("requestExtensionWorkingDaysEnabled")
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
@@ -142,6 +138,18 @@ public class FoiaConfig
     @Value("${dojNiemAbbreviationText}")
     private String dojNiemAbbreviationText;
 
+    @JsonProperty("declareRequestAsRecordsEnabled")
+    @Value("${declareRequestAsRecordsEnabled}")
+    private Boolean declareRequestAsRecordsEnabled;
+
+    @JsonProperty("declareRequestAsRecordsDaysDelay")
+    @Value("${declareRequestAsRecordsDaysDelay}")
+    private Integer declareRequestAsRecordsDaysDelay;
+
+    @JsonProperty("enableStagedRelease")
+    @Value("${enableStagedRelease}")
+    private Boolean enableStagedRelease;
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -150,16 +158,6 @@ public class FoiaConfig
     public void setMaxDaysInHoldQueue(Integer maxDaysInHoldQueue)
     {
         this.maxDaysInHoldQueue = maxDaysInHoldQueue;
-    }
-
-    public Boolean getDashboardBannerEnabled()
-    {
-        return dashboardBannerEnabled;
-    }
-
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
-    {
-        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
     public Boolean getRequestExtensionWorkingDaysEnabled()
@@ -418,5 +416,29 @@ public class FoiaConfig
     public void setCreateNewPortalUserOptionOnArkcaseRequestForm(Boolean createNewPortalUserOptionOnArkcaseRequestForm)
     {
         this.createNewPortalUserOptionOnArkcaseRequestForm = createNewPortalUserOptionOnArkcaseRequestForm;
+    }
+
+    public Boolean getDeclareRequestAsRecordsEnabled() {
+        return declareRequestAsRecordsEnabled;
+    }
+
+    public void setDeclareRequestAsRecordsEnabled(Boolean declareRequestAsRecordsEnabled) {
+        this.declareRequestAsRecordsEnabled = declareRequestAsRecordsEnabled;
+    }
+
+    public Integer getDeclareRequestAsRecordsDaysDelay() {
+        return declareRequestAsRecordsDaysDelay;
+    }
+
+    public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
+        this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
+    }
+
+    public Boolean getEnableStagedRelease() {
+        return enableStagedRelease;
+    }
+
+    public void setEnableStagedRelease(Boolean enableStagedRelease) {
+        this.enableStagedRelease = enableStagedRelease;
     }
 }

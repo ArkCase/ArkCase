@@ -299,6 +299,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String assigneeTitle;
 
     @Transient
+    private String assigneePhone;
+
+    @Transient
     private  String assigneeFullName;
 
     @PrePersist
@@ -988,11 +991,21 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.assigneeTitle = assigneeTitle;
     }
 
+    @JsonIgnore
     public String getAssigneeFullName() {
         return assigneeFullName;
     }
 
     public void setAssigneeFullName(String assigneeFullName) {
         this.assigneeFullName = assigneeFullName;
+    }
+
+    @JsonIgnore
+    public String getAssigneePhone() {
+        return assigneePhone;
+    }
+
+    public void setAssigneePhone(String assigneePhone) {
+        this.assigneePhone = assigneePhone;
     }
 }

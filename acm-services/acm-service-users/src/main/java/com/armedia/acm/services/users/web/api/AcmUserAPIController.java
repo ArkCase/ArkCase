@@ -222,13 +222,15 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory,
+            HttpSession session, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             AcmUser acmUser = ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
+            ldapUserService.publishUserCreatedEvent(session, authentication, acmUser, true);
             ldapUserService.publishSetPasswordEmailEvent(acmUser);
             acmUserEventPublisher.getApplicationEventPublisher().publishEvent(new AcmLdapSyncEvent(acmUser.getUserId()));
             return acmUser;

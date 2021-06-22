@@ -48,6 +48,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                     $scope.template.templateFilename = template.data.templateFilename;
                     $scope.template.dateFormatString = template.data.dateFormatString;
                     $scope.template.numberFormatString = template.data.numberFormatString;
+                    $scope.template.emailSubject = template.data.emailSubject;
                     //we will activate it by default
                     $scope.template.activated = true;
                     $scope.template.enabled = true;
@@ -75,6 +76,11 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             $scope.template.objectType = $scope.objectType.key;
         };
 
+        $scope.changeParentType = function (selectedParentType) {
+            $scope.parentType = selectedParentType;
+            $scope.template.parentType = $scope.parentType.key;
+        };
+
         $scope.changeTemplateModelProvider = function(templateModelProvider){
             $scope.templateModelProvider = templateModelProvider;
             $scope.template.templateModelProvider = $scope.templateModelProvider;
@@ -96,10 +102,19 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             var currentSelectedObjectType = _.find($scope.correspondenceObjectTypes, function(objectType) {
                 return objectType.key === $scope.selectedRow.objectType;
             });
+
+            var currentSelectedParentType = _.find($scope.correspondenceParentTypes, function (parentType) {
+                return parentType.key === $scope.selectedRow.parentType;
+            });
+
             $scope.selectedName = currentSelectedObjectType;
+            $scope.selectedParentType = currentSelectedParentType;
             $scope.template.label = $scope.selectedRow.label;
             $scope.changeTemplateModelProvider($scope.selectedRow.templateModelProvider);
             $scope.change(currentSelectedObjectType);
+            if (currentSelectedParentType) {
+                $scope.changeParentType(currentSelectedParentType);
+            }
         }
 
         $scope.getNavBarTree = function(){

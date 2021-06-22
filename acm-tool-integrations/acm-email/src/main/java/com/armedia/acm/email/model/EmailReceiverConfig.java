@@ -27,11 +27,15 @@ package com.armedia.acm.email.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonSerialize(as = EmailReceiverConfig.class)
 public class EmailReceiverConfig
@@ -93,6 +97,8 @@ public class EmailReceiverConfig
     @JsonProperty("email.enableBurstingAttachments")
     @Value("${email.enableBurstingAttachments}")
     private Boolean enableBurstingAttachments;
+
+    private Map<String, String> replyHandlers = new HashMap<>();
 
     public String getCaseFileUser()
     {
@@ -272,5 +278,16 @@ public class EmailReceiverConfig
     public void setEnableBurstingAttachments(Boolean enableBurstingAttachments) 
     {
         this.enableBurstingAttachments = enableBurstingAttachments;
+    }
+
+    @MapValue(value = "email.replyHandlers")
+    public Map<String, String> getReplyHandlers()
+    {
+        return replyHandlers;
+    }
+
+    public void setReplyHandlers(Map<String, String> replyHandlers)
+    {
+        this.replyHandlers = replyHandlers;
     }
 }

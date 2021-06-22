@@ -39,8 +39,8 @@ import com.armedia.acm.services.participants.model.DecoratedAssignedObjectPartic
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -86,8 +86,8 @@ public class SaveCaseFileAPIController
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public CaseFile createCaseFileMutipart(@RequestPart(name = "casefile") CaseFile in,
-            @RequestPart(name = "files")Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
+    public CaseFile createCaseFileMultipart(@RequestPart(name = "casefile") CaseFile in,
+            @RequestPart(name = "files", required = false) Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {

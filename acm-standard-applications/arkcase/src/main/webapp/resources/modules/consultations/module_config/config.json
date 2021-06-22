@@ -1327,7 +1327,8 @@
                 {
                     "name": "modifiedDate",
                     "displayName": "consultations.comp.suggestedConsultations.table.columns.modified",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modifiedDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",

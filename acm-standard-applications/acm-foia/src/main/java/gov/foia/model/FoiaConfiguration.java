@@ -28,6 +28,8 @@ package gov.foia.model;
  */
 
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
@@ -37,7 +39,6 @@ public class FoiaConfiguration extends SystemConfiguration
     private Integer maxDaysInHoldQueue;
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
     private Integer requestExtensionWorkingDays;
-    private Boolean dashboardBannerEnabled;
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean complexRequestTrackOptionEnabled;
@@ -58,6 +59,9 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean createNewPortalUserOptionOnArkcaseRequestForm;
     private Boolean automaticCreationOfRequestWhenAppealIsRemandedEnabled;
     private Map<String, String> dojYearlyReports;
+    private Boolean declareRequestAsRecordsEnabled;
+    private Integer declareRequestAsRecordsDaysDelay;
+    private Boolean enableStagedRelease;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -97,16 +101,6 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setRequestExtensionWorkingDays(Integer requestExtensionWorkingDays)
     {
         this.requestExtensionWorkingDays = requestExtensionWorkingDays;
-    }
-
-    public Boolean getDashboardBannerEnabled()
-    {
-        return dashboardBannerEnabled;
-    }
-
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
-    {
-        this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
     public Boolean getNotificationGroupsEnabled()
@@ -314,5 +308,29 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setDojYearlyReports(Map<String, String> dojYearlyReports)
     {
         this.dojYearlyReports = dojYearlyReports;
+    }
+
+    public Boolean getDeclareRequestAsRecordsEnabled() {
+        return declareRequestAsRecordsEnabled;
+    }
+
+    public void setDeclareRequestAsRecordsEnabled(Boolean declareRequestAsRecordsEnabled) {
+        this.declareRequestAsRecordsEnabled = declareRequestAsRecordsEnabled;
+    }
+
+    public Integer getDeclareRequestAsRecordsDaysDelay() {
+        return declareRequestAsRecordsDaysDelay;
+    }
+
+    public void setDeclareRequestAsRecordsDaysDelay(Integer declareRequestAsRecordsDaysDelay) {
+        this.declareRequestAsRecordsDaysDelay = declareRequestAsRecordsDaysDelay;
+    }
+
+    public Boolean getEnableStagedRelease() {
+        return enableStagedRelease;
+    }
+
+    public void setEnableStagedRelease(Boolean enableStagedRelease) {
+        this.enableStagedRelease = enableStagedRelease;
     }
 }

@@ -38,8 +38,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import com.armedia.acm.service.EMLToPDFConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,6 +60,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
 {
@@ -69,6 +72,10 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     private EcmFileDao ecmFileDao;
     private ApplicationEventPublisher eventPublisher;
     private EmailSenderConfig emailSenderConfig;
+    private EMLToPDFConverter emlToPDFConverter;
+
+    @Value("${convertEmailsToPDF.outgoingEmailToPdf:false}")
+    private Boolean convertFileToPdf;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -77,7 +84,7 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     }
 
     public void trackEmail(MimeMessage message, String emailAddress, String group, String subject, String objectType, String objectId,
-            List<InputStreamDataSource> attachments)
+            List<InputStreamDataSource> attachments, String ccEmailAddress, String bccEmailAddress)
     {
         if (objectType != null && objectType.equals("USER"))
         {
@@ -89,10 +96,11 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String messageFileName = "-" + currentDate + "-" + subject.replaceAll(":", "_") + ".eml";
+        String messageFileName = "-" + currentDate + "-" + UUID.randomUUID() + ".eml";
         // email address might be multiple emails concatenated with a comma. Se we cut the email address not to exceed
         // filename limit of 255 characters
-        String email = group != null ? group : emailAddress;
+        String email = group != null ? group : emailAddress + "," + ccEmailAddress + "," + bccEmailAddress;
+        email = email.replaceAll(",,", "");
         messageFileName = email.substring(0, Math.min(email.length(), 255 - messageFileName.length())) + messageFileName;
         File messageFile = new File(tempDir + File.separator + messageFileName);
 
@@ -116,25 +124,29 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
                 messageFileName = checkDuplicateFileName(messageFileName, folder.getId());
                 mailFile = getEcmFileService().upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
+                if(convertFileToPdf)
+                {
+                    try
+                    {
+                        log.debug("Converting file [{}] to PDF started!", messageFileName);
+                        File pdfConvertedFile = emlToPDFConverter.convert(new FileInputStream(messageFile), messageFileName);
+                        if (pdfConvertedFile != null && pdfConvertedFile.exists() && pdfConvertedFile.length() > 0)
+                        {
+                            try (InputStream pdfConvertedFileIs = new FileInputStream(pdfConvertedFile))
+                            {
+                                mailFile.setFileActiveVersionNameExtension(".pdf");
+                                mailFile.setFileActiveVersionMimeType("application/pdf");
+                                ecmFileService.update(mailFile, pdfConvertedFileIs, auth);
+                                mailFile.getVersions().get(1).setFile(mailFile);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.debug("Converting file [{}] to PDF failed!", messageFileName, e);
+                    }
+                }
 
-            }
-            if (attachments != null)
-            {
-                attachments.forEach(attachment -> {
-                    try (InputStream is = attachment.getInputStream())
-                    {
-                        String attachmentFileName = checkDuplicateFileName(attachment.getName(), folder.getId());
-                        getEcmFileService().upload(attachmentFileName, "attachment", "Document", is, attachment.getContentType(),
-                                attachmentFileName, auth,
-                                folder.getCmisFolderId(), objectType, Long.parseLong(objectId));
-                    }
-                    // File upload falling should not break the flow
-                    catch (IOException | AcmUserActionFailedException | AcmCreateObjectFailedException e)
-                    {
-                        log.error("Failed to upload attachments to Outgoing Email folder for object with ID '{}'. Cause: {}", objectId,
-                                e.getMessage());
-                    }
-                });
             }
 
             SmtpEventMailSent event = new SmtpEventMailSent(email, userId, mailFile.getId(), mailFile.getObjectType(),
@@ -227,5 +239,15 @@ public class TrackOutgoingEmailService implements ApplicationEventPublisherAware
     public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
+    }
+
+    public EMLToPDFConverter getEmlToPDFConverter()
+    {
+        return emlToPDFConverter;
+    }
+
+    public void setEmlToPDFConverter(EMLToPDFConverter emlToPDFConverter)
+    {
+        this.emlToPDFConverter = emlToPDFConverter;
     }
 }

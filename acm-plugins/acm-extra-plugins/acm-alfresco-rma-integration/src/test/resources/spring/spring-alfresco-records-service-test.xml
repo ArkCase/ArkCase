@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="logoutUrl" class="java.lang.String">
         <constructor-arg index="0" value="/logout"/>
@@ -29,6 +29,7 @@
     </bean>
 
     <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig"/>
+    <bean id="loginConfig" class="com.armedia.acm.web.model.LoginConfig"/>
 
     <bean id="rmaConfig" class="com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig"/>
 

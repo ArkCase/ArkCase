@@ -152,6 +152,10 @@ public class FolderAndFilesUtils
     {
         if (input != null && input.length() > 0)
         {
+            if (input.endsWith("."))
+            {
+                input = input.substring(0, input.length() - 1) + "_";
+            }
             input = input.replace(" ", "_");
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");

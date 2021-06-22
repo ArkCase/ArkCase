@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
@@ -54,7 +54,7 @@ public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
 {
     private AcmCaseFileStatusChangedListener unit;
     private AlfrescoRecordsService mockService;
-    private AcmAuthenticationManager mockAuthenticationManager;
+    private AcmAuthenticationMapper mockAuthenticationMapper;
     private AlfrescoRmaConfig rmaConfig;
 
     @Before
@@ -62,10 +62,10 @@ public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
     {
         unit = new AcmCaseFileStatusChangedListener();
         mockService = createMock(AlfrescoRecordsService.class);
-        mockAuthenticationManager = createMock(AcmAuthenticationManager.class);
+        mockAuthenticationMapper = createMock(AcmAuthenticationMapper.class);
 
         unit.setAlfrescoRecordsService(mockService);
-        unit.setAuthenticationManager(mockAuthenticationManager);
+        unit.setAuthenticationMapper(mockAuthenticationMapper);
         rmaConfig = new AlfrescoRmaConfig();
         rmaConfig.setIntegrationEnabled(true);
     }
@@ -125,7 +125,7 @@ public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
         rmaConfig.setClosedStatuses("closed");
 
         expect(mockService.getRmaConfig()).andReturn(rmaConfig).anyTimes();
-        expect(mockAuthenticationManager.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
+        expect(mockAuthenticationMapper.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
                 .andReturn(new AcmAuthentication(Collections.emptySet(), user, "", true, user, 0L));
 
         mockService.declareAllContainerFilesAsRecords(

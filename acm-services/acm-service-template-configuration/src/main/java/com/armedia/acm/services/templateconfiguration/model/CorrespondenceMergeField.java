@@ -1,0 +1,139 @@
+package com.armedia.acm.services.templateconfiguration.model;
+
+/*-
+ * #%L
+ * ACM Service: Correspondence Library
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
+/**
+ * @author sasko.tanaskoski
+ *
+ */
+
+/**
+ * This POJO stores parameters for mergeField
+ */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
+public class CorrespondenceMergeField
+{
+
+    private String fieldId;
+
+    private String correspondenceFieldValue;
+
+    private String emailFieldValue;
+
+    private String fieldDescription;
+
+    private String fieldObjectType;
+
+    /**
+     * @return the fieldId
+     */
+    public String getFieldId()
+    {
+        return fieldId;
+    }
+
+    /**
+     * @param fieldId
+     *            the fieldId to set
+     */
+    public void setFieldId(String fieldId)
+    {
+        this.fieldId = fieldId;
+    }
+
+    /**
+     * @return the correspondenceFieldValue
+     */
+    public String getCorrespondenceFieldValue()
+    {
+        return correspondenceFieldValue;
+    }
+
+    /**
+     * @param correspondenceFieldValue
+     *            the correspondenceFieldValue to set
+     */
+    public void setCorrespondenceFieldValue(String correspondenceFieldValue)
+    {
+        this.correspondenceFieldValue = correspondenceFieldValue;
+    }
+
+    /**
+     * @return the fieldDescription
+     */
+    public String getFieldDescription()
+    {
+        return fieldDescription;
+    }
+
+    /**
+     * @param fieldDescription
+     *            the fieldDescription to set
+     */
+    public void setFieldDescription(String fieldDescription)
+    {
+        this.fieldDescription = fieldDescription;
+    }
+
+    /**
+     * @return the fieldObjectType
+     */
+    public String getFieldObjectType()
+    {
+        return fieldObjectType;
+    }
+
+    /**
+     * @param fieldObjectType
+     *            the fieldObjectType to set
+     */
+    public void setFieldObjectType(String fieldObjectType)
+    {
+        this.fieldObjectType = fieldObjectType;
+    }
+
+    /**
+     * @return the emailFieldValue
+     */
+    public String getEmailFieldValue()
+    {
+        return emailFieldValue;
+    }
+
+    /**
+     * @param emailFieldValue
+     *            the emailFieldValue to set
+     */
+    public void setEmailFieldValue(String emailFieldValue)
+    {
+        this.emailFieldValue = emailFieldValue;
+    }
+}

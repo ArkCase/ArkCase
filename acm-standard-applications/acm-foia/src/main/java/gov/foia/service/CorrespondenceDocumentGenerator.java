@@ -29,7 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import gov.foia.model.FOIADocumentDescriptor;
@@ -71,7 +71,7 @@ public class CorrespondenceDocumentGenerator implements DocumentGenerator
             }
 
         }
-        catch (IllegalArgumentException | IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        catch (IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             throw new DocumentGeneratorException(
                     "Failed to generate correspondence document for objectId: [" + acmObject.getId() + "], objectType: ["

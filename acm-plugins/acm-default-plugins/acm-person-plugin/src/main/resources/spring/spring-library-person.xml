@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -159,4 +159,23 @@
     <bean id="personConfig" class="com.armedia.acm.plugins.person.model.PersonConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="userEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.UserEmailToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="personEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonEmailToSolrTransformer">
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+
+    <bean id="organizationEmailToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationEmailToSolrTransformer">
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="createPersonFromUser" class="com.armedia.acm.plugins.person.service.CreatePersonFromUser">
+        <property name="personService" ref="personService"/>
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+
 </beans>

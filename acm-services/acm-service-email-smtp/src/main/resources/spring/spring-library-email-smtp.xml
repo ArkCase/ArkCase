@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="smtpService" class="com.armedia.acm.services.email.smtp.SmtpService">
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -30,13 +31,15 @@
         </property>
     </bean>
     
-    <bean id="trackOutgoingEmailService" class="com.armedia.acm.services.email.smtp.TrackOutgoingEmailService">
+    <bean id="trackOutgoingEmailService" class="com.armedia.acm.services.email.smtp.TrackOutgoingEmailService" scope="refresh">
+        <aop:scoped-proxy/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
+        <property name="emlToPDFConverter" ref="emlToPDFConverter"/>
     </bean>
 
 </beans>

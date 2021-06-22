@@ -91,6 +91,48 @@ public class CustomLogoRetrieveFile
         }
     }
 
+    @RequestMapping(value = "/headerlogoportal.png", method = RequestMethod.GET)
+    public void retrievePortalHeaderLogo(HttpServletResponse response)
+    {
+        try
+        {
+            byte[] logo = customLogoService.getHeaderLogoPortalFile();
+            writeImageToResponse(logo, response);
+        }
+        catch (AcmCustomLogoException e)
+        {
+            log.error("Can not get portal header logo", e);
+        }
+    }
+
+    @RequestMapping(value = "/loginlogoportal.png", method = RequestMethod.GET)
+    public void retrievePortalLoginLogo(HttpServletResponse response)
+    {
+        try
+        {
+            byte[] logo = customLogoService.getLoginLogoPortalFile();
+            writeImageToResponse(logo, response);
+        }
+        catch (AcmCustomLogoException e)
+        {
+            log.error("Can not get portal login logo", e);
+        }
+    }
+
+    @RequestMapping(value = "/bannerportal.png", method = RequestMethod.GET)
+    public void retrievePortalBannerLogo(HttpServletResponse response)
+    {
+        try
+        {
+            byte[] logo = customLogoService.getBannerLogoPortalFile();
+            writeImageToResponse(logo, response);
+        }
+        catch (AcmCustomLogoException e)
+        {
+            log.error("Can not get portal banner logo", e);
+        }
+    }
+
     private void writeImageToResponse(byte[] image, HttpServletResponse response)
     {
         try

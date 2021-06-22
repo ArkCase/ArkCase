@@ -87,6 +87,9 @@ public class OCR extends MediaEngine implements AcmEntity, AcmStatefulEntity, Se
     @Column(name = "cm_ocr_class_name")
     private String className = this.getClass().getName();
 
+    @Column(name = "ocr_retry_attempt")
+    private Integer ocrRetryAttempt;
+
     @Override
     public Long getId()
     {
@@ -115,5 +118,15 @@ public class OCR extends MediaEngine implements AcmEntity, AcmStatefulEntity, Se
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public Integer getOcrRetryAttempt()
+    {
+        return ocrRetryAttempt;
+    }
+
+    public void setOcrRetryAttempt(Integer ocrRetryAttempt)
+    {
+        this.ocrRetryAttempt = ocrRetryAttempt;
     }
 }

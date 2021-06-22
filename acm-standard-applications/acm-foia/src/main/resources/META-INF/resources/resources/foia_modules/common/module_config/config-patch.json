@@ -12,7 +12,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='type'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -22,7 +22,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='created'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -32,7 +32,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='modified'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.modified | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -75,7 +75,7 @@
     {
         "op": "replace",
         "path": "/docTree/columnDefs/?@.name=='version'/__todo__cellTemplate",
-        "value": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "value": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
     },
     {
         "op": "replace",
@@ -157,7 +157,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -166,7 +166,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "!nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -211,7 +211,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {
@@ -220,7 +220,7 @@
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
-            "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
+            "disabledExpression": "!nodes[0].data.publicFlag || DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
         }
     },
     {

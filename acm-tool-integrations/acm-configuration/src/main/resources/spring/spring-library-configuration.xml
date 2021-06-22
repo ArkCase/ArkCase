@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config/>
@@ -26,14 +26,7 @@
         class="com.armedia.acm.configuration.core.initialization.BrandingConfigurationInitialization">
         <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
-        <property name="brandingFiles">
-            <list value-type="java.lang.String">
-                <value>header-logo.png</value>
-                <value>login-logo.png</value>
-                <value>email-logo.png</value>
-                <value>custom.css</value>
-            </list>
-        </property>
+        <property name="clientConfig" ref="configurationClientConfig"/>
     </bean>
 
     <bean id="acmLdapBeanSyncEventPublisher" class="com.armedia.acm.configuration.core.propertysource.AcmLdapBeanSyncEventPublisher"/>

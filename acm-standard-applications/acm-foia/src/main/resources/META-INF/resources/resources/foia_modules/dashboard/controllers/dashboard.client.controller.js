@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'FOIAConfiguration.Service', 'MessageService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, FOIAConfigurationService, MessageService) {
+angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'MessageService', 'Admin.ApplicationSettingsService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, MessageService, ApplicationSettingsService) {
 
     new DashboardHelper.Dashboard({
         scope: $scope,
@@ -25,10 +25,14 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
     var widgetsPerRoles = [];
     var isEditMode = false;
 
-    FOIAConfigurationService.isDashboardBannerEnabled().then(function(response){
-        $scope.isDashboardBannerEnabled = response.data;
-    },function(err){
-        MessageService.errorAction();
+    ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
+        $scope.isDashboardBannerEnabled = response.data["application.properties.dashboardBannerEnabled"];
+        var browserInfo = window.navigator.userAgent.toLowerCase().indexOf("trident");
+        if (browserInfo > -1 && $scope.isDashboardBannerEnabled) {
+            $scope.dashboardBanner = true;
+        } else if (browserInfo > -1 && !$scope.isDashboardBannerEnabled) {
+            $scope.dashboardBanner = false;
+        }
     });
 
     var onDashboardConfigRetrieved = function(data) {

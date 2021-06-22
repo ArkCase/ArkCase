@@ -27,6 +27,16 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -46,16 +56,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public class CreateAdHocTaskService
 {
@@ -121,22 +121,21 @@ public class CreateAdHocTaskService
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
             AcmFolder folder = adHocTask.getContainer().getAttachmentFolder();
-            for (MultipartFile file : filesToUpload)
+            if (filesToUpload != null)
             {
+                for (MultipartFile file : filesToUpload)
+                {
 
-                ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
-                        folder.getCmisFolderId(),
-                        adHocTask.getObjectType(),
-                        adHocTask.getTaskId());
+                    ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
+                            folder.getCmisFolderId(),
+                            adHocTask.getObjectType(),
+                            adHocTask.getTaskId());
+                }
             }
 
             if (adHocTask.getParentObjectId() != null)
             {
-                if ((adHocTask.getDocumentsToReview() != null && !adHocTask.getDocumentsToReview().isEmpty())
-                        || !filesToUpload.isEmpty())
-                {
-                    getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
-                }
+                getAcmTaskService().createTaskFolderStructureInParentObject(adHocTask);
             }
 
             publishAdHocTaskCreatedEvent(authentication, ipAddress, adHocTask, true);
@@ -164,7 +163,7 @@ public class CreateAdHocTaskService
     }
 
     public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows,
-                                     String sortParams, String userId)
+            String sortParams, String userId)
     {
         String retval = null;
 
@@ -193,7 +192,9 @@ public class CreateAdHocTaskService
         return retval;
     }
 
-    public AcmTask createTask(AcmTask in, Authentication authentication, String ipAddress) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+    public AcmTask createTask(AcmTask in, Authentication authentication, String ipAddress)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
         log.info("Creating task.");
         String user = authentication.getName();
 

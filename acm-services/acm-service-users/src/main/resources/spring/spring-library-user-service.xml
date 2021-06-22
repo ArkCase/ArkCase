@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -219,4 +219,18 @@
         <property name="ldapSyncProcessor" ref="ldapSyncProcessor"/>
         <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
+
+    <bean id="userAccessTokenDao"
+          class="com.armedia.acm.services.users.dao.UserAccessTokenDao"/>
+
+    <bean id="acmOAuth2AccessTokenService" class="com.armedia.acm.services.users.service.AcmOAuth2AccessTokenService">
+        <property name="userAccessTokenDao" ref="userAccessTokenDao"/>
+        <property name="clientRegistrationConfig" ref="oAuth2ClientRegistrationConfig"/>
+        <property name="acmRestTemplate" ref="acmRestTemplate"/>
+    </bean>
+
+    <bean id="oAuth2ClientRegistrationConfig"
+          class="com.armedia.acm.services.users.model.OAuth2ClientRegistrationConfig"/>
+
+    <bean id="acmRestTemplate" class="org.springframework.web.client.RestTemplate"/>
 </beans>

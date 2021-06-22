@@ -120,11 +120,11 @@ public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/forUser/{user}", userId)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();

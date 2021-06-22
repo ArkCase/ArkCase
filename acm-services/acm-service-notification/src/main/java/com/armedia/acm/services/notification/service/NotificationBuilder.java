@@ -77,12 +77,12 @@ public class NotificationBuilder
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
-                        notification.getRelatedObjectType(), userInTitle));
+                        notification.getRelatedObjectType(), userInTitle, null));
             }
             else
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
-                        notification.getParentType(), userInTitle));
+                        notification.getParentType(), userInTitle, null));
             }
             return notification;
         }
@@ -92,12 +92,42 @@ public class NotificationBuilder
             if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
-                        notification.getRelatedObjectType(), null));
+                        notification.getRelatedObjectType(), null, null));
             }
             else
             {
                 notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
-                        notification.getParentType(), null));
+                        notification.getParentType(), null, null));
+            }
+            return notification;
+        }
+
+        public Notification build(String userInTitle, Long objectId)
+        {
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
+                        notification.getRelatedObjectType(), userInTitle, objectId));
+            }
+            else
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
+                        notification.getParentType(), userInTitle, objectId));
+            }
+            return notification;
+        }
+
+        public Notification build(Long objectId)
+        {
+            if (notification.getRelatedObjectId() != null && notification.getRelatedObjectType() != null)
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getRelatedObjectNumber(),
+                        notification.getRelatedObjectType(), null, objectId));
+            }
+            else
+            {
+                notification.setTitle(notificationFormatter.buildTitle(notification.getTitle(), notification.getParentName(),
+                        notification.getParentType(), null, objectId));
             }
             return notification;
         }
@@ -105,6 +135,18 @@ public class NotificationBuilder
         public Builder withEmailAddresses(String emailAddressesCommaSeparated)
         {
             this.notification.setEmailAddresses(emailAddressesCommaSeparated);
+            return this;
+        }
+
+        public Builder withCCEmailAddresses(String emailAddressesCommaSeparated)
+        {
+            this.notification.setCcEmailAddresses(emailAddressesCommaSeparated);
+            return this;
+        }
+
+        public Builder withBCCEmailAddresses(String emailAddressesCommaSeparated)
+        {
+            this.notification.setBccEmailAddresses(emailAddressesCommaSeparated);
             return this;
         }
 
@@ -217,6 +259,12 @@ public class NotificationBuilder
         public Builder withNotificationType(String notificationType)
         {
             this.notification.setNotificationType(notificationType);
+            return this;
+        }
+
+        public Builder withEmailContent(String emailContent)
+        {
+            this.notification.setEmailContent(emailContent);
             return this;
         }
     }

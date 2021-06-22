@@ -152,6 +152,9 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_email_group")
     private String emailGroup;
 
+    @Column(name = "cm_email_content")
+    private String emailContent;
+
     @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(name = "acm_notification_files", joinColumns = {
             @JoinColumn(name = "cm_notification_id", referencedColumnName = "cm_notification_id") }, inverseJoinColumns = {
@@ -166,6 +169,12 @@ public class Notification implements Serializable, AcmObject, AcmEntity
    
     @Column (name = "cm_type")
     private String notificationType = NotificationConstants.TYPE_AUTOMATED;
+
+    @Column(name = "cm_cc_email_addresses")
+    private String ccEmailAddresses;
+
+    @Column(name = "cm_bcc_email_addresses")
+    private String bccEmailAddresses;
 
     @Override
     public Long getId()
@@ -350,6 +359,15 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         this.parentTitle = parentTitle;
     }
 
+    public void setParentTitle(String parentTitle, Long id)
+    {
+        if (parentTitle != null && parentTitle.length() > 1000)
+        {
+            parentTitle = StringUtils.left(parentTitle, 1000) + " " + id;
+        }
+        this.parentTitle = parentTitle + " " + id;
+    }
+
     public Long getRelatedObjectId()
     {
         return relatedObjectId;
@@ -486,4 +504,29 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     {
         this.notificationType = notificationType;
     }
+
+    public String getEmailContent() { return emailContent; }
+
+    public void setEmailContent(String emailContent) { this.emailContent = emailContent; }
+
+    public String getCcEmailAddresses()
+    {
+        return ccEmailAddresses;
+    }
+
+    public void setCcEmailAddresses(String ccEmailAddresses)
+    {
+        this.ccEmailAddresses = ccEmailAddresses;
+    }
+
+    public String getBccEmailAddresses()
+    {
+        return bccEmailAddresses;
+    }
+
+    public void setBccEmailAddresses(String bccEmailAddresses)
+    {
+        this.bccEmailAddresses = bccEmailAddresses;
+    }
+
 }

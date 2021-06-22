@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <bean id="billingItemDao" class="com.armedia.acm.services.billing.dao.BillingItemDao"/>
     
@@ -15,6 +18,11 @@
         <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
     </bean>
 
+    <bean id="touchNetService" class="com.armedia.acm.services.billing.service.impl.TouchNetService" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="billingItemDao" ref="billingItemDao"/>
+    </bean>
     <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"
           parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-billing-invoice-rules.xlsx"/>

@@ -18,7 +18,8 @@ angular.module('reports').factory(
                 '$http',
                 '$browser',
                 '$location',
-                function($sce, UtilDateService, $http, $browser, $location) {
+                'UtilService',
+                function($sce, UtilDateService, $http, $browser, $location,Util) {
                     return {
 
                         /**
@@ -58,6 +59,11 @@ angular.module('reports').factory(
 
                             if (params.stateSelected) {
                                 reportUrl += "&status=" + params.stateSelected;
+                            }
+
+                            var outputType = _.get(params.outputType, params.reportSelected);
+                            if(!Util.isEmpty(outputType) && !xmlReport){
+                                reportUrl += "&output-target=" + outputType;
                             }
 
                             if (xmlReport) {

@@ -98,7 +98,7 @@ public class FOIARequestService
     private ObjectAssociationService objectAssociationService;
 
 
-    @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
+    @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
             throws AcmCreateObjectFailedException
     {

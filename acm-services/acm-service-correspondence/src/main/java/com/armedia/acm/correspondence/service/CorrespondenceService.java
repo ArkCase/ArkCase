@@ -29,11 +29,14 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.Template;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -64,33 +67,8 @@ public interface CorrespondenceService
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
-                     String targetCmisFolderId, Boolean isManual)
+            String targetCmisFolderId, Boolean isManual)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
-
-    /**
-     * For use from MVC controllers and any other client with an Authentication object.
-     *
-     * @param authentication
-     * @param templates
-     * @param parentObjectType
-     * @param parentObjectId
-     * @param targetCmisFolderId
-     * @param documentName
-     * @return EcmFile
-     * @throws Exception
-     */
-    EcmFile generateMultiTemplate(Authentication authentication, List<Template> templates, String parentObjectType,
-                                  Long parentObjectId,
-                                  String targetCmisFolderId, String documentName) throws Exception;
-
-    /**
-     * For use from MVC controllers and any other client with an Authentication object.
-     *
-     * @param templateName
-     * @return EcmFile
-     * @throws Exception
-     */
-    Template findTemplate(String templateName);
 
     /**
      * Helper method for use from Activiti and other clients with no direct access to an Authentication, but in the call
@@ -98,7 +76,6 @@ public interface CorrespondenceService
      */
     EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
-
 
     List<Template> getAllTemplates();
 
@@ -148,29 +125,33 @@ public interface CorrespondenceService
     /**
      * @param objectType
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
     List<CorrespondenceMergeField> getMergeFieldsByType(String objectType);
 
     /**
      * @param mergeFieldId
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
     List<CorrespondenceMergeField> getMergeFieldByMergeFieldId(String mergeFieldId);
 
     /**
      * @param mergeField
      * @return
-     * @throws IOException, CorrespondenceMergeFieldVersionException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
-    void deleteMergeFields (String mergeFieldId) throws IOException;
+    void deleteMergeFields(String mergeFieldId) throws IOException;
 
     /**
      * @param newMergeField
      * @return
      */
-    void addMergeField (CorrespondenceMergeField newMergeField) throws IOException;
+    void addMergeField(CorrespondenceMergeField newMergeField) throws IOException;
+
     /**
      * @param mergeFields
      * @param auth
@@ -202,4 +183,14 @@ public interface CorrespondenceService
      * Listing all declared fields for given template model provider classpath
      */
     String getTemplateModelProviderDeclaredFields(String classPath);
+
+    /**
+     * Finding templateModelProvider class by name
+     */
+    TemplateModelProvider getTemplateModelProvider(Class templateModelProviderClass);
+
+    /**
+     * Translating merge terms by objectId and objectType
+     */
+    Notification convertMergeTerms(String templateName, String templateContent, String objectType, String objectId, List<Long> fileIds);
 }

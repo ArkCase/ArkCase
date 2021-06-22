@@ -353,4 +353,18 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="57-change_cm_organization_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_organization" columnName="cm_organization_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_organization" columnName="cm_organization_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="58-change_cm_organization_assoc_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_organization_assoc" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_organization_assoc" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="59-change_cm_organization_dba_datetime" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_organization_dba" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_organization_dba" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
 </databaseChangeLog>

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-standard-applications</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>2021.01</version>
+        <version>2021.02</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -195,5 +195,22 @@
             <artifactId>acm-service-exemption</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-zylab-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-zylab-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-alfresco-rma-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

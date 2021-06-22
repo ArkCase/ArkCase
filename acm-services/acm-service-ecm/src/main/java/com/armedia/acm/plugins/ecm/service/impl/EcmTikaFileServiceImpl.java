@@ -11,22 +11,23 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * If the software was purchased under a paid ArkCase license, the terms of 
  * the paid license agreement will prevail.  Otherwise, the software is 
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.UserDataBox;
@@ -61,6 +62,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -68,6 +70,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import us.fatehi.pointlocation6709.Angle;
@@ -88,6 +91,8 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         // enable BeanUtils to set null to Date field
         ConvertUtils.register(new DateConverter(null), Date.class);
     }
+
+    private EcmFileConfig ecmFileConfig;
 
     private transient final Logger logger = LogManager.getLogger(getClass());
     private Map<String, String> tikaMetadataToFilePropertiesMap;
@@ -119,16 +124,39 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     @Override
     public EcmTikaFile detectFileUsingTika(File file, String fileName) throws IOException, SAXException, TikaException
     {
-        Map<String, Object> metadata = extract(file, fileName);
+        if (file.length() > ecmFileConfig.getDocumentSizeBytesLimit())
+        {
+            logger.warn("File [{}] length [{}], extract metadata manually", fileName, file.length());
+            return extractMetadataManually(fileName);
+        }
+        else
+        {
+            Map<String, Object> metadata = extract(file, fileName);
 
-        String metadataLog = metadata.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(e -> String.format("%s: %s", e.getKey(), e.getValue()))
-                .collect(Collectors.joining(";\n", "[", "]"));
-        logger.debug("Metadata for file [{}]: {}", fileName, metadataLog);
+            String metadataLog = metadata.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .map(e -> String.format("%s: %s", e.getKey(), e.getValue()))
+                    .collect(Collectors.joining(";\n", "[", "]"));
+            logger.debug("Metadata for file [{}]: {}", fileName, metadataLog);
 
-        return fromMetadata(metadata);
+            return fromMetadata(metadata);
+        }
+
+    }
+
+    private EcmTikaFile extractMetadataManually(String fileName) {
+        String nameExtension = Optional.ofNullable(fileName)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(fileName.lastIndexOf("."))).orElse(null);
+
+        String contentType = URLConnection.getFileNameMap().getContentTypeFor(fileName);
+
+        EcmTikaFile ecmTikaFile = new EcmTikaFile();
+        ecmTikaFile.setContentType(contentType);
+        ecmTikaFile.setNameExtension(nameExtension);
+        logger.debug("Manually extracted Metadata for file [{}]: ContentType: [{}], NameExtension: [{}]", fileName, contentType, nameExtension);
+        return ecmTikaFile;
     }
 
     protected EcmTikaFile fromMetadata(Map<String, Object> metadata)
@@ -243,7 +271,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
                     (m, u) -> {
                     });
         }
-        catch (Exception tikaException)
+        catch (Error tikaException)
         {
             // we have to at least return the mime type and extension, so we just log the parser error, and continue
             // with the already-detected mime type.
@@ -291,7 +319,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
             // some movies don't store any dates at all, and then Tika presents the dates from the year 1904 for
             // some reason, usually as "1904-01-01T00:00:00Z". So if the date is before 1950 we will ignore it.
-            if (created.getYear() > 1950)
+            if (created.getYear() > 1950 && created.isBefore(LocalDateTime.now()))
             {
                 Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
                 fileMetadata.put("Creation-Date-Local", createdDate);
@@ -464,5 +492,13 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     public void setNameExtensionFixes(Map<String, String> nameExtensionFixes)
     {
         this.nameExtensionFixes = nameExtensionFixes;
+    }
+
+    public EcmFileConfig getEcmFileConfig() {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig) {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

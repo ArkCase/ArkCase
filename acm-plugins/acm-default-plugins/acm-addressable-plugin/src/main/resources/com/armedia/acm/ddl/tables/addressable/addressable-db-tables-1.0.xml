@@ -224,5 +224,12 @@
         <dropNotNullConstraint tableName="acm_postal_address" columnName="cm_address_type" columnDataType="VARCHAR(128)"></dropNotNullConstraint>
     </changeSet>
 
+    <changeSet id="16-change_cm_contact_method_created" author="mario.gjurcheski" dbms="mysql">
+        <modifyDataType tableName="acm_contact_method" columnName="cm_contact_method_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_contact_method" columnName="cm_contact_method_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_postal_address" columnName="cm_address_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_postal_address" columnName="cm_address_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
 

@@ -78,6 +78,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -95,7 +96,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LogManager.getLogger(getClass());
-    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypes;
+    private AcmAallowedUploadFileTypesConfig allowedUploadFileTypesConfig;
     private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
     private EcmFileService ecmFileService;
@@ -155,9 +156,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
 
             if (activeVersionMimeType != null && detectedMetadata != null
-                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
+                    && isFileTypeUploadAllowed(detectedMetadata, activeVersionMimeType))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -165,7 +164,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 String finalMimeType = mimeTypeAndExtension.getLeft();
                 String finalExtension = mimeTypeAndExtension.getRight();
 
-                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+                ecmUniqueFilename = getFolderAndFilesUtils().createUniqueIdentificator(ecmUniqueFilename);
 
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
@@ -222,6 +221,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             FileUtils.deleteQuietly(tempFileContents);
         }
+    }
+
+    private boolean isFileTypeUploadAllowed(EcmTikaFile detectedMetadata, String activeVersionMimeType)
+    {
+        List<String> allAllowedUploadFileTypes = getAllAllowedUploadFileTypes(allowedUploadFileTypesConfig.getAllowedUploadFileTypes(),
+                activeVersionMimeType);
+        return !getAllowedUploadFileTypesConfig().getRestrictFileTypesUpload()
+                || detectedMetadata.getContentType().equals(activeVersionMimeType)
+                || allAllowedUploadFileTypes.contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-"));
     }
 
     @Override
@@ -327,9 +335,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 detectedMetadata.setContentType(detectedMetadata.getContentType().split(";")[0]);
             }
             if (activeVersionMimeType != null && detectedMetadata != null
-                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                            (getAllAllowedUploadFileTypes(allowedUploadFileTypes.getAllowedUploadFileTypes(), activeVersionMimeType)
-                                    .contains(detectedMetadata.getContentType().replaceAll("\\.", "-dot-")))))
+                    && isFileTypeUploadAllowed(detectedMetadata, activeVersionMimeType))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -380,7 +386,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
                     if (pipelineContext.isFileNameAlreadyInEcmSystem())
-                    {stopProgressBar(metadata);
+                    {
+                        stopProgressBar(metadata);
                         log.debug("File: {} already exists in ecm system", metadata.getFileName());
                         throw new ArkCaseFileNameAlreadyExistsException("fileName already exists");
                     }
@@ -389,7 +396,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 return pipelineContext.getEcmFile();
             }
             else
-            {stopProgressBar(metadata);
+            {
+                stopProgressBar(metadata);
                 log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
                         metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
                 throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
@@ -402,7 +410,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
     }
 
-    private void stopProgressBar(EcmFile metadata){
+    private void stopProgressBar(EcmFile metadata)
+    {
         // stop the progressbar executor
         ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
         if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null
@@ -557,77 +566,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile updateFileTransaction(Authentication authentication, final EcmFile ecmFile, InputStream fileInputStream)
             throws IOException
     {
-        File file = null;
-        try
-        {
-
-            if (ecmFile.getFileActiveVersionNameExtension() != null
-                    && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
-            {
-                ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
-            }
-
-            log.debug("Creating ecm file pipeline context");
-            EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
-
-            pipelineContext.setAuthentication(authentication);
-            pipelineContext.setEcmFile(ecmFile);
-            file = File.createTempFile("arkcase-update-file-transaction-", null);
-            FileUtils.copyInputStreamToFile(fileInputStream, file);
-            pipelineContext.setFileContents(file);
-
-            try (InputStream is = FileUtils.openInputStream(file))
-            {
-                String fileHash = DigestUtils.md5Hex(is);
-                pipelineContext.setFileHash(fileHash);
-            }
-
-            EcmTikaFile ecmTikaFile = new EcmTikaFile();
-
-            try
-            {
-                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
-            }
-            catch (TikaException | SAXException | IOException e1)
-            {
-                log.debug("Can not auto detect file using Tika");
-                ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
-                ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
-            }
-
-            pipelineContext.setDetectedFileMetadata(ecmTikaFile);
-
-            if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
-            {
-                ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
-            }
-            ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
-
-            boolean searchablePDF = false;
-            if (ecmFileConfig.getSnowboundEnableOcr())
-            {
-                searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
-            }
-            pipelineContext.setSearchablePDF(searchablePDF);
-
-            try
-            {
-                log.debug("Calling pipeline manager handlers");
-                getEcmFileService().updateFileLinks(ecmFile);
-                return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> pipelineContext.getEcmFile());
-            }
-            catch (Exception e)
-            {
-                log.error("pipeline handler call failed: {}", e.getMessage(), e);
-            }
-        }
-        finally
-        {
-            FileUtils.deleteQuietly(file);
-        }
-
-        log.debug("Returning from updateFileTransaction method");
-        return ecmFile;
+        return updateFileTransaction(authentication, ecmFile, fileInputStream, null);
     }
 
     @Override
@@ -663,11 +602,18 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             try
             {
-                String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())
-                        ? ecmFile.getFileName()
-                        : ecmFile.getFileName() + "." + fileExtension;
+                if (Objects.isNull(fileExtension))
+                {
+                    ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
+                }
+                else
+                {
+                    String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())
+                            ? ecmFile.getFileName()
+                            : ecmFile.getFileName() + "." + fileExtension;
 
-                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
+                    ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
+                }
             }
             catch (TikaException | SAXException | IOException e1)
             {
@@ -715,20 +661,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throws IOException
     {
 
-        ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream);
-        String ipAddress = null;
-        if (authentication != null)
-        {
-            if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
-            {
-                ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
-            }
-        }
-
-        getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
-        getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
-
-        return ecmFile;
+        return updateFileTransactionEventAware(authentication, ecmFile, fileInputStream, null);
     }
 
     @Override
@@ -933,14 +866,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypes()
+    public AcmAallowedUploadFileTypesConfig getAllowedUploadFileTypesConfig()
     {
-        return allowedUploadFileTypes;
+        return allowedUploadFileTypesConfig;
     }
 
-    public void setAllowedUploadFileTypes(AcmAallowedUploadFileTypesConfig allowedUploadFileTypes)
+    public void setAllowedUploadFileTypesConfig(AcmAallowedUploadFileTypesConfig allowedUploadFileTypesConfig)
     {
-        this.allowedUploadFileTypes = allowedUploadFileTypes;
+        this.allowedUploadFileTypesConfig = allowedUploadFileTypesConfig;
     }
 
     public ProgressIndicatorService getProgressIndicatorService()

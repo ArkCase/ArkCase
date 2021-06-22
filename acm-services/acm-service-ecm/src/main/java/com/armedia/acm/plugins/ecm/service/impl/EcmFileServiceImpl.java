@@ -56,11 +56,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.LinkTargetFileDTO;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
@@ -74,9 +74,6 @@ import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectL
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -127,6 +124,9 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -188,9 +188,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private CamelContextManager camelContextManager;
 
-    private AuthenticationTokenDao authenticationTokenDao;
-
     private FileEventPublisher fileEventPublisher;
+
+    private EmailAttachmentExtractorComponent emailAttachmentExtractorComponent;
+
+    private AcmFolderService acmFolderService;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -935,24 +937,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         if (null != folderId)
         {
-            AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
-            AcmCmisObjectList cmisFolder = allFilesForFolder(authentication, container, folderId);
-            if (cmisFolder == null)
+            if (folder == null)
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
             }
             else
             {
-                for (AcmCmisObject file : cmisFolder.getChildren())
-                {
-                    if (!((EcmFileConstants.RECORD).equals(file.getStatus())))
-                    {
-                        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(cmisFolder, container, authentication);
-                        event.setSucceeded(true);
-                        getApplicationEventPublisher().publishEvent(event);
-                    }
-                }
+                List<EcmFile> filesInFolderAndSubfolders = getAcmFolderService().getFilesInFolderAndSubfolders(folderId);
+                filesInFolderAndSubfolders.stream()
+                        .filter(file -> file.getStatus().equalsIgnoreCase(EcmFileConstants.ACTIVE))
+                        .map(file -> new EcmFileDeclareRequestEvent(file, true, authentication))
+                        .forEach(event -> getApplicationEventPublisher().publishEvent(event));
             }
         }
     }
@@ -1077,6 +1073,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         object.setLink(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_LINK));
 
         object.setDuplicate(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_DUPLICATE));
+
+        object.setCustodian(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CUSTODIAN));
 
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
@@ -1582,13 +1580,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         boolean fileDeleted = false;
         String tmpDirectory = FileUtils.getTempDirectoryPath();
         File file = new File(tmpDirectory + File.separator + uniqueFileName);
-        try{
+        try
+        {
             String absolutePath = file.getCanonicalPath();
-            if (!absolutePath.startsWith(tmpDirectory)){
+            if (!absolutePath.startsWith(tmpDirectory))
+            {
                 log.error("The unique file name {} does not validate in current directory.", uniqueFileName);
                 throw new ValidationException("Invalid path constructed!");
             }
-        }catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Error while reading contents of {} email template.", uniqueFileName, e);
             throw new ValidationException("Invalid path constructed!");
@@ -1722,7 +1723,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
-        props.put(ArkCaseCMISConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
+        props.put(ArkCaseCMISConstants.VERSIONING_STATE,
+                cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
@@ -1800,7 +1802,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileFromArkcase(Long fileId)
     {
-        deleteAuthenticationTokens(fileId);
         getEcmFileDao().deleteFile(fileId);
     }
 
@@ -1854,7 +1855,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             if (removeFileFromDatabase)
             {
-                deleteAuthenticationTokens(objectId);
                 getEcmFileDao().deleteFile(objectId);
             }
             else
@@ -1986,7 +1986,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(ArkCaseCMISConstants.ALL_VERSIONS, true);
         try
         {
-            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
             getRecycleBinItemService().removeItemFromRecycleBin(recycleBinId);
             getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
@@ -2034,7 +2033,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            deleteAuthenticationTokens(objectId);
             getEcmFileDao().deleteFile(objectId);
             getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
         }
@@ -2065,7 +2063,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
         }
         catch (PersistenceException e)
@@ -2294,7 +2291,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
             fileCopyVersion.setCmisObjectId(file.getVersions().get(file.getVersions().size() - 1).getCmisObjectId());
             fileCopyVersion.setVersionTag(file.getActiveVersionTag());
@@ -2350,26 +2346,132 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
+                        if (getEmailAttachmentExtractorComponent().isEmail(attachment))
+                        {
+                            try
+                            {
+                                uploadFilesFromEmail(attachment, authentication, parentObjectType, parentObjectId, fileType, folderCmisId,
+                                        uploadedFiles, fileLang, request.getParameter("uuid"));
+                            }
+                            catch (Exception e)
+                            {
+                                log.error("Upload of email file and attachments failed", e);
+                                throw new AcmCreateObjectFailedException(parentObjectType, "Email file and attachments upload failed", e);
+                            }
+                        }
+                        else
+                        {
+                            AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
 
-                        EcmFile metadata = new EcmFile();
-                        metadata.setFileType(fileType);
-                        metadata.setFileLang(fileLang);
-                        metadata.setFileName(attachment.getOriginalFilename());
-                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
-                        metadata.setUuid(request.getParameter("uuid"));
-                        EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
-                                parentObjectId,
-                                metadata);
-                        uploadedFiles.add(temp);
+                            EcmFile metadata = new EcmFile();
+                            metadata.setFileType(fileType);
+                            metadata.setFileLang(fileLang);
+                            metadata.setFileName(attachment.getOriginalFilename());
+                            metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+                            metadata.setUuid(request.getParameter("uuid"));
+                            EcmFile temp = upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
+                                    parentObjectId,
+                                    metadata);
+                            uploadedFiles.add(temp);
 
-                        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                            applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+                        }
                     }
                 }
             }
         }
 
         return uploadedFiles;
+    }
+
+    private void uploadFilesFromEmail(MultipartFile attachment, Authentication authentication, String parentObjectType, Long parentObjectId,
+            String fileType, String folderCmisId, List<EcmFile> uploadedFiles, String fileLang, String uuid) throws Exception
+    {
+
+        String folderName;
+
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String currentDate = formatter.format(date);
+
+        // extract email attachments
+        EmailAttachmentExtractorComponent.EmailContent emailContent = getEmailAttachmentExtractorComponent().extract(attachment);
+
+        // make folder name and create new folder with that name for email file and it's attachment
+        folderName = emailContent.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailContent.getSender();
+        AcmFolder folder = getFolderDao().findByCmisFolderId(folderCmisId);
+        AcmFolder emailFolder = null;
+
+        emailFolder = getAcmFolderService().addNewFolder(folder, folderName);
+
+        // upload emails attachment
+        uploadAttachment(
+                authentication,
+                parentObjectType,
+                parentObjectId,
+                emailFolder.getCmisFolderId(),
+                uploadedFiles,
+                Objects.requireNonNull(emailContent).getEmailAttachments());
+
+        // create and upload email file and publish event
+        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, false);
+
+        EcmFile metadata = new EcmFile();
+        metadata.setFileType(fileType);
+        metadata.setFileLang(fileLang);
+        metadata.setFileName(attachment.getOriginalFilename());
+        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
+        metadata.setUuid(uuid);
+        EcmFile temp = upload(
+                authentication,
+                acmMultipartFile,
+                emailFolder.getCmisFolderId(),
+                parentObjectType,
+                parentObjectId,
+                metadata);
+
+        applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+
+        uploadedFiles.add(temp);
+    }
+
+    private void uploadAttachment(Authentication authentication, String parentObjectType, Long parentObjectId, String folderCmisId,
+            List<EcmFile> uploadedFiles, List<EmailAttachmentExtractorComponent.EmailAttachment> emailAttachments)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        for (EmailAttachmentExtractorComponent.EmailAttachment emailAttachment : emailAttachments)
+        {
+            try
+            {
+                EcmFile temp = upload(
+                        emailAttachment.getName(),
+                        "Attachment",
+                        "Document",
+                        emailAttachment.getInputStream(),
+                        emailAttachment.getContentType(),
+                        emailAttachment.getName(),
+                        authentication,
+                        folderCmisId,
+                        parentObjectType,
+                        parentObjectId);
+                uploadedFiles.add(temp);
+
+                applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
+            }
+            catch (AcmCreateObjectFailedException e)
+            {
+                if (e.getMessage().contains("MIME type"))
+                {
+                    log.warn("Failed to upload email attachment {}. Attachment MIME type not acceptable. Skip this file",
+                            emailAttachment.getName());
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+
+        }
     }
 
     @Override
@@ -2435,6 +2537,37 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public void updateLinkTargetFile(EcmFile file) throws EcmFileLinkException
+    {
+        EcmFile f = getEcmFileDao().getLinkTargetFile(file);
+        EcmFileVersion activeFileVersion = file.getVersions()
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst().orElse(null);
+
+        f.setFileType(file.getFileType());
+        f.setActiveVersionTag(file.getActiveVersionTag());
+        f.setFileName(file.getFileName());
+        f.setContainer(file.getContainer());
+        f.setStatus(file.getStatus());
+        f.setCategory(file.getCategory());
+        f.setFileActiveVersionMimeType(file.getFileActiveVersionMimeType());
+        f.setClassName(file.getClassName());
+        f.setFileActiveVersionNameExtension(file.getFileActiveVersionNameExtension());
+        f.setFileSource(file.getFileSource());
+        f.setLegacySystemId(file.getLegacySystemId());
+        f.setPageCount(file.getPageCount());
+        f.setSecurityField(file.getSecurityField());
+        f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
+        if (Objects.nonNull(activeFileVersion))
+        {
+            f.getVersions().get(0).setCmisObjectId(activeFileVersion.getCmisObjectId());
+        }
+
+        getEcmFileDao().save(f);
+    }
+
+    @Override
     public LinkTargetFileDTO getLinkTargetFileInfo(EcmFile ecmFile) throws EcmFileLinkException
     {
         log.info("Get target file info for the linked file: {}", ecmFile.getId());
@@ -2484,18 +2617,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
 
         return files;
-    }
-
-    private void deleteAuthenticationTokens(Long fileId)
-    {
-        List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);
-        for (AuthenticationToken authenticationToken : authenticationTokens)
-        {
-            authenticationToken.setStatus(AuthenticationTokenConstants.FILE_DELETED);
-            authenticationToken.setFileId(null);
-            getAuthenticationTokenDao().save(authenticationToken);
-            getAuthenticationTokenDao().getEntityManager().flush();
-        }
     }
 
     private AcmFolder getFolderLinkTarget(AcmFolder folderLink)
@@ -2714,16 +2835,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.recycleBinItemService = recycleBinItemService;
     }
 
-    public AuthenticationTokenDao getAuthenticationTokenDao()
-    {
-        return authenticationTokenDao;
-    }
-
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
-    {
-        this.authenticationTokenDao = authenticationTokenDao;
-    }
-
     public CamelContextManager getCamelContextManager()
     {
         return camelContextManager;
@@ -2742,5 +2853,25 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
     {
         this.fileEventPublisher = fileEventPublisher;
+    }
+
+    public EmailAttachmentExtractorComponent getEmailAttachmentExtractorComponent()
+    {
+        return emailAttachmentExtractorComponent;
+    }
+
+    public void setEmailAttachmentExtractorComponent(EmailAttachmentExtractorComponent emailAttachmentExtractorComponent)
+    {
+        this.emailAttachmentExtractorComponent = emailAttachmentExtractorComponent;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
     }
 }

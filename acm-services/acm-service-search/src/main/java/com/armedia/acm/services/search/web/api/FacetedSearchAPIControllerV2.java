@@ -40,6 +40,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,6 +53,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -76,7 +80,7 @@ public class FacetedSearchAPIControllerV2
     // For EXPORT, set parameter export =(eg. 'csv') & fields = [fields that should be exported]!
     @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<String> mainNotFilteredFacetedSearch(
+    public ResponseEntity<?> mainNotFilteredFacetedSearch(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
@@ -95,7 +99,7 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "getParentDocument", required = false, defaultValue = "false") boolean getParentDocument,
             @RequestParam(value = "fl", required = false) String fields,
 
-            Authentication authentication) throws SolrException, UnsupportedEncodingException
+            Authentication authentication) throws SolrException, UnsupportedEncodingException, FileNotFoundException
     {
         log.debug("User '{}' is performing facet search for the query: '{}' ", authentication.getName(), q);
         MultiValueMap<String, String> headers = new HttpHeaders();
@@ -177,11 +181,29 @@ public class FacetedSearchAPIControllerV2
                 // Get the appropriate generator for the requested file type
                 ReportGenerator generator = springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
-                String content = generator.generateReport(exportFields, exportTitles, res, timeZoneOffsetinMinutes);
-                headers.add("Content-Type", generator.getReportContentType());
-                headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
 
-                res = content;
+                // add for UWP-14, export pdf
+                if(export.toLowerCase().equals(SearchConstants.SEARCH_RESULTS_PDF_EXPORT)){
+                    String filePath = generator.generateReport(exportFields, exportTitles, res, timeZoneOffsetinMinutes);
+                    File pdfFile = new File(filePath);
+                    if (pdfFile.exists())
+                    {
+                        return ResponseEntity
+                                .ok()
+                                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)))
+                                .contentType(MediaType.APPLICATION_PDF)
+                                .contentLength(pdfFile.length())
+                                .body(new InputStreamResource(new FileInputStream(pdfFile)));
+                    }
+                }
+                else{
+                    String content = generator.generateReport(exportFields, exportTitles, res, timeZoneOffsetinMinutes);
+                    headers.add("Content-Type", generator.getReportContentType());
+                    headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
+
+                    res = content;
+                }
+
             }
             catch (NoSuchBeanDefinitionException e)
             {
@@ -195,7 +217,6 @@ public class FacetedSearchAPIControllerV2
             JSONObject solrResponse = getFacetedSearchService().getParentDocumentJsonObject(authentication, res);
             res = solrResponse.toString();
         }
-
         return new ResponseEntity<>(res, headers, HttpStatus.OK);
     }
 

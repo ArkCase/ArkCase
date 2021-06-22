@@ -36,8 +36,8 @@ angular.module('people').controller(
                         PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
                             objectType: ObjectService.ObjectTypes.PERSON
                         }).then(function(result) {
-                            if (result && !$scope.isPortalPerson()) {
-                                gridHelper.addButton(config, "edit");
+                            if (result) {
+                                gridHelper.addButton(config, "edit", null, null, "isEditable");
                                 gridHelper.addButton(config, "delete", null, null, "isDefault");
                             }
                         });
@@ -184,6 +184,10 @@ angular.module('people').controller(
                         }
                         var comparisonProperties = [ "id", "type", "subType", "value", "description" ];
                         return Util.objectsComparisonByGivenProperties(defaultEmail, email, comparisonProperties);
+                    }
+
+                    $scope.isEditable = function(email) {
+                         return $scope.isDefault(email) && $scope.isPortalPerson();
                     }
 
                 } ]);

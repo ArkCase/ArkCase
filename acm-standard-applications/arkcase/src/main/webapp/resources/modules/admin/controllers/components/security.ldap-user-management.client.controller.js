@@ -22,36 +22,18 @@ angular.module('admin').controller(
             $scope.userAuthorizedFilter = userAuthorizedFilter;
             $scope.retrieveDataFilter = retrieveDataFilter;
 
-
-            function getEnableEditingLdapUsers(directories, directory) {
-                $scope.enableLdapUser = false;
-                removePrefixInKey(directories.data);
-                _.find(directories.data , function (data) {
-                    if(data.id === directory){
-                        $scope.enableLdapUser = data.enableEditingLdapUsers;
-                        return  $scope.enableLdapUser;
+            function isUserManagementEnabled(directories, directory) {
+                var dirData = _.find(directories, function (data) {
+                    if(data["ldapConfig.id"] === directory){
+                        return data;
                     }
                 });
-
-            }
-
-            //we need this because key name contains '.'
-            function removePrefixInKey(data) {
-                angular.forEach(data, function(row, index) {
-                    angular.forEach(row, function(element, key) {
-                        if (key.match('.') !== -1) {
-                            delete row[key];
-                            var newKey = key.replace(/[a-zA-Z]*?\./, '');
-                            row[newKey] = element;
-                        }
-                    });
-                });
+                return dirData ? dirData["ldapConfig.enableEditingLdapUsers"] : false;
             }
 
             var currentAuthGroups;
             var selectedUser;
             var userPageSize = 50;
-            var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
             function initializeData() {
                 $scope.makePaginationRequest = true;
                 $scope.userFilterWord = null;
@@ -81,7 +63,9 @@ angular.module('admin').controller(
                 initUser(userPageSize, directoryName);
             };
 
-            LdapConfigService.retrieveDirectories().then(function(directories) {
+            var directoriesConfigPromise = LdapConfigService.retrieveDirectories();
+
+            directoriesConfigPromise.then(function(directories) {
                 $scope.directories = Object.keys(directories.data).sort();
                 $scope.directoryName = $scope.directoryName ? $scope.directoryName : $scope.directories[0];
                 $scope.initUser(userPageSize, $scope.directoryName);
@@ -246,21 +230,17 @@ angular.module('admin').controller(
                         } else {
                             MessageService.error(error.data.message);
                         }
-
                     }
-
                     else {
                         MessageService.errorAction();
                     }
-
                 });
-
             }
 
             function cloneUser() {
-                LdapConfigService.retrieveDirectories().then(function (directories) {
-                    getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if ($scope.enableLdapUser) {
+                directoriesConfigPromise.then(function (directories) {
+                    var userManagementEnabled = isUserManagementEnabled(directories.data, selectedUser.directory);
+                    if (userManagementEnabled) {
                         var modalInstance = openCloneUserModal({}, "");
                         var deferred = $q.defer();
                         modalInstance.result.then(function (data) {
@@ -286,7 +266,6 @@ angular.module('admin').controller(
 
             function deleteUser() {
                 LdapUserManagementService.deleteUser(selectedUser).then(function() {
-
                     var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
                     var users = cacheUsers.get();
                     var cacheKeyUser = _.find(users, {
@@ -427,9 +406,9 @@ angular.module('admin').controller(
 
             // Add method for AFDP-6803 to customize ok button
             $scope.deleteUserConfirm = function deleteUserConfirm() {
-                LdapConfigService.retrieveDirectories().then(function (directories) {
-                    getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if($scope.enableLdapUser === true){
+                directoriesConfigPromise.then(function (directories) {
+                    var userManagementEnabled = isUserManagementEnabled(directories.data, selectedUser.directory);
+                    if(userManagementEnabled){
                         bootbox.confirm({
                             message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
                             buttons: {
@@ -450,8 +429,7 @@ angular.module('admin').controller(
                     }else {
                         DialogService.alert($translate.instant("admin.security.ldap.user.management.alertMessage"));
                     }
-
-                })
+                });
             }
 
         } ]);

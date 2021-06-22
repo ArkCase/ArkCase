@@ -41,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -81,9 +80,12 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-title.xml",
         "/spring/spring-library-labels-service.xml",
-        "/spring/spring-test-quartz-scheduler.xml"
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-templates-configuration.xml",
+        "/spring/spring-library-portal-gateway-service.xml",
+        "/spring/spring-library-pdf-utilities.xml"
 })
-@Rollback(true)
+@Rollback
 public class NotificationIT
 {
     static
@@ -93,6 +95,7 @@ public class NotificationIT
         System.setProperty("configuration.server.url", "http://localhost:9999");
         System.setProperty("application.name.default", "arkcase,ldap");
         System.setProperty("application.profile.reversed", "runtime");
+        System.setProperty("configuration.client.spring.path", "spring");
     }
 
     @Autowired

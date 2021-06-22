@@ -7,12 +7,13 @@
   "documentType" : "document type",
   "templateFilename" : "modelName.html",
   "objectType" : "OBJECT_TYPE",
-  "templateModelProvider" : "com.armedia.acm.services.notification.service.provider.TemplateModelProvider",
+  "templateModelProvider" : "com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider",
   "templateType" : "emailTemplate",
   "enabled" : true,
   "dateFormatString" : "MM/dd/yyyy",
   "numberFormatString" : "###,###,###",
   "activated" : true,
   "modifier" : "arkcase-admin@arkcase.org",
-  "modified" : "2020-10-13T12:06:34.629Z"
+  "modified" : "2020-10-13T12:06:34.629Z",
+  "emailSubject":""
 } ]

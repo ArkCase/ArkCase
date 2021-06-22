@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;

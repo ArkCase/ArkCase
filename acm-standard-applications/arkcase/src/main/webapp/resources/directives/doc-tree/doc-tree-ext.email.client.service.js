@@ -30,7 +30,13 @@ angular.module('services').factory('DocTreeExt.Email',
                    DocumentRepositoryInfoService.getDocumentRepositoryInfo(objectId).then(function(data) {
                        getOriginatorEmail(data);
                     });
-                }else {
+                } else if (objectType === "BUSINESS_PROCESS") {
+                    objectTypeInEndpoint = ObjectService.ObjectTypesInEndpoints.TASK;
+                    objectId = DocTree.objectInfo.taskId;
+                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function (data) {
+                        getOriginatorEmail(data);
+                    });
+                } else {
                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
                        getOriginatorEmail(data);
                     });
@@ -117,13 +123,14 @@ angular.module('services').factory('DocTreeExt.Email',
                 openModal: function(DocTree, nodes) {
                     var modalInstance;
                     checkForOriginatorEmail(DocTree).then(function(emailOfOriginator) {
+                        var objectType = DocTree.scope.objectType === "BUSINESS_PROCESS" ? ObjectService.ObjectTypes.TASK : DocTree.scope.objectType;
                         var params = {
                             config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
                             nodes: nodes,
                             emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration,
                             DocTree: DocTree,
                             emailOfOriginator: emailOfOriginator,
-                            emailSubject: DocTree.scope.objectType === 'CASE_FILE' ? "Case " + DocTree.scope.objectInfo.acmObjectNumber : DocTree.scope.objectType.charAt(0) + DocTree.scope.objectType.substring(1).toLowerCase() + " " + DocTree.scope.objectInfo.acmObjectNumber
+                            emailSubject: $translate.instant('common.objectTypes.' + objectType) + " " + getAcmObjectNumber()
                         };
 
                         modalInstance = $modal.open({
@@ -145,19 +152,40 @@ angular.module('services').factory('DocTreeExt.Email',
                             emailData.body = res.body;
                             emailData.footer = '\n\n' + res.footer;
                             emailData.emailAddresses = res.recipients;
+                            emailData.ccEmailAddresses = res.ccRecipients;
+                            emailData.bccEmailAddresses = res.bccRecipients;
                             emailData.objectId = DocTree._objId;
                             emailData.objectType = DocTree._objType;
                             emailData.objectNumber = DocTree.objectInfo.acmObjectNumber;
                             emailData.modelReferenceName = res.template;
                             emailData.attachmentIds = res.selectedFilesToEmail;
 
-                            if(emailData.attachmentIds && emailData.modelReferenceName == 'plainEmail') {
+                            if (emailData.attachmentIds && emailData.modelReferenceName == 'plainEmail') {
                                 EcmEmailService.sendEmailWithAttachments(emailData, emailData.objectType);
                             } else {
                                 EcmEmailService.sendManualEmail(emailData);
                             }
                         });
                     });
+
+                    function getAcmObjectNumber() {
+                        switch (DocTree.scope.objectType) {
+                            case ObjectService.ObjectTypes.CASE_FILE:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.COMPLAINT:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.CONSULTATION:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.TASK:
+                                return DocTree.scope.objectInfo.taskId;
+                            case ObjectService.ObjectTypes.DOC_REPO:
+                                return DocTree.scope.objectInfo.id;
+                            case ObjectService.ObjectTypes.BUSINESS_PROCESS:
+                                return DocTree.scope.objectInfo.taskId;
+                            default:
+                                return DocTree.scope.objectInfo.acmObjectNumber;
+                        }
+                    }
                 }
 
                 ,
@@ -190,13 +218,13 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     });
     $scope.emailDataModel = {};
     $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
-    $scope.emailDataModel.subject = params.emailSubject;
 
     var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList('emailTemplate');
     templatesPromise.then(function(templates) {
         $scope.emailTemplates = _.filter(templates.data, function(et) {
-            return et.activated && (et.objectType == $scope.DocTree._objType || et.objectType == 'ALL' || et.objectType == ObjectService.ObjectTypes.FILE);
+            return et.activated && (et.objectType == 'ALL' || (et.objectType == 'FILE' && (et.parentType == $scope.DocTree._objType || Util.isEmpty((et.parentType)))));
         });
+        $scope.emailTemplates = _.sortBy($scope.emailTemplates, "label");
         var found = _.find($scope.emailTemplates, {
             templateFilename: 'plainEmail.html'
         });
@@ -205,15 +233,34 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 
     $scope.recipients = [];
     $scope.recipientsStr = "";
+    $scope.ccRecipients = [];
+    $scope.ccRecipientsStr = "";
+    $scope.bccRecipients = [];
+    $scope.bccRecipientsStr = "";
+    $scope.subject = params.emailSubject;
+    var paramsPlainEmail = {};
+    paramsPlainEmail.objectType = $scope.DocTree._objType;
+    paramsPlainEmail.objectId = $scope.DocTree._objId;
+    paramsPlainEmail.templateName = 'plainEmail.html';
+    paramsPlainEmail.fileIds = $scope.emailDataModel.selectedFilesToEmail;
+
+    var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(paramsPlainEmail);
+    getTemplateContentPromise.then(function (response) {
+        if (response.data.templateEmailSubject) {
+            $scope.emailDataModel.subject = response.data.templateEmailSubject;
+        } else {
+            $scope.emailDataModel.subject = $scope.subject;
+        }
+    });
 
     if (!Util.isEmpty(params.emailOfOriginator)) {
         $scope.recipients.push(params.emailOfOriginator);
         $scope.recipientsStr = params.emailOfOriginator;
     }
 
-    var buildRecipientsStr = function(recipients) {
+    var buildRecipientsStr = function (recipients) {
         var recipientsStr = '';
-        _.forEach(recipients, function(recipient, index) {
+        _.forEach(recipients, function (recipient, index) {
             if (index === 0) {
                 recipientsStr = recipient.email;
             } else {
@@ -224,7 +271,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
         return recipientsStr;
     };
 
-    $scope.chooseRecipients = function() {
+    $scope.chooseRecipients = function (recipientType) {
         var modalInstance = $modal.open({
             templateUrl: 'directives/doc-tree/doc-tree-ext.email-recipients.dialog.html',
             controller: 'directives.DocTreeEmailRecipientsDialogController',
@@ -232,18 +279,35 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             size: 'lg',
             backdrop: 'static',
             resolve: {
-                config: function() {
+                config: function () {
                     return $scope.config;
                 },
-                recipients: function() {
+                recipients: function () {
                     return $scope.recipients;
+                },
+                ccRecipients: function () {
+                    return $scope.ccRecipients;
+                },
+                bccRecipients: function () {
+                    return $scope.bccRecipients;
+                },
+                recipientType: function() {
+                    return recipientType
                 }
             }
         });
 
         modalInstance.result.then(function(recipients) {
-            $scope.recipients = recipients;
-            $scope.recipientsStr = buildRecipientsStr(recipients);
+            if (recipientType == 'cc') {
+                $scope.ccRecipients = recipients;
+                $scope.ccRecipientsStr = buildRecipientsStr(recipients);
+            } else if (recipientType == 'bcc') {
+                $scope.bccRecipients = recipients;
+                $scope.bccRecipientsStr = buildRecipientsStr(recipients);
+            } else {
+                $scope.recipients = recipients;
+                $scope.recipientsStr = buildRecipientsStr(recipients);
+            }
         });
     };
 
@@ -259,14 +323,27 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     };
 
     $scope.loadContent = function () {
-
-        var getTemplateContentPromise = correspondenceService.retrieveTemplateContent($scope.template);
+        var params = {};
+        params.objectType = $scope.DocTree._objType;
+        params.objectId = $scope.DocTree._objId;
+        params.templateName = $scope.template;
+        params.fileIds = $scope.emailDataModel.selectedFilesToEmail;
+        
+        var getTemplateContentPromise = correspondenceService.retrieveConvertedTemplateContent(params);
 
         getTemplateContentPromise.then(function (response) {
-            $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
-            document.getElementById("content").innerHTML=$scope.templateContent;
+            if (response.data.templateEmailSubject) {
+                $scope.emailDataModel.subject = response.data.templateEmailSubject;
+            } else {
+                $scope.emailDataModel.subject = $scope.subject;
+            }
+            if ($scope.template === "plainEmail.html") {
+                $('#plain').summernote('code', "");
+            } else {
+                $scope.templateContent = response.data.templateContent.replace("${baseURL}", window.location.href.split('/home.html#!')[0]);
+                $('#content').summernote('code', $scope.templateContent);
+            }
         });
-
     };
 
     $scope.onClickCancel = function() {
@@ -275,6 +352,8 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 
     $scope.onClickOk = function() {
         $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
+        $scope.emailDataModel.ccRecipients = $scope.ccRecipientsStr.split('; ');
+        $scope.emailDataModel.bccRecipients = $scope.bccRecipientsStr.split('; ');
         $scope.emailDataModel.template = _.contains($scope.template, '.html') ? $scope.template.replace('.html', '') : $scope.template;
         $modalInstance.close($scope.emailDataModel);
     };
@@ -286,17 +365,24 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 } ]);
 
 angular.module('directives').controller('directives.DocTreeEmailRecipientsDialogController',
-        [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'Object.LookupService', 'config', 'recipients', 'UtilService', 'MessageService', '$translate', function($scope, $modalInstance, DocTreeExtEmail, ObjectLookupService, config, recipients, Util, MessageService, $translate) {
+        [ '$scope', '$modalInstance', 'DocTreeExt.Email', 'Object.LookupService', 'config', 'recipients', 'ccRecipients', 'bccRecipients', 'recipientType', 'UtilService', 'MessageService', '$translate', function($scope, $modalInstance, DocTreeExtEmail, ObjectLookupService, config, recipients, ccRecipients, bccRecipients, recipientType, Util, MessageService, $translate) {
 
             $scope.config = config;
-            $scope.recipients = angular.copy(recipients);
-
-            $scope.onSelectRecipient = function(selectedItems, lastSelectedItems, isSelected) {
+            if(recipientType == 'cc') {
+                $scope.recipients = angular.copy(ccRecipients);
+            }
+            else if(recipientType == 'bcc') {
+                $scope.recipients = angular.copy(bccRecipients);
+            }
+            else {
+                $scope.recipients = angular.copy(recipients);
+            }
+            $scope.onSelectRecipient = function (selectedItems, lastSelectedItems, isSelected) {
                 if (Util.isEmpty(lastSelectedItems[0].email_lcs)) {
                     MessageService.info($translate.instant('common.directive.docTree.email.noEmailAddress') + lastSelectedItems[0].object_type_s.toLowerCase());
                 } else {
                     var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
-                    var isRecipientSelected = _.find($scope.recipients, function(recipient) {
+                    var isRecipientSelected = _.find($scope.recipients, function (recipient) {
                         return recipient.email === selectedRecipientEmail;
                     });
 

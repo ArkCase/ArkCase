@@ -42,6 +42,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by joseph.mcgrady on 4/26/2017.
@@ -60,7 +62,9 @@ public class ListSiteAPIController
     {
         try
         {
-            return getSiteDao().listAllSites(user);
+            List<Site> result = Stream.concat(getSiteDao().listAllSites(user).stream(), getSiteDao().listAllSites("ALL").stream())
+                    .collect(Collectors.toList());
+            return result;
         }
         catch (Exception e)
         {

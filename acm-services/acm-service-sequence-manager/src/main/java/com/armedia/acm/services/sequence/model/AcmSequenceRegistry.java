@@ -66,10 +66,6 @@ public class AcmSequenceRegistry implements Serializable
     @Column(name = "cm_sequence_part_value")
     private Long sequencePartValue;
 
-    @Column(name = "cm_sequence_part_value_used_flag")
-    @Convert(converter = BooleanToStringConverter.class)
-    private Boolean sequencePartValueUsedFlag;
-
     /**
      * @return the sequenceValue
      */
@@ -136,23 +132,6 @@ public class AcmSequenceRegistry implements Serializable
     public void setSequencePartValue(Long sequencePartValue)
     {
         this.sequencePartValue = sequencePartValue;
-    }
-
-    /**
-     * @return the sequencePartValueUsedFlag
-     */
-    public Boolean getSequencePartValueUsedFlag()
-    {
-        return sequencePartValueUsedFlag;
-    }
-
-    /**
-     * @param sequencePartValueUsedFlag
-     *            the sequencePartValueUsedFlag to set
-     */
-    public void setSequencePartValueUsedFlag(Boolean sequencePartValueUsedFlag)
-    {
-        this.sequencePartValueUsedFlag = sequencePartValueUsedFlag;
     }
 
 }

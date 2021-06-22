@@ -27,8 +27,10 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.apache.logging.log4j.Logger;
+import com.armedia.acm.web.model.LoginConfig;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -40,16 +42,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmLoginSuccessOperations loginSuccessOperations;
     private SessionRegistry sessionRegistry;
     private SessionAuthenticationStrategy sessionAuthenticationStrategy;
-    private List<String> ignoreSavedUrls;
+    private LoginConfig loginConfig;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -66,7 +67,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
             if (redirectUrl != null)
             {
                 String contextPath = request.getContextPath();
-                if (ignoreSavedUrls.stream().anyMatch(url -> redirectUrl.contains(contextPath + url)))
+                if (loginConfig.getIgnoredSavedUrls().stream().anyMatch(url -> redirectUrl.contains(contextPath + url)))
                 {
                     request.getSession().removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
                 }
@@ -97,8 +98,8 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         this.sessionAuthenticationStrategy = sessionAuthenticationStrategy;
     }
 
-    public void setIgnoreSavedUrls(List<String> ignoreSavedUrls)
+    public void setLoginConfig(LoginConfig loginConfig)
     {
-        this.ignoreSavedUrls = ignoreSavedUrls;
+        this.loginConfig = loginConfig;
     }
 }

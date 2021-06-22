@@ -33,6 +33,8 @@ import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationService;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
@@ -70,6 +72,8 @@ public abstract class AbstractTaskNotifier
 
     private NotificationService notificationService;
 
+    private CorrespondenceTemplateManager templateManager;
+
     /**
      * @param activitiTaskService
      *            the activitiTaskService to set
@@ -102,32 +106,53 @@ public abstract class AbstractTaskNotifier
                 AcmUser user = userDao.findByUserId(task.getAssignee());
                 String parentType = task.getObjectType();
                 Long parentId = task.getId();
+                String emailSubject = "";
+                Template template;
 
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
-
-                if (task.getDueDate().compareTo(now) > 0)
+                if (user != null)
                 {
-                    Notification notification = notificationService.getNotificationBuilder()
-                            .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
-                                    user.getUserId())
-                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
-                            .forObjectWithTitle(task.getTitle())
-                            .withEmailAddresses(user.getMail())
-                            .build();
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, user.getUserId());
 
-                    notificationService.saveNotification(notification);
+                    if (task.getDueDate().compareTo(now) > 0)
+                    {
+                        template = templateManager.findTemplate("taskUpcoming.html");
+                        if (template != null)
+                        {
+                            emailSubject = template.getEmailSubject();
+                        }
+                        Notification notification = notificationService.getNotificationBuilder()
+                                .newNotification("taskUpcoming", NotificationConstants.TASK_UPCOMING, parentType, parentId,
+                                        user.getUserId())
+                                .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                                .forObjectWithTitle(task.getTitle())
+                                .withEmailAddresses(user.getMail())
+                                .withSubject(emailSubject)
+                                .build(task.getId());
+
+                        notificationService.saveNotification(notification);
+                    }
+                    else
+                    {
+                        template = templateManager.findTemplate("taskOverdue.html");
+                        if (template != null)
+                        {
+                            emailSubject = template.getEmailSubject();
+                        }
+                        Notification notification = notificationService.getNotificationBuilder()
+                                .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
+                                        user.getUserId())
+                                .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
+                                .forObjectWithTitle(task.getTitle())
+                                .withEmailAddresses(user.getMail())
+                                .withSubject(emailSubject)
+                                .build(task.getId());
+
+                        notificationService.saveNotification(notification);
+                    }
                 }
                 else
                 {
-                    Notification notification = notificationService.getNotificationBuilder()
-                            .newNotification("taskOverdue", NotificationConstants.TASK_OVERDUE, parentType, parentId,
-                                    user.getUserId())
-                            .forObjectWithNumber(String.format("%s-%s", parentType, parentId))
-                            .forObjectWithTitle(task.getTitle())
-                            .withEmailAddresses(user.getMail())
-                            .build();
-
-                    notificationService.saveNotification(notification);
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, NotificationConstants.SYSTEM_USER);
                 }
             }
         }
@@ -187,5 +212,15 @@ public abstract class AbstractTaskNotifier
     public void setNotificationService(NotificationService notificationService)
     {
         this.notificationService = notificationService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

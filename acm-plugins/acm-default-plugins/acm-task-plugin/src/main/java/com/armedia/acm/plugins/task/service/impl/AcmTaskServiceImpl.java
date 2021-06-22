@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.task.service.impl;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.auth.AcmAuthenticationMapper;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmObject;
@@ -78,8 +78,11 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.templateconfiguration.model.Template;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemplateManager;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -131,7 +134,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectConverter objectConverter;
-    private AcmAuthenticationManager authenticationManager;
+    private AcmAuthenticationMapper authenticationMapper;
     private SaveBusinessProcess saveBusinessProcess;
     private NotificationDao notificationDao;
     private AcmDataService acmDataService;
@@ -139,6 +142,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private RuntimeService activitiRuntimeService;
     private TranslationService translationService;
     private EcmFileParticipantService fileParticipantService;
+    private CorrespondenceTemplateManager templateManager;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -503,7 +507,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmAuthentication authentication;
                 try
                 {
-                    authentication = authenticationManager.getAcmAuthentication(
+                    authentication = authenticationMapper.getAcmAuthentication(
                             new UsernamePasswordAuthenticationToken(principal, principal));
                 }
                 catch (AuthenticationServiceException e)
@@ -698,6 +702,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public void sendAcmDocumentSingleTaskWorkflowMail(Long objectId, String objectType, String approvers)
     {
+        String emailSubject = "";
+        Template template = templateManager.findTemplate("acmDocumentSingleTaskWorkflow.html");
+        if (template != null)
+        {
+            emailSubject = template.getEmailSubject();
+        }
         AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
         AcmObject object = dao.find(objectId);
         Notification notification = new Notification();
@@ -707,6 +717,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
         notification.setEmailAddresses(approvers);
         notification.setTemplateModelName("acmDocumentSingleTaskWorkflow");
+        notification.setSubject(emailSubject);
         notificationDao.save(notification);
 
     }
@@ -742,7 +753,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             String approversCsv = configuration.getApprovers();
             List<String> approvers = approversCsv == null ? new ArrayList<>()
-                    : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+                    : Arrays.stream(approversCsv.split(",")).filter(Objects::nonNull).map(String::trim).collect(Collectors.toList());
             pvars.put("approvers", approversCsv);
             pvars.put("taskName", task.getTitle());
 
@@ -757,7 +768,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
             pvars.put("taskPriority", configuration.getTaskPriority());
 
-            pvars.put("approver1", task.getAssignee());
+            pvars.put("approver", task.getAssignee());
 
             pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", task.getCandidateGroups());
@@ -982,14 +993,14 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.objectConverter = objectConverter;
     }
 
-    public AcmAuthenticationManager getAuthenticationManager()
+    public AcmAuthenticationMapper getAuthenticationMapper()
     {
-        return authenticationManager;
+        return authenticationMapper;
     }
 
-    public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
+    public void setAuthenticationMapper(AcmAuthenticationMapper authenticationMapper)
     {
-        this.authenticationManager = authenticationManager;
+        this.authenticationMapper = authenticationMapper;
     }
 
     public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess)
@@ -1055,5 +1066,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public CorrespondenceTemplateManager getTemplateManager()
+    {
+        return templateManager;
+    }
+
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 }

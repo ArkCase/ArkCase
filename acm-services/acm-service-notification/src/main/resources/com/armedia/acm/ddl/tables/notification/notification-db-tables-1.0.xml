@@ -244,4 +244,17 @@
             <column name="cm_type" type="CLOB"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="23-add-column-email-content" author="viktorija.kostovska">
+        <addColumn tableName="acm_notification">
+            <column name="cm_email_content" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="24-add-cc-bcc-email-addresses-columns" author="ana.serafimoska">
+        <addColumn tableName="acm_notification">
+            <column name="cm_cc_email_addresses" type="CLOB"/>
+            <column name="cm_bcc_email_addresses" type="CLOB"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

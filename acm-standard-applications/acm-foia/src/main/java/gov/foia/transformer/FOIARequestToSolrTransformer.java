@@ -29,6 +29,7 @@ package gov.foia.transformer;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
@@ -144,18 +145,21 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
 
         if (requestIn.getOriginator() != null && requestIn.getOriginator().getPerson() != null)
         {
-            if(requestIn.getOriginator().getPerson().getFullName() != null)
+            Person person = requestIn.getOriginator().getPerson();
+            if (person.getFullName() != null)
             {
-                additionalProperties.put("requester_name_s", requestIn.getOriginator().getPerson().getFullName());
+                additionalProperties.put("requester_name_s", person.getFullName());
             }
-            else {
+            else
+            {
                 additionalProperties.put("requester_name_s", "");
             }
-            if(requestIn.getOriginator().getPerson().getDefaultEmail().getValue() != null)
+            if (person.getDefaultEmail() != null)
             {
-                additionalProperties.put("requester_email_s", requestIn.getOriginator().getPerson().getDefaultEmail().getValue());
+                additionalProperties.put("requester_email_s", person.getDefaultEmail().getValue());
             }
-            else {
+            else
+            {
                 additionalProperties.put("requester_email_s", "");
             }
         }
@@ -170,5 +174,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
         additionalProperties.put("processing_fee_waive_s", Double.toString(requestIn.getProcessingFeeWaive()));
         additionalProperties.put("request_agency_s", requestIn.getComponentAgency());
+        additionalProperties.put("external_identifier_s", requestIn.getExternalIdentifier());
+        additionalProperties.put("difficulty_rating_s", requestIn.getDifficultyRating());
     }
 }

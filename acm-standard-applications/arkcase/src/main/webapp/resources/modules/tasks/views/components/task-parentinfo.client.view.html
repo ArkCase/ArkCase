@@ -20,7 +20,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.created | date: 'shortDate' }}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.created | date: ('common.defaultDateTimeUIFormat' | translate) }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.incidentDate.label</span>
                 </small>
@@ -73,7 +73,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentConsultationInfo.created | date: 'shortDate' }}</div>
+                <div class="h4 font-bold">{{parentConsultationInfo.created | date: ('common.defaultDateTimeUIFormat' | translate) }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.consultation.incidentDate.label</span>
                 </small>
@@ -123,7 +123,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: 'shortDate' }}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: ('common.defaultDateTimeUIFormat' | translate) }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.incidentDate.label</span>
                 </small>

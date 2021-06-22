@@ -33,7 +33,9 @@ import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -70,6 +72,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrConfig solrConfig;
     private DataAccessControlConfig dacConfig;
     private AcmDataService acmDataService;
+    private EcmFileConfig fileConfig;
 
     @Override
     public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -81,7 +84,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
         // whether to index file contents or just store document-related metadata
-        if (solrConfig.getEnableContentFileIndexing())
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
         {
             return mapContentDocumentProperties(in);
         }
@@ -92,7 +95,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
     {
-        if (solrConfig.getEnableContentFileIndexing())
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
         {
             return null;
         }
@@ -154,7 +157,22 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
         doc.setAdditionalProperty("duplicate_b", in.isDuplicate());
+        doc.setAdditionalProperty("custodian_s", in.getCustodian());
+
+        if (in.getZylabFileMetadata() != null)
+        {
+            doc.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
+        }
         return doc;
+    }
+
+    private Long getFileSizeBytes(EcmFile in)
+    {
+        return in.getVersions().stream()
+                .filter(fileVersion -> fileVersion.getVersionTag().equals(in.getActiveVersionTag()))
+                .findFirst()
+                .map(EcmFileVersion::getFileSizeBytes)
+                .orElse(0L);
     }
 
     private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
@@ -175,21 +193,18 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         SolrContentDocument solr = new SolrContentDocument();
         SolrAdvancedSearchDocument solrAdvancedSearchDocument = mapDocumentProperties(in);
 
-        if (solrAdvancedSearchDocument != null)
+        try
         {
-            try
-            {
-                getArkCaseBeanUtils().copyProperties(solr, solrAdvancedSearchDocument);
-            }
-            catch (IllegalAccessException | InvocationTargetException e)
-            {
-                log.error("Could not copy properties from SolrAdvancedSearchDocument to SolrContentDocument");
-            }
-
-            // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
-            // "additionalProperties" property. Copy them explicitly here.
-            solr.getAdditionalProperties().putAll(solrAdvancedSearchDocument.getAdditionalProperties());
+            getArkCaseBeanUtils().copyProperties(solr, solrAdvancedSearchDocument);
         }
+        catch (IllegalAccessException | InvocationTargetException e)
+        {
+            log.error("Could not copy properties from SolrAdvancedSearchDocument to SolrContentDocument");
+        }
+
+        // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
+        // "additionalProperties" property. Copy them explicitly here.
+        solr.getAdditionalProperties().putAll(solrAdvancedSearchDocument.getAdditionalProperties());
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
@@ -276,6 +291,12 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
         solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
+        solr.setAdditionalProperty("custodian_s", in.getCustodian());
+
+        if (in.getZylabFileMetadata() != null)
+        {
+            solr.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
+        }
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
@@ -398,5 +419,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setDacConfig(DataAccessControlConfig dacConfig)
     {
         this.dacConfig = dacConfig;
+    }
+
+    public EcmFileConfig getFileConfig()
+    {
+        return fileConfig;
+    }
+
+    public void setFileConfig(EcmFileConfig fileConfig)
+    {
+        this.fileConfig = fileConfig;
     }
 }

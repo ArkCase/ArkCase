@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.ActionsController',
-    ['$scope', '$state', '$timeout', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
-        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService',
-        function ($scope, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService) {
+    ['$scope', '$translate', '$state', '$timeout', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService',
+        'Helper.ObjectBrowserService', 'Profile.UserInfoService', 'Ecm.EmailService', 'Admin.ZylabIntegrationService', 'Request.ZylabMatterService', 'MessageService',
+        function ($scope, $translate, $state, $timeout, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, EcmEmailService, ZylabIntegrationService, RequestZylabMatterService, MessageService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -19,6 +19,8 @@ angular.module('cases').controller(
             });
 
             $scope.loadingRequestIcon = "fa fa-save";
+            $scope.creatingMatterIcon = "fa fa-gavel";
+            $scope.createMatterInProgress = false;
 
             $scope.showBtnChildOutcomes = false;
             $scope.availableChildOutcomes = [];
@@ -31,6 +33,12 @@ angular.module('cases').controller(
                 });
             });
 
+            ZylabIntegrationService.getConfiguration().then(function (response) {
+                $scope.documentReviewEnabled = response.data["zylabIntegration.enabled"];
+                $scope.zylabIntegrationConfig = response.data;
+            });
+
+
             var promiseQueryUser = Authentication.queryUserInfo();
             var promiseGetGroups = ObjectLookupService.getGroups();
 
@@ -41,6 +49,8 @@ angular.module('cases').controller(
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
                 $scope.showBtnChildOutcomes = false;
+                $scope.createMatterInProgress = false;
+                $scope.creatingMatterIcon = "fa fa-gavel";
 
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
@@ -62,24 +72,24 @@ angular.module('cases').controller(
                         $scope.showBtnSubscribe = Util.isEmpty(found);
                         $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     });
-                        });
-                    };
+                });
+            };
 
-                    $scope.save = function() {
-                        $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
-                        var deferred = $q.defer();
-                        if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
-                            $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
-                        } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
-                            $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);
-                        } else {
-                            deferred.resolve();
-                        }
+            $scope.save = function () {
+                $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
+                var deferred = $q.defer();
+                if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                    $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
+                } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                    $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);
+                } else {
+                    deferred.resolve();
+                }
 
-                        deferred.promise.then(function () {
-                            $scope.$bus.publish('ACTION_SAVE_CASE', {});    
-                        });
-                    };
+                deferred.promise.then(function () {
+                    $scope.$bus.publish('ACTION_SAVE_CASE', {});
+                });
+            };
 
             $scope.$bus.subscribe('report-object-updated', function (caseInfo) {
                 $scope.loadingRequestIcon = "fa fa-save";
@@ -102,6 +112,48 @@ angular.module('cases').controller(
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     return data;
                 });
+            };
+
+            $scope.createMatter = function (requestInfo) {
+                $scope.creatingMatterIcon = "fa fa-circle-o-notch fa-spin";
+                $scope.createMatterInProgress = true;
+
+                RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
+                    var createMatterResponse = data.data;
+                    if (createMatterResponse.status === "CREATED") {
+                        MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
+                        $scope.createMatterInProgress = false;
+                        $scope.openMatter(createMatterResponse.zylabId);
+                        if ($scope.objectInfo.caseNumber === createMatterResponse.matterName) {
+                            $scope.objectInfo.externalIdentifier = createMatterResponse.zylabId;
+                        }
+                    } else if (createMatterResponse.status === "IN_PROGRESS") {
+                        MessageService.info($translate.instant("cases.comp.actions.createMatter.inProgress"));
+                    } else {
+                        MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
+                    }
+
+                    $scope.creatingMatterIcon = "fa fa-gavel";
+                    $scope.createMatterInProgress = false;
+                }).catch(function () {
+                    MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
+                    $scope.creatingMatterIcon = "fa fa-gavel";
+                    $scope.createMatterInProgress = false;
+                });
+            };
+
+            $scope.openMatter = function (matterId) {
+                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", matterId);
+                var openMatterURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterPath;
+
+                window.open(openMatterURL, '_blank');
+            };
+
+            $scope.openMatterReports = function (requestInfo) {
+                var openMatterReportsPath = $scope.zylabIntegrationConfig["zylabIntegration.matterReportsPath"].replace("{matterId}", requestInfo.externalIdentifier);
+                var openMatterReportsURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterReportsPath;
+
+                window.open(openMatterReportsURL, '_blank');
             };
 
             UserInfoService.getUserInfo().then(function (infoData) {
@@ -172,7 +224,7 @@ angular.module('cases').controller(
                     objectType: ObjectService.ObjectTypes.CASE_FILE,
                     objectNumber: $scope.objectInfo.caseNumber,
                     emailSubject: 'Request ' + $scope.objectInfo.caseNumber,
-                    emailOfOriginator: $scope.objectInfo.acmObjectOriginator.person.defaultEmail.value
+                    emailOfOriginator: $scope.objectInfo.acmObjectOriginator.person.defaultEmail ? $scope.objectInfo.acmObjectOriginator.person.defaultEmail.value : ""
                 };
                 var modalInstance = $modal.open({
                     templateUrl: 'modules/common/views/send-email-modal.client.view.html',
@@ -181,24 +233,26 @@ angular.module('cases').controller(
                     size: 'lg',
                     backdrop: 'static',
                     resolve: {
-                        params: function() {
+                        params: function () {
                             return params;
                         }
                     }
                 });
 
-                modalInstance.result.then(function(res) {
+                modalInstance.result.then(function (res) {
                     var emailData = {};
                     emailData.subject = res.subject;
                     emailData.body = res.body;
                     emailData.footer = '\n\n' + res.footer;
                     emailData.emailAddresses = res.recipients;
+                    emailData.ccEmailAddresses = res.ccRecipients;
+                    emailData.bccEmailAddresses = res.bccRecipients;
                     emailData.objectId = $scope.objectInfo.id;
                     emailData.objectType = ObjectService.ObjectTypes.CASE_FILE;
                     emailData.objectNumber = $scope.objectInfo.caseNumber;
                     emailData.modelReferenceName = res.template;
 
-                    if(emailData.modelReferenceName != 'plainEmail') {
+                    if (emailData.modelReferenceName != 'plainEmail') {
                         EcmEmailService.sendManualEmail(emailData);
                     } else {
                         EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.CASE_FILE);
@@ -210,4 +264,4 @@ angular.module('cases').controller(
 
         }
 
-        ]);
+    ]);

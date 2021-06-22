@@ -98,6 +98,18 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
         return query.getSingleResult();
     }
 
+    public BillingInvoice getBillingInvoiceByEcmFileId(Long ecmFileId)
+    {
+        String queryText = "SELECT billingInvoice " +
+                "FROM BillingInvoice billingInvoice " +
+                "WHERE billingInvoice.billingInvoiceEcmFile.fileId = :ecmFileId";
+
+        TypedQuery<BillingInvoice> query = getEntityManager().createQuery(queryText, BillingInvoice.class);
+        query.setParameter("ecmFileId", ecmFileId);
+
+        return query.getSingleResult();
+    }
+
     @Transactional
     public BillingInvoice saveBillingInvoice(BillingInvoice billingInvoice)
     {

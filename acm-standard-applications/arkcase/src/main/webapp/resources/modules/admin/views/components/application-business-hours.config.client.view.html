@@ -4,6 +4,9 @@
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4">
+                    <label translate>admin.application.businessHours.config.labels.startOfBusinessDayTime</label>
+                </div>
+                <div class="col-lg-4">
                     <label translate>admin.application.businessHours.config.labels.endOfBusinessDayTime</label>
                 </div>
             </div>
@@ -11,16 +14,20 @@
                 <div class="col-lg-4">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="endOfBusinessDayEnabled">
+                            <input type="checkbox" ng-model="businessDayHoursEnabled">
                             <span translate>
-                                    admin.application.businessHours.config.labels.endOfBusinessDayEnabled
+                                    admin.application.businessHours.config.labels.businessDayHoursEnabled
                                 </span>
                         </label>
                     </div>
                 </div>
                 <div class="col-lg-4">
+                    <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" ng-model="startOfBusinessDayTime"
+                           ng-disabled="!businessDayHoursEnabled" class="form-control">
+                </div>
+                <div class="col-lg-4">
                     <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" ng-model="endOfBusinessDayTime"
-                            ng-disabled="!endOfBusinessDayEnabled" class="form-control">
+                            ng-disabled="!businessDayHoursEnabled" class="form-control">
                 </div>
             </div>
             <br />

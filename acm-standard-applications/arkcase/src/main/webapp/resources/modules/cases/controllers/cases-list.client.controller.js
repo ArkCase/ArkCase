@@ -33,9 +33,10 @@ angular.module('cases').controller(
                             var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
 
                             var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
+                            var objectNumber = data.objectNumber;
                             var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
                                 objectTypeString: objectTypeString,
-                                objectId: data.objectId
+                                objectId: objectNumber !== null ? objectNumber : data.objectId
                             });
                             if (frevvoRequest) {
                                 ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.objectId);

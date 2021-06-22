@@ -31,13 +31,10 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
-import com.armedia.acm.services.email.service.EmailSource;
-import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.http.MediaType;
@@ -52,7 +49,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -194,6 +190,8 @@ public class AcmMailServiceAPIController
             String template = templateService.getTemplate(templateName);
             in.setTemplate(template);
             in.setEmailAddresses(emailAddresses);
+            in.setCcEmailAddresses(in.getCcEmailAddresses());
+            in.setBccEmailAddresses(in.getBccEmailAddresses());
             result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
             return result;
         }
@@ -204,25 +202,6 @@ public class AcmMailServiceAPIController
                             + e.getMessage(),
                     e);
         }
-    }
-
-    /**
-     * @param objectType
-     * @param emailAddress
-     * @return
-     * @throws AcmEmailConfigurationException
-     */
-    private List<String> loadTemplates(String objectType, String emailAddress, List<String> actions) throws AcmEmailConfigurationException
-    {
-        List<String> templates = new ArrayList<>();
-        List<EmailTemplateConfiguration> configurations = templateService.getMatchingTemplates(emailAddress, objectType, EmailSource.MANUAL,
-                actions);
-        for (EmailTemplateConfiguration configuration : configurations)
-        {
-            String template = templateService.getTemplate(configuration.getTemplateName());
-            templates.add(template);
-        }
-        return templates;
     }
 
     /**

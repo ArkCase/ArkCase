@@ -67,124 +67,124 @@ import java.util.Map;
 @ControllerAdvice
 public class AcmSpringMvcErrorManager
 {
-    private Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @ExceptionHandler(AcmParticipantsException.class)
     public void handleException(HttpServletResponse response, AcmParticipantsException e)
     {
-        log.error("Participants exception: " + e.getMessage(), e);
+        log.error("Participants exception: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmObjectNotFoundException.class)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)
     {
-        log.error("Object Not Found: " + e.getMessage(), e);
+        log.error("Object Not Found: {}", e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmUserActionFailedException.class)
     public void handleException(HttpServletResponse response, AcmUserActionFailedException e)
     {
-        log.error("User Action Failed: " + e.getMessage(), e);
+        log.error("User Action Failed: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmCreateObjectFailedException.class)
     public void handleCreateObjectFailed(HttpServletResponse response, AcmCreateObjectFailedException e)
     {
-        log.error("Create Object Failed: " + e.getMessage(), e);
+        log.error("Create Object Failed: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmListObjectsFailedException.class)
     public void handleListObjectsFailed(HttpServletResponse response, AcmListObjectsFailedException e)
     {
-        log.error("List Objects Failed: " + e.getMessage(), e);
+        log.error("List Objects Failed: {}", e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmUpdateObjectFailedException.class)
     public void handleUpdateObjectFailed(HttpServletResponse response, AcmUpdateObjectFailedException e)
     {
-        log.error("Update Object Failed: " + e.getMessage(), e);
+        log.error("Update Object Failed: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmNotAuthorizedException.class)
     public void handleNotAuthorized(HttpServletResponse response, AcmNotAuthorizedException e)
     {
-        log.error("Not Authorized: " + e.getMessage(), e);
+        log.error("Not Authorized: {}", e.getMessage(), e);
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmAccessControlException.class)
     public void handleAccessControl(HttpServletResponse response, AcmAccessControlException e)
     {
-        log.error("Not Authorized: " + e.getMessage(), e);
+        log.error("Not Authorized: {}", e.getMessage(), e);
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
     
     @ExceptionHandler(AccessDeniedException.class)
     public void accessDeniedHandler(HttpServletResponse response, AccessDeniedException e)
     {
-        log.error("Access is not granted: " + e.getMessage(), e);
+        log.error("Access is not granted: {}", e.getMessage(), e);
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public void lastChanceHandler(HttpServletResponse response, Exception e)
     {
-        log.error("Last Chance Handler: " + e.getMessage(), e);
+        log.error("Last Chance Handler: {}", e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmEncryptionBadKeyOrDataException.class)
     public void invalidOutlookPassword(HttpServletResponse response, Exception e)
     {
-        log.error("Invalid outlook password: " + e.getMessage(), e);
+        log.error("Invalid outlook password: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmOutlookItemNotFoundException.class)
     public void outlookItemNotFound(HttpServletResponse response, Exception e)
     {
-        log.error("Requested item not found: " + e.getMessage(), e);
+        log.error("Requested item not found: {}", e.getMessage(), e);
         sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmResourceNotFoundException.class)
     public void resourceNotFound(HttpServletResponse response, Exception e)
     {
-        log.error("Resource not found: " + e.getMessage(), e);
+        log.error("Resource not found: {}", e.getMessage(), e);
         sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmResourceNotModifiableException.class)
     public void resourceNotModifiable(HttpServletResponse response, Exception e)
     {
-        log.error("Resource cannot be modified: " + e.getMessage(), e);
+        log.error("Resource cannot be modified: {}", e.getMessage(), e);
         sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
     }
 
     @ExceptionHandler(InvalidLookupException.class)
     public void invalidLookup(HttpServletResponse response, Exception e)
     {
-        log.error("Invalid lookup: " + e.getMessage(), e);
+        log.error("Invalid lookup: {}", e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmObjectLockException.class)
     public void handleException(HttpServletResponse response, AcmObjectLockException e)
     {
-        log.error("AcmObjectLockException occurred: " + e.getMessage(), e);
+        log.error("AcmObjectLockException occurred: {}", e.getMessage(), e);
         sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmStateOfArkcaseGenerateReportException.class)
     public void handleAcmStateOfArkcaseGenerateReportException(HttpServletResponse response, AcmObjectLockException e)
     {
-        log.error("AcmStateOfArkcaseGenerateReportException occurred", e.getMessage(), e);
+        log.error("AcmStateOfArkcaseGenerateReportException occurred: {}", e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 

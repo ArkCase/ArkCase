@@ -1239,7 +1239,7 @@
                 {
                     "name": "created",
                     "displayName": "requests.comp.exemption.table.columns.dateCreated",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -1279,7 +1279,7 @@
                 {
                     "name": "created",
                     "displayName": "requests.comp.exemptionStatute.table.columns.dateCreated",
-                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateTimeUIFormat' | translate) }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
-    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.4.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--
@@ -21,6 +21,7 @@
     <mvc:view-controller path="/sso/loggedout" view-name="loggedout"/>
     <mvc:view-controller path="/samllogin" view-name="saml_login"/>
     <mvc:view-controller path="/" view-name="redirect:/home.html"/>
+    <mvc:view-controller path="/oauth/loggedout" view-name="oauth-loggedout"/>
 
     <!-- Scan for Spring beans declared via annotations. -->
     <!--<context:component-scan base-package="com.armedia.acm.web"/>-->
@@ -36,13 +37,6 @@
 
     <bean id="acmJacksonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper" ref="sourceObjectMapper"/>
-    </bean>
-
-    <bean id="castorXmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="ignoreExtraAttributes" value="true"/>
-        <property name="ignoreExtraElements" value="true"/>
-        <property name="validating" value="false"/>
-        <property name="suppressNamespaces" value="true"/>
     </bean>
 
     <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
@@ -173,15 +167,11 @@
         <property name="defaultLocale" value="en"/>
     </bean>
 
-    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="lang"/>
-    </bean>
-
-    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
-        <property name="interceptors">
-            <ref bean="localeChangeInterceptor"/>
-        </property>
-    </bean>
+    <mvc:interceptors>
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang"/>
+        </bean>
+    </mvc:interceptors>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="classpath:messages"/>

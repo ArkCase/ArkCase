@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="templateConfigurationManager" class="com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager">
+        <property name="templatesConfiguration" value="file:${user.home}/.arkcase/acm/templates-configuration.json"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
+    <bean id="templatingEngine" class="com.armedia.acm.services.templateconfiguration.service.TemplatingEngine">
+        <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
+    </bean>
+
+    <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager">
+        <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
+
+</beans>

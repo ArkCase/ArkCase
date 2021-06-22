@@ -35,7 +35,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.consultation.model.Consultation;
 import com.armedia.acm.plugins.consultation.service.ConsultationService;
 import com.armedia.acm.plugins.consultation.utility.ConsultationEventUtility;
-import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
@@ -45,7 +44,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -76,17 +74,6 @@ public class SaveConsultationAPIController
     private ConsultationEventUtility consultationEventUtility;
 
     private UserTrackerService userTrackerService;
-
-    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CONSULTATION', 'saveConsultation')")
-    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
-    @DecoratedAssignedObjectParticipants
-    @ResponseBody
-    public Consultation createConsultation(@RequestBody Consultation in, HttpSession session, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
-            IOException
-    {
-        return saveConsultation(in, null, session, auth);
-    }
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CONSULTATION', 'saveConsultation')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

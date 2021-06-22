@@ -37,3 +37,4 @@ rebel.xml
 launch.test.json
 *.code-workspace
 .vscode/settings.json
+builds/

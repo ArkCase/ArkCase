@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.casefile.dao;
 
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.services.templateconfiguration.model.CorrespondenceMergeField;
+import com.armedia.acm.services.templateconfiguration.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
@@ -73,47 +73,47 @@ public class SpelTest extends EasyMockSupport
         replayAll();
 
         System.out.println(caseFile.getCreated());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null));
         System.out.println(evaluation);
 
         caseFile.setCreated(new Date("2020/03/10"));
         System.out.println(caseFile.getCreated());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null));
         System.out.println(evaluation);
 
         caseFile.setCreated(new Date("2020/10/01"));
         System.out.println(caseFile.getCreated());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null));
         System.out.println(evaluation);
 
         caseFile.setCreated(new Date("2020/09/30"));
         System.out.println(caseFile.getCreated());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(created.year+1900+(created.month+1>=10?1:0))", null));
         System.out.println(evaluation);
 
         // 'FY'+(receivedDate.year+(receivedDate.month.value+1>=10?1:0))
         caseFile.setQueueEnterDate(LocalDateTime.of(2020, 12, 24, 10, 10));
         System.out.println(caseFile.getQueueEnterDate());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
-                null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
+                null));
         System.out.println(evaluation);
 
         caseFile.setQueueEnterDate(LocalDateTime.of(2020, 10, 1, 10, 10));
         System.out.println(caseFile.getQueueEnterDate());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
-                null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
+                null));
         System.out.println(evaluation);
 
         caseFile.setQueueEnterDate(LocalDateTime.of(2020, 9, 30, 10, 10));
         System.out.println(caseFile.getQueueEnterDate());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
-                null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
+                null));
         System.out.println(evaluation);
 
         caseFile.setQueueEnterDate(LocalDateTime.of(2020, 2, 13, 10, 10));
         System.out.println(caseFile.getQueueEnterDate());
-        evaluation = generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
-                null);
+        evaluation = String.valueOf(generator.evaluateSpelExpression(caseFile, "'FY'+(queueEnterDate.year+(queueEnterDate.month.value>=10?1:0))",
+                null));
         System.out.println(evaluation);
     }
 }

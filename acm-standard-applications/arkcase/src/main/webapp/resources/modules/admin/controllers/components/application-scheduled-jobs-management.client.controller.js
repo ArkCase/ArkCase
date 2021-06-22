@@ -59,6 +59,7 @@ angular.module('admin').controller('Admin.ManageScheduledJobsController',
                             job.paused = jobState.paused;
                             job.lastRun = jobState.lastRun;
                             job.nextRun = jobState.nextRun;
+                            job.triggerState = jobState.triggerState;
                         }
                     }
                     $scope.gridOptions.data = _.values(_.sortBy(jobStateMap, function (job) {
@@ -95,5 +96,10 @@ angular.module('admin').controller('Admin.ManageScheduledJobsController',
             $scope.resumeJob = function (rowEntity) {
                 AdminScheduledJobsManagementService.resumeJob(rowEntity.jobName);
             };
+
+            $scope.restoreTriggerState = function (rowEntity) {
+                AdminScheduledJobsManagementService.restoreTriggerState(rowEntity.triggerName);
+            };
+
 
         } ]);

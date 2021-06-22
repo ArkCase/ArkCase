@@ -32,6 +32,7 @@ import static gov.foia.model.FOIARequest.PURGE_HOLD_QUEUE;
 import static gov.foia.model.FOIARequest.REQUESTS_BY_STATUS;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,10 +102,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         }
     }
 
-    /**
-     * @param minusDays
-     * @return
-     */
     public List<FOIARequest> getAllRequestsInHoldBefore(LocalDate holdEnterDate)
     {
         return getAllRequestsInQueueBefore(PURGE_HOLD_QUEUE, "Hold", "holdEnterDate", holdEnterDate);
@@ -243,8 +241,13 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequestType(request.getRequestType());
         requestStatus.setRequesterFirstName(request.getOriginator().getPerson().getGivenName());
         requestStatus.setRequesterLastName(request.getOriginator().getPerson().getFamilyName());
-        requestStatus.setRequesterEmail(request.getOriginator().getPerson().getContactMethods()
-                .stream().filter(cm -> cm.getType().equalsIgnoreCase("email")).findFirst().get().getValue());
+        String requesterEmail = request.getOriginator().getPerson().getContactMethods()
+                .stream()
+                .filter(cm -> cm.getType().equalsIgnoreCase("email"))
+                .findFirst()
+                .map(ContactMethod::getValue)
+                .orElse(null);
+        requestStatus.setRequesterEmail(requesterEmail);
         requestStatus.setDispositionValue(request.getDisposition());
 
         if (!request.getChildObjects().isEmpty() && request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE))
@@ -331,6 +334,19 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requests;
     }
 
+    public List<FOIARequest> findAllReleasedNonRecordRequestsBeforeDate(LocalDateTime releaseQueueEnterDate)
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.queue.name = 'Release'" +
+                " AND request.releasedDate < :releaseQueueEnterDate" +
+                " AND (request.declaredAsRecord IS NULL OR request.declaredAsRecord = false)";
+        TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
+        allRecords.setParameter("releaseQueueEnterDate", releaseQueueEnterDate);
+
+        List<FOIARequest> requests = allRecords.getResultList();
+        return requests;
+    }
+
     public List<FOIARequest> findAllHeldAndAppealedRequests()
     {
         String queryText = "SELECT request FROM FOIARequest request"
@@ -338,6 +354,17 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;
+    }
+
+    public FOIARequest findByExternalIdentifier(String externalIdentifier)
+    {
+        String queryText = "SELECT request FROM FOIARequest request "
+                + "WHERE request.externalIdentifier = :externalIdentifier";
+
+        TypedQuery<FOIARequest> findByExternalIdentifier = getEm().createQuery(queryText, FOIARequest.class);
+        findByExternalIdentifier.setParameter("externalIdentifier", externalIdentifier);
+
+        return findByExternalIdentifier.getSingleResult();
     }
 
     public List<FOIARequest> getNextAvailableRequestInQueue(Long queueId, Date createdDate)

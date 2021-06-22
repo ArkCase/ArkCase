@@ -144,6 +144,19 @@ public class ApplicationConfig implements DynamicApplicationConfig
     @Value("${application.properties.organizationFax}")
     private String organizationFax;
 
+    @UnmodifiableConfigProperty
+    @JsonProperty("application.properties.templateGuideUrl")
+    @Value("${application.properties.templateGuideUrl}")
+    private String templateGuideUrl;
+
+    @JsonProperty("application.properties.dashboardBannerEnabled")
+    @Value("${application.properties.dashboardBannerEnabled}")
+    private Boolean dashboardBannerEnabled;
+
+    @JsonProperty("application.properties.listFilesInFolder")
+    @Value("${application.properties.listFilesInFolder}")
+    private String listFilesInFolder;
+
     public Integer getIdleLimit()
     {
         return idleLimit;
@@ -352,5 +365,35 @@ public class ApplicationConfig implements DynamicApplicationConfig
     public void setOrganizationFax(String organizationFax)
     {
         this.organizationFax = organizationFax;
+    }
+
+    public String getTemplateGuideUrl()
+    {
+        return templateGuideUrl;
+    }
+
+    public void setTemplateGuideUrl(String templateGuideUrl)
+    {
+        this.templateGuideUrl = templateGuideUrl;
+    }
+
+    public Boolean getDashboardBannerEnabled()
+    {
+        return dashboardBannerEnabled;
+    }
+
+    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
+    {
+        this.dashboardBannerEnabled = dashboardBannerEnabled;
+    }
+
+    public String getListFilesInFolder()
+    {
+        return listFilesInFolder;
+    }
+
+    public void setListFilesInFolder(String listFilesInFolder)
+    {
+        this.listFilesInFolder = listFilesInFolder;
     }
 }

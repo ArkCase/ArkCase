@@ -14,7 +14,7 @@
  *
  * The Admin.DashboardConfigService provides correspondence Management calls functionality
  */
-angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload', function($http, Upload) {
+angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload', function ($http, Upload) {
     return ({
         retrieveTemplatesList: retrieveTemplatesList,
         retrieveActiveVersionTemplatesList: retrieveActiveVersionTemplatesList,
@@ -30,7 +30,8 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion,
         listAllProperties: listAllProperties,
         listTemplateModelProviders: listTemplateModelProviders,
-        retrieveTemplateContent: retrieveTemplateContent
+        retrieveTemplateContent: retrieveTemplateContent,
+        retrieveConvertedTemplateContent: retrieveConvertedTemplateContent
     });
 
     /**
@@ -330,4 +331,15 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         });
     };
 
-} ]);
+    function retrieveConvertedTemplateContent(params) {
+        return $http({
+            method: "GET",
+            url: 'api/latest/plugin/admin/convertedTemplateContent/' + params.objectType + '/' + params.objectId + '/' + params.templateName,
+            cache: false,
+            params: {
+                "fileIds": params.fileIds
+            }
+        });
+    };
+
+}]);

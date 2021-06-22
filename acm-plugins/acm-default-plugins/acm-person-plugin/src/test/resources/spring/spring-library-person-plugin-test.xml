@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="personExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
@@ -17,6 +17,12 @@
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
+
+    <bean id="pdfService" class="com.armedia.acm.pdf.service.PdfServiceImpl"/>
+
+    <bean id="loginConfig" class="com.armedia.acm.web.model.LoginConfig"/>
+
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao"/>
 
     <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
         <property name="caches">
