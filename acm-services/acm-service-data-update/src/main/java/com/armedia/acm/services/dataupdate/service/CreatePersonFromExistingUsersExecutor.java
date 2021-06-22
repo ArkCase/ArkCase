@@ -34,11 +34,13 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import com.armedia.acm.services.users.model.event.UserPersistenceEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 5/20/2021
@@ -68,9 +70,15 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
             if (!acmUser.getUserId().equals("OCR_SERVICE") && !acmUser.getUserId().equals("TRANSCRIBE_SERVICE"))
             {
                 Person existingPerson = getPersonDao().findByLdapUserId(acmUser.getUserId());
+                Optional<Person> existingPersonWithoutLdapId = getPersonDao()
+                        .findByEmail(acmUser.getMail());
                 if (existingPerson != null)
                 {
                     addOrUpdatePerson(acmUser, existingPerson);
+                }
+                else if (existingPersonWithoutLdapId.isPresent())
+                {
+                    addOrUpdatePerson(acmUser, existingPersonWithoutLdapId.get());
                 }
                 else
                 {
