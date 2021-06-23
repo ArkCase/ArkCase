@@ -112,9 +112,9 @@ public class CostsheetServiceImpl implements CostsheetService
     @Override
     public AcmCostsheet get(Long id)
     {
-        AcmCostsheet timesheet = getAcmCostsheetDao().find(id);
+        AcmCostsheet costsheet = getAcmCostsheetDao().find(id);
 
-        return timesheet;
+        return costsheet;
     }
 
     /**
@@ -155,7 +155,7 @@ public class CostsheetServiceImpl implements CostsheetService
 
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
         String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
@@ -189,7 +189,7 @@ public class CostsheetServiceImpl implements CostsheetService
         String authorQuery = "";
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
         String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
 

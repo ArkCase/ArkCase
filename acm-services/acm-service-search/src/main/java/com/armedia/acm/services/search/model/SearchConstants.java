@@ -66,7 +66,7 @@ public interface SearchConstants
     String PROPERTY_FILE_CATEGORY = "category_s";
     String PROPERTY_FILE_TYPE = "type_s";
     String PROPERTY_CREATED = "create_tdt";
-    String PROPERTY_MODIFIED = "last_modified_tdt";
+    String PROPERTY_MODIFIED = "modified_date_tdt";
     String PROPERTY_CREATOR = "author";
     String PROPERTY_MODIFIER = "modifier_s";
     String PROPERTY_OBJECT_TYPE = "object_type_s";

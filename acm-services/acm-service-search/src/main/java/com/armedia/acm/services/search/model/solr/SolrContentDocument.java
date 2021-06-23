@@ -84,9 +84,9 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         values.put("literal.id", getId());
         values.put("literal.object_type_s", getObject_type_s());
         values.put("literal.object_id_s", getObject_id_s());
-        values.put("literal.modified_date_tdt", getModified_date_tdt());
+        values.put("literal.modified_date_tdt", getModified_date_tdt().toInstant().toString());
         values.put("literal.modifier_lcs", getModifier_lcs());
-        values.put("literal.create_date_tdt", getCreate_date_tdt());
+        values.put("literal.create_date_tdt", getCreate_date_tdt().toInstant().toString());
         values.put("literal.creator_lcs", getCreator_lcs());
         values.put("literal.name", getName());
         values.put("literal.parent_id_s", getParent_id_s());
@@ -147,36 +147,36 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         StringBuilder url = new StringBuilder(
                 "&literal.allow_user_ls="
                         + (getAllow_user_ls() == null ? null
-                                : getAllow_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.allow_user_ls=")))
+                        : getAllow_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.allow_user_ls=")))
                         + "&literal.deny_user_ls="
                         + (getDeny_user_ls() == null ? null
-                                : getDeny_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.deny_user_ls=")))
+                        : getDeny_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.deny_user_ls=")))
                         + "&literal.allow_group_ls="
                         + (getAllow_group_ls() == null ? null
-                                : getAllow_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.allow_group_ls")))
+                        : getAllow_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.allow_group_ls")))
                         + "&literal.deny_group_ls="
                         + (getDeny_group_ls() == null ? null
-                                : getDeny_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.deny_group_ls")))
+                        : getDeny_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.deny_group_ls")))
                         + "&literal.parent_allow_group_ls="
                         + (getParent_allow_group_ls() == null ? null
-                                : getParent_allow_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_allow_group_ls")))
+                        : getParent_allow_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_allow_group_ls")))
                         + "&literal.parent_deny_group_ls="
                         + (getParent_deny_group_ls() == null ? null
-                                : getParent_deny_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_deny_group_ls")))
+                        : getParent_deny_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_deny_group_ls")))
                         + "&literal.parent_allow_user_ls="
                         + (getParent_allow_user_ls() == null ? null
-                                : getParent_allow_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_allow_user_ls")))
+                        : getParent_allow_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_allow_user_ls")))
                         + "&literal.parent_deny_user_ls="
                         + (getParent_deny_user_ls() == null ? null
-                                : getParent_deny_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_deny_user_ls")))
+                        : getParent_deny_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_deny_user_ls")))
                         +
                         "&literal.hidden_b=" + isHidden_b() +
                         "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
@@ -186,20 +186,20 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
                         "&literal.id=" + encode(getId()) +
                         "&literal.object_type_s=" + encode(getObject_type_s()) +
                         "&literal.object_id_s=" + encode(getObject_id_s()) +
-                        "&literal.modified_date_tdt=" + getModified_date_tdt() +
-                        "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
-                        "&literal.create_date_tdt=" + getCreate_date_tdt() +
-                        "&literal.creator_lcs=" + encode(getCreator_lcs()) +
-                        "&literal.name=" + encode(getName()) +
-                        "&literal.parent_id_s=" + encode(getParent_id_s()) +
-                        "&literal.parent_type_s=" + encode(getParent_type_s()) +
-                        "&literal.parent_number_lcs=" + encode(getParent_number_lcs()) +
-                        "&literal.title_parseable=" + encode(getTitle_parseable()) +
-                        "&literal.title_parseable_lcs=" + encode(getTitle_parseable_lcs()) +
-                        "&literal.assignee_full_name_lcs=" + encode(getAssignee_full_name_lcs()) +
-                        "&literal.type_lcs=" + encode(getType_lcs()) +
-                        "&literal.ext_s=" + encode(getExt_s()) +
-                        "&literal.mime_type_s=" + encode(getMime_type_s()));
+                        "&literal.modified_date_tdt=" + getModified_date_tdt().toInstant().toString() +
+                "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
+                "&literal.create_date_tdt=" + getCreate_date_tdt().toInstant().toString() +
+                "&literal.creator_lcs=" + encode(getCreator_lcs()) +
+                "&literal.name=" + encode(getName()) +
+                "&literal.parent_id_s=" + encode(getParent_id_s()) +
+                "&literal.parent_type_s=" + encode(getParent_type_s()) +
+                "&literal.parent_number_lcs=" + encode(getParent_number_lcs()) +
+                "&literal.title_parseable=" + encode(getTitle_parseable()) +
+                "&literal.title_parseable_lcs=" + encode(getTitle_parseable_lcs()) +
+                "&literal.assignee_full_name_lcs=" + encode(getAssignee_full_name_lcs()) +
+                "&literal.type_lcs=" + encode(getType_lcs()) +
+                "&literal.ext_s=" + encode(getExt_s()) +
+                "&literal.mime_type_s=" + encode(getMime_type_s()));
 
         if (getAdditionalProperties() != null)
         {

@@ -197,7 +197,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         if (in.getContainer() != null)
         {
-            solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
             solr.setAdditionalProperty("parent_object_id_i", in.getContainer().getContainerObjectId());
             solr.setAdditionalProperty("parent_object_id_s", "" + in.getContainer().getContainerObjectId());
             solr.setAdditionalProperty("parent_object_type_s", in.getContainer().getContainerObjectType());
@@ -247,7 +246,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
-        solr.setParent_folder_id_i(in.getFolder().getId());
         solr.setAdditionalProperty("author_s", in.getCreator());
         solr.setAdditionalProperty("category_s", in.getCategory());
         solr.setAdditionalProperty("type_s", in.getFileType());

@@ -287,7 +287,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileType(), result.getType_lcs());
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(13, result.getAdditionalProperties().size());
+        assertEquals(21, result.getAdditionalProperties().size());
     }
 
     private void validateResult(SolrContentDocument result)
@@ -310,7 +310,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileType(), result.getType_lcs());
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(13, result.getAdditionalProperties().size());
+        assertEquals(21, result.getAdditionalProperties().size());
     }
 
 }
