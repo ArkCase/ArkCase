@@ -68,16 +68,7 @@ public class DateTimeService {
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
-    public static String toUTCDateTimeTimezone(LocalDateTime date)
-    {
-        if (date == null)
-        {
-            return "";
-        }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
-    }
-
-    public static String toClientDateDateTimezone(Date date)
+    public static String dateToClientDateTimezone(Date date)
     {
         if (date == null)
         {
@@ -88,13 +79,15 @@ public class DateTimeService {
                 .format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
-    public static String toUTCDateTimezone(LocalDateTime date)
+    public static String dateToClientDateTimeTimezone(Date date)
     {
         if (date == null)
         {
             return "";
         }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public LocalDateTime fromDateToClientLocalDateTime(Date date)
