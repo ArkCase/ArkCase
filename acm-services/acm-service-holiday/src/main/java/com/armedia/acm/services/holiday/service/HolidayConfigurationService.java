@@ -121,9 +121,19 @@ public class HolidayConfigurationService
     {
         LocalDateTime ldt = getDateTimeService().fromDateToLocalDateTime(date);
 
-        LocalDate dateWithAddedWorkingDays = addWorkingDaysToDate(ldt.toLocalDate(), workingDays);
+        LocalDate localDate = ldt.toLocalDate();
 
-        return setEndOfLocalTimeBusinessHoursToDate(dateWithAddedWorkingDays);
+        if (isFirstDayFullWorkingDay(ldt))
+        {
+            // if first day is full working day we need to subtrack it
+            localDate = addWorkingDaysToDate(localDate, workingDays - 1);
+        }
+        else
+        {
+            localDate = addWorkingDaysToDate(localDate, workingDays);
+        }
+
+        return setEndOfLocalTimeBusinessHoursToDate(localDate);
     }
 
     /**
@@ -175,6 +185,13 @@ public class HolidayConfigurationService
         LocalTime localTimeInSetTimezone = date.toLocalTime();
 
         return localTimeInSetTimezone.isBefore(getStartOfClientBusinessDayTime());
+    }
+
+    public boolean isFirstDayFullWorkingDay(LocalDateTime date)
+    {
+        LocalTime localTime = getDateTimeService().toClientLocalDateTime(date).toLocalTime();
+
+        return localTime.equals(getStartOfClientBusinessDayTime());
     }
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
