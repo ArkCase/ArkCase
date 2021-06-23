@@ -96,7 +96,6 @@ public class CopyFileAPIController
             {
                 log.info("File with id: " + in.getId() + " successfully copied to the location with id: " + in.getFolderId());
             }
-            getFileEventPublisher().publishFileCopiedEvent(copyFile, source, authentication, ipAddress, true);
             FileDTO fileDTO = new FileDTO();
             fileDTO.setNewFile(copyFile);
             fileDTO.setOriginalId(Long.toString(in.getId()));
