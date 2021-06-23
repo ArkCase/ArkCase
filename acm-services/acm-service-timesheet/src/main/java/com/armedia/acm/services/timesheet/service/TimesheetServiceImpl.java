@@ -203,7 +203,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
 
         String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_s:DELETE";
@@ -238,7 +238,7 @@ public class TimesheetServiceImpl implements TimesheetService
         String authorQuery = "";
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
 
         String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";

@@ -1051,7 +1051,7 @@
                 },
                 {
                     "name": "created",
-                    "field": "create_tdt",
+                    "field": "create_date_tdt",
                     "displayName": "requests.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
