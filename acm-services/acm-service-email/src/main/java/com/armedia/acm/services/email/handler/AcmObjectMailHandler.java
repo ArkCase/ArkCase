@@ -195,7 +195,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         }
         catch (Exception e)
         {
-            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage(), e);
+            log.error("Error processing object with number '{}'. Exception msg: '{}' ", entityId, e.getMessage(), e);
             exception = e;
         }
 
