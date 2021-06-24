@@ -41,6 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.naming.directory.InvalidAttributeValueException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -196,8 +197,7 @@ public class DefaultPluggablePortalUserService implements PortalUserService
 
     @Override
     public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
-            throws PortalUserServiceException
-    {
+            throws PortalUserServiceException, InvalidAttributeValueException {
         log.debug("Changing password for [{}] [{}] for portal with [{}] ID.", userId, acmUserId, portalId);
         Optional<AcmUser> acmPortalUser = userDao.findByEmailAddressAndDirectoryName(userId, directoryName);
         if (!acmPortalUser.isPresent())

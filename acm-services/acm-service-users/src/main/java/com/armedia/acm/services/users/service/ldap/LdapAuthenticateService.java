@@ -43,6 +43,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 /**
  * Authenticates a user id and password against LDAP directory. To support multiple LDAP configurations, create multiple
  * Spring
@@ -76,8 +78,7 @@ public class LdapAuthenticateService
         return authenticated;
     }
 
-    public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
-    {
+    public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException, InvalidAttributeValueException {
         log.debug("Changing password for user:{}", userName);
         AcmUser acmUser = userDao.findByUserId(userName);
         LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), currentPassword);
@@ -90,6 +91,11 @@ public class LdapAuthenticateService
         catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
+        }
+        catch (InvalidAttributeValueException e)
+        {
+            log.debug("The password is too young to change ",e);
+            throw e;
         }
         try
         {

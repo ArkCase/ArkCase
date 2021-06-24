@@ -50,10 +50,7 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
-import javax.naming.directory.SearchControls;
+import javax.naming.directory.*;
 
 import java.util.List;
 
@@ -119,8 +116,7 @@ public class SpringLdapUserDao
     }
 
     public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)
-            throws AcmLdapActionFailedException
-    {
+            throws AcmLdapActionFailedException, InvalidAttributeValueException {
         try
         {
             ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
@@ -139,6 +135,16 @@ public class SpringLdapUserDao
         }
         catch (AuthenticationException e)
         {
+            throw e;
+        }
+        catch (AcmLdapActionFailedException e)
+        {
+            log.debug("AcmLdapActionFailedException occurs",e);
+            throw e;
+        }
+        catch (InvalidAttributeValueException e)
+        {
+            log.debug("The password is too young to change ",e);
             throw e;
         }
         catch (Exception e)
