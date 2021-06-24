@@ -93,27 +93,50 @@
                         <div class="col-sm-6 form-group">
                             <label for="country" translate>
                                 complaints.comp.newComplaint.location.country</label>
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <select id="country" class="form-control" ng-model="complaint.defaultAddress.country"
+                                    ng-required="checkLocationRules(complaint.defaultAddress)"
                                     ng-change="changeStates(complaint.defaultAddress.country)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.country &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.country.validation.error</span>
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.addressType</label>
-                            <select ng-model="complaint.defaultAddress.type" ng-change="selectChanged()" class="form-control input-md">
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <select ng-model="complaint.defaultAddress.type"
+                                    ng-required="checkLocationRules(complaint.defaultAddress)"
+                                    ng-change="selectChanged()" class="form-control input-md">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.type &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.addressType.validation.error</span>
                         </div>
                     </div>
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.streetAddress</label>
-                            <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <input type="text"
+                                   ng-required="checkLocationRules(complaint.defaultAddress)"
+                                   ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.streetAddress &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.streetAddress.validation.error</span>
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.streetAddress2 </label>
@@ -124,30 +147,62 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.newComplaint.location.city</label>
-                            <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <input type="text"
+                                   ng-required="checkLocationRules(complaint.defaultAddress)"
+                                   ng-model="complaint.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.city &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.city.validation.error</span>
                         </div>
                         <div class="col-sm-2"
                                 ng-if="complaint.defaultAddress.country == 'US' || complaint.defaultAddress.country == 'CA' || complaint.defaultAddress.country == 'JP'">
                             <label translate>complaints.comp.newComplaint.location.state</label>
-                            <select ng-model="complaint.defaultAddress.state" class="form-control input-md">
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <select ng-model="complaint.defaultAddress.state"
+                                    ng-required="checkLocationRules(complaint.defaultAddress)"
+                                    class="form-control input-md">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.state &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="complaint.defaultAddress.country != 'US' && complaint.defaultAddress.country != 'CA' && complaint.defaultAddress.country != 'JP'">
                             <label for="txtState" translate>
                                 complaints.comp.newComplaint.location.state
                             </label>
-                            <input id="txtState" type="text" ng-model="complaint.defaultAddress.state" class="input-md form-control"
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <input id="txtState" type="text"
+                                   ng-required="checkLocationRules(complaint.defaultAddress)"
+                                   ng-model="complaint.defaultAddress.state" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.state.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.state &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.state.validation.error</span>
                         </div>
                         <div class="col-sm-2">
                             <label translate>complaints.comp.newComplaint.location.zip</label>
-                            <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
+                            <span ng-if="checkLocationRules(complaint.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <input type="text"
+                                   ng-required="checkLocationRules(complaint.defaultAddress)"
+                                   ng-model="complaint.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!complaint.defaultAddress.zip &&
+                                    checkLocationRules(complaint.defaultAddress)"
+                                  translate>
+                            complaints.comp.newComplaint.location.zip.validation.error</span>
                         </div>
 
                         <div class="col-sm-2 form-group">
