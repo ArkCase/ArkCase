@@ -168,39 +168,60 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="country" translate>consultations.newConsultation.country.label</label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <select id="country" class="form-control"
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].country"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].country"
+                                        ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         ng-change="changeStates(config.data.originator.person.addresses[primaryAddressIndex].country)">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].country &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      translate>
+                            consultations.newConsultation.country.validation.error</span>
                             </div>
                             <div class="col-sm-2">
                                 <label for="addressType" translate>consultations.newConsultation.address.type.label</label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <select id="addressType" class="form-control"
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].type"
+                                        ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].type && existingPerson.addresses[primaryAddressIndex].streetAddress">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
                                 </select>
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].type &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      translate>
+                            consultations.newConsultation.address.type.validation.error</span>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="address1" translate>consultations.newConsultation.address.label </label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="address1"
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].streetAddress"
+                                        ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         placeholder="{{'consultations.newConsultation.address.placeholder' | translate}}" name="address1"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].streetAddress">
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].streetAddress &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      translate>
+                            consultations.newConsultation.address.validation.error</span>
                             </div>
                             <div class="col-sm-2">
                                 <label for="address2" translate>consultations.newConsultation.address2.label</label>
@@ -216,15 +237,24 @@
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="city" translate>consultations.newConsultation.city.label</label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="city"
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].city"
+                                        ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         placeholder="{{'consultations.newConsultation.city.placeholder' | translate}}" name="city"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].city">
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].city &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      translate>
+                            consultations.newConsultation.city.validation.error</span>
                             </div>
                             <div class="col-sm-2">
                                 <label for="state" translate>consultations.newConsultation.state.label</label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <div ng-if="config.data.originator.person.addresses[primaryAddressIndex].country == 'US'
@@ -232,29 +262,46 @@
                             || config.data.originator.person.addresses[primaryAddressIndex].country == 'JP'">
                                     <select id="state" name="state"
                                             ng-model="config.data.originator.person.addresses[primaryAddressIndex].state"
+                                            ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                             ng-options="state.key as state.value | translate for state in states"
                                             class="form-control input-md"
                                             ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].state">
                                     </select>
+                                    <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].state &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                          translate>
+                            consultations.newConsultation.state.validation.error</span>
                                 </div>
                                 <div ng-if="config.data.originator.person.addresses[primaryAddressIndex].country != 'US' && config.data.originator.person.addresses[primaryAddressIndex].country != 'CA' && config.data.originator.person.addresses[primaryAddressIndex].country != 'JP'">
                                     <input id="txtState" type="text"
                                             ng-model="config.data.originator.person.addresses[primaryAddressIndex].state"
+                                            ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                             class="input-md form-control"
                                             placeholder="{{ 'consultations.newConsultation.state.placeholder' | translate }}"
                                             ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].state">
+                                    <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].state &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                          translate>
+                            consultations.newConsultation.state.validation.error</span>
                                 </div>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-2">
                                 <label for="zip" translate>consultations.newConsultation.zip.label</label>
+                                <span ng-if="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      class="required-asterisk">*</span>
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="zip" name="zip"
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].zip"
+                                        ng-required="checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         placeholder="{{'consultations.newConsultation.zip.placeholder' | translate}}"
                                         ng-disabled="isExistingPerson && existingPerson.addresses[primaryAddressIndex].zip">
+                                <span class="text-danger" ng-if="!config.data.originator.person.addresses[primaryAddressIndex].zip &&
+                                    checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                      translate>
+                            consultations.newConsultation.zip.validation.error</span>
                             </div>
                         </div>
                     </div>

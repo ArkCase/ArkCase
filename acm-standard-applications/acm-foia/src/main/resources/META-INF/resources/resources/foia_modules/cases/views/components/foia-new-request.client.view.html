@@ -233,7 +233,8 @@
                     <div class="row form-group">
                         <div class="col-sm-2">
                             <label for="country" translate>cases.newRequest.country.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
@@ -256,7 +257,8 @@
                         </div>
                         <div class="col-sm-2">
                             <label for="addressType" translate>cases.newRequest.address.type.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk-confirm-email">*</span>
                         </div>
                         <div class="col-sm-4">
@@ -281,7 +283,8 @@
                     <div class="row form-group">
                         <div class="col-sm-2">
                             <label for="address1" translate>cases.newRequest.address.label </label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
@@ -313,7 +316,8 @@
                     <div class="row form-group">
                         <div class="col-sm-2">
                             <label for="city" translate>cases.newRequest.city.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
@@ -330,7 +334,8 @@
                         </div>
                         <div class="col-sm-2">
                             <label for="state" translate>cases.newRequest.state.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk-state-label-modals">*</span>
                         </div>
                         <div class="col-sm-4">
@@ -365,7 +370,8 @@
                     <div class="row form-group">
                         <div class="col-sm-2">
                             <label for="zip" translate>cases.newRequest.zip.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser"
+                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser
+                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">

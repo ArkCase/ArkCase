@@ -487,6 +487,10 @@ angular.module('consultations').controller(
                 }
             };
 
+            $scope.checkLocationRules = function (address) {
+                return !_.values(address).every(_.isEmpty)
+            };
+
             function openDuplicatePersonPicker(result) {
                 $scope.config.data.originator.person.defaultEmail.value = '';
                 $scope.confirmationEmail = '';

@@ -278,6 +278,10 @@ angular.module('organizations').controller(
                 }
             };
 
+            $scope.checkLocationRules = function (address) {
+                return !_.values(address).every(_.isEmpty)
+            };
+
             // ---------------------   mention   ---------------------------------
                     $scope.paramsSummernote = {
                         emailAddresses: [],
