@@ -36,6 +36,8 @@ import com.armedia.acm.services.notification.service.provider.model.BillingTempl
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -76,7 +78,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
             sessionId = params[5];
             message = params[6].replace("-", "_");
         }
-        Date date = notification.getCreated();
+        LocalDateTime date = notification.getCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         String objectNumber = "";
         if (notification.getTitle().contains(":"))
         {
@@ -104,7 +106,7 @@ public class BillingTemplateModelProvider implements TemplateModelProvider<Billi
 
         }
         return new BillingTemplateModel(amount, token, fileId, objectId, notification.getParentType(), objectNumber, billName,
-                paymentMethod, last4digitsOfCardNumber, date.toString(), sessionId, message);
+                paymentMethod, last4digitsOfCardNumber, date, sessionId, message);
     }
 
     @Override
