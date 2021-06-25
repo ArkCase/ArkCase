@@ -26,6 +26,7 @@ package com.armedia.acm.services.notification.service.provider.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class BillingTemplateModel
@@ -39,12 +40,12 @@ public class BillingTemplateModel
     private final String billName;
     private final String paymentMethod;
     private final String cardNumber;
-    private final String paymentDate;
+    private final LocalDateTime paymentDate;
     private final String sessionId;
     private final String message;
 
     public BillingTemplateModel(String amount, String token, String fileId, String objectId, String objectType, String objectNumber, String billName,
-            String paymentMethod, String cardNumber, String paymentDate, String sessionId, String message)
+            String paymentMethod, String cardNumber, LocalDateTime paymentDate, String sessionId, String message)
     {
         this.amount = amount;
         this.token = token;
@@ -105,7 +106,7 @@ public class BillingTemplateModel
         return cardNumber;
     }
 
-    public String getPaymentDate()
+    public LocalDateTime getPaymentDate()
     {
         return paymentDate;
     }
