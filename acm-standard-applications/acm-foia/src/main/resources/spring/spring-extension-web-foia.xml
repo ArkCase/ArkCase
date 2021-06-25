@@ -26,6 +26,7 @@
             <beans:property name="portalRequestService" ref="portalRequestService"/>
             <beans:property name="personService" ref="personService"/>
             <beans:property name="responseInstallmentDao" ref="responseInstallmentDao"/>
+            <beans:property name="translationService" ref="translationService"/>
         </beans:bean>
 
         <beans:bean id="saveFOIARequestAPIController" class="gov.foia.web.api.SaveFOIARequestAPIController">
