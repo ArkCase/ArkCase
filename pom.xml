@@ -147,6 +147,9 @@
         <nimbusds.version>9.5</nimbusds.version>
         <openpdf.version>1.2.10</openpdf.version>
         <javax-jms.version>1.1</javax-jms.version>
+        <!-- code coverage reports -->
+        <jacoco.version>0.8.7</jacoco.version>
+        <code.coverage.minimum>0.02</code.coverage.minimum>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -415,6 +418,70 @@
                         <version>1.0</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <!-- with 0% test coverage -->
+                        <exclude>**/com/armedia/acm/form/closecomplaint/**</exclude>
+                        <exclude>**/com/armedia/acm/tools/activemq/**</exclude>
+                        <exclude>**/com/armedia/acm/crypto/**</exclude>
+                        <exclude>**/com/armedia/acm/tool/zylab/**</exclude>
+                        <exclude>**/com/armedia/acm/data/**</exclude>
+                        <!-- with < 2% (defined ${code.coverage.minimum}) test coverage -->
+                        <exclude>**/com/armedia/acm/calendar/**</exclude>
+                        <exclude>**/com/armedia/acm/plugins/admin/**</exclude>
+                        <exclude>**/com/armedia/acm/service/outlook/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-reports/jacoco.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco-reports/jacoco-output-unit-test</outputDirectory>
+                            <dataFile>${project.build.directory}/jacoco-reports/jacoco.exec</dataFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <!-- <haltOnFailure>false</haltOnFailure> or add -Djacoco.haltOnFailure=false as maven argument -->
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${code.coverage.minimum}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <dataFile>${project.build.directory}/jacoco-reports/jacoco.exec</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
