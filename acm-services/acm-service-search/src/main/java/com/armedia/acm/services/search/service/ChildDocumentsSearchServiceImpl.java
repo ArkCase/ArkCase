@@ -58,13 +58,13 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
         }
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
+            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND -status_lcs:CLOSE";
         }
         if (exceptDeletedOnly)
         {
             if (!activeOnly)
             {
-                query += " AND -status_s:DELETED";
+                query += " AND -status_lcs:DELETED";
             }
         }
         if (extra != null && extra.size() > 0)
@@ -91,7 +91,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
         String rowQueryParameters = String.format(
                 "q1=parent_object_type_s:%1$s AND object_type_s:%2$s AND parent_object_id_s:%3$s" +
                         "&q2=({!join from=timesheet_id_i to=object_id_i}parent_object_id_s:%3$s) AND object_type_s:%4$s" +
-                        "&fq=object_type_s:TASK&fq=-status_s:DELETE",
+                        "&fq=object_type_s:TASK&fq=-status_lcs:DELETE",
                 parentType,
                 childTypes.get(1),
                 parentId.toString(),

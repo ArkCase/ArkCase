@@ -44,7 +44,7 @@
             {
                 "desc": "cases.tree.filters.opened",
                 "name": "all-open-cases",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+                "value": "fq=-status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED",
                 "default": true
             },
             {
@@ -55,17 +55,17 @@
             {
                 "desc": "cases.tree.filters.iAmAssigned",
                 "name": "my-assigned-cases",
-                "value": "fq=assignee_s:${user}"
+                "value": "fq=assignee_id_lcs:${user}"
             },
             {
                 "desc": "cases.tree.filters.iAmFollowing",
                 "name": "my-following-cases",
-                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
             },
             {
                 "desc": "cases.tree.filters.closed",
                 "name": "all-closed-cases",
-                "value": "fq=status_s:CLOSED"
+                "value": "fq=status_lcs:CLOSED"
             },
             {
                 "desc": "cases.tree.filters.noFilter",
@@ -77,12 +77,12 @@
             {
                 "desc": "cases.tree.sorters.dateAsc",
                 "name": "sort-date-asc",
-                "value": "create_tdt ASC"
+                "value": "create_date_tdt ASC"
             },
             {
                 "desc": "cases.tree.sorters.dateDesc",
                 "name": "sort-date-desc",
-                "value": "create_tdt DESC",
+                "value": "create_date_tdt DESC",
                 "default": true
             },
             {
@@ -531,7 +531,7 @@
                         {
                             "width": 150,
                             "name": "assignee",
-                            "field": "assignee_s",
+                            "field": "assignee_id_lcs",
                             "displayName": "cases.comp.approvalRouting.assignee.label",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames"
@@ -539,10 +539,10 @@
                         {
                             "width": 150,
                             "name": "due",
-                            "field": "due_tdt",
+                            "field": "dueDate_tdt",
                             "displayName": "cases.comp.approvalRouting.dueDate.label",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 }
@@ -915,7 +915,7 @@
                 },
                 {
                     "name": "assignee",
-                    "field": "assignee_s",
+                    "field": "assignee_id_lcs",
                     "displayName": "cases.comp.tasks.table.columns.assignee",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
@@ -925,11 +925,11 @@
                     "field": "createDate",
                     "displayName": "cases.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
-                    "field": "priority_s",
+                    "field": "priority_lcs",
                     "displayName": "cases.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
@@ -938,11 +938,11 @@
                     "field": "dueDate",
                     "displayName": "cases.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
-                    "field": "status_s",
+                    "field": "status_lcs",
                     "displayName": "cases.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }

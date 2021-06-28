@@ -34,20 +34,20 @@
  {
  "desc": "All Open Cases",
  "name": "all-open-cases",
- "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+ "value": "fq=-status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED",
  "default": true
  },
  {
  "desc": "All I've Created",
  "name": "my-created-cases",
- "value": "fq=author_s:${user}"
+ "value": "fq=creator_lcs:${user}"
  }
  ],
  "sorters": [
  {
  "desc": "Sort Date Asc",
  "name": "sort-date-asc",
- "value": "create_tdt ASC"
+ "value": "create_date_tdt ASC"
  },
  {
  "desc": "Sort By Case Name",

@@ -59,7 +59,7 @@
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='all-open-cases'/value",
-        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -queue_name_s:Release"
+        "value": "fq=-status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND -queue_name_s:Release"
     },
     {
         "op": "remove",
@@ -90,7 +90,7 @@
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='my-assigned-cases'/value",
-        "value": "fq=assignee_s:${user} AND -queue_name_s:Release"
+        "value": "fq=assignee_id_lcs:${user} AND -queue_name_s:Release"
     },
     {
         "op": "add",
