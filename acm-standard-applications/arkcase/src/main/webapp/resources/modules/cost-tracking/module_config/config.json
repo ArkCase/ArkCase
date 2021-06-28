@@ -42,12 +42,12 @@
         "sorters": [
             {
                 "desc": "costTracking.tree.sorters.dateAsc",
-                "name": "create_tdt ASC",
+                "name": "create_date_tdt ASC",
                 "default": true
             },
             {
                 "desc": "costTracking.tree.sorters.dateDesc",
-                "name": "create_tdt DESC"
+                "name": "create_date_tdt DESC"
             },
             {
                 "desc": "costTracking.tree.sorters.idAsc",
@@ -213,34 +213,34 @@
                         },
                         {
                             "name": "assignee",
-                            "field": "assignee_s",
+                            "field": "assignee_id_lcs",
                             "displayName": "costTracking.comp.tasks.table.columns.assignee",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames"
                         },
                         {
                             "name": "created",
-                            "field": "create_tdt",
+                            "field": "create_date_tdt",
                             "displayName": "costTracking.comp.tasks.table.columns.created",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "priority",
-                            "field": "priority_s",
+                            "field": "priority_lcs",
                             "displayName": "costTracking.comp.tasks.table.columns.priority",
                             "headerCellFilter": "translate"
                         },
                         {
                             "name": "due",
-                            "field": "due_tdt",
+                            "field": "dueDate_tdt",
                             "displayName": "costTracking.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "status",
-                            "field": "status_s",
+                            "field": "status_lcs",
                             "displayName": "costTracking.comp.tasks.table.columns.status",
                             "headerCellFilter": "translate"
                         }
@@ -513,34 +513,34 @@
                 },
                 {
                     "name": "assignee",
-                    "field": "assignee_s",
+                    "field": "assignee_id_lcs",
                     "displayName": "costTracking.comp.tasks.table.columns.assignee",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
                 },
                 {
                     "name": "created",
-                    "field": "create_tdt",
+                    "field": "create_date_tdt",
                     "displayName": "costTracking.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
-                    "field": "priority_s",
+                    "field": "priority_lcs",
                     "displayName": "costTracking.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "due",
-                    "field": "due_tdt",
+                    "field": "dueDate_tdt",
                     "displayName": "costTracking.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
-                    "field": "status_s",
+                    "field": "status_lcs",
                     "displayName": "costTracking.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }

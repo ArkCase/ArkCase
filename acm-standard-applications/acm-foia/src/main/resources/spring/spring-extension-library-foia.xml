@@ -406,17 +406,17 @@
             <beans:property name="sortParameterNameToCmisFieldName">
                 <map>
                     <entry key="name" value="name_lcs"/>
-                    <entry key="type" value="type_s"/>
+                    <entry key="type" value="type_lcs"/>
                     <entry key="created" value="create_date_tdt"/>
                     <entry key="author" value="author"/>
                     <entry key="version" value="version_s"/>
                     <entry key="modified" value="modified_date_tdt"/>
                     <entry key="creator" value="author"/>
-                    <entry key="modifier" value="modifier_s"/>
+                    <entry key="modifier" value="modifier_lcs"/>
                     <entry key="category" value="category_s"/>
                     <entry key="redactionStatus" value="redaction_status_s"/>
                     <entry key="reviewStatus" value="review_status_s"/>
-                    <entry key="status" value="status_s"/>
+                    <entry key="status" value="status_lcs"/>
                     <entry key="public" value="public_flag_b"/>
                 </map>
             </beans:property>

@@ -863,7 +863,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     {
         Long businessProcessId = null;
         String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId
-                + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
+                + " AND outcome_name_s:buckslipOutcome AND status_lcs:CLOSED";
         String retval = null;
 
         try

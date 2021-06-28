@@ -302,12 +302,12 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     //    'request_id_s',
                     //    'page_count_l',
                     //    'patient_name_s',
-                    //    'priority_s',
+                    //    'priority_lcs',
                     //    'requester_type_s',
                     //    'requester_name_s',
                     //    'reject_reason_ss',
                     //    'state_lcs',
-                    //    'type_s',
+                    //    'type_lcs',
                     //    'work_order_number_l',
                     //    'zip_code_s'
                     //].join(',')

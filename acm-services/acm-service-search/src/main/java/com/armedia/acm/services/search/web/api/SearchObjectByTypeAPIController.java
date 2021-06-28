@@ -102,12 +102,12 @@ public class SearchObjectByTypeAPIController
         {
             if (!StringUtils.isBlank(assignee))
             {
-                query += " AND assignee_s:" + assignee;
+                query += " AND assignee_id_lcs:" + assignee;
             }
 
             if (activeOnly)
             {
-                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE" +
+                query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND -status_lcs:CLOSE" +
                         " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
             }
             log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
@@ -181,12 +181,12 @@ public class SearchObjectByTypeAPIController
 
         if (!StringUtils.isBlank(assignee))
         {
-            query += " AND assignee_s:" + assignee;
+            query += " AND assignee_id_lcs:" + assignee;
         }
 
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
@@ -216,12 +216,12 @@ public class SearchObjectByTypeAPIController
 
         if (!StringUtils.isBlank(assignee))
         {
-            query += " AND assignee_s:" + assignee;
+            query += " AND assignee_id_lcs:" + assignee;
         }
 
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 

@@ -28,8 +28,8 @@ package com.armedia.acm.services.search.model.solr;
  */
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -84,9 +84,9 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         values.put("literal.id", getId());
         values.put("literal.object_type_s", getObject_type_s());
         values.put("literal.object_id_s", getObject_id_s());
-        values.put("literal.modified_date_tdt", getModified_date_tdt().toInstant().toString());
+        values.put("literal.modified_date_tdt", getModified_date_tdt()!=null?getModified_date_tdt().toInstant().toString():null);
         values.put("literal.modifier_lcs", getModifier_lcs());
-        values.put("literal.create_date_tdt", getCreate_date_tdt().toInstant().toString());
+        values.put("literal.create_date_tdt", getCreate_date_tdt()!=null?getCreate_date_tdt().toInstant().toString():null);
         values.put("literal.creator_lcs", getCreator_lcs());
         values.put("literal.name", getName());
         values.put("literal.parent_id_s", getParent_id_s());

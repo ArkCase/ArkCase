@@ -166,6 +166,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
 
+        solr.setCreator_lcs(in.getCreator());
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
@@ -246,9 +247,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
-        solr.setAdditionalProperty("author_s", in.getCreator());
         solr.setAdditionalProperty("category_s", in.getCategory());
-        solr.setAdditionalProperty("type_s", in.getFileType());
+        solr.setAdditionalProperty("type_lcs", in.getFileType());
         solr.setAdditionalProperty("version_s", in.getActiveVersionTag());
         // need an _lcs field for sorting
         solr.setAdditionalProperty("name_lcs", in.getFileName());

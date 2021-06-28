@@ -86,8 +86,8 @@ angular.module('tasks').factory(
                                         var tasks = data.response.docs;
                                         angular.forEach(tasks, function(task) {
                                             //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
-                                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
-                                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.dueDate_tdt)) && !(task.status_lcs === "CLOSED");
+                                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.dueDate_tdt)) && !(task.status_lcs === "CLOSED");
                                         });
                                         that.scope.gridOptions = that.scope.gridOptions || {};
                                         that.scope.gridOptions.data = tasks;
@@ -105,7 +105,7 @@ angular.module('tasks').factory(
                             });
 
                             that.scope.isDeleteDisabled = arg.isDeleteDisabled || function(rowEntity) {
-                                return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== that.scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
+                                return ((Util.isEmpty(rowEntity.assignee_id_lcs) || (rowEntity.assignee_id_lcs !== that.scope.userId)) || (rowEntity.status_lcs === "CLOSED") || (!rowEntity.adhocTask_b));
                             };
 
                             that.scope.onClickObjLink = arg.onClickObjLink || function(event, rowEntity) {

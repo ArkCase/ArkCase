@@ -253,11 +253,11 @@ public class AcmObjectLockServiceImplTest
         Resource resourceFile = new ClassPathResource("/solrResponseCaseFile.json");
         String jsonContent = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
 
-        String filter = "fq=status_s:OPEN";
+        String filter = "fq=status_lcs:OPEN";
 
         expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
                 "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "",
-                "fq=status_s:OPEN")).andReturn(jsonContent);
+                "fq=status_lcs:OPEN")).andReturn(jsonContent);
 
         replay(mocks);
 
@@ -298,10 +298,10 @@ public class AcmObjectLockServiceImplTest
         Resource resourceFile = new ClassPathResource("/solrResponseCaseFile.json");
         String jsonContent = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
 
-        String filter = "fq=status_s:OPEN";
+        String filter = "fq=status_lcs:OPEN";
 
         expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
-                "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, "", "fq=status_s:OPEN"))
+                "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, "", "fq=status_lcs:OPEN"))
                         .andReturn(jsonContent);
 
         replay(mocks);

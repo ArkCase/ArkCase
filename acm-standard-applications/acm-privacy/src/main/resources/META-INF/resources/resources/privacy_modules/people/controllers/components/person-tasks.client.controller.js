@@ -73,7 +73,7 @@ angular.module('people').controller(
             });
 
             $scope.isDeleteDisabled = function(rowEntity) {
-                return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
+                return ((Util.isEmpty(rowEntity.assignee_id_lcs) || (rowEntity.assignee_id_lcs !== $scope.userId)) || (rowEntity.status_lcs === "CLOSED") || (!rowEntity.adhocTask_b));
             };
 
         } ]);

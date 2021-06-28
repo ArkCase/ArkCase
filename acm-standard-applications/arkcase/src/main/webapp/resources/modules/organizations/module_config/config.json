@@ -32,23 +32,23 @@
             {
                 "desc": "organizations.tree.filters.iHaveCreated",
                 "name": "my-created",
-                "value": "fq=author_s:${user}"
+                "value": "fq=creator_lcs:${user}"
             },
             {
                 "desc": "organizations.tree.filters.iHaveCreatedActive",
                 "name": "my-created-active",
-                "value": "fq=author_s:${user} AND status_s:ACTIVE"
+                "value": "fq=creator_lcs:${user} AND status_lcs:ACTIVE"
             },
             {
                 "desc": "organizations.tree.filters.active",
                 "name": "active",
-                "value": "status_s:ACTIVE",
+                "value": "status_lcs:ACTIVE",
                 "default": true
             },
             {
                 "desc": "organizations.tree.filters.inActive",
                 "name": "in-active",
-                "value": "status_s:INACTIVE"
+                "value": "status_lcs:INACTIVE"
             },
             {
                 "desc": "organizations.tree.filters.noFilter",
