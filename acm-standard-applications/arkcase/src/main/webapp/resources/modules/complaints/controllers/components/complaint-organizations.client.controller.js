@@ -53,8 +53,9 @@ angular.module('complaints').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.objectInfo = objectInfo;
-                        $scope.gridOptions.data = $scope.objectInfo.organizationAssociations;
+                        OrganizationInfoService.getOrganizations().then(function(organizations) {
+                            $scope.gridOptions.data = HelperUiGridService.filterRestricted(organizations.data.response.docs, $scope.objectInfo.organizationAssociations);
+                        });
                     };
 
                     $scope.getPrimaryContact = function(organizationAssiciation) {

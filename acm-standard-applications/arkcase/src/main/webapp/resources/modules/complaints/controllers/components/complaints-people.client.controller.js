@@ -57,8 +57,9 @@ angular.module('complaints').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.objectInfo = objectInfo;
-                        $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                        PersonInfoService.getPersons().then(function(persons) {
+                            $scope.gridOptions.data = HelperUiGridService.filterRestricted(persons.data.response.docs, $scope.objectInfo.personAssociations);
+                        });
                     };
 
                     var newPersonAssociation = function() {
