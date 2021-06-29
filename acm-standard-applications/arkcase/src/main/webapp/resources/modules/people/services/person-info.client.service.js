@@ -132,6 +132,28 @@ angular.module('services').factory('Person.InfoService', [ '$resource', '$transl
 
     /**
      * @ngdoc method
+     * @name getPersons
+     * @methodOf services:Person.InfoService
+     *
+     * @description
+     * Query all person data
+     *
+     * @returns {Object} Promise
+     */
+    Service.getPersons = function () {
+        return $http({
+            method: 'GET',
+            url: peopleBaseUrl,
+            params: {
+                n: 10000
+            },
+            cache: false,
+            isArray: true
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name queryByEmail
      * @methodOf services:Person.InfoService
      *

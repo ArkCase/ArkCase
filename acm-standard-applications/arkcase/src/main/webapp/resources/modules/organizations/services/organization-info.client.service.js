@@ -10,7 +10,7 @@
  *
  * Organization.InfoService provides functions for Organization database data
  */
-angular.module('services').factory('Organization.InfoService', [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService', 'CacheFactory', 'ObjectService', function($resource, $translate, Store, Util, MessageService, CacheFactory, ObjectService) {
+angular.module('services').factory('Organization.InfoService', [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', 'MessageService', 'CacheFactory', 'ObjectService', function($resource, $translate, Store, Util, $http, MessageService, CacheFactory, ObjectService) {
 
     var organizationCache = CacheFactory(ObjectService.ObjectTypes.ORGANIZATION, {
         maxAge: 1 * 60 * 1000, // Items added to this cache expire after 1 minute
@@ -129,6 +129,28 @@ angular.module('services').factory('Organization.InfoService', [ '$resource', '$
                     return data;
                 }
             }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getOrganizations
+     * @methodOf services:Organization.InfoService
+     *
+     * @description
+     * Query all organization data
+     *
+     * @returns {Object} Promise
+     */
+    Service.getOrganizations = function () {
+        return $http({
+            method: 'GET',
+            url: organizationsBaseUrl,
+            params: {
+                n: 10000
+            },
+            cache: false,
+            isArray: true
         });
     };
 
