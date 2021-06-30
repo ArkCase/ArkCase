@@ -136,32 +136,32 @@ public class AcmFileSystemLockManager implements LockManager
     }
 
     @Override
-    public LockResult refresh(String tokenId, LockableResource resource) throws NotAuthorizedException
+    public LockResult refresh(String tokenId, LockTimeout timeout, LockableResource resource) throws NotAuthorizedException
     {
         ReadLock readLock = readWriteLock.readLock();
-        readLock.lock();
-        CurrentLock lock = null;
-        try
-        {
-            lock = locks.get(resource.getUniqueId());
-            if (lock == null)
-            {
-                return LockResult.failed(LockResult.FailureReason.PRECONDITION_FAILED);
-            }
-            else if (!lock.token.tokenId.equals(tokenId))
-            {
-                throw new NotAuthorizedException(resource);
-            }
-            else
-            {
-                lock.token.setFrom(new Date());
-                return LockResult.success(lock.token);
-            }
-        }
-        finally
-        {
-            readLock.unlock();
-        }
+      readLock.lock();
+      CurrentLock lock = null;
+      try
+      {
+          lock = locks.get(resource.getUniqueId());
+          if (lock == null)
+          {
+              return LockResult.failed(LockResult.FailureReason.PRECONDITION_FAILED);
+          }
+          else if (!lock.token.tokenId.equals(tokenId))
+          {
+              throw new NotAuthorizedException(resource);
+          }
+          else
+          {
+              lock.token.setFrom(new Date());
+              return LockResult.success(lock.token);
+          }
+      }
+      finally
+      {
+          readLock.unlock();
+      }
     }
 
     @Override
@@ -274,5 +274,7 @@ public class AcmFileSystemLockManager implements LockManager
         }
 
     }
+
+   
 
 }
