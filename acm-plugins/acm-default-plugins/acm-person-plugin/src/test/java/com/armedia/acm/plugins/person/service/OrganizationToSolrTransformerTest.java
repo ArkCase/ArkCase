@@ -27,6 +27,13 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -382,14 +389,14 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         assertThat(result.getCreator_lcs(), is(in.getCreator()));
         assertThat(result.getModified_date_tdt(), is(in.getModified()));
         assertThat(result.getModifier_lcs(), is(in.getModifier()));
-        assertThat(result.getType_lcs(), is(in.getOrganizationType()));
+        assertThat(result.getAdditionalProperties().get(TYPE_LCS), is(in.getOrganizationType()));
         assertThat(result.getName(), is(in.getOrganizationValue()));
-        assertThat(result.getTitle_parseable(), is(in.getOrganizationValue()));
-        assertThat(result.getTitle_parseable_lcs(), is(in.getOrganizationValue()));
-        assertThat(result.getStatus_lcs(), is(in.getStatus()));
-        assertThat(result.getAdditionalProperties().get("creator_full_name_lcs"), is("Create Creator"));
-        assertThat(result.getAdditionalProperties().get("modifier_full_name_lcs"), is("Modify Modifier"));
-        assertThat(result.getAdditionalProperties().get("acm_participants_lcs"),
+        assertThat(result.getAdditionalProperties().get(TITLE_PARSEABLE), is(in.getOrganizationValue()));
+        assertThat(result.getAdditionalProperties().get(TITLE_PARSEABLE_LCS), is(in.getOrganizationValue()));
+        assertThat(result.getAdditionalProperties().get(STATUS_LCS), is(in.getStatus()));
+        assertThat(result.getAdditionalProperties().get(CREATOR_FULL_NAME_LCS), is("Create Creator"));
+        assertThat(result.getAdditionalProperties().get(MODIFIER_FULL_NAME_LCS), is("Modify Modifier"));
+        assertThat(result.getAdditionalProperties().get(ACM_PARTICIPANTS_LCS),
                 is("[{\"ldapId\":\"ldapType\", \"type\":\"participantType\"}]"));
     }
 }

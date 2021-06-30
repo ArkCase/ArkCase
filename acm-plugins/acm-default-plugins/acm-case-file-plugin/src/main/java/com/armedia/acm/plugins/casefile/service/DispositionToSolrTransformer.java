@@ -34,6 +34,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 09.03.2015.
@@ -52,24 +53,24 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Disposition in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), null);
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setAdditionalProperty("disposition_type_s", in.getDispositionType());
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(Disposition in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put("disposition_type_s", in.getDispositionType());
         if (in.getExistingCaseNumber() != null)
         {
-            solr.setAdditionalProperty("target_object_number_s", in.getExistingCaseNumber());
+            additionalProperties.put("target_object_number_s", in.getExistingCaseNumber());
         }
-
-        return solr;
     }
 
     @Override

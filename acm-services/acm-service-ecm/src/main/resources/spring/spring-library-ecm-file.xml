@@ -210,7 +210,7 @@
                 <entry key="author" value="author"/>
                 <entry key="version" value="version_s"/>
                 <entry key="modified" value="modified_date_tdt"/>
-                <entry key="creator" value="author"/>
+                <entry key="creator" value="creator_lcs"/>
                 <entry key="modifier" value="modifier_lcs"/>
                 <entry key="category" value="category_s"/>
                 <entry key="status" value="status_lcs"/>

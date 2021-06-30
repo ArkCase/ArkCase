@@ -62,7 +62,7 @@ public class SARPortalPersonToSolrTransformer extends SARPersonToSolrTransformer
 
             if (solr != null)
             {
-                solr.setObject_sub_type_s("PORTAL_SAR_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "PORTAL_SAR_PERSON");
             }
 
             return solr;

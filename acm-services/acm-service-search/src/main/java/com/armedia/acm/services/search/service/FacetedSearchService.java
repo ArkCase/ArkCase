@@ -27,6 +27,8 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+
 import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -655,9 +657,9 @@ public class FacetedSearchService
             {
                 String parentId = "";
                 String parentType = "";
-                if (docs.getJSONObject(i).has("parent_ref_s"))
+                if (docs.getJSONObject(i).has(PARENT_REF_S))
                 {
-                    String parentReference = docs.getJSONObject(i).getString("parent_ref_s");
+                    String parentReference = docs.getJSONObject(i).getString(PARENT_REF_S);
                     parentId = StringUtils.substringBefore(parentReference, "-");
                     parentType = StringUtils.substringAfter(parentReference, "-");
                 }

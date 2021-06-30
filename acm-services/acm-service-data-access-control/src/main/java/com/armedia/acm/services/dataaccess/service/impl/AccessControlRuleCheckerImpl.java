@@ -27,6 +27,8 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
@@ -36,10 +38,10 @@ import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -248,10 +250,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         if (userIsParticipantTypeAny != null && !userIsParticipantTypeAny.isEmpty())
         {
             // if participants defined
-            if (solrJsonResult.has("acm_participants_lcs"))
+            if (solrJsonResult.has(ACM_PARTICIPANTS_LCS))
             {
                 log.debug("Checking if {} is a participant of type in 'userIsParticipantTypeAny' list", authentication.getName());
-                JSONArray securityParticipants = new JSONArray(solrJsonResult.getString("acm_participants_lcs"));
+                JSONArray securityParticipants = new JSONArray(solrJsonResult.getString(ACM_PARTICIPANTS_LCS));
                 Set<String> participantsOfTypeAny = getParticipantsOfType(securityParticipants, userIsParticipantTypeAny);
                 return participantsOfTypeAny.stream().anyMatch(ldapId -> isParticipantAnyOf(ldapId, authentication));
             }

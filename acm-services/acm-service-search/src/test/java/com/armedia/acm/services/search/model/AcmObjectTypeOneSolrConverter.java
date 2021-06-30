@@ -33,6 +33,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/23/14.
@@ -76,5 +77,11 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmObjectTypeOne.class;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmObjectTypeOne in, Map<String, Object> additionalProperties)
+    {
+
     }
 }

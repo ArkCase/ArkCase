@@ -27,6 +27,16 @@ package com.armedia.acm.services.note.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
@@ -37,6 +47,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note>
 {
@@ -53,47 +64,46 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Note in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        String name = String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId());
 
-        solr.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                NoteConstants.OBJECT_TYPE, name);
 
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(NoteConstants.OBJECT_TYPE);
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setDescription_parseable(in.getNote());
-        solr.setTitle_parseable(in.getNote());
-        solr.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
+        return solrDoc;
+    }
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-
+    @Override
+    public void mapAdditionalProperties(Note in, Map<String, Object> additionalProperties)
+    {
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         AcmUser author = getUserDao().quietFindByUserId(in.getAuthor());
         if (author != null)
         {
-            solr.setAdditionalProperty("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
+            additionalProperties.put("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
         }
 
-        solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
-        solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
-        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        solr.setAdditionalProperty("type_lcs", in.getType());
-        solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
-
-        return solr;
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getNote());
+        additionalProperties.put(TITLE_PARSEABLE, in.getNote());
+        additionalProperties.put(PARENT_TYPE_S, in.getParentType());
+        additionalProperties.put(PARENT_OBJECT_ID_I, in.getParentId());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getParentTitle());
+        additionalProperties.put(TYPE_LCS, in.getType());
+        additionalProperties.put(PARENT_REF_S, String.format("%d-%s", in.getParentId(), in.getParentType()));
     }
 
     @Override

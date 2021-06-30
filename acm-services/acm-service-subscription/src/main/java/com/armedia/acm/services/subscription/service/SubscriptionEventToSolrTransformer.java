@@ -27,6 +27,16 @@ package com.armedia.acm.services.subscription.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.OWNER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NAME_T;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.services.notification.service.NotificationFormatter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -38,6 +48,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 29.01.2015.
@@ -60,54 +71,53 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscriptionEvent in)
     {
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
         String event = auditEventConfig.getEventTypes().getOrDefault("eventType." + in.getEventType(), "Was updated");
         String title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + event;
 
-        solr.setTitle_parseable(notificationFormatter.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), title);
 
+        solrDoc.setAdditionalProperty(TITLE_PARSEABLE, title);
+
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmSubscriptionEvent in, Map<String, Object> additionalProperties)
+    {
         if (in.getEventObjectId() != null)
         {
-            solr.setParent_id_s(Long.toString(in.getEventObjectId()));
+            additionalProperties.put(PARENT_ID_S, in.getEventObjectId());
         }
         else
         {
-            solr.setParent_id_s("");
+            additionalProperties.put(PARENT_ID_S, "");
         }
 
-        solr.setParent_type_s(in.getEventObjectType());
-        solr.setParent_name_t(in.getEventObjectName());
-        solr.setParent_number_lcs(in.getEventObjectNumber());
+        additionalProperties.put(PARENT_TYPE_S, in.getEventObjectType());
+        additionalProperties.put(PARENT_NAME_T, in.getEventObjectName());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getEventObjectNumber());
 
-        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
-
-        solr.setOwner_lcs(in.getSubscriptionOwner());
-        solr.setAdditionalProperty("related_subscription_ref_s", in.getRelatedSubscriptionId());
+        additionalProperties.put(PARENT_REF_S, in.getEventObjectId() + "-" + in.getEventObjectType());
+        additionalProperties.put(OWNER_LCS, in.getSubscriptionOwner());
+        additionalProperties.put("related_subscription_ref_s", in.getRelatedSubscriptionId());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
-
-        return solr;
     }
 
     @Override

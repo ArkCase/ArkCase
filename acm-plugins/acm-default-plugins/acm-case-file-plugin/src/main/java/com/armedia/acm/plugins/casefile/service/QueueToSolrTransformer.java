@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+
 import com.armedia.acm.plugins.casefile.dao.AcmQueueDao;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -56,38 +59,35 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmQueue in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-QUEUE");
-        solr.setObject_id_s(in.getId().toString());
-        solr.setObject_type_s("QUEUE");
-        solr.setName(in.getName());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), "QUEUE",
+                in.getName());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        Map<String, Object> properties = solr.getAdditionalProperties();
+        return solrDoc;
+    }
 
-        properties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
-        properties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
-        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER, in.getDisplayOrder());
+    @Override
+    public void mapAdditionalProperties(AcmQueue in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
+        additionalProperties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
+        additionalProperties.put(SearchConstants.PROPERTY_QUEUE_ORDER, in.getDisplayOrder());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
-
-        return solr;
     }
 
     @Override

@@ -58,7 +58,6 @@ public interface SearchConstants
     String PROPERTY_RESPONSE = "response";
     String PROPERTY_DOCS = "docs";
     String PROPERTY_NAME = "name";
-    String PROPERTY_ASCENDANTS = "ascendants_id_ss";
     String PROPERTY_FACET_COUNTS = "facet_counts";
     String PROPERTY_FACET_FIELDS = "facet_fields";
     String PROPERTY_OBJECT_ID_S = "object_id_s";
@@ -79,11 +78,10 @@ public interface SearchConstants
     String PROPERTY_PUBLIC_FLAG = "public_flag_b";
     String PROPERTY_REDACTION_STATUS = "redaction_status_s";
     String PROPERTY_REVIEW_STATUS = "review_status_s";
-    String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
     String PROPERTY_QUEUE_ID_S = "queue_id_s";
     String PROPERTY_QUEUE_NAME_S = "queue_name_s";
     String PROPERTY_QUEUE_ORDER = "queue_order_i";
-    String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_object_type_s";
+    String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_type_s";
     String PROPERTY_PARENT_OBJECT_ID_I = "parent_object_id_i";
     String PROPERTY_PAGE_COUNT_I = "page_count_i";
     String PROPERTY_OBJECT_TYPE_S = "object_type_s";

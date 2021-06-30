@@ -63,7 +63,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
             if (solr != null)
             {
                 mapRequestProperties(requestIn, solr.getAdditionalProperties());
-                solr.setObject_sub_type_s("FOIA_REQUEST");
+                solr.setAdditionalProperty("object_sub_type_s", "FOIA_REQUEST");
             }
             return solr;
         }

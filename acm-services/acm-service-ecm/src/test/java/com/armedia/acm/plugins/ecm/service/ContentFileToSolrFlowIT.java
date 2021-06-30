@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CMIS_VERSION_SERIES_ID_S;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
@@ -179,7 +180,7 @@ public class ContentFileToSolrFlowIT
         log.debug("doc id: {}", newDocument.getVersionSeriesId());
 
         SolrContentDocument solrContentDocument = new SolrContentDocument();
-        solrContentDocument.setCmis_version_series_id_s(newDocument.getVersionSeriesId());
+        solrContentDocument.setAdditionalProperty(CMIS_VERSION_SERIES_ID_S, newDocument.getVersionSeriesId());
         solrContentDocument.setAdditionalProperty("cmis_repository_id_s", ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         solrContentDocument.setName("/spring/spring-library-add-file-camel" + System.currentTimeMillis() + ".xml");
 
