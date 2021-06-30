@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CMIS_VERSION_SERIES_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CONTENT_TYPE;
+
 import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -75,7 +78,7 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         final SolrContentDocument solrContentDocument = getObjectConverter().getJsonUnmarshaller().unmarshall(json,
                 SolrContentDocument.class);
         final String cmisRepositoryId = (String) solrContentDocument.getAdditionalProperties().get("cmis_repository_id_s");
-        final String cmisObjectId = solrContentDocument.getCmis_version_series_id_s();
+        final String cmisObjectId = (String) solrContentDocument.getAdditionalProperties().get(CMIS_VERSION_SERIES_ID_S);
 
         logger.debug("Finding content file {} from repository id: {}", cmisObjectId, cmisRepositoryId);
 
@@ -100,7 +103,7 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         ContentStream contentStream = cmisDoc.getContentStream();
 
         final String logText = solrContentDocument.getName();
-        final String contentType = solrContentDocument.getContent_type();
+        final String contentType = solrContentDocument.getAdditionalProperties().get(CONTENT_TYPE).toString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", contentType);

@@ -1,13 +1,10 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.armedia.acm.plugins.addressable.model.PostalAddress;
-
 /*-
  * #%L
  * ACM Default Plugin: Person
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2021 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -30,6 +27,18 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DATA_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.VALUE_PARSEABLE;
+
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -46,6 +55,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/27/14.
@@ -64,52 +74,51 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization in)
     {
-        SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        getSearchAccessControlFields().setAccessControlFields(orgDoc, org);
+        mapRequiredProperties(solrDoc, in.getOrganizationId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getOrganizationValue());
 
-        orgDoc.setId(org.getOrganizationId() + "-ORGANIZATION");
-        orgDoc.setObject_type_s("ORGANIZATION");
-        orgDoc.setObject_id_s(org.getOrganizationId() + "");
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        orgDoc.setCreate_date_tdt(org.getCreated());
-        orgDoc.setCreator_lcs(org.getCreator());
-        orgDoc.setModified_date_tdt(org.getModified());
-        orgDoc.setModifier_lcs(org.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        orgDoc.setType_lcs(org.getOrganizationType());
-        orgDoc.setValue_parseable(org.getOrganizationValue());
+        return solrDoc;
+    }
 
-        orgDoc.setName(org.getOrganizationValue());
-        orgDoc.setTitle_parseable(org.getOrganizationValue());
-        orgDoc.setTitle_parseable_lcs(org.getOrganizationValue());
-        orgDoc.setStatus_lcs(org.getStatus());
+    @Override
+    public void mapAdditionalProperties(Organization in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TYPE_LCS, in.getOrganizationType());
+        additionalProperties.put(VALUE_PARSEABLE, in.getOrganizationValue());
+        additionalProperties.put(TITLE_PARSEABLE, in.getOrganizationValue());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getOrganizationValue());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
 
         /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            orgDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
-        AcmUser modifier = getUserDao().quietFindByUserId(org.getModifier());
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        orgDoc.setAdditionalProperty("primary_contact_s", getPrimaryContact(org));
-        orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
-        orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
-        orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
-        orgDoc.setAdditionalProperty("default_email_lcs", getDefaultEmail(org));
+        additionalProperties.put(DATA_LCS, in.getOrganizationValue());
+        additionalProperties.put("primary_contact_s", getPrimaryContact(in));
+        additionalProperties.put("default_phone_s", getDefaultPhone(in));
+        additionalProperties.put("default_location_s", getDefaultAddress(in));
+        additionalProperties.put("default_identification_s", getDefaultIdentification(in));
+        additionalProperties.put("default_email_lcs", getDefaultEmail(in));
 
-        String participantsListJson = ParticipantUtils.createParticipantsListJson(org.getParticipants());
-        orgDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-
-        return orgDoc;
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
     }
 
     private String getDefaultEmail(Organization organization)

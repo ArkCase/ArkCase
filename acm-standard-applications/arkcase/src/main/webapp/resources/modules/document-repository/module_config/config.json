@@ -39,7 +39,7 @@
             {
                 "desc": "document-repository.tree.filters.iAmFollowing",
                 "name": "my-following-document-repositories",
-                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
+                "value": "fq={!join from=parent_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
             },
             {
                 "desc": "document-repository.tree.filters.noFilter",

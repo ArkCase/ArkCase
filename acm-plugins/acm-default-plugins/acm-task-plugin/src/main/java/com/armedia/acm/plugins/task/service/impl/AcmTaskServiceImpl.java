@@ -462,7 +462,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         log.debug("Taking task objects from Solr for parentObjectType = {} and parentObjectId={}", parentObjectType, parentObjectId);
 
-        String query = "object_type_s:TASK AND parent_object_type_s :" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
+        String query = "object_type_s:TASK AND parent_type_s :" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
 
         try
         {
@@ -862,7 +862,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         Long businessProcessId = null;
-        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId
+        String query = "object_type_s:TASK AND parent_type_s:" + objectType + " AND parent_object_id_i:" + objectId
                 + " AND outcome_name_s:buckslipOutcome AND status_lcs:CLOSED";
         String retval = null;
 

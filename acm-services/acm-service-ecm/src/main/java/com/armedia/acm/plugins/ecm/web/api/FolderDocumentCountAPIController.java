@@ -101,7 +101,7 @@ public class FolderDocumentCountAPIController
                     auth,
                     SolrCore.ADVANCED_SEARCH,
                     "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + objectId
-                            + " AND parent_object_type_s:" + objectType,
+                            + " AND parent_type_s:" + objectType,
                     0,
                     1,
                     "object_id_s ASC",
@@ -128,7 +128,7 @@ public class FolderDocumentCountAPIController
                         auth,
                         SolrCore.ADVANCED_SEARCH,
                         "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + objectId
-                                + " AND parent_object_type_s:" + objectType,
+                                + " AND parent_type_s:" + objectType,
                         0,
                         baseFolders,
                         "object_id_s ASC",
@@ -203,7 +203,7 @@ public class FolderDocumentCountAPIController
             String subFolderResults = getExecuteSolrQuery().getResultsByPredefinedQuery(
                     auth,
                     SolrCore.ADVANCED_SEARCH,
-                    "parent_object_id_s:" + folderId + " AND parent_object_type_s:FOLDER",
+                    "parent_id_s:" + folderId + " AND parent_type_s:FOLDER",
                     0,
                     subFolderCount,
                     "object_id_s ASC",

@@ -27,6 +27,15 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.VALUE_PARSEABLE;
+
 import com.armedia.acm.plugins.person.dao.PersonAliasDao;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -36,6 +45,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by will.phillips on 8/4/2016.
@@ -53,45 +63,44 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAlias org)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAlias in)
     {
-        SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
-        orgDoc.setId(org.getId() + "-PERSON-ALIAS");
-        orgDoc.setObject_type_s("PERSON-ALIAS");
-        orgDoc.setObject_id_s(org.getId() + "");
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        if (org.getPerson() != null && org.getPerson().getId() != null)
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                "PERSON-ALIAS", in.getAliasValue());
+
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(PersonAlias in, Map<String, Object> additionalProperties)
+    {
+        if (in.getPerson() != null && in.getPerson().getId() != null)
         {
-            orgDoc.setParent_type_s("PERSON");
-            orgDoc.setParent_id_s(Long.toString(org.getPerson().getId()));
-            orgDoc.setParent_ref_s(Long.toString(org.getPerson().getId()) + "-PERSON");
+            additionalProperties.put(PARENT_TYPE_S, "PERSON");
+            additionalProperties.put(PARENT_ID_S, Long.toString(in.getPerson().getId()));
+            additionalProperties.put(PARENT_REF_S, in.getPerson().getId() + "-PERSON");
         }
 
-        orgDoc.setCreate_date_tdt(org.getCreated());
-        orgDoc.setCreator_lcs(org.getCreator());
-        orgDoc.setModified_date_tdt(org.getModified());
-        orgDoc.setModifier_lcs(org.getModifier());
-
-        orgDoc.setType_lcs(org.getAliasType());
-        orgDoc.setValue_parseable(org.getAliasValue());
-
-        orgDoc.setName(org.getAliasValue());
-        orgDoc.setTitle_parseable(org.getAliasValue());
+        additionalProperties.put(TYPE_LCS, in.getAliasType());
+        additionalProperties.put(VALUE_PARSEABLE, in.getAliasType());
+        additionalProperties.put(TITLE_PARSEABLE, in.getAliasType());
 
         /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            orgDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
-        AcmUser modifier = getUserDao().quietFindByUserId(org.getModifier());
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
-
-        return orgDoc;
     }
 
     @Override

@@ -27,6 +27,12 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EMAIL_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -34,6 +40,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -53,39 +60,44 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-        solr.setId(in.getUserId() + "-USER");
-        solr.setObject_id_s(in.getUserId() + "");
-        solr.setObject_type_s("USER");
-        solr.setName(in.getFullName());
-        solr.setFirst_name_lcs(in.getFirstName());
-        solr.setLast_name_lcs(in.getLastName());
-        solr.setEmail_lcs(in.getMail());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setTitle_parseable(in.getFullName());
+        solrDoc.setId(in.getUserId() + "-USER");
+        solrDoc.setObject_id_s(in.getUserId() + "");
+        solrDoc.setObject_type_s("USER");
+        solrDoc.setName(in.getFullName());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setModified_date_tdt(in.getModified());
+        solrDoc.setCreate_date_tdt(in.getCreated());
+        solrDoc.setModified_date_tdt(in.getModified());
 
-        solr.setStatus_lcs(in.getUserState().name());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmUser in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(FIRST_NAME_LCS, in.getFirstName());
+        additionalProperties.put(LAST_NAME_LCS, in.getLastName());
+        additionalProperties.put(EMAIL_LCS, in.getMail());
+        additionalProperties.put(TITLE_PARSEABLE, in.getFullName());
+        additionalProperties.put(STATUS_LCS, in.getUserState().name());
 
         // Add groups
-        solr.setGroups_id_ss(in.getGroupNames().count() == 0 ? null : in.getGroupNames().collect(Collectors.toList()));
+        additionalProperties.put("groups_id_ss", in.getGroupNames().count() == 0 ? null : in.getGroupNames().collect(Collectors.toList()));
 
-        solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
-        solr.setAdditionalProperty("country_s", in.getCountry());
-        solr.setAdditionalProperty("country_abbreviation_s", in.getCountryAbbreviation());
-        solr.setAdditionalProperty("department_s", in.getDepartment());
-        solr.setAdditionalProperty("company_s", in.getCompany());
-        solr.setAdditionalProperty("title_s", in.getTitle());
-        solr.setAdditionalProperty("name_partial", in.getFullName());
-        solr.setAdditionalProperty("name_lcs", in.getFullName());
+        additionalProperties.put("directory_name_s", in.getUserDirectoryName());
+        additionalProperties.put("country_s", in.getCountry());
+        additionalProperties.put("country_abbreviation_s", in.getCountryAbbreviation());
+        additionalProperties.put("department_s", in.getDepartment());
+        additionalProperties.put("company_s", in.getCompany());
+        additionalProperties.put("title_s", in.getTitle());
+        additionalProperties.put("name_partial", in.getFullName());
 
         // TODO find a way to add Organization
         // TODO find a way to add Application Title
         // TODO find a way to add Location
-
-        return solr;
     }
 
     @Override
@@ -109,4 +121,5 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     {
         return AcmUser.class;
     }
+
 }

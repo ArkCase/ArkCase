@@ -27,6 +27,14 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CONTACT_METHOD_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.POSTAL_ADDRESS_ID_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.dao.PersonContactDao;
@@ -36,12 +44,13 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by riste.tutureski on 10/21/14.
@@ -59,53 +68,53 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonContact personContact)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonContact in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        solrDoc.setId(personContact.getId() + "-PERSON_CONTACT");
-        solrDoc.setObject_type_s("PERSON_CONTACT");
-        solrDoc.setObject_id_s(personContact.getId() + "");
 
-        solrDoc.setCreate_date_tdt(personContact.getCreated());
-        solrDoc.setCreator_lcs(personContact.getCreator());
-        solrDoc.setModified_date_tdt(personContact.getModified());
-        solrDoc.setModifier_lcs(personContact.getModifier());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                "PERSON_CONTACT", "");
 
-        if (personContact.getCompanyName() != null && !personContact.getCompanyName().isEmpty())
+        if (in.getCompanyName() != null && !in.getCompanyName().isEmpty())
         {
-            solrDoc.setName(personContact.getCompanyName());
+            solrDoc.setName(in.getCompanyName());
         }
-        else if (personContact.getPersonName() != null && !personContact.getPersonName().isEmpty())
+        else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
         {
-            solrDoc.setName(personContact.getPersonName());
+            solrDoc.setName(in.getPersonName());
         }
 
-        solrDoc.setFirst_name_lcs(personContact.getFirstName());
-        solrDoc.setLast_name_lcs(personContact.getLastName());
-
-        solrDoc.setTitle_parseable(personContact.getFirstName() + " " + personContact.getLastName());
-
-        addContactMethods(personContact, solrDoc);
-
-        addAddresses(personContact, solrDoc);
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(personContact.getCreator());
-        if (creator != null)
-        {
-            solrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(personContact.getModifier());
-        if (modifier != null)
-        {
-            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
         return solrDoc;
     }
 
-    private void addAddresses(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
+    @Override
+    public void mapAdditionalProperties(PersonContact in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(FIRST_NAME_LCS, in.getFirstName());
+        additionalProperties.put(LAST_NAME_LCS, in.getLastName());
+        additionalProperties.put(TITLE_PARSEABLE, in.getFirstName() + " " + in.getLastName());
+
+        addContactMethods(in, additionalProperties);
+
+        addAddresses(in, additionalProperties);
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
+    }
+
+    private void addAddresses(PersonContact personContact, Map<String, Object> additionalProperties)
     {
         List<String> addressIds = new ArrayList<>();
         if (personContact.getAddresses() != null)
@@ -116,10 +125,10 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
             }
 
         }
-        solrDoc.setPostal_address_id_ss(addressIds);
+        additionalProperties.put(POSTAL_ADDRESS_ID_SS, addressIds);
     }
 
-    private void addContactMethods(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
+    private void addContactMethods(PersonContact personContact, Map<String, Object> additionalProperties)
     {
         List<String> contactMethodIds = new ArrayList<>();
         if (personContact.getContactMethods() != null)
@@ -129,7 +138,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
                 contactMethodIds.add(cm.getId() + "-CONTACT-METHOD");
             }
         }
-        solrDoc.setContact_method_ss(contactMethodIds);
+        additionalProperties.put(CONTACT_METHOD_SS, contactMethodIds);
     }
 
     @Override

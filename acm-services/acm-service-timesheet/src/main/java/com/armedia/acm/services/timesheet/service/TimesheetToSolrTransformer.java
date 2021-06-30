@@ -30,6 +30,10 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
@@ -38,6 +42,7 @@ import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -56,24 +61,22 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTimesheet in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-" + TimesheetConstants.OBJECT_TYPE);
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getTitle());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getTimesheetNumber());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                TimesheetConstants.OBJECT_TYPE, in.getTimesheetNumber());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setStatus_lcs(in.getStatus());
+        return solrDoc;
+    }
 
-        return solr;
+    @Override
+    public void mapAdditionalProperties(AcmTimesheet in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
     }
 
     @Override

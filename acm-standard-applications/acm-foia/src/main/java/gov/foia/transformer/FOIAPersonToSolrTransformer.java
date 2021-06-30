@@ -31,10 +31,8 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
-import java.util.Map;
+import org.apache.logging.log4j.Logger;
 
 import gov.foia.model.FOIAPerson;
 
@@ -68,7 +66,7 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
                 // can't call mapRequestProperties, because SolrAdvancedSearchDocument
                 // has a specific property 'object_sub_type_s', so also setting it via
                 // mapRequestProperties may cause a duplicate key exception.
-                solr.setObject_sub_type_s("FOIA_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "FOIA_PERSON");
             }
 
             return solr;

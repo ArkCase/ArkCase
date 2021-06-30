@@ -27,6 +27,13 @@ package gov.foia.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EMAIL_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EXT_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
@@ -50,17 +57,7 @@ import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemp
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIAReadingRoom;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
-import gov.foia.model.PortalFOIARequestStatus;
-import gov.foia.model.WithdrawRequest;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -98,6 +95,18 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIAReadingRoom;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
+import gov.foia.model.PortalFOIARequestStatus;
+import gov.foia.model.WithdrawRequest;
 
 /**
  * @author sasko.tanaskoski
@@ -260,10 +269,10 @@ public class PortalRequestService
                 PortalFOIAReadingRoom room = new PortalFOIAReadingRoom();
                 PortalFOIAReadingRoom.File file = new PortalFOIAReadingRoom.File();
                 file.setFileId(docFile.getString("object_id_s"));
-                file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+                file.setFileName(docFile.getString(TITLE_PARSEABLE) + docFile.getString(EXT_S));
                 room.setFile(file);
                 room.setPublishedDate(formatter.parse(docFile.getString("modified_date_tdt")));
-                setParentData(room, docFile.getString("parent_ref_s"), auth);
+                setParentData(room, docFile.getString(PARENT_REF_S), auth);
                 readingRoomList.add(room);
             }
             catch (JSONException | ParseException e)
@@ -315,10 +324,10 @@ public class PortalRequestService
             for (int i = 0; i < membersArray.length(); i++)
             {
                 JSONObject memberObject = membersArray.getJSONObject(i);
-                String memberState = getSearchResults().extractString(memberObject, "status_lcs");
+                String memberState = getSearchResults().extractString(memberObject, STATUS_LCS);
                 if (memberState.equals(AcmUserState.VALID.name()))
                 {
-                    String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+                    String emailAddress = getSearchResults().extractString(memberObject, EMAIL_LCS);
                     officersGroupMemberEmailAddresses.add(emailAddress);
                 }
             }
@@ -372,10 +381,10 @@ public class PortalRequestService
         JSONArray docRequests = searchResults.getDocuments(results);
         JSONObject docRequest = docRequests.getJSONObject(0);
         portalReadingRoom.setRequestId(docRequest.getString("name"));
-        portalReadingRoom.setRequestTitle(docRequest.getString("title_parseable"));
-        if (!docRequest.isNull("description_no_html_tags_parseable"))
+        portalReadingRoom.setRequestTitle(docRequest.getString(TITLE_PARSEABLE));
+        if (!docRequest.isNull(DESCRIPTION_NO_HTML_TAGS_PARSEABLE))
         {
-            portalReadingRoom.setDescription(docRequest.getString("description_no_html_tags_parseable"));
+            portalReadingRoom.setDescription(docRequest.getString(DESCRIPTION_NO_HTML_TAGS_PARSEABLE));
         }
         else
         {

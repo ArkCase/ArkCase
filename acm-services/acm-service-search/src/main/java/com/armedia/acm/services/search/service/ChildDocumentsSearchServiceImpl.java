@@ -50,7 +50,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             boolean exceptDeletedOnly, List<String> extra, String sort, int startRow, int maxRows, Authentication authentication)
             throws SolrException
     {
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
+        String query = "parent_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
 
         if (!"".equals(childType))
         {
@@ -89,17 +89,17 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
     {
 
         String rowQueryParameters = String.format(
-                "q1=parent_object_type_s:%1$s AND object_type_s:%2$s AND parent_object_id_s:%3$s" +
-                        "&q2=({!join from=timesheet_id_i to=object_id_i}parent_object_id_s:%3$s) AND object_type_s:%4$s" +
+                "q1=parent_type_s:%1$s AND object_type_s:%2$s AND parent_id_s:%3$s" +
+                        "&q2=({!join from=timesheet_id_i to=object_id_i}parent_id_s:%3$s) AND object_type_s:%4$s" +
                         "&fq=object_type_s:TASK&fq=-status_lcs:DELETE",
                 parentType,
                 childTypes.get(1),
                 parentId.toString(),
                 childTypes.get(0));
         String query = String.format(
-                "q=({!join from=id to=parent_ref_s v=$q1}) OR (_query_:\"parent_object_type_s:%s AND parent_object_id_i:%d\")" +
-                        "OR (({!join from=object_id_i to=parent_object_id_i v=$q2}) AND parent_object_type_s:%s)" +
-                        "(({!join from=object_id_i to=parent_object_id_i v=$q2}) AND parent_object_type_s:%<s)",
+                "q=({!join from=id to=parent_ref_s v=$q1}) OR (_query_:\"parent_type_s:%s AND parent_object_id_i:%d\")" +
+                        "OR (({!join from=object_id_i to=parent_object_id_i v=$q2}) AND parent_type_s:%s)" +
+                        "(({!join from=object_id_i to=parent_object_id_i v=$q2}) AND parent_type_s:%<s)",
                 parentType,
                 parentId,
                 childTypes.get(0));

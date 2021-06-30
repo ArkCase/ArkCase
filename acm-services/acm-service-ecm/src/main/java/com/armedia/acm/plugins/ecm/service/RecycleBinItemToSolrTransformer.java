@@ -78,15 +78,21 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
         solr.setObject_id_s(in.getSourceObjectId() + "");
         solr.setObject_id_i(in.getSourceObjectId());
         solr.setObject_type_s(RecycleBinConstants.OBJECT_TYPE_ITEM);
-
-        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
-
         solr.setCreate_date_tdt(in.getCreated());
+        solr.setAuthor(in.getCreator());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
+        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
+
         return solr;
+    }
+
+    @Override
+    public void mapAdditionalProperties(RecycleBinItem in, Map<String, Object> additionalProperties)
+    {
+        mapAdditionalPropertiesForRecycleBinItem(in, additionalProperties);
     }
 
     private void mapAdditionalPropertiesForRecycleBinItem(RecycleBinItem in, Map<String, Object> additionalProperties)

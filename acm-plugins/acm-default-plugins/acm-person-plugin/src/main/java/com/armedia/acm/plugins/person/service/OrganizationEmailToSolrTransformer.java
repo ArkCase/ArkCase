@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EMAIL_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -35,6 +38,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ana.serafimoska
@@ -53,18 +57,23 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization in)
     {
-        SolrAdvancedSearchDocument solrDocument = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
         if (in.getDefaultEmail() != null)
         {
-            solrDocument.setObject_type_s("EMAIL");
-            solrDocument.setId(in.getId() + "-EMAIL");
-            solrDocument.setObject_id_s(in.getOrganizationId() + "");
-            solrDocument.setType_lcs(in.getObjectType());
-            solrDocument.setEmail_lcs(in.getDefaultEmail().getValue());
-            solrDocument.setName(in.getOrganizationValue());
-
+            solrDoc.setObject_type_s("EMAIL");
+            solrDoc.setId(in.getId() + "-EMAIL");
+            solrDoc.setObject_id_s(in.getOrganizationId() + "");
+            solrDoc.setName(in.getOrganizationValue());
+            mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
         }
-        return solrDocument;
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(Organization in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TYPE_LCS, in.getObjectType());
+        additionalProperties.put(EMAIL_LCS, in.getDefaultEmail().getValue());
     }
 
     @Override

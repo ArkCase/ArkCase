@@ -27,6 +27,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -576,7 +577,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         JSONObject solrDocumentJson = new JSONObject(solrDocument);
         JSONObject solrResultJson = solrDocumentJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-        solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
+        solrResultJson.put(ACM_PARTICIPANTS_LCS, "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}, {\"ldapId\":\"joy-acm\", \"type\":\"reader\"}," +
                 "{\"ldapId\":\"hope-acm\", \"type\":\"reader\"}, {\"ldapId\":\"ann-acm\", \"type\":\"reader\"}]");
 
@@ -601,7 +602,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         JSONObject solrDocumentJson = new JSONObject(solrDocument);
         JSONObject solrResultJson = solrDocumentJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-        solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_ADMINISTRATOR\", \"type\":\"owning group\"}," +
+        solrResultJson.put(ACM_PARTICIPANTS_LCS, "[{\"ldapId\":\"ACM_ADMINISTRATOR\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
                 "restrictCase", solrDocumentJson.toString());
@@ -622,7 +623,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         JSONObject solrDocumentJson = new JSONObject(solrDocument);
         JSONObject solrResultJson = solrDocumentJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-        solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
+        solrResultJson.put(ACM_PARTICIPANTS_LCS, "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
                 "restrictCase", solrDocumentJson.toString());

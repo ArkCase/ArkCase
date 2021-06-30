@@ -677,7 +677,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // This method is to search for all files that belong to a container, no matter where they are in the
         // folder hierarchy.
         String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:"
-                + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
+                + container.getContainerObjectId() + " AND parent_type_s:" + container.getContainerObjectType();
 
         String filterQuery = "fq=object_type_s:FILE";
 
@@ -840,7 +840,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // only files and folders will have a "folder_id_i" attribute with a value that matches a container
         // folder id
         String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:"
-                + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
+                + container.getContainerObjectId() + " AND parent_type_s:" + container.getContainerObjectType();
 
         String filterQuery = category == null ? "fq=hidden_b:false"
                 : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
@@ -857,7 +857,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
 
-        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
+        String query = String.format("(object_type_s:FILE AND parent_type_s:%s AND parent_id_s:%s) OR "
                 + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
                 container.getContainerObjectType(), container.getContainerObjectId(), container.getContainerObjectType(),
                 container.getContainerObjectId());
@@ -872,7 +872,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = String.format("object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s",
+        String query = String.format("object_type_s:FILE AND parent_type_s:%s AND parent_id_s:%s",
                 container.getContainerObjectType(), container.getContainerObjectId());
         String fq = searchFilter.equals("") ? "hidden_b:false" : String.format("fq=(%s) AND hidden_b:false", searchFilter);
 
@@ -885,7 +885,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
             int startRow, int maxRows, String category) throws AcmListObjectsFailedException
     {
-        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
+        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_type_s:"
                 + container.getContainerObjectType();
 
         String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:"

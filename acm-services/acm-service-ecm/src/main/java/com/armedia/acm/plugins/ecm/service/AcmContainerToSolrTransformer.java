@@ -27,6 +27,12 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -34,6 +40,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 3/23/15.
@@ -54,35 +61,32 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
+        mapRequiredProperties(doc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
+                in.getContainerObjectTitle());
+
         // no access control on folders (yet)
         doc.setPublic_doc_b(true);
 
-        doc.setCreator_lcs(in.getCreator());
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        doc.setCreate_date_tdt(in.getCreated());
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setModified_date_tdt(in.getModified());
-        doc.setName(in.getContainerObjectTitle());
-        doc.setModifier_lcs(in.getModifier());
-        doc.setTitle_parseable(in.getContainerObjectTitle());
-        doc.setTitle_parseable_lcs(in.getContainerObjectTitle());
+        mapAdditionalProperties(in, doc.getAdditionalProperties());
 
-        doc.setAdditionalProperty("parent_object_id_i", in.getContainerObjectId());
-        doc.setAdditionalProperty("parent_object_id_s", "" + in.getContainerObjectId());
-        doc.setAdditionalProperty("parent_object_type_s", in.getContainerObjectType());
+        return doc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmContainer in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getContainerObjectTitle());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, "" + in.getContainerObjectTitle());
+        additionalProperties.put(PARENT_OBJECT_ID_I, in.getContainerObjectId());
+        additionalProperties.put(PARENT_ID_S, "" + in.getContainerObjectId());
+        additionalProperties.put(PARENT_TYPE_S, in.getContainerObjectType());
 
         // folder id will be used to find files and folders that belong to this container
         if (in.getFolder() != null)
         {
-            doc.setAdditionalProperty("folder_id_i", in.getFolder().getId());
-            doc.setAdditionalProperty("folder_name_s", in.getFolder().getName());
+            additionalProperties.put("folder_id_i", in.getFolder().getId());
+            additionalProperties.put("folder_name_s", in.getFolder().getName());
         }
-
-        // need an _lcs field for sorting
-        doc.setAdditionalProperty("name_lcs", in.getContainerObjectTitle());
-
-        return doc;
     }
 
     @Override

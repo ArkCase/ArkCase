@@ -27,6 +27,7 @@ package gov.foia.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.HIDDEN_B;
 import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -64,7 +65,7 @@ public class FOIAUserToSolrTransformer extends UserToSolrTransformer
             // set hidden_b to true if user has portal prefix
             if (solr.getObject_id_s().startsWith(userPrefix))
             {
-                solr.setHidden_b(true);
+                solr.setAdditionalProperty(HIDDEN_B, true);
             }
         }
         return solr;
