@@ -47,7 +47,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private Long object_id_i;
     private String object_type_s;
     private String name;
-    private String nameLcs;
+    private String name_lcs;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
@@ -327,13 +327,13 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.dueDate_tdt = dueDate_tdt;
     }
 
-    public String getNameLcs()
+    public String getName_lcs()
     {
-        return nameLcs;
+        return name_lcs;
     }
 
-    public void setNameLcs(String nameLcs)
+    public void setName_lcs(String name_lcs)
     {
-        this.nameLcs = nameLcs;
+        this.name_lcs = name_lcs;
     }
 }
