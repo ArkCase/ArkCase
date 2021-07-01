@@ -78,7 +78,7 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
         doc.setModifier_lcs(modifier);
         doc.setModified_date_tdt(modified);
         doc.setName(name);
-        doc.setNameLcs(name);
+        doc.setName_lcs(name);
     }
 
     void mapAdditionalProperties(T in, Map<String, Object> additionalProperties);
