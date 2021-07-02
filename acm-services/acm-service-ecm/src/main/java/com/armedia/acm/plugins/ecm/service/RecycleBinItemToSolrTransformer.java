@@ -84,7 +84,7 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
+        mapAdditionalProperties(in, solr.getAdditionalProperties());
 
         return solr;
     }

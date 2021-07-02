@@ -79,19 +79,21 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
         LOG.info("Creating Solr advanced search document for Group.");
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getName() + "-GROUP");
-        solr.setObject_id_s(in.getName());
-        solr.setObject_type_s("GROUP");
-        solr.setName(in.getName());
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        solrDoc.setId(in.getName() + "-GROUP");
+        solrDoc.setObject_id_s(in.getName());
+        solrDoc.setObject_type_s("GROUP");
+        solrDoc.setName(in.getName());
+        solrDoc.setName_lcs(in.getName());
+        solrDoc.setCreate_date_tdt(in.getCreated());
+        solrDoc.setAuthor(in.getCreator());
+        solrDoc.setCreator_lcs(in.getCreator());
+        solrDoc.setModified_date_tdt(in.getModified());
+        solrDoc.setModifier_lcs(in.getModifier());
 
-        return solr;
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+        return solrDoc;
     }
 
     @Override
@@ -103,6 +105,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
         additionalProperties.put("object_sub_type_s", in.getType().name());
         additionalProperties.put("ascendants_id_ss", in.getAscendantsStream().collect(Collectors.toList()));
+
         additionalProperties.put("groups_member_of_id_ss",
                 in.getMemberOfGroups().stream().map(AcmGroup::getName).collect(Collectors.toList()));
 
