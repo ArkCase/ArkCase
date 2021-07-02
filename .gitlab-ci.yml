@@ -105,7 +105,7 @@ deploy_backend_foia_dev:
   environment:
     name: Dev FOIA
   script:
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "job_tags": "upgrade,foia,foia-analytical-reports" }'' -k $APPDEV_TOWER_URL/api/v2/job_templates/13/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "job_tags": "upgrade,foia" }'' -k $APPDEV_TOWER_URL/api/v2/job_templates/13/launch/'
 
 .deploy_backend_privacy_dev:
   stage: deploy
