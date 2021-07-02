@@ -64,6 +64,7 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
             solrDoc.setId(in.getId() + "-EMAIL");
             solrDoc.setObject_id_s(in.getOrganizationId() + "");
             solrDoc.setName(in.getOrganizationValue());
+            solrDoc.setName_lcs(in.getOrganizationValue());
             mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
         }
         return solrDoc;

@@ -66,7 +66,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solrDoc.setObject_id_s(in.getUserId() + "");
         solrDoc.setObject_type_s("USER");
         solrDoc.setName(in.getFullName());
-
+        solrDoc.setName_lcs(in.getFullName());
         solrDoc.setCreate_date_tdt(in.getCreated());
         solrDoc.setModified_date_tdt(in.getModified());
 

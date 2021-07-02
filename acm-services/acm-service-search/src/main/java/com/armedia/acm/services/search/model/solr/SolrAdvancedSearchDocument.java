@@ -41,6 +41,10 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
 {
     private static final long serialVersionUID = 1L;
 
+    {
+        getAdditionalProperties().put("hidden_b", false);
+        getAdditionalProperties().put("adhocTask_b", false);
+    }
     ///////////////////// fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
@@ -73,19 +77,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
 
     private List<Long> parent_deny_user_ls;
     private List<Long> parent_allow_user_ls;
-
-    // TODO: VLADIMIR
-    /*
-     * @JsonIgnore
-     * public String getEcmFileId()
-     * {
-     * return ecmFileId;
-     * }
-     * public void setEcmFileId(String ecmFileId)
-     * {
-     * this.ecmFileId = ecmFileId;
-     * }
-     */
 
     /////////////////// for docs with an incident date ////////////
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
@@ -335,5 +326,35 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setName_lcs(String name_lcs)
     {
         this.name_lcs = name_lcs;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "SolrAdvancedSearchDocument{" +
+                "id='" + id + '\'' +
+                ", object_id_s='" + object_id_s + '\'' +
+                ", object_id_i=" + object_id_i +
+                ", object_type_s='" + object_type_s + '\'' +
+                ", name='" + name + '\'' +
+                ", name_lcs='" + name_lcs + '\'' +
+                ", create_date_tdt=" + create_date_tdt +
+                ", author='" + author + '\'' +
+                ", creator_lcs='" + creator_lcs + '\'' +
+                ", modified_date_tdt=" + modified_date_tdt +
+                ", modifier_lcs='" + modifier_lcs + '\'' +
+                ", public_doc_b=" + public_doc_b +
+                ", protected_object_b=" + protected_object_b +
+                ", deny_group_ls=" + deny_group_ls +
+                ", allow_group_ls=" + allow_group_ls +
+                ", deny_user_ls=" + deny_user_ls +
+                ", allow_user_ls=" + allow_user_ls +
+                ", parent_deny_group_ls=" + parent_deny_group_ls +
+                ", parent_allow_group_ls=" + parent_allow_group_ls +
+                ", parent_deny_user_ls=" + parent_deny_user_ls +
+                ", parent_allow_user_ls=" + parent_allow_user_ls +
+                ", incident_date_tdt=" + incident_date_tdt +
+                ", dueDate_tdt=" + dueDate_tdt +
+                '}';
     }
 }

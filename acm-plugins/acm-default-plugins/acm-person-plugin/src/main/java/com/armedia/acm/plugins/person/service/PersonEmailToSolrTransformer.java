@@ -68,6 +68,7 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
             solrDoc.setId(in.getId() + "-EMAIL");
             solrDoc.setObject_id_s(in.getId() + "");
             solrDoc.setName(in.getGivenName() + " " + in.getFamilyName());
+            solrDoc.setName_lcs(in.getGivenName() + " " + in.getFamilyName());
             mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
             return solrDoc;
