@@ -42,9 +42,6 @@
 
                 1. Set the status to Deleted, if status is not Closed
                 2. Set the queue name to 'Delete'
-                3. Generate Delete Correspondence letter
-                4.Compress the Response folder
-                5.Send the compressed Response folder file to outbound message queue
             </text>
     </textAnnotation>
   </process>
