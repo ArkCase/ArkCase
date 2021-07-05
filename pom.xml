@@ -29,7 +29,7 @@
         <apache-commons-codec>1.13</apache-commons-codec>
         <apache-commons-exec.version>1.3</apache-commons-exec.version>
         <apache-commons-file-upload.version>1.4</apache-commons-file-upload.version>
-        <apache-commons-io.version>2.4</apache-commons-io.version>
+        <apache-commons-io.version>2.7</apache-commons-io.version>
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-csv.version>1.8</apache-commons-csv.version>
@@ -38,7 +38,7 @@
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-commons-validator.version>1.6</apache-commons-validator.version>
         <apache-commons-email.version>1.5</apache-commons-email.version>
-        <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
+        <apache-httpcomponents-httpclient.version>4.5.13</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
         <aspectj.version>1.7.4</aspectj.version>
@@ -48,7 +48,7 @@
         <castor-xml.version>1.3.3</castor-xml.version>
         <chemistry.version>1.1.0</chemistry.version>
         <osgi.version>6.0.0</osgi.version>
-        <com.google.guava.version>18.0</com.google.guava.version>
+        <com.google.guava.version>30.0-jre</com.google.guava.version>
         <docx4j.core>3.3.7</docx4j.core>
         <docx4j.export.fo>3.3.6</docx4j.export.fo>
         <drools.version>7.34.0.Final</drools.version>
@@ -80,7 +80,7 @@
         <jsonassert.version>1.5.0</jsonassert.version>
         <jsp.api.version>2.0</jsp.api.version>
         <jstl.version>1.2</jstl.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
         <log4j.version>2.11.0</log4j.version>
@@ -92,7 +92,7 @@
         <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
         <milton.version>2.8.0.3</milton.version>
         <mockito.core.version>3.7.7</mockito.core.version>
-        <mysql.version>5.1.35</mysql.version>
+        <mysql.version>8.0.16</mysql.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
@@ -104,7 +104,7 @@
         <pdfbox.version>2.0.22</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>2.0.9</powermock.version>
-        <puppycrawl.version>6.8.1</puppycrawl.version>
+        <puppycrawl.version>7.8.2</puppycrawl.version>
         <reactor-netty.version>1.0.3</reactor-netty.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.30</slf4j.version>
