@@ -65,8 +65,6 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        buildName(in);
-
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(),
                 in.getModified(), "LOCATION", buildName(in));
 
