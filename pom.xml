@@ -150,6 +150,7 @@
         <!-- code coverage reports -->
         <jacoco.version>0.8.7</jacoco.version>
         <code.coverage.minimum>0.02</code.coverage.minimum>
+        <owasp.encoder.version>1.2.3</owasp.encoder.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -1674,6 +1675,14 @@
                 <artifactId>json-sanitizer</artifactId>
                 <version>1.2.1</version>
             </dependency>
+            
+            <!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
+            <dependency>
+               <groupId>org.owasp.encoder</groupId>
+               <artifactId>encoder</artifactId>
+               <version>${owasp.encoder.version}</version>
+            </dependency>
+            
 
         </dependencies>
     </dependencyManagement>
