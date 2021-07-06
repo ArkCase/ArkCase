@@ -47,6 +47,7 @@ import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.collections.map.HashedMap;
+import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -300,7 +301,7 @@ public class StreamServiceImpl implements StreamService
             {
                 // Return single part of file.
                 Range range = ranges.get(0);
-                response.setContentType(contentType);
+                response.setContentType(Encode.forJava(contentType));
                 response.setHeader("Content-Range", "bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
                 response.setHeader("Content-Length", String.valueOf(range.getLength()));
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
