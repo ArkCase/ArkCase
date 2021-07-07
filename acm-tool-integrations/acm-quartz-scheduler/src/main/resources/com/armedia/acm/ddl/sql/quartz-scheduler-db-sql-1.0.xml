@@ -485,4 +485,11 @@
         </sql>
     </changeSet>
 
+    <changeSet id="02-deleting_due_date_update_job" author="martin.jovanovski">
+        <sql>DELETE FROM QRTZ_CRON_TRIGGERS   WHERE trigger_name IN (SELECT trigger_name FROM QRTZ_TRIGGERS WHERE job_name = 'dueDateUpdateJob')
+        </sql>
+        <sql>DELETE FROM QRTZ_TRIGGERS        WHERE job_name = 'dueDateUpdateJob'</sql>
+        <sql>DELETE FROM QRTZ_JOB_DETAILS     WHERE job_name = 'dueDateUpdateJob'</sql>
+    </changeSet>
+
 </databaseChangeLog>
