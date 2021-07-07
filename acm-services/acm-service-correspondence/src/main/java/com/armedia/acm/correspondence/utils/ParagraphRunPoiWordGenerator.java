@@ -715,7 +715,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         else
         {
 
-            // check if the expression is currentDate, files, baseURL, organizationName, etc.
+            // check if the expression is files, baseURL, organizationName, etc.
             if (BASE_URL.equalsIgnoreCase(spelExpression))
             {
                 generatedExpression = appConfig.getBaseUrl();
