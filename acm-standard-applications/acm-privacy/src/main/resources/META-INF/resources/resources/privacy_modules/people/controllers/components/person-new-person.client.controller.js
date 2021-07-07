@@ -213,7 +213,9 @@ angular.module('people').controller(
                     });
                     MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.PERSON, "DETAILS", objectInfo.data.id, objectInfo.data.details);
                     MessageService.info(personWasCreatedMessage);
-                    ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
+                    $timeout(function () {
+                        ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
+                    }, 1500);
                     $scope.onModalClose();
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";

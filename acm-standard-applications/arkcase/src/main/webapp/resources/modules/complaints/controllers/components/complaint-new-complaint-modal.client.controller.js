@@ -539,4 +539,8 @@ angular.module('complaints').controller(
                         $modalInstance.dismiss();
                     };
 
+                    $scope.checkLocationRules = function (address) {
+                        return !_.values(address).every(_.isEmpty)
+                    };
+
                 } ]);

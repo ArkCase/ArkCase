@@ -269,6 +269,10 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             setStatus("ACTIVE");
         }
+        if (getTitle() == null || getTitle().trim().isEmpty())
+        {
+            setTitle("-");
+        }
 
         setupChildPointers();
     }

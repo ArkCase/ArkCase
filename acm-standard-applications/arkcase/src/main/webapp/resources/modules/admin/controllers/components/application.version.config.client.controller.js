@@ -12,5 +12,8 @@ angular.module('admin').controller('Admin.ApplicationVersionController', [ '$sco
         if (result.data["extensionVersion"]) {
             $scope.extensionVersion = result.data["extensionVersion"];
         }
+        if (!$scope.jarModifiedTime && $scope.applicationVersion === $scope.extensionVersion) {
+            $scope.jarModifiedTime = moment.utc(result.data["Build-Time"]).format("MMMM DD, YYYY");
+        }
     });
 }]);

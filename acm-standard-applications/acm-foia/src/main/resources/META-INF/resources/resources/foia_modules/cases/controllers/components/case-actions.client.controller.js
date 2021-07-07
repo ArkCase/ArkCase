@@ -49,6 +49,8 @@ angular.module('cases').controller(
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
                 $scope.showBtnChildOutcomes = false;
+                $scope.createMatterInProgress = false;
+                $scope.creatingMatterIcon = "fa fa-gavel";
 
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
@@ -70,24 +72,24 @@ angular.module('cases').controller(
                         $scope.showBtnSubscribe = Util.isEmpty(found);
                         $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     });
-                        });
-                    };
+                });
+            };
 
-                    $scope.save = function() {
-                        $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
-                        var deferred = $q.defer();
-                        if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
-                            $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
-                        } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
-                            $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);
-                        } else {
-                            deferred.resolve();
-                        }
+            $scope.save = function () {
+                $scope.loadingRequestIcon = "fa fa-circle-o-notch fa-spin";
+                var deferred = $q.defer();
+                if (($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Intake' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.requestType === 'New Request' && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                    $scope.$bus.publish('OPEN_REQUEST_DISPOSITION_MODAL', deferred);
+                } else if ($scope.objectInfo.requestType === 'Appeal' && ($scope.objectInfo.queue.name === 'Fulfill' || $scope.objectInfo.queue.name === 'Appeal' || $scope.objectInfo.queue.name === 'Hold') && $scope.objectInfo.disposition == null && $scope.objectInfo.dispositionClosedDate != null) {
+                    $scope.$bus.publish('OPEN_APPEAL_DISPOSITION_MODAL', deferred);
+                } else {
+                    deferred.resolve();
+                }
 
-                        deferred.promise.then(function () {
-                            $scope.$bus.publish('ACTION_SAVE_CASE', {});    
-                        });
-                    };
+                deferred.promise.then(function () {
+                    $scope.$bus.publish('ACTION_SAVE_CASE', {});
+                });
+            };
 
             $scope.$bus.subscribe('report-object-updated', function (caseInfo) {
                 $scope.loadingRequestIcon = "fa fa-save";
@@ -117,10 +119,21 @@ angular.module('cases').controller(
                 $scope.createMatterInProgress = true;
 
                 RequestZylabMatterService.createMatter(requestInfo.id).then(function (data) {
-                    $scope.objectInfo =  data.data;
-                    MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
+                    var createMatterResponse = data.data;
+                    if (createMatterResponse.status === "CREATED") {
+                        MessageService.info($translate.instant("cases.comp.actions.createMatter.sucess"));
+                        $scope.createMatterInProgress = false;
+                        $scope.openMatter(createMatterResponse.zylabId);
+                        if ($scope.objectInfo.caseNumber === createMatterResponse.matterName) {
+                            $scope.objectInfo.externalIdentifier = createMatterResponse.zylabId;
+                        }
+                    } else if (createMatterResponse.status === "IN_PROGRESS") {
+                        MessageService.info($translate.instant("cases.comp.actions.createMatter.inProgress"));
+                    } else {
+                        MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
+                    }
+
                     $scope.creatingMatterIcon = "fa fa-gavel";
-                    $scope.openMatter($scope.objectInfo);
                     $scope.createMatterInProgress = false;
                 }).catch(function () {
                     MessageService.error($translate.instant("cases.comp.actions.createMatter.error"));
@@ -129,10 +142,8 @@ angular.module('cases').controller(
                 });
             };
 
-
-
-        $scope.openMatter = function (requestInfo) {
-                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", requestInfo.externalIdentifier);
+            $scope.openMatter = function (matterId) {
+                var openMatterPath = $scope.zylabIntegrationConfig["zylabIntegration.openMatterPath"].replace("{matterId}", matterId);
                 var openMatterURL = $scope.zylabIntegrationConfig["zylabIntegration.url"] + openMatterPath;
 
                 window.open(openMatterURL, '_blank');
@@ -222,13 +233,13 @@ angular.module('cases').controller(
                     size: 'lg',
                     backdrop: 'static',
                     resolve: {
-                        params: function() {
+                        params: function () {
                             return params;
                         }
                     }
                 });
 
-                modalInstance.result.then(function(res) {
+                modalInstance.result.then(function (res) {
                     var emailData = {};
                     emailData.subject = res.subject;
                     emailData.body = res.body;
@@ -241,7 +252,7 @@ angular.module('cases').controller(
                     emailData.objectNumber = $scope.objectInfo.caseNumber;
                     emailData.modelReferenceName = res.template;
 
-                    if(emailData.modelReferenceName != 'plainEmail') {
+                    if (emailData.modelReferenceName != 'plainEmail') {
                         EcmEmailService.sendManualEmail(emailData);
                     } else {
                         EcmEmailService.sendPlainEmail(emailData, ObjectService.ObjectTypes.CASE_FILE);
@@ -253,4 +264,4 @@ angular.module('cases').controller(
 
         }
 
-        ]);
+    ]);

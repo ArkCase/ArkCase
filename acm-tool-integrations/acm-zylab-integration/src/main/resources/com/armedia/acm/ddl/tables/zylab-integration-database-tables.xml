@@ -1,0 +1,53 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-acm_zylab_matter_status-table" author="aleksandar.acevski" dbms="mysql">
+        <createTable tableName="acm_zylab_matter_status">
+            <column name="cm_zylab_matter_status_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_zylab_matter_status"/>
+            </column>
+            <column name="cm_matter_name" type="TEXT">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_matter_name" />
+            </column>
+            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_last_updated" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_status" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="02-create-acm_zylab_matter_status-table" author="aleksandar.acevski" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_zylab_matter_status">
+            <column name="cm_zylab_matter_status_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_zylab_matter_status"/>
+            </column>
+            <column name="cm_matter_name" type="VARCHAR(1024)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_matter_name" />
+            </column>
+            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_last_updated" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="03-create-acm_zylab_matter_status-seq" author="aleksandar.acevski">
+        <createTable tableName="acm_zylab_matter_status_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_zylab_matter_status_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_zylab_matter_status"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

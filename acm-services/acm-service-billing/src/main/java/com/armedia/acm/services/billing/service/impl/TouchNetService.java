@@ -28,20 +28,24 @@ package com.armedia.acm.services.billing.service.impl;
  */
 
 import com.armedia.acm.core.model.ApplicationConfig;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.billing.dao.BillingItemDao;
 import com.touchnet.secureLink.service.TPGSecureLink_BindingStub;
 import com.touchnet.secureLink.service.TPGSecureLink_ServiceLocator;
-import com.touchnet.secureLink.types.*;
+import com.touchnet.secureLink.types.AuthorizeAccountRequest;
+import com.touchnet.secureLink.types.AuthorizeAccountResponse;
+import com.touchnet.secureLink.types.GenerateSecureLinkTicketRequest;
+import com.touchnet.secureLink.types.GenerateSecureLinkTicketResponse;
+import com.touchnet.secureLink.types.NameValuePair;
+import com.touchnet.secureLink.types.SecureLinkException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.xml.rpc.ServiceException;
-import java.rmi.RemoteException;
 
+import java.rmi.RemoteException;
 
 public class TouchNetService
 {
@@ -59,6 +63,9 @@ public class TouchNetService
 
     @Value("${payment.touchnet.securelinkendpoint}")
     private String secureLinkEndPoint;
+
+    @Value("${payment.touchnet.securepaylinkendpoint}")
+    private String securePayLinkEndPoint;
 
     @Value("${payment.touchnet.upaysiteid}")
     private String uPaySiteId;
@@ -147,11 +154,12 @@ public class TouchNetService
         return binding;
     }
 
-    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String objectNumber, String ecmFileId, String acm_ticket)
+    public String validateLinkAndRedirectToPaymentForm(String amount, String objectId, String objectType, String objectNumber,
+            String ecmFileId, String acm_ticket)
     {
-        if(!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
+        if (!billingItemDao.checkIfPaymentIsAlreadyDone(acm_ticket))
         {
-            return redirectToPaymentForm(amount,objectId,objectType,ecmFileId, acm_ticket, objectNumber);
+            return redirectToPaymentForm(amount, objectId, objectType, ecmFileId, acm_ticket, objectNumber);
         }
         else
         {
@@ -163,7 +171,7 @@ public class TouchNetService
     {
         String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
 
-        return "<html>\n" +
+        return HtmlUtils.htmlEscape("<html>\n" +
                 "<header>\n" +
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
                 "<style>\n" +
@@ -191,15 +199,16 @@ public class TouchNetService
                 "<br><br><br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
-                "</html>\n";
+                "</html>\n");
     }
 
-    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket, String objectNumber)
+    private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket,
+            String objectNumber)
     {
         String ticket = generateTicketID(amount, objectId, objectType, ecmFileId, acm_ticket, objectNumber);
         String ticketName = objectId + objectType;
 
-        return "<form name=\"autoform\" action=\"https://test.secure.touchnet.net:8443/C30002test_upay/web/index.jsp\" method=\"post\">\n" +
+        String form = "<form name=\"autoform\" action=\"" + securePayLinkEndPoint + "\" method=\"post\">\n" +
                 "    <input name=\"UPAY_SITE_ID\" type=\"hidden\" value=\"" + uPaySiteId + "\" />\n" +
                 "    <input name=\"TICKET\" type=\"hidden\" value=\"" + ticket + "\" />\n" +
                 "    <input name=\"TICKET_NAME\" type=\"hidden\" value=\"" + ticketName + "\" />\n" +
@@ -207,12 +216,16 @@ public class TouchNetService
                 "<script type=\"text/javascript\">\n" +
                 "         document.autoform.submit();\n" +
                 "</script>\n";
+
+        log.debug(form);
+
+        return HtmlUtils.htmlEscape(form);
     }
 
     private String redirectToAlreadyPaidPage()
     {
         String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
-        return "<html>\n" +
+        return HtmlUtils.htmlEscape("<html>\n" +
                 "<header>\n" +
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
                 "<style>\n" +
@@ -234,9 +247,8 @@ public class TouchNetService
                 "<br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
-                "</html>\n";
+                "</html>\n");
     }
-
 
     public String getTouchNetUsername()
     {
@@ -296,5 +308,15 @@ public class TouchNetService
     public void setBillingItemDao(BillingItemDao billingItemDao)
     {
         this.billingItemDao = billingItemDao;
+    }
+
+    public String getSecurePayLinkEndPoint()
+    {
+        return securePayLinkEndPoint;
+    }
+
+    public void setSecurePayLinkEndPoint(String securePayLinkEndPoint)
+    {
+        this.securePayLinkEndPoint = securePayLinkEndPoint;
     }
 }

@@ -52,6 +52,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIAExemptionCodeDao;
@@ -75,6 +79,8 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private LookupDao lookupDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass().getName());
+
+    List<ExemptionCode> exemptionCodesOnExemptDoc;
 
     @Override
     public FOIATaskRequestModel getModel(Object object)
@@ -187,16 +193,16 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private FormattedMergeTerm setExemptionCodesOnExemptDocument(FOIARequest request)
     {
         FormattedMergeTerm exemptionCodesForExemptFiles = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
-                request.getObjectType());
-        if (exemptionCodes != null)
+        exemptionCodesOnExemptDoc = foiaExemptionCodeDao.getExemptionCodesForExemptFilesForRequest(request.getId(),
+                request.getObjectType()).stream().filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
+        if (exemptionCodesOnExemptDoc != null)
         {
             List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
                     .getEntries();
             Map<String, String> codeDescriptions = lookupEntries.stream()
                     .collect(Collectors.toMap(StandardLookupEntry::getKey, StandardLookupEntry::getValue));
             List<FormattedRun> runs = new ArrayList<>();
-            for (ExemptionCode exCode : exemptionCodes)
+            for (ExemptionCode exCode : exemptionCodesOnExemptDoc)
             {
                 foiaExemptionService.createAndStyleRunsForCorrespondenceLetters(codeDescriptions, runs, exCode);
             }
@@ -208,9 +214,13 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
     private FormattedMergeTerm setRedactionsOnReleasedDocument(FOIARequest request)
     {
         FormattedMergeTerm redactionsForReleasedDocuments = new FormattedMergeTerm();
-        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request);
+        List<ExemptionCode> exemptionCodes = foiaExemptionCodeDao.getResponseFolderExemptionCodesForRequest(request).stream()
+                .filter(distinctByProperty(ExemptionCode::getExemptionCode)).collect(Collectors.toList());
         if (exemptionCodes != null)
         {
+            List<String> mappedExemptionCodesOnExemptDoc = exemptionCodesOnExemptDoc.stream().map(ExemptionCode::getExemptionCode).collect(Collectors.toList());
+            exemptionCodes = exemptionCodes.stream().filter(element-> !mappedExemptionCodesOnExemptDoc.contains(element.getExemptionCode())).collect(Collectors.toList());
+
             List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("annotationTags")
                     .getEntries();
             Map<String, String> codeDescriptions = lookupEntries.stream()
@@ -223,6 +233,12 @@ public class FOIATaskRequestTemplateModelProvider implements TemplateModelProvid
             redactionsForReleasedDocuments.setRuns(runs);
         }
         return redactionsForReleasedDocuments;
+    }
+
+    private static <T> Predicate<T> distinctByProperty(Function<? super T, ?> propertyExtractor)
+    {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(propertyExtractor.apply(t));
     }
 
     @Override

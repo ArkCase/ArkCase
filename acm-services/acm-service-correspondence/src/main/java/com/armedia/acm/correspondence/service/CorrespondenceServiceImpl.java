@@ -50,8 +50,8 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -71,7 +71,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private static final String TEMP_FILE_PREFIX = "template-";
     private static final String TEMP_FILE_SUFFIX = ".docx";
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
     private CorrespondenceEventPublisher eventPublisher;

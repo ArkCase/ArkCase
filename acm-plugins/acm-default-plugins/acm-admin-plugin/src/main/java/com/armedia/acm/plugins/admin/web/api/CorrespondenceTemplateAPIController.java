@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -244,7 +245,7 @@ public class CorrespondenceTemplateAPIController
 
             }
 
-            Notification notification = correspondenceService.convertMergeTerms(templateName, content.toString(), objectType, objectId,
+            Notification notification = correspondenceService.convertMergeTerms(templateName, HtmlUtils.htmlEscape(content.toString()), objectType, objectId,
                     fileIds);
             retval.put("templateContent", notification.getEmailContent());
             retval.put("templateEmailSubject", notification.getSubject());

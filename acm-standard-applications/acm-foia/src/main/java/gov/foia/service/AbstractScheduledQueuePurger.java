@@ -117,6 +117,7 @@ public abstract class AbstractScheduledQueuePurger
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", request.getId());
+        processVariables.put("OBJECT_STATUS", request.getStatus());
         return processVariables;
     }
 

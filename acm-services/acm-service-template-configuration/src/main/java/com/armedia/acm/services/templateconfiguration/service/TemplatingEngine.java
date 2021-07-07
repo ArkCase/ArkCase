@@ -27,7 +27,6 @@ package com.armedia.acm.services.templateconfiguration.service;
  * #L%
  */
 
-import static org.reflections.Reflections.log;
 
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.holiday.service.DateTimeService;
@@ -52,6 +51,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -59,6 +62,8 @@ import freemarker.template.TemplateException;
 
 public class TemplatingEngine
 {
+    
+    private transient final Logger log  = LogManager.getLogger(getClass());
     public static final String DATE_TYPE = "Date";
     public static final String DATE_TIME_TYPE = "LocalDateTime";
     private ApplicationConfig applicationConfig;
@@ -106,13 +111,10 @@ public class TemplatingEngine
                         DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
                 stContext.registerFunction("toClientDateTimezone",
                         DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimeTimezone",
-                        DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
-                stContext.registerFunction("toUTCDateTimezone",
-                        DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-                stContext.registerFunction("toClientDateDateTimezone",
-                        DateTimeService.class.getDeclaredMethod("toClientDateDateTimezone", Date.class));
-
+                stContext.registerFunction("dateToClientDateTimezone",
+                        DateTimeService.class.getDeclaredMethod("dateToClientDateTimezone", Date.class));
+                stContext.registerFunction("dateToClientDateTimeTimezone",
+                        DateTimeService.class.getDeclaredMethod("dateToClientDateTimeTimezone", Date.class));
             }
             catch (NoSuchMethodException e)
             {

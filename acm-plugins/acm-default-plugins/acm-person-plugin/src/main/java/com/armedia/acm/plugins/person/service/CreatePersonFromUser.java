@@ -46,6 +46,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Ana Serafimoska <ana.serafimoska@armedia.com> on 5/19/2021
@@ -72,9 +73,15 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
             {
                 Person existingPerson = getPersonDao()
                         .findByLdapUserId(((AcmUser) ((UserPersistenceEvent) object).getSource()).getUserId());
+                Optional<Person> existingPersonWithoutLdapId = getPersonDao()
+                        .findByEmail(((AcmUser) ((UserPersistenceEvent) object).getSource()).getMail());
                 if (existingPerson != null)
                 {
                     addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPerson);
+                }
+                else if (existingPersonWithoutLdapId.isPresent())
+                {
+                    addOrUpdatePerson((UserPersistenceEvent) object, auth, existingPersonWithoutLdapId.get());
                 }
                 else
                 {
@@ -92,6 +99,7 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
                 ((AcmUser) object.getSource()).getFirstName() != null ? ((AcmUser) object.getSource()).getFirstName() : "Unknown");
         person.setFamilyName(
                 ((AcmUser) object.getSource()).getLastName() != null ? ((AcmUser) object.getSource()).getLastName() : "Unknown");
+        person.setTitle("-");
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();

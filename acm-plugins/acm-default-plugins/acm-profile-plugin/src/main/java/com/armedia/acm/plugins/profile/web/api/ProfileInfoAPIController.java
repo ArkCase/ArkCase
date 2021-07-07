@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.profile.service.UserOrgService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.owasp.encoder.Encode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -91,7 +92,7 @@ public class ProfileInfoAPIController
         {
             EcmFile ecmSignatureFile = ecmFileService.findById(ecmSignatureFileId);
             // MIME type of the file
-            response.setContentType(ecmSignatureFile.getFileActiveVersionMimeType());
+            response.setContentType(Encode.forJava(ecmSignatureFile.getFileActiveVersionMimeType()));
             // Read from the file and write into the response
             try (OutputStream os = response.getOutputStream(); InputStream is = ecmFileService.downloadAsInputStream(ecmSignatureFileId))
             {

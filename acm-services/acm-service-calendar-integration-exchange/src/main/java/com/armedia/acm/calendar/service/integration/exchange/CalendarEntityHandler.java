@@ -43,8 +43,8 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
@@ -95,7 +95,7 @@ public class CalendarEntityHandler
     protected Map<String, PropertyDefinition> sortFields;
     @PersistenceContext
     private EntityManager em;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private OutlookDao outlookDao;
     private AcmContainerDao containerEntityDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

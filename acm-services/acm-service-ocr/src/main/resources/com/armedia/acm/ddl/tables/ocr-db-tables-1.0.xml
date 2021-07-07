@@ -59,4 +59,10 @@
         <modifyDataType tableName="acm_ocr" columnName="cm_ocr_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="02-add_ocr_retry_attempt" author="denys.kotovyi">
+        <addColumn tableName="acm_ocr">
+            <column name="ocr_retry_attempt" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

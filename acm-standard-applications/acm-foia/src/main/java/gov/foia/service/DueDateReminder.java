@@ -67,7 +67,7 @@ public class DueDateReminder
         List<FOIARequest> foiaRequests = foiaRequestDao.findAllNotReleasedRequests();
         for (FOIARequest request : foiaRequests)
         {
-            if (request.getDueDate() != null)
+            if (!request.getQueue().toString().equals("Hold") && request.getDueDate() != null)
             {
                 int daysDiffOneDay = Days.daysBetween(new DateTime(oneDayFromNow.getTime()), new DateTime(request.getDueDate().getTime()))
                         .getDays();

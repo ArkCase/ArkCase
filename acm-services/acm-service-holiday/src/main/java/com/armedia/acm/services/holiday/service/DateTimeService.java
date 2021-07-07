@@ -42,7 +42,7 @@ public class DateTimeService {
     private ApplicationConfig appConfig;
     public static DateTimeService dateTimeService;
 
-    private String dateTimePattern = "MM/dd/yyyy HH:mm [VV]";
+    private String dateTimePattern = "MM/dd/yyyy HH:mm a [VV]";
     private String datePattern = "MM/dd/yyyy";
 
     public void init()
@@ -68,16 +68,7 @@ public class DateTimeService {
         return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
-    public static String toUTCDateTimeTimezone(LocalDateTime date)
-    {
-        if (date == null)
-        {
-            return "";
-        }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
-    }
-
-    public static String toClientDateDateTimezone(Date date)
+    public static String dateToClientDateTimezone(Date date)
     {
         if (date == null)
         {
@@ -88,13 +79,29 @@ public class DateTimeService {
                 .format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
     }
 
-    public static String toUTCDateTimezone(LocalDateTime date)
+    public static String dateToClientDateTimeTimezone(Date date)
     {
         if (date == null)
         {
             return "";
         }
-        return dateTimeService.getZonedDateTimeAtUTC(date).format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+    }
+
+    public static String currentDateToClientDate()
+    {
+        Date date = new Date();
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+    }
+
+    public static String currentDateToClientDateTime()
+    {
+        Date date = new Date();
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
     public LocalDateTime fromDateToClientLocalDateTime(Date date)
@@ -104,7 +111,7 @@ public class DateTimeService {
 
     public LocalDateTime toClientLocalDateTime(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
     public LocalDate fromDateToClientLocalDate(Date date)
@@ -114,17 +121,17 @@ public class DateTimeService {
 
     public LocalDate toClientLocalDate(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalDate();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDate();
     }
 
-    public LocalTime fromDateToClientTimeTimezone(Date date)
+    public LocalTime fromDateToClientTimeTimezone(LocalDateTime date)
     {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
     }
 
     public LocalTime toClientLocalTime(LocalDateTime date)
     {
-        return getZonedDateTimeAtDefaultClientTimezone(date).withZoneSameInstant(ZoneOffset.UTC).toLocalTime();
+        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
     }
 
     public LocalDateTime fromDateToLocalDateTime(Date date)
@@ -132,9 +139,9 @@ public class DateTimeService {
         return getZonedDateTimeAtUTC(date).toLocalDateTime();
     }
 
-    public LocalDateTime toUTCDateTime(LocalDateTime date)
+    public LocalDateTime fromClientLocalDateTimeToUTCDateTime(LocalDateTime date)
     {
-        return getZonedDateTimeAtUTC(date).toLocalDateTime();
+        return date.atZone(getDefaultClientZoneId()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 
     public LocalDate toUTCDate(Date date)
@@ -149,12 +156,12 @@ public class DateTimeService {
 
     public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
     {
-        return date.toInstant().atZone(getDefaultClientZoneId());
+        return date.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(getDefaultClientZoneId());
     }
 
     public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(LocalDateTime date)
     {
-        return date.atZone(getDefaultClientZoneId());
+        return getZonedDateTimeAtUTC(date).withZoneSameInstant(getDefaultClientZoneId());
     }
 
     public ZonedDateTime getZonedDateTimeAtUTC(Date date)

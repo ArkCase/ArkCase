@@ -138,6 +138,11 @@
             <artifactId>acm-service-ms-outlook-integration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+               <groupId>org.owasp.encoder</groupId>
+               <artifactId>encoder</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

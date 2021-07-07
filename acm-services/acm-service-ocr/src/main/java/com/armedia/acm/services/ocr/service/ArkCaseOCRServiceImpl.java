@@ -77,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -145,9 +146,11 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             // we need just to take one of them (if there are many), check if we need to proceed, and proceed if yes.
             // After that, the business process will update all IDs
 
+            MediaEngine mediaEngine = null;
+
             try
             {
-                MediaEngine mediaEngine = saveProcessingStatus(ids);
+                mediaEngine = saveProcessingStatus(ids);
                 MediaEngine providerOCR = getProviderOCR(mediaEngine);
 
                 if (providerOCR != null && !MediaEngineStatusType.PROCESSING.toString().equals(providerOCR.getStatus()))
@@ -178,9 +181,28 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             {
                 LOG.warn("Could not check if OCR should be completed. PROCESS_ID=[{}], REASON=[{}]",
                         delegateExecution.getProcessInstanceId(), e.getMessage());
+                if (mediaEngine != null)
+                {
+                    processFailedAttempt(delegateExecution, mediaEngine);
+                }
             }
+        }
+    }
 
+    private void processFailedAttempt(DelegateExecution delegateExecution, MediaEngine mediaEngine) {
+        OCR ocr = (OCR) mediaEngine;
+        int retryAttempt = Optional.ofNullable(ocr.getOcrRetryAttempt()).orElse(1);
+        if (retryAttempt > getConfiguration().getMaxFailedAttempts())
+        {
+            String action = doFailed(mediaEngine);
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), action);
+            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.STATUS.toString(), MediaEngineActionType.FAILED.toString());
+        }
+        else
+        {
+            ocr.setOcrRetryAttempt(++retryAttempt);
+            ocrDao.save(ocr);
+            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), MediaEngineActionType.PROCESSING.toString());
         }
     }
 

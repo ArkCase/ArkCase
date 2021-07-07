@@ -117,9 +117,9 @@ public abstract class AcmFileSystemResource implements GetableResource, Lockable
     }
 
     @Override
-    public LockResult refreshLock(String token) throws NotAuthorizedException, PreConditionFailedException
+    public LockResult refreshLock(String token, LockTimeout timeout) throws NotAuthorizedException, PreConditionFailedException
     {
-        return resourceFactory.getLockManager().refresh(token, this);
+        return resourceFactory.getLockManager().refresh(token,timeout, this);
     }
 
     @Override

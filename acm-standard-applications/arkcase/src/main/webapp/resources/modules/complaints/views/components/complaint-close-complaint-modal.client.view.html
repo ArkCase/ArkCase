@@ -137,10 +137,8 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.type </label>
                                         <span class="required-asterisk">*</span>
-                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod"
-                                                class="form-control input-md"
-                                                ng-options="contact as contact.type for contact in contactTypes track by contact.id"
-                                                required>
+                                        <select ng-model="closeComplaintRequest.contactType" class="form-control input-md" ng-change="updateReferExternalContactMethod(closeComplaintRequest.contactType)"
+                                                ng-options="contact.value | translate for contact in contactTypes" required>
                                         </select>
                                     </div>
                                     <div class="col-sm-6">

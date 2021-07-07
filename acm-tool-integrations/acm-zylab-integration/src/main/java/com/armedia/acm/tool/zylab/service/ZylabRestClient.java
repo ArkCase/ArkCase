@@ -27,12 +27,12 @@ package com.armedia.acm.tool.zylab.service;
  * #L%
  */
 
-import java.io.File;
-import java.util.List;
-
 import com.armedia.acm.tool.zylab.model.CreateMatterRequest;
 import com.armedia.acm.tool.zylab.model.MatterDTO;
 import com.armedia.acm.tool.zylab.model.MatterTemplateDTO;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on February, 2021
@@ -42,8 +42,16 @@ public interface ZylabRestClient
 
     /**
      *
-     * Sends a POST request to create a new Matter in ZyLAB with the specified info
+     * Sends a GET request to query all Matters in ZyLAB Document Review
      * 
+     * @return Matters data
+     */
+    List<MatterDTO> getAllMatters();
+
+    /**
+     *
+     * Sends a POST request to create a new Matter in ZyLAB with the specified info
+     *
      * @param createMatterRequest
      *            object that holds the needed info to create a new ZyLAB Matter
      * @return Matter data

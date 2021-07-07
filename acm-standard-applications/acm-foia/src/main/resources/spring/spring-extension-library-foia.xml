@@ -106,19 +106,6 @@
             <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
-        <beans:bean id="holdedAndAppealedRequestsDueDateUpdate"
-                    class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
-            <beans:property name="requestDao" ref="foiaRequestDao"/>
-            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="foiaConfig" ref="foiaConfig"/>
-            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
-        </beans:bean>
-
-        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor"
-                    parent="acmJobDescriptor">
-            <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
-        </beans:bean>
-
         <beans:bean id="dueDateReminder" class="gov.foia.service.DueDateReminder">
             <property name="notificationDao" ref="notificationDao"/>
             <property name="foiaRequestDao" ref="foiaRequestDao"/>
@@ -137,6 +124,10 @@
             <beans:property name="outputMimeType" value="application/pdf"/>
         </beans:bean>
 
+        <beans:bean id="extendDatesServiceForRequestsInHoldQueue" class="gov.foia.service.ExtendDatesServiceForRequestsInHoldQueue">
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
         <!-- <beans:bean id="folderNamePredicate" class="gov.foia.service.FolderNameEqualsPredicate">
             <beans:property name="folderName" value="01 Request"/>
         </beans:bean>
@@ -190,6 +181,7 @@
                     <beans:ref bean="foiaRequestDataUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
+                    <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -487,6 +479,14 @@
             <beans:property name="documentExemptionService" ref="documentExemptionService"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="zylabEventPublisher" ref="zylabEventPublisher"/>
+        </beans:bean>
+
+        <beans:bean id="createPersonFromExistingUsersExecutor"
+              class="gov.foia.service.dataupdate.CreateFOIAPersonFromExistingUsersExecutor">
+            <beans:property name="solrReindexService" ref="solrReindexService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </beans:bean>
 
     </beans:beans>
