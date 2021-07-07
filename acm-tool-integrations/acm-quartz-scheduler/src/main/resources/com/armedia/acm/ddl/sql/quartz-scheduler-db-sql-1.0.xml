@@ -492,4 +492,8 @@
         <sql>DELETE FROM QRTZ_JOB_DETAILS     WHERE job_name = 'dueDateUpdateJob'</sql>
     </changeSet>
 
+    <changeSet id="03-update-job-data-to-trigger-full-reindex" author="vladimir.cherepnalkovski">
+        <sql>UPDATE QRTZ_JOB_DETAILS SET JOB_DATA = NULL</sql>
+    </changeSet>
+
 </databaseChangeLog>
