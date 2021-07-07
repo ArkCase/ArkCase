@@ -6,7 +6,7 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
             var vm = this;
             vm.config = null;
             var userInfo = null;
-            var requestQueue = "Release";
+            var requestQueue = "Release OR Hold";
 
             var paginationOptions = {
                 pageNumber: 1,
