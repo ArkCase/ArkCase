@@ -12,6 +12,10 @@
                       targetRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"/>
         <serviceTask id="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585" name="Set FOIA Request status to Perfected"
                      activiti:expression="#{changeObjectStatusService.changeIfNoPermanentStatusIsSet(OBJECT_ID, OBJECT_TYPE, 'Perfected', 'Closed')}"/>
+        <sequenceFlow id="sid-A1A80BC3-B3F3-472A-8187-6EF2428E1D51" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
+                      targetRef="sid-F88A33F4-A31E-43B6-A65C-0921762C023D"/>
+        <serviceTask id="sid-F88A33F4-A31E-43B6-A65C-0921762C023D" name="Extend FOIA Request Due Date"
+                     activiti:expression="#{extendDatesServiceForRequestsInHoldQueue.extendDatesForRequestsLeavingHoldQueue(OBJECT_ID)}"/>
         <sequenceFlow id="sid-9CC4EEEB-90ED-4DEC-9FBC-0F27FC1CE629" sourceRef="sid-E0905ADB-9340-49AC-ADA5-3AD0B417D585"
                       targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
         <endEvent id="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39" name="End&#xa;"/>
@@ -20,6 +24,7 @@
                 Currently there is one such actions:
 
                 1. Set the status to Perfected, if status is not Closed
+                2. Extend Perfected Date and Due Date
             </text>
         </textAnnotation>
     </process>
