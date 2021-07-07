@@ -163,7 +163,7 @@ public class FolderCompressorAPIController
         {
             try (InputStream fileOutput = FileUtils.openInputStream(new File(filePath)))
             {
-                response.setHeader("Content-Disposition", Encode.forJava("attachment; filename=\"" + fileName + "\""));
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + Encode.forJava(fileName) + "\"");
                 response.setContentType(Encode.forJava("application/zip"));
                 byte[] buffer = new byte[1024];
                 int read;
