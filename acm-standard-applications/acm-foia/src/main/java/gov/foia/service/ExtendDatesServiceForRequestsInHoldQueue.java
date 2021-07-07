@@ -39,7 +39,7 @@ public class ExtendDatesServiceForRequestsInHoldQueue
     private HolidayConfigurationService holidayConfigurationService;
     private FOIARequestDao requestDao;
 
-    public void extendDueDate(Long objectId)
+    public void extendDatesForRequestsLeavingHoldQueue(Long objectId)
     {
        FOIARequest request = requestDao.find(objectId);
 
