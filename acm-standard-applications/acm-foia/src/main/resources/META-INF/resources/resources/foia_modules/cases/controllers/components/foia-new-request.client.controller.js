@@ -314,6 +314,13 @@ angular.module('cases').controller(
                     if (!Util.isEmpty(selected)) {
                         PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
                             $scope.setPerson(person);
+                            if(person.defaultOrganization != null) {
+                                $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                            } else {
+                                if(person.organizationAssociations[0] != null) {
+                                    $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                                }
+                            }
                             $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                             $scope.newPerson = angular.copy($scope.blankPerson);
                         });
