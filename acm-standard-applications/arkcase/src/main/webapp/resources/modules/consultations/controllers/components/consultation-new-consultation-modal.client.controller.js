@@ -224,13 +224,18 @@ angular.module('consultations').controller(
                 modalInstance.result.then(function (data) {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         $scope.setPerson(person);
+                        if(person.defaultOrganization != null) {
+                            $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                        } else {
+                            if(person.organizationAssociations[0] != null) {
+                              $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                            }
+                        }
                         $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     });
                 });
 
             };
-
-            
 
             function setOrganizationAssociation(association, data) {
                 association.person = $scope.config.data.originator.person;
