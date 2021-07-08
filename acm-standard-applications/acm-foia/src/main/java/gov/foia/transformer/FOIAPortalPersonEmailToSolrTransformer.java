@@ -52,7 +52,7 @@ public class FOIAPortalPersonEmailToSolrTransformer extends FOIAPersonEmailToSol
             solr = super.toSolrAdvancedSearch(portalFOIAPerson);
             if (solr != null)
             {
-                solr.setObject_sub_type_s("PORTAL_FOIA_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "PORTAL_FOIA_PERSON");
             }
             return solr;
         }

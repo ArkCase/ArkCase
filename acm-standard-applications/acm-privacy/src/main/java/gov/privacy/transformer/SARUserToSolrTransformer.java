@@ -27,10 +27,10 @@ package gov.privacy.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.HIDDEN_B;
 import static com.armedia.acm.services.users.model.ldap.MapperUtils.prefixTrailingDot;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.UserToSolrTransformer;
@@ -65,30 +65,7 @@ public class SARUserToSolrTransformer extends UserToSolrTransformer
             // set hidden_b to true if user has portal prefix
             if (solr.getObject_id_s().startsWith(userPrefix))
             {
-                solr.setHidden_b(true);
-            }
-        }
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmUser in)
-    {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
-                .get(String.format("%s_sync", directoryName));
-
-        String userPrefix = prefixTrailingDot(ldapSyncConfig.getUserPrefix());
-
-        SolrDocument solr;
-
-        solr = super.toSolrQuickSearch(in);
-
-        if (solr != null)
-        {
-            // set hidden_b to true if user has portal prefix
-            if (solr.getObject_id_s().startsWith(userPrefix))
-            {
-                solr.setHidden_b(true);
+                solr.setAdditionalProperty(HIDDEN_B, true);
             }
         }
         return solr;

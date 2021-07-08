@@ -27,6 +27,18 @@ package com.armedia.acm.plugins.consultation.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_ID_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PRIORITY_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
 import com.armedia.acm.plugins.consultation.model.Consultation;
@@ -36,7 +48,6 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -46,6 +57,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on May, 2020
@@ -67,96 +79,63 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Consultation in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                ConsultationConstants.OBJECT_TYPE, in.getConsultationNumber());
 
-        solr.setId(in.getId() + "-CONSULTATION");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(ConsultationConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getTitle());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getConsultationNumber());
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        solrDoc.setDueDate_tdt(in.getDueDate());
 
-        solr.setDueDate_tdt(in.getDueDate());
-        solr.setPriority_lcs(in.getPriority());
-        solr.setStatus_lcs(in.getStatus());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(Consultation in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put(PRIORITY_LCS, in.getPriority());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
 
         String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_id_lcs(assigneeUserId);
+        additionalProperties.put(ASSIGNEE_ID_LCS, assigneeUserId);
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
         if (assignee != null)
         {
-            solr.setAssignee_first_name_lcs(assignee.getFirstName());
-            solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FIRST_NAME_LCS, assignee.getFirstName());
+            additionalProperties.put(ASSIGNEE_LAST_NAME_LCS, assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, assignee.getFirstName() + " " + assignee.getLastName());
         }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solr.setTitle_parseable_lcs(in.getTitle());
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
 
         // The property "assignee_group_id_lcs" is used only for showing/hiding claim/unclaim buttons
-        solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+        additionalProperties.put("assignee_group_id_lcs", in.getAssigneeGroup());
 
         // This property is used for showin the owning group for the object
-        solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
-        solr.setAdditionalProperty("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(Consultation in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setName(in.getConsultationNumber());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(ConsultationConstants.OBJECT_TYPE);
-        solr.setId(in.getId() + "-CONSULTATION");
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setTitle_parseable(in.getTitle());
-
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getTitle());
-
-        return solr;
+        additionalProperties.put("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        additionalProperties.put("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
     }
 
     @Override

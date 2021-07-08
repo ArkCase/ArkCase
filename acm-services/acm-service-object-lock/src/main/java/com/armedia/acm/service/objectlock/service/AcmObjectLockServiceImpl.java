@@ -27,6 +27,9 @@ package com.armedia.acm.service.objectlock.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
@@ -223,7 +226,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         if (!StringUtils.isEmpty(objectType))
         {
             query.append(" AND ");
-            query.append("parent_type_s").append(":").append(objectType);
+            query.append(PARENT_TYPE_S).append(":").append(objectType);
         }
         if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser))
         {
@@ -244,13 +247,13 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         if (!StringUtils.isEmpty(parentObjectType))
         {
             query.append(" AND ");
-            query.append("parent_type_s").append(":").append(parentObjectType);
+            query.append(PARENT_TYPE_S).append(":").append(parentObjectType);
         }
 
         if (objectId != null && !StringUtils.isEmpty(objectId))
         {
             query.append(" AND ");
-            query.append("parent_id_s").append(":").append(objectId);
+            query.append(PARENT_ID_S).append(":").append(objectId);
         }
         if (creator != null && !StringUtils.isEmpty(creator))
         {

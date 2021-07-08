@@ -172,13 +172,13 @@ public class GetConsultationByStatusAPIController
         switch (consultationsByStatusAndTimePeriod)
         {
         case LAST_WEEK:
-            facetQuery += "+AND+last_modified_tdt:[NOW-7DAYS TO *]";
+            facetQuery += "+AND+modified_date_tdt:[NOW-7DAYS TO *]";
             break;
         case LAST_MONTH:
-            facetQuery += "+AND+last_modified_tdt:[NOW-1MONTH TO *]";
+            facetQuery += "+AND+modified_date_tdt:[NOW-1MONTH TO *]";
             break;
         case LAST_YEAR:
-            facetQuery += "+AND+last_modified_tdt:[NOW-1YEAR TO *]";
+            facetQuery += "+AND+modified_date_tdt:[NOW-1YEAR TO *]";
             break;
         case ALL:
             // no filtering by modified date
@@ -189,7 +189,7 @@ public class GetConsultationByStatusAPIController
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, facetQuery, 0, 1, "");
         }
         catch (SolrException e)
         {

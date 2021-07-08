@@ -40,7 +40,7 @@ angular.module('request-info').controller(
                         gridHelper.setUserNameFilterToConfig(promiseUsers);
 
                         //default (init) sorting of tasks grid
-                        $scope.sort.by = "create_tdt";
+                        $scope.sort.by = "create_date_tdt";
                         $scope.sort.dir = "desc";
 
                         componentHelper.doneConfig(config);

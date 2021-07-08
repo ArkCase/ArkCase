@@ -27,14 +27,17 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EMAIL_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /*** Created by ana.serafimoska */
 
@@ -51,22 +54,23 @@ public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
-        SolrAdvancedSearchDocument solrDocument = new SolrAdvancedSearchDocument();
-        solrDocument.setObject_type_s("EMAIL");
-        solrDocument.setId(in.getUserId() + "-EMAIL");
-        solrDocument.setObject_id_s(in.getUserId() + "");
-        solrDocument.setType_lcs("SYSTEM USER");
-        solrDocument.setEmail_lcs(in.getMail());
-        solrDocument.setName(in.getFullName());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        return solrDocument;
+        solrDoc.setObject_type_s("EMAIL");
+        solrDoc.setId(in.getUserId() + "-EMAIL");
+        solrDoc.setObject_id_s(in.getUserId() + "");
+        solrDoc.setName(in.getFullName());
+        solrDoc.setName_lcs(in.getFullName());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
     }
 
-    // No implementation needed due to https://arkcase.atlassian.net/browse/ACFP-704
     @Override
-    public SolrDocument toSolrQuickSearch(AcmUser in)
+    public void mapAdditionalProperties(AcmUser in, Map<String, Object> additionalProperties)
     {
-        return null;
+        additionalProperties.put(TYPE_LCS, "SYSTEM USER");
+        additionalProperties.put(EMAIL_LCS, in.getMail());
     }
 
     @Override

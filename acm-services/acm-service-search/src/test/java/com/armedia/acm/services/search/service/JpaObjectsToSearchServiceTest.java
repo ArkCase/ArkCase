@@ -40,7 +40,6 @@ import com.armedia.acm.services.search.model.AcmObjectTypeTwo;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
@@ -101,17 +100,13 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
         expect(mockContextHolder.getAllBeansOfType(AcmObjectToSolrDocTransformer.class)).andReturn(transformerMap);
 
         Capture<SolrAdvancedSearchDocument> capturedAdvancedSearch = EasyMock.newCapture();
-        Capture<SolrDocument> capturedQuickSearch = EasyMock.newCapture();
         Capture<SolrContentDocument> capturedContentFileIndex = EasyMock.newCapture();
         Capture<SolrDeleteDocumentByIdRequest> capturedAdvancedDeleteRequest = EasyMock.newCapture();
-        Capture<SolrDeleteDocumentByIdRequest> capturedQuickDeleteRequest = EasyMock.newCapture();
         Capture<SolrDeleteDocumentByIdRequest> capturedContentFileIndexDeleteRequest = EasyMock.newCapture();
 
         mockSendToSolr.sendSolrAdvancedSearchDocuments(Arrays.asList(capture(capturedAdvancedSearch)));
-        mockSendToSolr.sendSolrQuickSearchDocuments(Arrays.asList(capture(capturedQuickSearch)));
         mockSendToSolr.sendSolrContentFileIndexDocuments(Arrays.asList(capture(capturedContentFileIndex)));
         mockSendToSolr.sendSolrAdvancedSearchDeletes(Arrays.asList(capture(capturedAdvancedDeleteRequest)));
-        mockSendToSolr.sendSolrQuickSearchDeletes(Arrays.asList(capture(capturedQuickDeleteRequest)));
         mockSendToSolr.sendSolrContentFileIndexDeletes(Arrays.asList(capture(capturedContentFileIndexDeleteRequest)));
 
         replayAll();
@@ -121,13 +116,10 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(4, typeOneSolrConverter.getHandledObjectsCount());
-        assertEquals(2, typeOneSolrConverter.getHandledQuickSearchCount());
 
         assertNotNull(capturedAdvancedSearch.getValue());
-        assertNotNull(capturedQuickSearch.getValue());
 
         assertNotNull(capturedAdvancedDeleteRequest.getValue());
-        assertNotNull(capturedQuickDeleteRequest.getValue());
 
     }
 

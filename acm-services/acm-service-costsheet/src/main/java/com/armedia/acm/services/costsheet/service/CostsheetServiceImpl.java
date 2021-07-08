@@ -112,9 +112,9 @@ public class CostsheetServiceImpl implements CostsheetService
     @Override
     public AcmCostsheet get(Long id)
     {
-        AcmCostsheet timesheet = getAcmCostsheetDao().find(id);
+        AcmCostsheet costsheet = getAcmCostsheetDao().find(id);
 
-        return timesheet;
+        return costsheet;
     }
 
     /**
@@ -155,13 +155,13 @@ public class CostsheetServiceImpl implements CostsheetService
 
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
-        String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_s:DELETE";
+        String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_lcs:DELETE";
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");
@@ -189,13 +189,13 @@ public class CostsheetServiceImpl implements CostsheetService
         String authorQuery = "";
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
-        String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
+        String query = "object_type_s:" + objectType + authorQuery + " AND -status_lcs:DELETE";
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");

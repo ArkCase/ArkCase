@@ -32,38 +32,38 @@
             {
                 "desc": "tasks.tree.filters.myTasks",
                 "name": "my-tasks",
-                "value": "fq=assignee_s:${user}",
+                "value": "fq=assignee_id_lcs:${user}",
                 "default": true
             },
             {
                 "desc": "tasks.tree.filters.opened",
                 "name": "opened-tasks",
-                "value": "fq=status_s:OPEN"
+                "value": "fq=status_lcs:OPEN"
             },
             {
                 "desc": "tasks.tree.filters.completed",
                 "name": "completed-tasks",
-                "value": "fq=status_s:COMPLETE"
+                "value": "fq=status_lcs:COMPLETE"
             },
             {
                 "desc": "tasks.tree.filters.dueToday",
                 "name": "tasks-due-today",
-                "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+                "value": "fq=dueDate_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED"
             },
             {
                 "desc": "tasks.tree.filters.myDueToday",
                 "name": "my-tasks-due-today",
-                "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
+                "value": "fq=dueDate_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND assignee_id_lcs:${user}"
             },
             {
                 "desc": "tasks.tree.filters.overdue",
                 "name": "tasks-overdue",
-                "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+                "value": "fq=dueDate_tdt:[* TO NOW/DAY] AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED"
             },
             {
                 "desc": "tasks.tree.filters.myOverdue",
                 "name": "my-tasks-overdue",
-                "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
+                "value": "fq=dueDate_tdt:[* TO NOW/DAY] AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND assignee_id_lcs:${user}"
             },
             {
                 "desc": "tasks.tree.filters.noFilter",
@@ -75,12 +75,12 @@
             {
                 "desc": "tasks.tree.sorters.createdDateAsc",
                 "name": "sort-date-asc",
-                "value": "create_tdt ASC"
+                "value": "create_date_tdt ASC"
             },
             {
                 "desc": "tasks.tree.sorters.createdDateDesc",
                 "name": "sort-date-desc",
-                "value": "create_tdt DESC"
+                "value": "create_date_tdt DESC"
             },
             {
                 "desc": "tasks.tree.sorters.dueDateAsc",

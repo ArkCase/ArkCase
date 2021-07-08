@@ -31,7 +31,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,31 +80,6 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
         }
 
         throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIAFile)
-        {
-            FOIAFile foiaFile = (FOIAFile) in;
-            solr = super.toSolrQuickSearch(foiaFile);
-
-            if (solr != null)
-            {
-                mapRequestProperties(foiaFile, solr.getAdditionalProperties());
-            }
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-
-        throw new RuntimeException("Could not send to quick search class name " + in.getClass().getName() + "!.");
-
     }
 
     @Override

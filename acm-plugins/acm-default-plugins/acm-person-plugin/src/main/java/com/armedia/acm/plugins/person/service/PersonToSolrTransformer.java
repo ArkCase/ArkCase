@@ -27,6 +27,20 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CONTACT_METHOD_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ORGANIZATION_ID_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PERSON_TITLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.POSTAL_ADDRESS_ID_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.dao.PersonDao;
@@ -36,7 +50,6 @@ import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -47,6 +60,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/21/14.
@@ -65,63 +79,61 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        getSearchAccessControlFields().setAccessControlFields(solrDoc, person);
+        String name = in.getGivenName() + " " + in.getFamilyName();
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), name);
 
-        solrDoc.setId(person.getId() + "-PERSON");
-        solrDoc.setObject_type_s("PERSON");
-        solrDoc.setObject_id_s(person.getId() + "");
-        solrDoc.setPerson_title_lcs(person.getTitle());
-        solrDoc.setFirst_name_lcs(person.getGivenName());
-        solrDoc.setLast_name_lcs(person.getFamilyName());
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        solrDoc.setFull_name_lcs(person.getGivenName() + " " + person.getFamilyName());
-
-        solrDoc.setCreate_date_tdt(person.getCreated());
-        solrDoc.setCreator_lcs(person.getCreator());
-        solrDoc.setModified_date_tdt(person.getModified());
-        solrDoc.setModifier_lcs(person.getModifier());
-
-        solrDoc.setName(person.getGivenName() + " " + person.getFamilyName());
-
-        solrDoc.setTitle_parseable(person.getFamilyName() + " " + person.getGivenName());
-        solrDoc.setTitle_parseable_lcs(person.getFamilyName() + " " + person.getGivenName());
-        solrDoc.setStatus_lcs(person.getStatus());
-
-        addContactMethods(person, solrDoc);
-
-        addOrganizations(person, solrDoc);
-
-        addAddresses(person, solrDoc);
-
-        addAliases(person, solrDoc);
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(person.getCreator());
-        if (creator != null)
-        {
-            solrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(person.getModifier());
-        if (modifier != null)
-        {
-            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
-
-        solrDoc.setAdditionalProperty("default_organization_s",
-                person.getDefaultOrganization() != null ? person.getDefaultOrganization().getOrganization().getOrganizationValue() : null);
-        solrDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(person));
-        solrDoc.setAdditionalProperty("default_location_s", getDefaultAddress(person));
-        solrDoc.setAdditionalProperty("default_email_lcs", getDefaultEmail(person));
-
-        String participantsListJson = ParticipantUtils.createParticipantsListJson(person.getParticipants());
-        solrDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
         return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(Person in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(PERSON_TITLE_LCS, in.getTitle());
+        additionalProperties.put(FIRST_NAME_LCS, in.getGivenName());
+        additionalProperties.put(LAST_NAME_LCS, in.getFamilyName());
+        additionalProperties.put(FULL_NAME_LCS, in.getGivenName() + " " + in.getFamilyName());
+        additionalProperties.put(TITLE_PARSEABLE, in.getFamilyName() + " " + in.getGivenName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getFamilyName() + " " + in.getGivenName());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
+
+        addContactMethods(in, additionalProperties);
+
+        addOrganizations(in, additionalProperties);
+
+        addAddresses(in, additionalProperties);
+
+        addAliases(in, additionalProperties);
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        additionalProperties.put("default_organization_s",
+                in.getDefaultOrganization() != null ? in.getDefaultOrganization().getOrganization().getOrganizationValue() : null);
+        additionalProperties.put("default_phone_s", getDefaultPhone(in));
+        additionalProperties.put("default_location_s", getDefaultAddress(in));
+        additionalProperties.put("default_email_lcs", getDefaultEmail(in));
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
     }
 
     private String getDefaultEmail(Person person)
@@ -178,7 +190,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         return sb.toString();
     }
 
-    private void addAddresses(Person person, SolrAdvancedSearchDocument solrDoc)
+    private void addAddresses(Person person, Map<String, Object> additionalProperties)
     {
         List<String> addressIds = new ArrayList<>();
         if (person.getAddresses() != null)
@@ -189,10 +201,10 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
             }
 
         }
-        solrDoc.setPostal_address_id_ss(addressIds);
+        additionalProperties.put(POSTAL_ADDRESS_ID_SS, addressIds);
     }
 
-    private void addOrganizations(Person person, SolrAdvancedSearchDocument solrDoc)
+    private void addOrganizations(Person person, Map<String, Object> additionalProperties)
     {
         List<String> organizationIds = new ArrayList<>();
         if (person.getOrganizations() != null)
@@ -202,10 +214,10 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
                 organizationIds.add(org.getOrganizationId() + "-ORGANIZATION");
             }
         }
-        solrDoc.setOrganization_id_ss(organizationIds);
+        additionalProperties.put(ORGANIZATION_ID_SS, organizationIds);
     }
 
-    private void addContactMethods(Person person, SolrAdvancedSearchDocument solrDoc)
+    private void addContactMethods(Person person, Map<String, Object> additionalProperties)
     {
         List<String> contactMethodIds = new ArrayList<>();
         if (person.getContactMethods() != null)
@@ -215,10 +227,10 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
                 contactMethodIds.add(cm.getId() + "-CONTACT-METHOD");
             }
         }
-        solrDoc.setContact_method_ss(contactMethodIds);
+        additionalProperties.put(CONTACT_METHOD_SS, contactMethodIds);
     }
 
-    private void addAliases(Person person, SolrAdvancedSearchDocument solrDoc)
+    private void addAliases(Person person, Map<String, Object> additionalProperties)
     {
         List<String> aliasIds = new ArrayList<>();
         if (person.getPersonAliases() != null)
@@ -228,31 +240,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
                 aliasIds.add(pa.getId() + "-PERSON-ALIAS");
             }
         }
-        solrDoc.setPerson_alias_ss(aliasIds);
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
-
-        solrDoc.setId(in.getId() + "-PERSON");
-        solrDoc.setObject_type_s("PERSON");
-        solrDoc.setName(in.getGivenName() + " " + in.getFamilyName());
-        solrDoc.setObject_id_s(in.getId() + "");
-
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor_s(in.getCreator());
-        solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setModifier_s(in.getModifier());
-
-        solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
-        solrDoc.setTitle_parseable_lcs(in.getFamilyName() + " " + in.getGivenName());
-        solrDoc.setStatus_s(in.getStatus());
-
-        return solrDoc;
+        additionalProperties.put("person_alias_ss", aliasIds);
     }
 
     @Override

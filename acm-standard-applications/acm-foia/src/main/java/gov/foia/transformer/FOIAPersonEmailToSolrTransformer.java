@@ -53,7 +53,7 @@ public class FOIAPersonEmailToSolrTransformer extends PersonEmailToSolrTransform
             solr = super.toSolrAdvancedSearch(foiaPerson);
             if (solr != null)
             {
-                solr.setObject_sub_type_s("FOIA_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "FOIA_PERSON");
             }
             return solr;
         }

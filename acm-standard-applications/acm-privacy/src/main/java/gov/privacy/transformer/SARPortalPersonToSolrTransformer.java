@@ -29,7 +29,6 @@ package gov.privacy.transformer;
 
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +62,7 @@ public class SARPortalPersonToSolrTransformer extends SARPersonToSolrTransformer
 
             if (solr != null)
             {
-                solr.setObject_sub_type_s("PORTAL_SAR_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "PORTAL_SAR_PERSON");
             }
 
             return solr;
@@ -71,30 +70,6 @@ public class SARPortalPersonToSolrTransformer extends SARPersonToSolrTransformer
         else
         {
             log.error("Could not send to advanced search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof PortalSARPerson)
-        {
-            PortalSARPerson personIn = (PortalSARPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                solr.getAdditionalProperties().put("object_sub_type_s", "PORTAL_SAR_PERSON");
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
         }
         throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
     }

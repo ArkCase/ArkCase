@@ -30,12 +30,9 @@ package gov.foia.transformer;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
-import java.util.Map;
+import org.apache.logging.log4j.Logger;
 
 import gov.foia.model.FOIAPerson;
 
@@ -69,7 +66,7 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
                 // can't call mapRequestProperties, because SolrAdvancedSearchDocument
                 // has a specific property 'object_sub_type_s', so also setting it via
                 // mapRequestProperties may cause a duplicate key exception.
-                solr.setObject_sub_type_s("FOIA_PERSON");
+                solr.setAdditionalProperty("object_sub_type_s", "FOIA_PERSON");
             }
 
             return solr;
@@ -82,42 +79,8 @@ public class FOIAPersonToSolrTransformer extends PersonToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIAPerson)
-        {
-            FOIAPerson personIn = (FOIAPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(personIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return FOIAPerson.class;
     }
-
-    /**
-     * @param requestIn
-     * @param additionalProperties
-     */
-    protected void mapRequestProperties(FOIAPerson personIn, Map<String, Object> additionalProperties)
-    {
-        additionalProperties.put("object_sub_type_s", "FOIA_PERSON");
-    }
-
 }

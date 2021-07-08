@@ -34,12 +34,12 @@
             {
                 "desc": "document-repository.tree.filters.iHaveCreated",
                 "name": "my-created-document-repositories",
-                "value": "fq=author_s:${user} AND repository_type_s:GENERAL"
+                "value": "fq=creator_lcs:${user} AND repository_type_s:GENERAL"
             },
             {
                 "desc": "document-repository.tree.filters.iAmFollowing",
                 "name": "my-following-document-repositories",
-                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+                "value": "fq={!join from=parent_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
             },
             {
                 "desc": "document-repository.tree.filters.noFilter",
@@ -52,12 +52,12 @@
             {
                 "desc": "document-repository.tree.sorters.dateAsc",
                 "name": "sort-date-asc",
-                "value": "create_tdt ASC"
+                "value": "create_date_tdt ASC"
             },
             {
                 "desc": "document-repository.tree.sorters.dateDesc",
                 "name": "sort-date-desc",
-                "value": "create_tdt DESC",
+                "value": "create_date_tdt DESC",
                 "default": true
             },
             {
@@ -514,7 +514,7 @@
                 },
                 {
                     "name": "assignee",
-                    "field": "assignee_s",
+                    "field": "assignee_id_lcs",
                     "displayName": "document-repository.comp.tasks.table.columns.assignee",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
@@ -524,11 +524,11 @@
                     "field": "createDate",
                     "displayName": "document-repository.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
-                    "field": "priority_s",
+                    "field": "priority_lcs",
                     "displayName": "document-repository.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
@@ -537,11 +537,11 @@
                     "field": "dueDate",
                     "displayName": "document-repository.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
-                    "field": "status_s",
+                    "field": "status_lcs",
                     "displayName": "document-repository.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }

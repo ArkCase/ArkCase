@@ -32,7 +32,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,11 +64,6 @@ public class SendDocumentsToSolr implements InitializingBean
         sendToJmsQueue(solrDocuments, "solrAdvancedSearch.in");
     }
 
-    public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
-    {
-        sendToJmsQueue(solrDocuments, "solrQuickSearch.in");
-    }
-
     public void sendSolrContentFileIndexDocuments(List<SolrContentDocument> solrDocuments)
     {
         if (solrDocuments != null)
@@ -92,19 +86,6 @@ public class SendDocumentsToSolr implements InitializingBean
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
                 sendToJmsQueue(doc, "solrAdvancedSearch.in");
-            }
-        }
-    }
-
-    public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
-    {
-        // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
-        // index.
-        if (deletes != null)
-        {
-            for (SolrDeleteDocumentByIdRequest doc : deletes)
-            {
-                sendToJmsQueue(doc, "solrQuickSearch.in");
             }
         }
     }

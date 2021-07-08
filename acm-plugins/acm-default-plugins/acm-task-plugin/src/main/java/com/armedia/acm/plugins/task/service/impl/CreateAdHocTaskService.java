@@ -27,16 +27,6 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -56,6 +46,16 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class CreateAdHocTaskService
 {
@@ -172,14 +172,14 @@ public class CreateAdHocTaskService
         String authorQuery = "";
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
 
-        String query = "object_type_s:" + objectType + " AND name:" + objectName + authorQuery + " AND -status_s:DELETE";
+        String query = "object_type_s:" + objectType + " AND name:" + objectName + authorQuery + " AND -status_lcs:DELETE";
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");

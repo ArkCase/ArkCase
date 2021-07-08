@@ -110,9 +110,9 @@ public class GetTotalPageCountAPIControllerTest extends EasyMockSupport
                 SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":10";
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 50,
                 SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 50, 50,
                 SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
 
         replayAll();
@@ -150,9 +150,9 @@ public class GetTotalPageCountAPIControllerTest extends EasyMockSupport
                 SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":10";
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 50,
                 SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50,
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 50, 50,
                 SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
 
         replayAll();

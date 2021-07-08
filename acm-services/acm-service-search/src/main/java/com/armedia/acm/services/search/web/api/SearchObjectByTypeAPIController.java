@@ -32,8 +32,8 @@ import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
@@ -102,12 +102,12 @@ public class SearchObjectByTypeAPIController
         {
             if (!StringUtils.isBlank(assignee))
             {
-                query += " AND assignee_s:" + assignee;
+                query += " AND assignee_id_lcs:" + assignee;
             }
 
             if (activeOnly)
             {
-                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE" +
+                query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND -status_lcs:CLOSE" +
                         " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
             }
             log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
@@ -157,7 +157,7 @@ public class SearchObjectByTypeAPIController
         // try what the user sent, if no sort properties were found
         sortParams = StringUtils.isBlank(sortParams) ? sort : sortParams;
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                 startRow, maxRows, sortParams, params);
 
         publishSearchEvent(authentication, httpSession, true, results);
@@ -181,12 +181,12 @@ public class SearchObjectByTypeAPIController
 
         if (!StringUtils.isBlank(assignee))
         {
-            query += " AND assignee_s:" + assignee;
+            query += " AND assignee_id_lcs:" + assignee;
         }
 
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
@@ -216,12 +216,12 @@ public class SearchObjectByTypeAPIController
 
         if (!StringUtils.isBlank(assignee))
         {
-            query += " AND assignee_s:" + assignee;
+            query += " AND assignee_id_lcs:" + assignee;
         }
 
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
@@ -266,10 +266,10 @@ public class SearchObjectByTypeAPIController
 
         if (solrResponse.getResponse() != null)
         {
-            List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
+            List<SolrAdvancedSearchDocument> solrDocs = solrResponse.getResponse().getDocs();
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
             Long objectId = null;
-            for (SolrDocument doc : solrDocs)
+            for (SolrAdvancedSearchDocument doc : solrDocs)
             {
                 // in case when objectID is not Long like in USER case
                 try

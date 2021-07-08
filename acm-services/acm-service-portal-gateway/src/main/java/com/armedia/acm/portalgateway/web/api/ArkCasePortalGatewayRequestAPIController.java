@@ -156,7 +156,7 @@ public class ArkCasePortalGatewayRequestAPIController
         filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
 
         query = String.format("name:%s*", query);
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0,
                 10, "",
                 filterQueries);
 

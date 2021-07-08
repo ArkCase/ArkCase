@@ -27,9 +27,20 @@ package com.armedia.acm.services.search.model.solr;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.HIDDEN_B;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -76,28 +87,26 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         listToUrlValues(values, getParent_allow_user_ls(), "parent_allow_user_ls");
         listToUrlValues(values, getParent_deny_user_ls(), "parent_deny_user_ls");
 
-        values.put("literal.hidden_b", isHidden_b());
-        values.put("literal.parent_ref_s", getParent_ref_s());
-        values.put("literal.status_lcs", getStatus_lcs());
+        values.put("literal.hidden_b", getAdditionalProperties().get(HIDDEN_B));
+        values.put("literal.parent_ref_s", getAdditionalProperties().get(PARENT_REF_S));
+        values.put("literal.status_lcs", getAdditionalProperties().get(STATUS_LCS));
         values.put("literal.protected_object_b", isProtected_object_b());
         values.put("literal.public_doc_b", isPublic_doc_b());
         values.put("literal.id", getId());
         values.put("literal.object_type_s", getObject_type_s());
         values.put("literal.object_id_s", getObject_id_s());
-        values.put("literal.modified_date_tdt", getModified_date_tdt());
+        values.put("literal.modified_date_tdt", getModified_date_tdt()!=null?getModified_date_tdt().toInstant().toString():null);
         values.put("literal.modifier_lcs", getModifier_lcs());
-        values.put("literal.create_date_tdt", getCreate_date_tdt());
+        values.put("literal.create_date_tdt", getCreate_date_tdt()!=null?getCreate_date_tdt().toInstant().toString():null);
         values.put("literal.creator_lcs", getCreator_lcs());
         values.put("literal.name", getName());
-        values.put("literal.parent_id_s", getParent_id_s());
-        values.put("literal.parent_type_s", getParent_type_s());
-        values.put("literal.parent_number_lcs", getParent_number_lcs());
-        values.put("literal.title_parseable", getTitle_parseable());
-        values.put("literal.title_parseable_lcs", getTitle_parseable_lcs());
-        values.put("literal.assignee_full_name_lcs", getAssignee_full_name_lcs());
-        values.put("literal.type_lcs", getType_lcs());
-        values.put("literal.ext_s", getExt_s());
-        values.put("literal.mime_type_s", getMime_type_s());
+        values.put("literal.parent_id_s", getAdditionalProperties().get(PARENT_ID_S));
+        values.put("literal.parent_type_s", getAdditionalProperties().get(PARENT_TYPE_S));
+        values.put("literal.parent_number_lcs", getAdditionalProperties().get(PARENT_NUMBER_LCS));
+        values.put("literal.title_parseable", getAdditionalProperties().get(TITLE_PARSEABLE));
+        values.put("literal.title_parseable_lcs", getAdditionalProperties().get(TITLE_PARSEABLE_LCS));
+        values.put("literal.assignee_full_name_lcs", getAdditionalProperties().get(ASSIGNEE_FULL_NAME_LCS));
+        values.put("literal.type_lcs", getAdditionalProperties().get(TYPE_LCS));
 
         if (getAdditionalProperties() != null)
         {
@@ -147,59 +156,57 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
         StringBuilder url = new StringBuilder(
                 "&literal.allow_user_ls="
                         + (getAllow_user_ls() == null ? null
-                                : getAllow_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.allow_user_ls=")))
+                        : getAllow_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.allow_user_ls=")))
                         + "&literal.deny_user_ls="
                         + (getDeny_user_ls() == null ? null
-                                : getDeny_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.deny_user_ls=")))
+                        : getDeny_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.deny_user_ls=")))
                         + "&literal.allow_group_ls="
                         + (getAllow_group_ls() == null ? null
-                                : getAllow_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.allow_group_ls")))
+                        : getAllow_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.allow_group_ls")))
                         + "&literal.deny_group_ls="
                         + (getDeny_group_ls() == null ? null
-                                : getDeny_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.deny_group_ls")))
+                        : getDeny_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.deny_group_ls")))
                         + "&literal.parent_allow_group_ls="
                         + (getParent_allow_group_ls() == null ? null
-                                : getParent_allow_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_allow_group_ls")))
+                        : getParent_allow_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_allow_group_ls")))
                         + "&literal.parent_deny_group_ls="
                         + (getParent_deny_group_ls() == null ? null
-                                : getParent_deny_group_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_deny_group_ls")))
+                        : getParent_deny_group_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_deny_group_ls")))
                         + "&literal.parent_allow_user_ls="
                         + (getParent_allow_user_ls() == null ? null
-                                : getParent_allow_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_allow_user_ls")))
+                        : getParent_allow_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_allow_user_ls")))
                         + "&literal.parent_deny_user_ls="
                         + (getParent_deny_user_ls() == null ? null
-                                : getParent_deny_user_ls().stream().map(Object::toString)
-                                        .collect(Collectors.joining("&literal.parent_deny_user_ls")))
+                        : getParent_deny_user_ls().stream().map(Object::toString)
+                        .collect(Collectors.joining("&literal.parent_deny_user_ls")))
                         +
-                        "&literal.hidden_b=" + isHidden_b() +
-                        "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
-                        "&literal.status_lcs=" + encode(getStatus_lcs()) +
+                        "&literal.hidden_b=" + getAdditionalProperties().get(HIDDEN_B) +
+                        "&literal.parent_ref_s=" + encode(getAdditionalProperties().get(PARENT_REF_S).toString()) +
+                        "&literal.status_lcs=" + encode(getAdditionalProperties().get(STATUS_LCS).toString()) +
                         "&literal.protected_object_b=" + isProtected_object_b() +
                         "&literal.public_doc_b=" + isPublic_doc_b() +
                         "&literal.id=" + encode(getId()) +
                         "&literal.object_type_s=" + encode(getObject_type_s()) +
                         "&literal.object_id_s=" + encode(getObject_id_s()) +
-                        "&literal.modified_date_tdt=" + getModified_date_tdt() +
-                        "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
-                        "&literal.create_date_tdt=" + getCreate_date_tdt() +
-                        "&literal.creator_lcs=" + encode(getCreator_lcs()) +
-                        "&literal.name=" + encode(getName()) +
-                        "&literal.parent_id_s=" + encode(getParent_id_s()) +
-                        "&literal.parent_type_s=" + encode(getParent_type_s()) +
-                        "&literal.parent_number_lcs=" + encode(getParent_number_lcs()) +
-                        "&literal.title_parseable=" + encode(getTitle_parseable()) +
-                        "&literal.title_parseable_lcs=" + encode(getTitle_parseable_lcs()) +
-                        "&literal.assignee_full_name_lcs=" + encode(getAssignee_full_name_lcs()) +
-                        "&literal.type_lcs=" + encode(getType_lcs()) +
-                        "&literal.ext_s=" + encode(getExt_s()) +
-                        "&literal.mime_type_s=" + encode(getMime_type_s()));
+                        "&literal.modified_date_tdt=" + getModified_date_tdt().toInstant().toString() +
+                "&literal.modifier_lcs=" + encode(getModifier_lcs()) +
+                "&literal.create_date_tdt=" + getCreate_date_tdt().toInstant().toString() +
+                "&literal.creator_lcs=" + encode(getCreator_lcs()) +
+                "&literal.name=" + encode(getName()) +
+                        "&literal.parent_id_s=" + encode(getAdditionalProperties().get(PARENT_ID_S).toString()) +
+                        "&literal.parent_type_s=" + encode(getAdditionalProperties().get(PARENT_TYPE_S).toString()) +
+                        "&literal.parent_number_lcs=" + encode(getAdditionalProperties().get(PARENT_NUMBER_LCS).toString()) +
+                        "&literal.title_parseable=" + encode(getAdditionalProperties().get(TITLE_PARSEABLE).toString()) +
+                        "&literal.title_parseable_lcs=" + encode(getAdditionalProperties().get(TITLE_PARSEABLE_LCS).toString()) +
+                        "&literal.assignee_full_name_lcs=" + encode(getAdditionalProperties().get(ASSIGNEE_FULL_NAME_LCS).toString()) +
+                        "&literal.type_lcs=" + encode(getAdditionalProperties().get(TYPE_LCS).toString()));
 
         if (getAdditionalProperties() != null)
         {
@@ -246,17 +253,5 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     public void setSkipAdditionalPropertiesInURL(List<String> skipAdditionalPropertiesInURL)
     {
         this.skipAdditionalPropertiesInURL = skipAdditionalPropertiesInURL;
-    }
-
-    @Override
-    public String getCmis_version_series_id_s()
-    {
-        return cmis_version_series_id_s;
-    }
-
-    @Override
-    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
-    {
-        this.cmis_version_series_id_s = cmis_version_series_id_s;
     }
 }
