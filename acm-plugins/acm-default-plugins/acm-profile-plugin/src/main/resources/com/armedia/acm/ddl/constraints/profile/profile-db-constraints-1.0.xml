@@ -60,4 +60,9 @@
         <addUniqueConstraint tableName="acm_user_org" columnNames="cm_user"/>
     </changeSet>
 
+    <changeSet id="01-change-cm-user-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_user" columnName="cm_user_deleted_at" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_user" columnName="cm_token_ex_date" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
