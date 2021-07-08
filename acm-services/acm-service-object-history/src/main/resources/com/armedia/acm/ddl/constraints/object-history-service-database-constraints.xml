@@ -39,4 +39,10 @@
         <dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
+    <changeSet id="08-change-cm-object-history-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_object_history" columnName="cm_modified" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_object_history" columnName="cm_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_object_history" columnName="cm_created" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
