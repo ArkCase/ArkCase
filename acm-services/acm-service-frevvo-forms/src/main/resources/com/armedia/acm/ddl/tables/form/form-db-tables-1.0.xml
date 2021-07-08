@@ -85,6 +85,11 @@
             <column name="cm_seq_name" value="acm_form_type_lu"></column>
         </insert>
     </changeSet>
+    
+    <changeSet id="02-change-cm-form-type-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_form_type_lu" columnName="cm_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_form_type_lu" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
 
 </databaseChangeLog>
 
