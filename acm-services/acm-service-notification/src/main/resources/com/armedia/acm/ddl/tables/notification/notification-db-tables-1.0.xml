@@ -257,4 +257,11 @@
             <column name="cm_bcc_email_addresses" type="CLOB"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="25-change-cm-notification-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_notification" columnName="cm_notification_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_notification" columnName="cm_notification_action_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_notification" columnName="cm_modified" newDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>
