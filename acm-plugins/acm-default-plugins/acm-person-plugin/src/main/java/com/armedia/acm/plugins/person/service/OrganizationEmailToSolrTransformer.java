@@ -36,6 +36,9 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,7 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
 {
     private OrganizationDao organizationDao;
     private UserDao userDao;
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -57,17 +61,24 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization in)
     {
-        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
         if (in.getDefaultEmail() != null)
         {
+            SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+
             solrDoc.setObject_type_s("EMAIL");
             solrDoc.setId(in.getId() + "-EMAIL");
             solrDoc.setObject_id_s(in.getOrganizationId() + "");
             solrDoc.setName(in.getOrganizationValue());
             solrDoc.setName_lcs(in.getOrganizationValue());
             mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+            return solrDoc;
         }
-        return solrDoc;
+        else
+        {
+            log.info("Organization has no default email. No EMAIL solr document will be added");
+            return null;
+        }
     }
 
     @Override
