@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.complaint.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -47,8 +47,8 @@ import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtens
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Arrays;
@@ -167,7 +167,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         }
     }
 
-    private boolean shouldDeleteOnClose()
+    protected boolean shouldDeleteOnClose()
     {
         boolean purgeOption;
         try
@@ -189,7 +189,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     }
 
-    private AcmAssignment createAcmAssignment(Complaint updatedComplaint)
+    protected AcmAssignment createAcmAssignment(Complaint updatedComplaint)
     {
         AcmAssignment assignment = new AcmAssignment();
         assignment.setObjectId(updatedComplaint.getComplaintId());
@@ -201,7 +201,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         return assignment;
     }
 
-    private boolean isPriorityChanged(Complaint complaint, Complaint updatedComplaint)
+    protected boolean isPriorityChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedPriority = updatedComplaint.getPriority();
         String priority = complaint.getPriority();
@@ -209,7 +209,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         return !Objects.equals(updatedPriority, priority);
     }
 
-    private boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
+    protected boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
     {
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = complaint.getAddresses();
@@ -271,7 +271,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         return existingIds.stream().anyMatch(id -> !updatedIds.contains(id));
     }
 
-    private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)
+    protected boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedDetails = updatedComplaint.getDetails();
         String details = complaint.getDetails();
@@ -279,7 +279,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     }
 
-    private void checkParticipants(Complaint complaint, Complaint updatedComplaint, String ipAddress)
+    protected void checkParticipants(Complaint complaint, Complaint updatedComplaint, String ipAddress)
     {
         List<AcmParticipant> existing = complaint.getParticipants();
         List<AcmParticipant> updated = updatedComplaint.getParticipants();
@@ -303,14 +303,14 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         }
     }
 
-    private boolean isStatusChanged(Complaint complaint, Complaint updatedComplaint)
+    protected boolean isStatusChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedStatus = updatedComplaint.getStatus();
         String status = complaint.getStatus();
         return !Objects.equals(updatedStatus, status);
     }
 
-    private boolean checkExecution(String objectType)
+    protected boolean checkExecution(String objectType)
     {
 
         return objectType.equals(ComplaintConstants.OBJECT_TYPE);
@@ -380,9 +380,21 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
+    public List<String> getComplaintStatusClosed() {
+        return complaintStatusClosed;
+    }
+
+    public void setComplaintStatusClosed(List<String> complaintStatusClosed) {
+        this.complaintStatusClosed = complaintStatusClosed;
+    }
+
     public void setComplaintStatusClosed(String complaintStatusClosed)
     {
         this.complaintStatusClosed = Arrays.asList(complaintStatusClosed.split(","));
+    }
+
+    public OutlookCalendarAdminServiceExtension getCalendarAdminService() {
+        return calendarAdminService;
     }
 
     /**
@@ -404,6 +416,10 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         this.objectConverter = objectConverter;
     }
 
+    public AcmOutlookFolderCreatorDao getFolderCreatorDao() {
+        return folderCreatorDao;
+    }
+
     /**
      * @param folderCreatorDao
      *            the folderCreatorDao to set
@@ -412,4 +428,5 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         this.folderCreatorDao = folderCreatorDao;
     }
+
 }
