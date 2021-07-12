@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.casefile.utility;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,7 +68,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
     }
 
     public void raiseCustomEvent(CaseFile caseFile, String caseState, String eventDescription, Date eventDate, String ipAddress,
-            String userId, Authentication auth)
+                                 String userId, Authentication auth)
     {
         String eventType = "com.armedia.acm.casefile." + caseState;
         eventDate = eventDate == null ? new Date() : eventDate;
@@ -155,7 +156,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
     }
 
     public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus,
-            String description)
+                                                    String description)
     {
         CaseFileParticipantsModifiedEvent event = new CaseFileParticipantsModifiedEvent(participant);
         event.setEventStatus(eventStatus);
@@ -217,4 +218,10 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
 }
