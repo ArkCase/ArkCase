@@ -71,6 +71,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonContact in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        log.info("Creating Solr advanced search document for PERSON_CONTACT.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "PERSON_CONTACT", "");

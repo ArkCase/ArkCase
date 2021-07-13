@@ -70,6 +70,7 @@ public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolr
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(OrganizationAssociation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        log.info("Creating Solr advanced search document for ORGANIZATION-ASSOCIATION.");
 
         String name = in.getOrganization().getOrganizationValue() + " (" + in.getAssociationType() + ")";
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(),

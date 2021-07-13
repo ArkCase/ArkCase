@@ -64,6 +64,7 @@ public class OrganizationEmailToSolrTransformer implements AcmObjectToSolrDocTra
         if (in.getDefaultEmail() != null)
         {
             SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+            log.info("Creating Solr advanced search document for Organization EMAIL.");
 
             solrDoc.setObject_type_s("EMAIL");
             solrDoc.setId(in.getId() + "-EMAIL");

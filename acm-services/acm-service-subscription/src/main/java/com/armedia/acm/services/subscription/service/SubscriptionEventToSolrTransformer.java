@@ -46,6 +46,9 @@ import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +58,7 @@ import java.util.Map;
  */
 public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscriptionEvent>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private SubscriptionEventDao subscriptionEventDao;
     private UserDao userDao;
@@ -72,6 +76,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     {
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for SUBSCRIPTION_EVENT.");
 
         String event = auditEventConfig.getEventTypes().getOrDefault("eventType." + in.getEventType(), "Was updated");
         String title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + event;

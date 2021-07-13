@@ -32,6 +32,9 @@ import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,7 @@ import java.util.Map;
  */
 public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransformer<Disposition>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private DispositionDao dispositionDao;
 
@@ -54,6 +58,7 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Disposition in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for DISPOSITION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), null);
