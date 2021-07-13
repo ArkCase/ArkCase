@@ -162,6 +162,11 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
+        <beans:bean id="updateHoldEnterDateForRequestInHoldQueue"
+                    class="gov.foia.service.dataupdate.UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="solrReindexFOIAFileExecutor" class="gov.foia.service.dataupdate.SolrReindexFoiaFileExecutor">
             <property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
@@ -182,6 +187,7 @@
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                     <beans:ref bean="createPersonFromExistingUsersExecutor"/>
+                    <beans:ref bean="updateHoldEnterDateForRequestInHoldQueue"/>
                 </beans:list>
             </beans:property>
 
