@@ -102,9 +102,12 @@
                                 <label for="position" translate>consultations.newConsultation.position.label</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
-                                        placeholder="{{'consultations.newConsultation.position.placeholder' | translate}}" name="position"
-                                        ng-disabled="isExistingPerson">
+                                <select id="personPosition" class="form-control"
+                                        ng-model="personPosition" ng-disabled="true">
+                                    <option ng-repeat="option in positions" value="{{option.key}}">
+                                        {{option.value | translate}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                         <div class="row form-group">

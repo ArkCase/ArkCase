@@ -28,8 +28,9 @@ angular.module('consultations').controller(
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var states = ObjectLookupService.getStates();
             var commonModuleConfig = ConfigService.getModuleConfig("common");
+            var positionLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
 
-            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup, commonModuleConfig]).then(function (data) {
+            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup, commonModuleConfig, positionLookup]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var prefixes = data[1];
@@ -50,6 +51,7 @@ angular.module('consultations').controller(
                 $scope.canadaProvinces = canadaProvinces;
                 $scope.japanStates = japanStates;
                 $scope.personTypes = personTypes;
+                $scope.positions = data[10];
 
                 $scope.config = moduleConfig;
                 $scope.organizationTypes = organizationTypes;
@@ -226,9 +228,11 @@ angular.module('consultations').controller(
                         $scope.setPerson(person);
                         if(person.defaultOrganization != null) {
                             $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                            $scope.personPosition = person.defaultOrganization.organization.personAssociations[0].personToOrganizationAssociationType;
                         } else {
                             if(person.organizationAssociations[0] != null) {
                               $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                              $scope.personPosition = person.organizationAssociations[0].organization.personAssociations[0].personToOrganizationAssociationType;
                             }
                         }
                         $scope.existingPerson = angular.copy($scope.config.data.originator.person);
@@ -302,12 +306,14 @@ angular.module('consultations').controller(
                         $scope.config.data.originator.person.organizations.push(data.organization);
                         setOrganizationAssociation(association, data);
                         $scope.organizationValue = data.organization.organizationValue;
+                        $scope.personPosition = data.type;
                     } else {
                         OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                             data.organization = organization;
                             $scope.organizationValue = data.organization.organizationValue;
                             $scope.config.data.originator.person.organizations.push(data.organization);
                             setOrganizationAssociation(association, data);
+                            $scope.personPosition = data.type;
                         });
                     }
                 });
