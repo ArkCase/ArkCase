@@ -16,14 +16,13 @@ public class UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor implements 
     @Override
     public String getUpdateId()
     {
-        return "update_hold_enter_date_for_requests_in_hold_queue";
+        return "update_hold_enter_date_for_requests_in_hold_queue_v2";
     }
 
     @Override
-    @Async
     public void execute()
     {
-        List<FOIARequest> requestList = getRequestDao().getAllRequestsInHoldBefore(LocalDate.now());
+        List<FOIARequest> requestList = getRequestDao().findAllHoldRequestsBefore(LocalDate.now());
 
         for (FOIARequest request : requestList)
         {
