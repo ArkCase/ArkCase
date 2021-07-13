@@ -67,7 +67,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectLock in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for OBJECT_LOCK.");
+        LOG.debug("Creating Solr advanced search document for OBJECT_LOCK.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "OBJECT_LOCK", null);

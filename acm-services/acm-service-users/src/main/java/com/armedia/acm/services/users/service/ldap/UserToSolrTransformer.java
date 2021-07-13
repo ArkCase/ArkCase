@@ -65,7 +65,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for USER.");
+        LOG.debug("Creating Solr advanced search document for USER.");
 
         solrDoc.setId(in.getUserId() + "-USER");
         solrDoc.setObject_id_s(in.getUserId() + "");

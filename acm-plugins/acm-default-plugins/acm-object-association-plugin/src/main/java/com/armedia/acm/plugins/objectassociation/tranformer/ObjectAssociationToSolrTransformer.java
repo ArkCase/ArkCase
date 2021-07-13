@@ -63,7 +63,7 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(ObjectAssociation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        log.info("Creating Solr advanced search document for REFERENCE.");
+        log.debug("Creating Solr advanced search document for REFERENCE.");
 
         mapRequiredProperties(solrDoc, in.getAssociationId(), in.getCreator(), in.getCreated(), in.getModifier(),
                 in.getModified(), ObjectAssociationConstants.REFFERENCE_TYPE, null);

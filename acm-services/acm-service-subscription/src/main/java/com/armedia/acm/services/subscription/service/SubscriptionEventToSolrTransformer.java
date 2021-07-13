@@ -76,7 +76,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     {
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for SUBSCRIPTION_EVENT.");
+        LOG.debug("Creating Solr advanced search document for SUBSCRIPTION_EVENT.");
 
         String event = auditEventConfig.getEventTypes().getOrDefault("eventType." + in.getEventType(), "Was updated");
         String title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + event;

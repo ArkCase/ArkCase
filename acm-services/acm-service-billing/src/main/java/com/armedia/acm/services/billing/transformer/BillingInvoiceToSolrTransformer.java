@@ -70,7 +70,7 @@ public class BillingInvoiceToSolrTransformer implements AcmObjectToSolrDocTransf
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(BillingInvoice in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for BILLING_INVOICE.");
+        LOG.debug("Creating Solr advanced search document for BILLING_INVOICE.");
 
         String name = String.format("%s_%d", BillingConstants.OBJECT_TYPE_INVOICE, in.getId());
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),

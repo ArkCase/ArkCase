@@ -60,7 +60,7 @@ public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for User EMAIL.");
+        LOG.debug("Creating Solr advanced search document for User EMAIL.");
 
         solrDoc.setObject_type_s("EMAIL");
         solrDoc.setId(in.getUserId() + "-EMAIL");

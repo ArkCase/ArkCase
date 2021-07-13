@@ -70,7 +70,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmFolder in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        log.info("Creating Solr advanced search document for FOLDER.");
+        log.debug("Creating Solr advanced search document for FOLDER.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), "FOLDER",
                 in.getName());

@@ -58,7 +58,7 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Disposition in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for DISPOSITION.");
+        LOG.debug("Creating Solr advanced search document for DISPOSITION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), null);

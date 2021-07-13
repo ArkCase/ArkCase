@@ -69,7 +69,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PostalAddress in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for LOCATION.");
+        LOG.debug("Creating Solr advanced search document for LOCATION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(),
                 in.getModified(), "LOCATION", buildName(in));

@@ -63,7 +63,7 @@ public class AcmTimeToSolrTransformer implements AcmObjectToSolrDocTransformer<A
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTime in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for TIME.");
+        LOG.debug("Creating Solr advanced search document for TIME.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 TimeConstants.OBJECT_TYPE, in.getCode());

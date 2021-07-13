@@ -72,7 +72,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAssociation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        log.info("Creating Solr advanced search document for PERSON-ASSOCIATION.");
+        log.debug("Creating Solr advanced search document for PERSON-ASSOCIATION.");
 
         String name = in.getPerson().getGivenName() + " " + in.getPerson().getFamilyName() + " (" + in.getPersonType() + ")";
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),

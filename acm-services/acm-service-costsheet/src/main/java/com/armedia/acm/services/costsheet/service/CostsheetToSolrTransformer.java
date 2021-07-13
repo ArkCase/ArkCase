@@ -68,7 +68,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmCostsheet in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for COSTSHEET");
+        LOG.debug("Creating Solr advanced search document for COSTSHEET");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 CostsheetConstants.OBJECT_TYPE, in.getCostsheetNumber());

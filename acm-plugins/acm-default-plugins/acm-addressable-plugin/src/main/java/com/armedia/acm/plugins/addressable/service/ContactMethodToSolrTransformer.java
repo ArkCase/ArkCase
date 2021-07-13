@@ -67,7 +67,7 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(ContactMethod in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for CONTACT-METHOD.");
+        LOG.debug("Creating Solr advanced search document for CONTACT-METHOD.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "CONTACT-METHOD", in.getValue());

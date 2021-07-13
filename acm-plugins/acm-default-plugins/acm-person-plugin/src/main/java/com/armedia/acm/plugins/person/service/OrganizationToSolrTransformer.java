@@ -80,7 +80,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for ORGANIZATION.");
+        LOG.debug("Creating Solr advanced search document for ORGANIZATION.");
 
         mapRequiredProperties(solrDoc, in.getOrganizationId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getOrganizationValue());
