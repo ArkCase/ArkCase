@@ -149,6 +149,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrContentDocument mapContentDocumentProperties(EcmFile in)
     {
         SolrContentDocument solr = new SolrContentDocument();
+        log.debug("Creating Solr Content Document for file_id [{}] and fine_name [{}]", in.getVersionSeriesId(), in.getFileName());
         SolrAdvancedSearchDocument solrAdvancedSearchDocument = mapDocumentProperties(in);
 
         try
@@ -177,7 +178,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrAdvancedSearchDocument mapDocumentProperties(EcmFile in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-
+        log.debug("Creating Solr advanced search document for file_id [{}] and fine_name [{}]", in.getVersionSeriesId(), in.getFileName());
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getFileName());
 

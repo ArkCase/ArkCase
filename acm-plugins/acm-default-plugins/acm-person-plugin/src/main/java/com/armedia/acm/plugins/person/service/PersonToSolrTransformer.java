@@ -82,6 +82,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        log.debug("Creating Solr advanced search document for PERSON.");
 
         String name = in.getGivenName() + " " + in.getFamilyName();
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),

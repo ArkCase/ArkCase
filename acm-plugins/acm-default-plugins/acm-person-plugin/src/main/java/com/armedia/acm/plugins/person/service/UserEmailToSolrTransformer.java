@@ -35,6 +35,9 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,8 @@ import java.util.Map;
 
 public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmUser>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private UserDao userDao;
 
     @Override
@@ -55,6 +60,7 @@ public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for User EMAIL.");
 
         solrDoc.setObject_type_s("EMAIL");
         solrDoc.setId(in.getUserId() + "-EMAIL");

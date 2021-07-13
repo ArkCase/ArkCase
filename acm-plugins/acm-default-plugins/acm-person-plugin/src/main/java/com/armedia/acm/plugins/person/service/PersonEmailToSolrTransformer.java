@@ -63,6 +63,7 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
         if (in.getDefaultEmail() != null)
         {
             SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+            log.debug("Creating Solr advanced search document for PERSON EMAIL.");
 
             solrDoc.setObject_type_s("EMAIL");
             solrDoc.setId(in.getId() + "-EMAIL");
@@ -75,7 +76,7 @@ public class PersonEmailToSolrTransformer implements AcmObjectToSolrDocTransform
         }
         else
         {
-            log.info("Person has no default email. No EMAIL solr document will be added");
+            log.debug("Person has no default email. No EMAIL solr document will be added");
             return null;
         }
     }

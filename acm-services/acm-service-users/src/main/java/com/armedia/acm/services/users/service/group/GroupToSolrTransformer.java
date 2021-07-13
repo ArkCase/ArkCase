@@ -77,7 +77,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     {
 
         acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
-        LOG.info("Creating Solr advanced search document for Group.");
+        LOG.debug("Creating Solr advanced search document for Group.");
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 

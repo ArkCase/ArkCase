@@ -2,7 +2,7 @@ package com.armedia.acm.services.comprehendmedical.transformer;
 
 /*-
  * #%L
- * ACM Service: Transcribe
+ * ACM Service: Comprehend Medical
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -62,7 +62,7 @@ public class ComprehendMedicalToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(ComprehendMedical in)
     {
-        LOG.debug("Creating Solr advanced search document for Transcribe.");
+        LOG.debug("Creating Solr advanced search document for COMPREHEND_MEDICAL.");
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 

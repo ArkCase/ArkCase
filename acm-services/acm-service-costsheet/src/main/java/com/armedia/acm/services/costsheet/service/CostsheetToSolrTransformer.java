@@ -42,6 +42,9 @@ import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,7 @@ import java.util.Map;
  */
 public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmCostsheet>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmCostsheetDao acmCostsheetDao;
 
@@ -64,6 +68,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmCostsheet in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for COSTSHEET");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 CostsheetConstants.OBJECT_TYPE, in.getCostsheetNumber());

@@ -39,6 +39,9 @@ import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,7 @@ import java.util.Map;
 
 public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTag>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private TagDao tagDao;
     private UserDao userDao;
@@ -63,6 +67,7 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTag in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for TAG.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getTagName());

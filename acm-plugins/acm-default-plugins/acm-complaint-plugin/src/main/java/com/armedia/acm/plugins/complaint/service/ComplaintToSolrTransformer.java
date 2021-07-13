@@ -53,6 +53,8 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,6 +67,8 @@ import java.util.Map;
  */
 public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer<Complaint>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private UserDao userDao;
     private ComplaintDao complaintDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
@@ -81,6 +85,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Complaint in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for COMPLAINT.");
 
         mapRequiredProperties(solrDoc, in.getComplaintId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "COMPLAINT", in.getComplaintNumber());

@@ -92,7 +92,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTask in)
     {
-        log.trace("converting to advanced search doc: " + in.getId());
+        log.debug("Creating Solr advanced search document for TASK.");
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
         mapRequiredProperties(solrDoc, in.getId(), in.getOwner(), in.getCreateDate(), null, new Date(), "TASK", in.getTitle());

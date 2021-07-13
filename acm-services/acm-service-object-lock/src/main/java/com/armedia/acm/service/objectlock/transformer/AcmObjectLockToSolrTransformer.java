@@ -40,6 +40,9 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,8 @@ import java.util.Map;
  */
 public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmObjectLock>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private AcmObjectLockDao dao;
     private UserDao userDao;
 
@@ -62,6 +67,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectLock in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for OBJECT_LOCK.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "OBJECT_LOCK", null);
