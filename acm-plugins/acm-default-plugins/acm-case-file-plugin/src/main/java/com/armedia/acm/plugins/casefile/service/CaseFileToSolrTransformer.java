@@ -86,7 +86,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(CaseFile in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for CASE_FILE.");
+        LOG.debug("Creating Solr advanced search document for CASE_FILE.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 CaseFileConstants.OBJECT_TYPE, in.getCaseNumber());

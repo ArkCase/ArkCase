@@ -85,7 +85,7 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Consultation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for CONSULTATION.");
+        LOG.debug("Creating Solr advanced search document for CONSULTATION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 ConsultationConstants.OBJECT_TYPE, in.getConsultationNumber());

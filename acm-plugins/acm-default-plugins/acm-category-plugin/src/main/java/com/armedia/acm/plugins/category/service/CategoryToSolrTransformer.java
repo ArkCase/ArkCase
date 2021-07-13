@@ -82,7 +82,7 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Category in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for CATEGORY.");
+        LOG.debug("Creating Solr advanced search document for CATEGORY.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getName());

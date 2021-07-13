@@ -73,7 +73,7 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(RecycleBinItem in)
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-        log.info("Creating Solr advanced search document for RECYCLE_BIN_ITEM.");
+        log.debug("Creating Solr advanced search document for RECYCLE_BIN_ITEM.");
 
         solr.setId(in.getId() + "-" + RecycleBinConstants.OBJECT_TYPE_ITEM);
         solr.setObject_id_s(in.getSourceObjectId() + "");

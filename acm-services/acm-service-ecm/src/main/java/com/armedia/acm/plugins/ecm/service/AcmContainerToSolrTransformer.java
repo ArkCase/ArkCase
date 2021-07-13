@@ -65,7 +65,7 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
-        LOG.info("Creating Solr advanced search document for CONTAINER.");
+        LOG.debug("Creating Solr advanced search document for CONTAINER.");
 
         mapRequiredProperties(doc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
                 in.getContainerObjectTitle());

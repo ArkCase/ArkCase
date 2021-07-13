@@ -70,7 +70,7 @@ public class BillingItemToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(BillingItem in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for BILLING_ITEM.");
+        LOG.debug("Creating Solr advanced search document for BILLING_ITEM.");
 
         String name = String.format("%s_%d", BillingConstants.OBJECT_TYPE_ITEM, in.getId());
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),

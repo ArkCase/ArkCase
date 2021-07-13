@@ -85,7 +85,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Complaint in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for COMPLAINT.");
+        LOG.debug("Creating Solr advanced search document for COMPLAINT.");
 
         mapRequiredProperties(solrDoc, in.getComplaintId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "COMPLAINT", in.getComplaintNumber());

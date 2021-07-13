@@ -69,7 +69,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Note in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for NOTE.");
+        LOG.debug("Creating Solr advanced search document for NOTE.");
 
         String name = String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId());
 

@@ -66,7 +66,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTimesheet in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for TIMESHEET.");
+        LOG.debug("Creating Solr advanced search document for TIMESHEET.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 TimesheetConstants.OBJECT_TYPE, in.getTimesheetNumber());

@@ -76,7 +76,7 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
     {
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for BUSINESS_PROCESS.");
+        LOG.debug("Creating Solr advanced search document for BUSINESS_PROCESS.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 BusinessProcessConstants.OBJECT_TYPE, solrDoc.getId());

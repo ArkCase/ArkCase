@@ -67,7 +67,7 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTag in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for TAG.");
+        LOG.debug("Creating Solr advanced search document for TAG.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getTagName());

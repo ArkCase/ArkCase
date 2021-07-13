@@ -65,7 +65,7 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmQueue in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for QUEUE.");
+        LOG.debug("Creating Solr advanced search document for QUEUE.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), "QUEUE",
                 in.getName());

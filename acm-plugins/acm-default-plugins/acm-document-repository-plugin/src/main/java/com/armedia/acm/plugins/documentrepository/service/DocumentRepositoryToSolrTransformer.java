@@ -76,7 +76,7 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(DocumentRepository in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for DOC_REPO.");
+        LOG.debug("Creating Solr advanced search document for DOC_REPO.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getName());

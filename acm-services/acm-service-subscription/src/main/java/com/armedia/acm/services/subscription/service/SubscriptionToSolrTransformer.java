@@ -63,7 +63,7 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for SUBSCRIPTION.");
+        LOG.debug("Creating Solr advanced search document for SUBSCRIPTION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
                 null);

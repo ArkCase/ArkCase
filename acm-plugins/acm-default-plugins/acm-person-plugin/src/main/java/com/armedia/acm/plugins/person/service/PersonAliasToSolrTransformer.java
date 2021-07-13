@@ -70,7 +70,7 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAlias in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        LOG.info("Creating Solr advanced search document for PERSON-ALIAS.");
+        LOG.debug("Creating Solr advanced search document for PERSON-ALIAS.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 "PERSON-ALIAS", in.getAliasValue());
