@@ -42,6 +42,9 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,8 @@ import java.util.Map;
  */
 public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransformer<PostalAddress>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private PostalAddressDao postalAddressDao;
     private UserDao userDao;
 
@@ -64,6 +69,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PostalAddress in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for LOCATION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(),
                 in.getModified(), "LOCATION", buildName(in));

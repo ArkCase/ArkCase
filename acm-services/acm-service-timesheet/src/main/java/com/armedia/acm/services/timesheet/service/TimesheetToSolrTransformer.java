@@ -40,6 +40,9 @@ import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,7 @@ import java.util.Map;
  */
 public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTimesheet>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmTimesheetDao acmTimesheetDao;
 
@@ -62,6 +66,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTimesheet in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for TIMESHEET.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 TimesheetConstants.OBJECT_TYPE, in.getTimesheetNumber());

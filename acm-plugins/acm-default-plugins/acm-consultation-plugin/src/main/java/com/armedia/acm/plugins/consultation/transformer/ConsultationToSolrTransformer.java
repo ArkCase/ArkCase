@@ -38,6 +38,7 @@ import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertie
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PRIORITY_LCS;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
 
 import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
@@ -52,6 +53,8 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -64,6 +67,8 @@ import java.util.Map;
  */
 public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransformer<Consultation>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private UserDao userDao;
     private ConsultationDao consultationDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
@@ -80,6 +85,7 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Consultation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for CONSULTATION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 ConsultationConstants.OBJECT_TYPE, in.getConsultationNumber());
@@ -125,7 +131,7 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
             additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getTitle());
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);

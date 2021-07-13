@@ -52,6 +52,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -62,6 +64,7 @@ import java.util.Map;
  */
 public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransformer<Organization>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private OrganizationDao organizationDao;
     private UserDao userDao;
@@ -77,6 +80,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for ORGANIZATION.");
 
         mapRequiredProperties(solrDoc, in.getOrganizationId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
                 in.getObjectType(), in.getOrganizationValue());

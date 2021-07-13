@@ -45,12 +45,16 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private UserDao userDao;
     private NoteDao noteDao;
@@ -65,6 +69,8 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Note in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for NOTE.");
+
         String name = String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId());
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),

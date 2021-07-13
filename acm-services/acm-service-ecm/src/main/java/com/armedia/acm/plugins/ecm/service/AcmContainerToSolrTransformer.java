@@ -38,6 +38,9 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,7 @@ import java.util.Map;
 public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmContainer>
 {
     private AcmContainerDao dao;
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public List<AcmContainer> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -60,6 +64,8 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
 
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
+
+        LOG.info("Creating Solr advanced search document for Container.");
 
         mapRequiredProperties(doc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
                 in.getContainerObjectTitle());

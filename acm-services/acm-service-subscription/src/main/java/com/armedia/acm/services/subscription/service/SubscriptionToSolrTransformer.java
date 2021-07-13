@@ -36,6 +36,9 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,7 @@ import java.util.Map;
  */
 public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscription>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private SubscriptionDao subscriptionDao;
 
@@ -59,6 +63,7 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
 
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.info("Creating Solr advanced search document for SUBSCRIPTION.");
 
         mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
                 null);
