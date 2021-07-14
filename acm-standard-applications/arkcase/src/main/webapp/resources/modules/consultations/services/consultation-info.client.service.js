@@ -196,6 +196,40 @@ angular.module('services').factory('Consultation.InfoService', [ '$resource', '$
 
     /**
      * @ngdoc method
+     * @name saveConsultationInfo
+     * @methodOf services:Consultation.InfoService
+     *
+     * @description
+     * Save consultation data
+     *
+     * @param {Object} consultationInfo  Consultation data
+     *
+     * @returns {Object} Promise
+     */
+    Service.saveConsultationInfo = function(consultationInfo) {
+        if (!Service.validateConsultationInfo(consultationInfo)) {
+            return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+        }
+        return Util.serviceCall({
+            service: Service.save,
+            data: JSOG.encode(consultationInfo),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            onSuccess: function(data) {
+                if (Service.validateConsultationInfo(data)) {
+                    var consultationInfo = data;
+                    if (consultationInfo.id) {
+                        consultationCache.put(consultationGetUrl + consultationInfo.id, consultationInfo);
+                    }
+                    return consultationCache;
+                }
+            }
+        })
+    };
+
+    /**
+     * @ngdoc method
      * @name saveConsultationWithFiles
      * @methodOf services:Consultation.InfoService
      *
