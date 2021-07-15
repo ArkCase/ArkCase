@@ -332,7 +332,7 @@ public class FacetedSearchService
         return sb.toString();
     }
 
-    private String createFacetedFiltersSubString(String filter) throws UnsupportedEncodingException
+    public String createFacetedFiltersSubString(String filter) throws UnsupportedEncodingException
     {
         StringBuilder queryBuilder = new StringBuilder();
         String timePeriods = searchConfig.getTimePeriod();
@@ -376,8 +376,8 @@ public class FacetedSearchService
         return queryBuilder.toString();
     }
 
-    private void buildFacetFilter(StringBuilder queryBuilder, JSONArray jsonArray, String searchKey,
-            String filterSplitByDot) throws UnsupportedEncodingException
+    protected void buildFacetFilter(StringBuilder queryBuilder, JSONArray jsonArray, String searchKey,
+                                    String filterSplitByDot) throws UnsupportedEncodingException
     {
         String[] allORFilters = filterSplitByDot.contains("|") ? filterSplitByDot.split(SearchConstants.PIPE_SPLITTER) : null;
 
@@ -586,7 +586,7 @@ public class FacetedSearchService
      *
      * splits by whitespace search terms and escapes each term with double quotes.
      * If term is already escaped with double quotes, it's ignored
-     * 
+     *
      * @param query
      *            raw query
      * @return String with escaped search terms

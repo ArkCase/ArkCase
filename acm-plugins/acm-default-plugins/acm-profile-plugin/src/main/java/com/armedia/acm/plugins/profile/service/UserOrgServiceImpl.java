@@ -190,6 +190,9 @@ public class UserOrgServiceImpl implements UserOrgService
         {
             profileDTO.setCompanyName(organization.getOrganizationValue());
         }
+        else if (user.getCompany() != null) {
+            profileDTO.setCompanyName(user.getCompany());
+        }
         profileDTO.setLocation(userOrgInfo.getLocation());
         profileDTO.setMainOfficePhone(userOrgInfo.getMainOfficePhone());
         profileDTO.setMobilePhoneNumber(userOrgInfo.getMobilePhoneNumber());
