@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsFooterController',
-    ['$q', '$scope', '$translate', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService', 'PermissionsService',
-        function ($q, $scope, $translate, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService, PermissionsService) {
+    ['$q', '$scope', '$translate', '$state', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'QueuesService', '$modal', 'Object.NoteService', 'Admin.FoiaConfigService',
+        function ($q, $scope, $translate, $state, $stateParams, CaseInfoService, HelperObjectBrowserService, QueuesService, $modal, NotesService, AdminFoiaConfigService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -27,23 +27,12 @@ angular.module('cases').controller('Cases.ActionsFooterController',
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-check";
 
-            $scope.hasDeletePermission = false;
-
             $scope.availableQueues = [];
             var onObjectInfoRetrieved = function (objectInfo) {
                 QueuesService.queryNextPossibleQueues(objectInfo.id).then(function (data) {
                     setQueueButtons(data);
                 });
             };
-
-            PermissionsService.getActionPermission('deleteRequest', "", {
-                objectType: "CASE_FILE"
-            }).then(function(result) {
-                if (result)
-                {
-                    $scope.hasDeletePermission = result;
-                }
-            });
 
             function setupNextQueue(name, deferred) {
                 var nextQueue = name;

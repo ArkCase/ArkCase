@@ -11,7 +11,8 @@
             </div>
         </fieldset>
         <fieldset class="btn-group">
-            <button class="btn btn-sm btn-default" ng-show="hasDeletePermission && objectInfo.status != 'Deleted'" ng-click="onClickNextQueue('Delete', clientInfo.$dirty)">
+            <button class="btn btn-sm btn-default" permission="deleteRequest" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide"
+                 ng-show="objectInfo.status != 'Deleted'" ng-click="onClickNextQueue('Delete', clientInfo.$dirty)">
                 <span>{{"Delete"}}</span>
             </button>
         </fieldset>
