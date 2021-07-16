@@ -28,6 +28,8 @@ angular.module('people').controller(
                         return userInfo;
                     });
 
+                    var assocTypeLabel = $translate.instant("people.comp.related.type.label");
+
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -107,7 +109,8 @@ angular.module('people').controller(
                             showSetPrimary: false,
                             types: $scope.relationshipTypes,
                             skipPeopleIdsInSearch: [ $scope.objectInfo.id //skip parent in the search
-                            ]
+                            ],
+                            assocTypeLabel: assocTypeLabel
                         };
                         if (rowEntity) {
                             angular.extend(params, {

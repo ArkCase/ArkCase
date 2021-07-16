@@ -8,6 +8,10 @@ angular.module('common').controller(
                         return moduleConfig;
                     });
 
+                    if (params.assocTypeLabel) {
+                        $scope.assocTypeLabel = params.assocTypeLabel;
+                    }
+
                     $scope.hasSubCompany = false;
                     $scope.newOrganizationPicked = null;
                     $scope.selectExisting = 0;

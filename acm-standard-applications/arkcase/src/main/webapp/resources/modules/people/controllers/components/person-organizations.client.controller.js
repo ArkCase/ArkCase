@@ -50,6 +50,8 @@ angular.module('people').controller(
                         }
                     });
 
+                    var assocTypeLabel = $translate.instant("people.comp.organizations.type.label");
+
                     var validateOrganizationAssociation = function(data, rowEntity) {
                         var validationResult = {
                             valid: true
@@ -170,7 +172,8 @@ angular.module('people').controller(
                             isDefault: false,
                             types: $scope.organizationTypes,
                             returnValueValidationFunction: validateOrganizationAssociation,
-                            isFirstOrganization: $scope.isFirstOrganization
+                            isFirstOrganization: $scope.isFirstOrganization,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         var modalInstance = $modal.open({

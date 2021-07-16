@@ -6,6 +6,10 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
                 return moduleConfig;
             });
 
+            if (params.assocTypeLabel) {
+                $scope.assocTypeLabel = params.assocTypeLabel;
+            }
+
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 

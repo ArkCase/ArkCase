@@ -35,6 +35,8 @@ angular.module('cases').controller(
                         }
                     });
 
+                    var assocTypeLabel = $translate.instant("cases.comp.people.type.label");
+
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
@@ -84,6 +86,7 @@ angular.module('cases').controller(
 
                         var params = {};
                         params.types = $scope.personTypes;
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (association) {
 

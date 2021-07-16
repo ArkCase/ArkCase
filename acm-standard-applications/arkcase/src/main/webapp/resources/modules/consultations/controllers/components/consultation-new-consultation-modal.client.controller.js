@@ -90,6 +90,9 @@ angular.module('consultations').controller(
 
             });
 
+            var assocTypeLabel = $translate.instant("consultations.comp.people.type.label");
+            var assocOrgTypeLabel = $translate.instant("consultations.newConsultation.position.label");
+
             var newPersonAssociation = function() {
                 return {
                     id: null,
@@ -216,7 +219,8 @@ angular.module('consultations').controller(
                     isDefault: false,
                     types: $scope.personTypes,
                     type: $scope.personTypes[0].key,
-                    typeEnabled: false
+                    typeEnabled: false,
+                    assocTypeLabel: assocTypeLabel
                 };
 
                 var modalInstance = $modal.open({
@@ -293,7 +297,8 @@ angular.module('consultations').controller(
                     isDefault: false,
                     addNewEnabled: true,
                     types: $scope.organizationTypes,
-                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false
+                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false,
+                    assocTypeLabel: assocOrgTypeLabel
                 };
 
                 var modalInstance = $modal.open({
