@@ -181,6 +181,16 @@ angular.module('consultations').controller(
                     } else {
                         $scope.confirmationEmail = '';
                     }
+
+                    if(person.defaultOrganization != null) {
+                        $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                        $scope.personPosition = person.defaultOrganization.organization.personAssociations[0].personToOrganizationAssociationType;
+                    } else {
+                        if(person.organizationAssociations[0] != null) {
+                            $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                            $scope.personPosition = person.organizationAssociations[0].organization.personAssociations[0].personToOrganizationAssociationType;
+                        }
+                    }
                 }
             };
 
