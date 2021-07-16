@@ -1,7 +1,7 @@
 <div ng-controller="Cases.ActionsFooterController">
     <div class="pull-right">
-        <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
-            <div class="btn-group">
+        <fieldset class="btn-group" permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
+            <div>
                 <button class="btn btn-sm btn-default" ng-click="onClickNextQueue(nextQueue.name, clientInfo.$dirty)"
                         ng-disabled="requestInProgress || clientInfo.$invalid" ng-repeat="nextQueue in availableQueues">
                     <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
@@ -9,6 +9,11 @@
                     <span>{{nextQueue.name}}</span>
                 </button>
             </div>
+        </fieldset>
+        <fieldset class="btn-group">
+            <button class="btn btn-sm btn-default" ng-show="hasDeletePermission && objectInfo.status != 'Deleted'" ng-click="onClickNextQueue('Delete', clientInfo.$dirty)">
+                <span>{{"Delete"}}</span>
+            </button>
         </fieldset>
     </div>
 </div>
