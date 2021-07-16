@@ -133,8 +133,6 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
@@ -182,8 +180,6 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
