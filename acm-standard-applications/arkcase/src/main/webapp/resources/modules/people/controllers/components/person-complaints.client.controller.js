@@ -17,6 +17,8 @@ angular.module('people').controller(
                         return personTypes;
                     });
 
+                    var assocTypeLabel = $translate.instant("people.comp.complaints.type.label");
+
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -93,6 +95,7 @@ angular.module('people').controller(
                         params.showDescription = true;
                         params.customFilter = '"Object Type": ' + ObjectService.ObjectTypes.COMPLAINT;
                         params.objectTypeLabel = $translate.instant("people.comp.complaints.objectType.label");
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (rowEntity) {
                             angular.extend(params, {

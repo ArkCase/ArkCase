@@ -31,6 +31,8 @@ angular.module('consultations').controller(
                 }
             });
 
+            var assocTypeLabel = $translate.instant("consultations.comp.organizations.type.label");
+
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
             });
@@ -86,6 +88,7 @@ angular.module('consultations').controller(
             function pickOrganization(association) {
                 var params = {};
                 params.types = $scope.organizationTypes;
+                params.assocTypeLabel = assocTypeLabel;
 
                 if (association) {
                     angular.extend(params, {

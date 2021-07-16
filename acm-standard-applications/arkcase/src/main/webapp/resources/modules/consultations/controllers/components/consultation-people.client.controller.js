@@ -35,6 +35,8 @@ angular.module('consultations').controller(
                 }
             });
 
+            var assocTypeLabel = $translate.instant("consultations.comp.people.type.label");
+
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
             });
@@ -83,6 +85,7 @@ angular.module('consultations').controller(
 
                 var params = {};
                 params.types = $scope.personTypes;
+                params.assocTypeLabel = assocTypeLabel;
 
                 if (association) {
 

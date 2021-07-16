@@ -27,6 +27,8 @@ angular.module('tasks').controller(
                 }
             });
 
+            var assocTypeLabel = $translate.instant("tasks.comp.people.type.label");
+
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
             });
@@ -59,6 +61,7 @@ angular.module('tasks').controller(
                 var association = {};
                 var params = {};
                 params.types = $scope.personTypes;
+                params.assocTypeLabel = assocTypeLabel;
 
                 var modalInstance = $modal.open({
                     scope: $scope,
