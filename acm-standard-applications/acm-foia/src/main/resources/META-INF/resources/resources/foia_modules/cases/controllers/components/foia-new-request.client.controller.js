@@ -309,6 +309,7 @@ angular.module('cases').controller(
                 modalInstance.result.then(function (selected) {
                     if (!Util.isEmpty(selected)) {
                         PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
+                            $scope.setPerson(person);
                             $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                             $scope.newPerson = angular.copy($scope.blankPerson);
                         });
@@ -639,6 +640,16 @@ angular.module('cases').controller(
                         $scope.confirmationEmail = angular.copy($scope.config.data.originator.person.defaultEmail.value);
                     } else {
                         $scope.confirmationEmail = '';
+                    }
+
+                    if(person.defaultOrganization != null) {
+                        $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                        $scope.personPosition = person.defaultOrganization.organization.personAssociations[0].personToOrganizationAssociationType;
+                    } else {
+                        if(person.organizationAssociations[0] != null) {
+                            $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                            $scope.personPosition = person.organizationAssociations[0].organization.personAssociations[0].personToOrganizationAssociationType;
+                        }
                     }
                 }
             };
