@@ -20,6 +20,8 @@ angular.module('cases').controller(
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
             var proofOfIdentityDocumentType = "Proof of Identity";
+            var assocOrgTypeLabel = $translate.instant("cases.newRequest.position.label");
+            var assocTypeLabel = $translate.instant("cases.comp.people.type.label");
 
             $scope.uploadFilesDescription = {};
             $scope.uploadFilesDescription[descriptionDocumentType] = [];
@@ -353,7 +355,8 @@ angular.module('cases').controller(
                     isDefault: false,
                     types: $scope.personTypes,
                     type: $scope.personTypes[0].key,
-                    typeEnabled: false
+                    typeEnabled: false,
+                    assocTypeLabel: assocTypeLabel
                 };
 
                 var modalInstance = $modal.open({
@@ -412,7 +415,8 @@ angular.module('cases').controller(
                     isDefault: false,
                     addNewEnabled: true,
                     types: $scope.organizationTypes,
-                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false
+                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false,
+                    assocTypeLabel: assocOrgTypeLabel
                 };
 
                 var modalInstance = $modal.open({

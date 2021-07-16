@@ -34,6 +34,8 @@ angular.module('organizations').controller(
                         return moduleConfig;
                     });
 
+                    var assocTypeLabel = $translate.instant("organizations.comp.people.type.label");
+
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -166,7 +168,8 @@ angular.module('organizations').controller(
                             returnValueValidationFunction: validatePersonAssociation,
                             hideNoField: !hasPeople(),
                             isOrganizationLocation: true,
-                            personLocations: $scope.objectInfo.defaultAddress
+                            personLocations: $scope.objectInfo.defaultAddress,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         var modalInstance = $modal.open({

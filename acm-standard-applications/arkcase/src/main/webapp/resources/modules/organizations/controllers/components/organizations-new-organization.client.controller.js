@@ -11,6 +11,8 @@ angular.module('organizations').controller(
                     $scope.showPhoneError = false;
                     $scope.showFaxError = false;
 
+                    var assocTypeLabel = $translate.instant("organizations.comp.people.type.label");
+
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
                         'url': 0,
@@ -139,7 +141,8 @@ angular.module('organizations').controller(
                             showSetPrimary: true,
                             isDefault: false,
                             types: $scope.personAssociationTypes,
-                            isFirstPerson: Util.isEmpty(associationFound) ? true : false
+                            isFirstPerson: Util.isEmpty(associationFound) ? true : false,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         //set this params for editing
