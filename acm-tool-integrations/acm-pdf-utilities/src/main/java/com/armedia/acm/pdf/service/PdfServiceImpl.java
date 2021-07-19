@@ -133,7 +133,25 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
+            /**
+             * com.sun.org.apache.xalan.internal.xsltc.trax - JDK
+             * org.apache.xalan.processor - Xalan
+             * org.apache.xalan.xsltc.trax - Xalan
+             * 
+             * those are TransformerFactory implementation providers and not sure which implementation doesn't support below XMLConstants 
+             * that's why suppressing IllegalArgumentException.
+             */
+         
+            try
+            {
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // TODO: handle exception
+            }
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
