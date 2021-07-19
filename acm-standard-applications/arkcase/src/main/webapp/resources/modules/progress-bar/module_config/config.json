@@ -1,0 +1,12 @@
+{
+  "id": "progress-bar",
+  "title": "Progress bar",
+  "configurable": false,
+  "menus": [],
+  "components": [],
+  "fullScreenPathExpressions": [
+    {
+      "expression": "/viewer/"
+    }
+  ]
+}

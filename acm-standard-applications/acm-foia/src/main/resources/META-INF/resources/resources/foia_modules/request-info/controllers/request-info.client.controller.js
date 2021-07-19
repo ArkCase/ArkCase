@@ -134,10 +134,48 @@ angular.module('request-info').controller(
                 $scope.loaderOpened = false;
             }
 
+            function onShowProgressBar() {
+                var fileDetails = {};
+                fileDetails.file = $scope.ecmFile;
+                fileDetails.fileName = $scope.ecmFile.name;
+                fileDetails.fileType = $scope.ecmFile.fileType;
+                fileDetails.folderId = $scope.ecmFile.folder.id;
+                fileDetails.lang = $scope.ecmFile.fileLang;
+                fileDetails.originObjectId = $scope.requestInfo.id;
+                fileDetails.originObjectType = $scope.requestInfo.requestType;
+                fileDetails.parentObjectNumber = $scope.requestInfo.caseNumber;
+                $scope.$bus.publish('open-progress-bar-modal', fileDetails);
+            }
+
+            function onUpdateProgressBar() {
+                var message = {};
+                message.objectId = $scope.requestInfo.id;
+                message.objectType = $scope.requestInfo.requestType;
+                message.success = true;
+                message.currentProgress = 99;
+                message.status = ObjectService.UploadFileStatus.IN_PROGRESS
+                $scope.$bus.publish('update-modal-progressbar-current-progress', message);
+            }
+
+            function onHideProgressBar(data) {
+                console.log(data)
+                var message = {};
+                message.objectId = $scope.requestInfo.id;
+                message.objectType = $scope.requestInfo.requestType;
+                message.success = true;
+                message.currentProgress = 100;
+                message.status = ObjectService.UploadFileStatus.FINISH;
+
+                $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+            }
+
 
             $scope.iframeLoaded = function () {
                 ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
                 ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+                ArkCaseCrossWindowMessagingService.addHandler('show-progress-bar', onShowProgressBar);
+                ArkCaseCrossWindowMessagingService.addHandler('update-progress-bar', onUpdateProgressBar);
+                ArkCaseCrossWindowMessagingService.addHandler('hide-progress-bar', onHideProgressBar);
 
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ArkCaseCrossWindowMessagingService.addHandler('document-saved', onDocumentSave);
@@ -283,6 +321,10 @@ angular.module('request-info').controller(
                     videoElement.play();
                 }
             };
+
+            $scope.$bus.subscribe('open-new-version-of-file', function () {
+                openViewerMultiple();
+            });
 
             $scope.$bus.subscribe('update-viewer-opened-versions', function (openedVersions) {
                 $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
