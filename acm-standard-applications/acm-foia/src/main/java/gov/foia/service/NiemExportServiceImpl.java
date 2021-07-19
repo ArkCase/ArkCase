@@ -231,9 +231,16 @@ public class NiemExportServiceImpl implements NiemExportService
     private void transformXMLToFile(Document document, FileOutputStream fileOutputStream) throws TransformerException
     {
         TransformerFactory factory = TransformerFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        try
+        {
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // TODO: handle exception
+        }
 
         Transformer transformer = factory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
