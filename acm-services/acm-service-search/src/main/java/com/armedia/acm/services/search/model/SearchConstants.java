@@ -36,7 +36,6 @@ public interface SearchConstants
 {
     String CATCH_ALL_QUERY = "catch_all:";
 
-    String CORE_QUICK = "QUICK";
     String CORE_ADVANCED = "ADVANCED";
 
     String DATE_FACET_PRE_KEY = "date.";
@@ -59,36 +58,34 @@ public interface SearchConstants
     String PROPERTY_RESPONSE = "response";
     String PROPERTY_DOCS = "docs";
     String PROPERTY_NAME = "name";
-    String PROPERTY_ASCENDANTS = "ascendants_id_ss";
     String PROPERTY_FACET_COUNTS = "facet_counts";
     String PROPERTY_FACET_FIELDS = "facet_fields";
     String PROPERTY_OBJECT_ID_S = "object_id_s";
 
     String PROPERTY_FILE_CATEGORY = "category_s";
-    String PROPERTY_FILE_TYPE = "type_s";
-    String PROPERTY_CREATED = "create_tdt";
-    String PROPERTY_MODIFIED = "last_modified_tdt";
+    String PROPERTY_FILE_TYPE = "type_lcs";
+    String PROPERTY_CREATED = "create_date_tdt";
+    String PROPERTY_MODIFIED = "modified_date_tdt";
     String PROPERTY_CREATOR = "author";
-    String PROPERTY_MODIFIER = "modifier_s";
+    String PROPERTY_MODIFIER = "modifier_lcs";
     String PROPERTY_OBJECT_TYPE = "object_type_s";
     String PROPERTY_OBJECT_TYPE_FACET = "object_type_facet";
     String PROPERTY_VERSION = "version_s";
     String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
     String PROPERTY_MIME_TYPE = "mime_type_s";
     String PROPERTY_EXT = "ext_s";
-    String PROPERTY_STATUS = "status_s";
+    String PROPERTY_STATUS = "status_lcs";
     String PROPERTY_PUBLIC_FLAG = "public_flag_b";
     String PROPERTY_REDACTION_STATUS = "redaction_status_s";
     String PROPERTY_REVIEW_STATUS = "review_status_s";
-    String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
     String PROPERTY_QUEUE_ID_S = "queue_id_s";
     String PROPERTY_QUEUE_NAME_S = "queue_name_s";
     String PROPERTY_QUEUE_ORDER = "queue_order_i";
-    String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_object_type_s";
+    String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_type_s";
     String PROPERTY_PARENT_OBJECT_ID_I = "parent_object_id_i";
     String PROPERTY_PAGE_COUNT_I = "page_count_i";
     String PROPERTY_OBJECT_TYPE_S = "object_type_s";
-    String PROPERTY_ASSIGNEE_ID = "assignee_s";
+    String PROPERTY_ASSIGNEE_ID = "assignee_id_lcs";
 
     String USER = "$[user]";
     /**

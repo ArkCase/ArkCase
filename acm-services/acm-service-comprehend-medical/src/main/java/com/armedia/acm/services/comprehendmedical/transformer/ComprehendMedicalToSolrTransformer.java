@@ -2,7 +2,7 @@ package com.armedia.acm.services.comprehendmedical.transformer;
 
 /*-
  * #%L
- * ACM Service: Transcribe
+ * ACM Service: Comprehend Medical
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,16 +27,22 @@ package com.armedia.acm.services.comprehendmedical.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.services.comprehendmedical.dao.ComprehendMedicalDao;
 import com.armedia.acm.services.comprehendmedical.model.ComprehendMedical;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 05/12/2020
@@ -56,56 +62,36 @@ public class ComprehendMedicalToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(ComprehendMedical in)
     {
-        LOG.debug("Creating Solr advanced search document for Transcribe.");
+        LOG.debug("Creating Solr advanced search document for COMPREHEND_MEDICAL.");
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setName(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-        solr.setStatus_lcs(in.getStatus());
-        solr.setType_lcs(in.getType());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setAdditionalProperty("remote_id_s", in.getRemoteId());
-        solr.setAdditionalProperty("language_s", in.getLanguage());
-        solr.setAdditionalProperty("media_file_version_id_l", in.getMediaEcmFileVersion().getId());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getMediaEcmFileVersion().getFile().getFileName());
 
-        solr.setAdditionalProperty("process_id_s", in.getProcessId());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setAdditionalProperty("parent_root_id_s", in.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
-        solr.setAdditionalProperty("parent_root_type_s", in.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
-        solr.setAdditionalProperty("parent_file_id_s", in.getMediaEcmFileVersion().getFile().getId());
-
-        return solr;
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(ComprehendMedical in)
+    public void mapAdditionalProperties(ComprehendMedical in, Map<String, Object> additionalProperties)
     {
-        LOG.debug("Creating Solr quick search document for Transcribe.");
+        additionalProperties.put(TITLE_PARSEABLE, in.getMediaEcmFileVersion().getFile().getFileName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getMediaEcmFileVersion().getFile().getFileName());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
+        additionalProperties.put(TYPE_LCS, in.getType());
 
-        SolrDocument solr = new SolrDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setStatus_s(in.getStatus());
-        solr.setName(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setName_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_parseable_lcs(in.getMediaEcmFileVersion().getFile().getFileName());
-        solr.setTitle_t(in.getMediaEcmFileVersion().getFile().getFileName());
+        additionalProperties.put("remote_id_s", in.getRemoteId());
+        additionalProperties.put("language_s", in.getLanguage());
+        additionalProperties.put("media_file_version_id_l", in.getMediaEcmFileVersion().getId());
 
-        return solr;
+        additionalProperties.put("process_id_s", in.getProcessId());
+
+        additionalProperties.put("parent_root_id_s", in.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
+        additionalProperties.put("parent_root_type_s", in.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
+        additionalProperties.put("parent_file_id_s", in.getMediaEcmFileVersion().getFile().getId());
+        additionalProperties.put("title_t", in.getMediaEcmFileVersion().getFile().getFileName());
     }
 
     @Override

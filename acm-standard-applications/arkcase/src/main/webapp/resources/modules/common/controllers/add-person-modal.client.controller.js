@@ -5,6 +5,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
         return moduleConfig;
     });
 
+    if (params.assocTypeLabel) {
+        $scope.assocTypeLabel = params.assocTypeLabel;
+    }
+
     $scope.selectExisting = 0;
     $scope.types = Util.isEmpty(params.types) ? [] : params.types;
     $scope.showDescription = params.showDescription;

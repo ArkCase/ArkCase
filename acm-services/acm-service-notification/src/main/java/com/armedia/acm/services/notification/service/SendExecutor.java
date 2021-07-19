@@ -37,8 +37,8 @@ import com.armedia.acm.services.templateconfiguration.model.Template;
 import com.armedia.acm.services.templateconfiguration.service.TemplateConfigurationManager;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class SendExecutor implements Executor
     private TemplateConfigurationManager templateConfigurationManager;
     private NotificationSenderFactory notificationSenderFactory;
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public Notification execute(Notification notification)

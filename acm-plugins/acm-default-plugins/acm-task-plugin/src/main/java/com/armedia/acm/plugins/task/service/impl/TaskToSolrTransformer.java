@@ -27,6 +27,26 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ADHOC_TASK_B;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_ID_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.BUSINESS_PROCESS_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.BUSINESS_PROCESS_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.OWNER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PRIORITY_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
@@ -38,17 +58,17 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.json.JSONArray;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -72,156 +92,86 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTask in)
     {
-        log.trace("converting to advanced search doc: " + in.getId());
-        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
+        log.debug("Creating Solr advanced search document for TASK.");
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        getSearchAccessControlFields().setAccessControlFields(doc, in);
+        mapRequiredProperties(solrDoc, in.getId(), in.getOwner(), in.getCreateDate(), null, new Date(), "TASK", in.getTitle());
 
-        doc.setId(in.getId() + "-TASK");
-        doc.setTitle_parseable(in.getTitle());
-        doc.setCreate_date_tdt(in.getCreateDate());
-        doc.setCreator_lcs(in.getOwner());
-        doc.setDescription_no_html_tags_parseable(in.getDetails());
-        doc.setDueDate_tdt(in.getDueDate());
-        doc.setModified_date_tdt(new Date()); // theoretically it's being indexed b/c it just changed
-        // activiti does not keep a last modified field
-        doc.setObject_id_s(Long.toString(in.getId()));
-        doc.setObject_id_i(in.getId());
-        doc.setObject_type_s("TASK");
-        doc.setObject_sub_type_s(in.getBusinessProcessName());
-        doc.setPriority_lcs(in.getPriority());
-        doc.setType_lcs(in.getType());
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
+
+        solrDoc.setDueDate_tdt(in.getDueDate());
+
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        mapParentAclProperties(solrDoc, in);
+        log.trace("returning an advanced search doc");
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmTask in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put("object_sub_type_s", in.getBusinessProcessName());
+        additionalProperties.put(PRIORITY_LCS, in.getPriority());
+        additionalProperties.put(TYPE_LCS, in.getType());
         if (in.getParentObjectId() != null)
         {
-            doc.setParent_type_s(in.getParentObjectType());
-            doc.setParent_id_s(Long.toString(in.getParentObjectId()));
-            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-            doc.setParent_number_lcs(in.getParentObjectName());
+            additionalProperties.put(PARENT_TYPE_S, in.getParentObjectType());
+            additionalProperties.put(PARENT_ID_S, Long.toString(in.getParentObjectId()));
+            additionalProperties.put(PARENT_REF_S, in.getParentObjectId() + "-" + in.getParentObjectType());
+            additionalProperties.put(PARENT_NUMBER_LCS, in.getParentObjectName());
         }
-        doc.setName(in.getTitle());
-        doc.setStatus_lcs(in.getStatus());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
 
         String assigneeUserId = in.getAssignee();
-        doc.setAssignee_id_lcs(assigneeUserId);
+        additionalProperties.put(ASSIGNEE_ID_LCS, assigneeUserId);
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
         if (assignee != null)
         {
-            doc.setAssignee_first_name_lcs(assignee.getFirstName());
-            doc.setAssignee_last_name_lcs(assignee.getLastName());
-            doc.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FIRST_NAME_LCS, assignee.getFirstName());
+            additionalProperties.put(ASSIGNEE_LAST_NAME_LCS, assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, assignee.getFirstName() + " " + assignee.getLastName());
         }
 
-        doc.setAdhocTask_b(in.isAdhocTask());
-        doc.setOwner_lcs(in.getOwner());
-        doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
-        doc.setBusiness_process_id_i(in.getBusinessProcessId());
+        additionalProperties.put(ADHOC_TASK_B, in.isAdhocTask());
+        additionalProperties.put(OWNER_LCS, in.getOwner());
+        additionalProperties.put(BUSINESS_PROCESS_NAME_LCS, in.getBusinessProcessName());
+        additionalProperties.put(BUSINESS_PROCESS_ID_I, in.getBusinessProcessId());
 
         AcmParticipant owningGroupParticipantLdapId = in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().orElse(null);
         if (owningGroupParticipantLdapId != null)
         {
-            doc.setAdditionalProperty("candidate_group_ss", in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().get().getParticipantLdapId());
+            additionalProperties.put("candidate_group_ss", in.getParticipants().stream()
+                    .filter(p -> p.getParticipantType().equals("owning group")).findFirst().get().getParticipantLdapId());
         }
         else
         {
-            doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+            additionalProperties.put("candidate_group_ss", in.getCandidateGroups());
         }
 
         // needed a _lcs property for sorting
-        doc.setTitle_parseable_lcs(in.getTitle());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getTitle());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getOwner());
         if (creator != null)
         {
-            doc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
-        doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
-
-        doc.setAdditionalProperty("outcome_name_s", in.getOutcomeName());
+        additionalProperties.put("parent_title_s", in.getParentObjectTitle());
+        additionalProperties.put("outcome_name_s", in.getOutcomeName());
 
         if (in.getAvailableOutcomes() != null)
         {
             List<String> outcomeValues = in.getAvailableOutcomes().stream().map(ao -> ao.getDescription()).collect(Collectors.toList());
-            doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
+            additionalProperties.put("outcome_value_ss", outcomeValues);
         }
-
-        mapParentAclProperties(doc, in);
-        log.trace("returning an advanced search doc");
-
-        return doc;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmTask in)
-    {
-        log.trace("converting to quick search doc: " + in.getId());
-        SolrDocument doc = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(doc, in);
-
-        doc.setTitle_parseable(in.getTitle());
-        doc.setDescription_no_html_tags_parseable(in.getDetails());
-        doc.setObject_id_s(Long.toString(in.getId()));
-        doc.setObject_id_i(in.getId());
-        doc.setCreate_tdt(in.getCreateDate());
-        doc.setName(in.getTitle());
-        doc.setStatus_s(in.getStatus());
-        doc.setAssignee_s(in.getAssignee());
-        doc.setOwner_s(in.getOwner());
-        doc.setId(in.getId() + "-TASK");
-        doc.setPriority_s(in.getPriority());
-        doc.setType_s(in.getType());
-
-        if (in.getParentObjectId() != null)
-        {
-            doc.setParent_object_type_s(in.getParentObjectType());
-            doc.setParent_object_id_i(in.getParentObjectId());
-            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-        }
-        doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
-        doc.setBusiness_process_id_i(in.getBusinessProcessId());
-        doc.setDue_tdt(in.getDueDate());
-        doc.setAdhocTask_b(in.isAdhocTask());
-        doc.setObject_type_s("TASK");
-        doc.setAuthor_s(in.getOwner());
-        doc.setLast_modified_tdt(new Date());
-
-        AcmParticipant owningGroupParticipantLdapId = in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().orElse(null);
-        if (owningGroupParticipantLdapId != null)
-        {
-            doc.setAdditionalProperty("candidate_group_ss", in.getParticipants().stream().filter(p -> p.getParticipantType().equals("owning group")).findFirst().get().getParticipantLdapId());
-        }
-        else
-        {
-            doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
-        }
-
-        doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
-        /*
-         * 'task_owner_s' is explicitly added as an additional property, because the current schema does not support
-         * multivalues
-         * and doc.setOwner_s would not work
-         */
-        doc.setAdditionalProperty("task_owner_s", in.getOwner());
-
-        doc.setTitle_parseable_lcs(in.getTitle());
-
-        doc.setAdditionalProperty("outcome_name_s", in.getOutcomeName());
-
-        if (in.getAvailableOutcomes() != null)
-        {
-            List<String> outcomeValues = in.getAvailableOutcomes().stream().map(ao -> ao.getDescription()).collect(Collectors.toList());
-            doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
-        }
-
-        mapParentAclProperties(doc, in);
-
-        log.trace("returning a quick search doc");
-
-        return doc;
     }
 
     private void mapParentAclProperties(SolrBaseDocument doc, AcmTask in)

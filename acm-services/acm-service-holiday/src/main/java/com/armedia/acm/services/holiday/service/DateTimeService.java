@@ -90,6 +90,20 @@ public class DateTimeService {
                 .format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
     }
 
+    public static String currentDateToClientDate()
+    {
+        Date date = new Date();
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.datePattern));
+    }
+
+    public static String currentDateToClientDateTime()
+    {
+        Date date = new Date();
+        return dateTimeService.getZonedDateTimeAtDefaultClientTimezone(date)
+                .format(DateTimeFormatter.ofPattern(dateTimeService.dateTimePattern));
+    }
+
     public LocalDateTime fromDateToClientLocalDateTime(Date date)
     {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();

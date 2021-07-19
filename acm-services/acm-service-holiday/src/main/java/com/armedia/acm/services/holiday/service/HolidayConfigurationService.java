@@ -97,6 +97,20 @@ public class HolidayConfigurationService
         return returnDate;
     }
 
+    public int calculateAmountOfWorkingDays(LocalDate startDate, LocalDate endDate)
+    {
+        int i = 0;
+        while (startDate.isBefore(endDate))
+        {
+            if (isWorkingDay(endDate))
+            {
+                i++;
+            }
+            endDate = endDate.minusDays(1);
+        }
+        return i;
+    }
+
     /**
      *
      * @param date

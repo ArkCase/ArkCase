@@ -27,6 +27,10 @@ package com.armedia.acm.plugins.category.web.api;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
@@ -257,8 +261,8 @@ public class CategoryManagementAPIController
 
                 category.setId(doc.get("object_id_s").asLong());
                 category.setName(doc.get("name").asText());
-                category.setDescription(doc.get("description_no_html_tags_parseable").asText());
-                JsonNode parentIdNode = doc.get("parent_id_s");
+                category.setDescription(doc.get(DESCRIPTION_NO_HTML_TAGS_PARSEABLE).asText());
+                JsonNode parentIdNode = doc.get(PARENT_ID_S);
                 if (parentIdNode != null)
                 {
                     Category parent = new Category();
@@ -269,7 +273,7 @@ public class CategoryManagementAPIController
                 category.setCreated(dateParser.parse(doc.get("create_date_tdt").asText()));
                 category.setModifier(doc.get("modifier_lcs").asText());
                 category.setModified(dateParser.parse(doc.get("modified_date_tdt").asText()));
-                category.setStatus(CategoryStatus.valueOf(doc.get("status_lcs").asText()));
+                category.setStatus(CategoryStatus.valueOf(doc.get(STATUS_LCS).asText()));
 
                 categories.add(category);
             }

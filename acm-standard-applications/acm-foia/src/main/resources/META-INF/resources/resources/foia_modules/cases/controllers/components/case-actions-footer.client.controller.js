@@ -458,6 +458,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                     if (defaultNextQueue) {
                         availableQueues.push("Complete");
                     }
+                        availableQueues = _.without(availableQueues, 'Delete');
+
                 }
                 availableQueues = availableQueues.map(function (item) {
                     var tmpObj = {};

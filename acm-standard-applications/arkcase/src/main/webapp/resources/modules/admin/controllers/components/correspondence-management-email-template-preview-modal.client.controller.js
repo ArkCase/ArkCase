@@ -53,7 +53,7 @@ angular.module('admin').controller('Admin.CMEmailTemplatePreviewModalController'
             typeaheadQuery = 'name:*' + typeaheadQuery + '*';
 
             if (typeaheadQuery.length >= 2) {
-                AutoSuggestService.autoSuggest(typeaheadQuery, 'QUICK',  'CASE_FILE').then(function(res) {
+                AutoSuggestService.autoSuggest(typeaheadQuery, 'ADVANCED',  'CASE_FILE').then(function(res) {
                     var results = _.pluck(res, typeAheadColumn);
                     deferred.resolve(results);
                 });

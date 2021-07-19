@@ -124,39 +124,4 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         assertEquals(solrResponse, jsonString);
 
     }
-
-    @Test
-    public void quickSearch_exception() throws Exception
-    {
-
-        String name = "test name";
-        String contactMethod = "contact method";
-
-        final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " + encodedContactMethodJoin + "value_parseable:"
-                + URLEncoder.encode(contactMethod + "*");
-        String sort = "last_name_lcs ASC, first_name_lcs ASC";
-        query = query.replaceAll(" ", "+");
-        sort = sort.replaceAll(" ", "+");
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort, false))
-                .andThrow(new SolrException("test Exception"));
-
-        replayAll();
-
-        MvcResult result = mockMvc
-                .perform(get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod).principal(mockAuthentication))
-                .andExpect(status().isInternalServerError()).andExpect(content().contentType(MediaType.TEXT_PLAIN)).andReturn();
-
-        verifyAll();
-
-        String response = result.getResponse().getContentAsString();
-
-        log.debug("Got error: [{}]", response);
-
-    }
-
 }

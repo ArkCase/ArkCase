@@ -71,6 +71,7 @@ angular.module('complaints').controller(
                         else
                             $scope.isAddressTypeSelected = false;
                     };
+                    var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
 
                     ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
                         $scope.incidentCategory = complaintTypes;
@@ -179,6 +180,7 @@ angular.module('complaints').controller(
                         params.type = $scope.initiatorType;
                         params.typeEnabled = false;
                         association = new newPersonAssociation();
+                        params.assocTypeLabel = assocTypeLabel;
 
                         var modalInstance = $modal.open({
                             scope: $scope,
@@ -244,7 +246,8 @@ angular.module('complaints').controller(
                             showSetPrimary: true,
                             isDefault: false,
                             types: $scope.personTypes,
-                            isFirstPerson: Util.isEmpty(associationFound) ? true : false
+                            isFirstPerson: Util.isEmpty(associationFound) ? true : false,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         //set this params for editing

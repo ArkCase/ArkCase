@@ -27,18 +27,25 @@ package com.armedia.acm.services.transcribe.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NAME_T;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.transcribe.dao.TranscribeItemDao;
 import com.armedia.acm.services.transcribe.model.TranscribeItem;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/05/2018
@@ -60,55 +67,39 @@ public class TranscribeItemToSolrTransformer implements AcmObjectToSolrDocTransf
     {
         LOG.debug("Creating Solr advanced search document for TranscribeItem.");
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setName(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable_lcs(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setParent_id_s(String.valueOf(in.getTranscribe().getId()));
-        solr.setParent_type_s(in.getTranscribe().getObjectType());
-        solr.setParent_name_t(in.getTranscribe().getMediaEcmFileVersion().getFile().getFileName());
-        solr.setParent_ref_s(String.format("%d-%s", in.getTranscribe().getId(), in.getTranscribe().getObjectType()));
+        String name = TranscribeUtils.getFirstWords(in.getText(), 5);
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), name);
 
-        solr.setAdditionalProperty("start_time_s", in.getStartTime().toString());
-        solr.setAdditionalProperty("end_time_s", in.getEndTime().toString());
-        solr.setAdditionalProperty("confidence_l", in.getConfidence());
-        solr.setAdditionalProperty("corrected_b", in.getCorrected().booleanValue());
-        solr.setAdditionalProperty("text_s", in.getText());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setAdditionalProperty("parent_root_id_s",
-                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
-        solr.setAdditionalProperty("parent_root_type_s",
-                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
-        solr.setAdditionalProperty("parent_file_id_s", in.getTranscribe().getMediaEcmFileVersion().getFile().getId());
-
-        return solr;
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(TranscribeItem in)
+    public void mapAdditionalProperties(TranscribeItem in, Map<String, Object> additionalProperties)
     {
-        SolrDocument solr = new SolrDocument();
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(String.valueOf(in.getId()));
-        solr.setObject_type_s(in.getObjectType());
-        solr.setName(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setName_lcs(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_parseable_lcs(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setTitle_t(TranscribeUtils.getFirstWords(in.getText(), 5));
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
+        String name = TranscribeUtils.getFirstWords(in.getText(), 5);
+        additionalProperties.put(TITLE_PARSEABLE, name);
+        additionalProperties.put(TITLE_PARSEABLE_LCS, name);
+        additionalProperties.put(PARENT_ID_S, String.valueOf(in.getTranscribe().getId()));
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getTranscribe().getObjectType());
+        additionalProperties.put(PARENT_NAME_T, in.getTranscribe().getMediaEcmFileVersion().getFile().getFileName());
+        additionalProperties.put(PARENT_REF_S, String.format("%d-%s", in.getTranscribe().getId(), in.getTranscribe().getObjectType()));
 
-        return solr;
+        additionalProperties.put("start_time_s", in.getStartTime().toString());
+        additionalProperties.put("end_time_s", in.getEndTime().toString());
+        additionalProperties.put("confidence_l", in.getConfidence());
+        additionalProperties.put("corrected_b", in.getCorrected().booleanValue());
+        additionalProperties.put("text_s", in.getText());
+
+        additionalProperties.put("parent_root_id_s",
+                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId());
+        additionalProperties.put("parent_root_type_s",
+                in.getTranscribe().getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType());
+        additionalProperties.put("parent_file_id_s", in.getTranscribe().getMediaEcmFileVersion().getFile().getId());
     }
 
     @Override

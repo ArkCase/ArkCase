@@ -27,21 +27,30 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.TimeConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author aleksandar.bujaroski
  */
 public class AcmTimeToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTime>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmTimeDao acmTimeDao;
 
     @Override
@@ -53,55 +62,25 @@ public class AcmTimeToSolrTransformer implements AcmObjectToSolrDocTransformer<A
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTime in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for TIME.");
 
-        solr.setId(in.getId() + "-" + TimeConstants.OBJECT_TYPE);
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(TimeConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getCode());
-        solr.setName(in.getCode());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                TimeConstants.OBJECT_TYPE, in.getCode());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setParent_id_s(Long.toString(in.getObjectId()));
-        solr.setParent_type_s(in.getType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getType());
-
-        solr.setAdditionalProperty("timesheet_id_i", in.getTimesheet().getId());
-
-        return solr;
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmTime in)
+    public void mapAdditionalProperties(AcmTime in, Map<String, Object> additionalProperties)
     {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + TimeConstants.OBJECT_TYPE);
-        solr.setName(in.getCode());
-        solr.setTitle_parseable(in.getCode());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(TimeConstants.OBJECT_TYPE);
-        solr.setAuthor_s(in.getCreator());
-        solr.setStartDate_s(in.getCreated());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setParent_object_id_s(Long.toString(in.getObjectId()));
-        solr.setParent_object_type_s(in.getType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getType());
-
-        solr.setAdditionalProperty("timesheet_id_i", in.getTimesheet().getId());
-
-        return solr;
+        additionalProperties.put(TITLE_PARSEABLE, in.getCode());
+        additionalProperties.put(PARENT_ID_S, Long.toString(in.getObjectId()));
+        additionalProperties.put(PARENT_TYPE_S, in.getType());
+        additionalProperties.put(PARENT_REF_S, in.getObjectId() + "-" + in.getType());
+        additionalProperties.put("timesheet_id_i", in.getTimesheet().getId());
     }
 
     @Override

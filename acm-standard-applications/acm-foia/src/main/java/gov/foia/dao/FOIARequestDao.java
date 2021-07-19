@@ -102,6 +102,16 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         }
     }
 
+    public List<FOIARequest> findAllHoldRequestsBefore(LocalDate holdEnterDate)
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.queue.name = 'Hold' AND request.holdEnterDate < :holdEnterDate";
+        TypedQuery<FOIARequest> query = getEm().createQuery(queryText, FOIARequest.class);
+        query.setParameter("holdEnterDate", holdEnterDate);
+        List<FOIARequest> requests = query.getResultList();
+        return requests;
+    }
+
     public List<FOIARequest> getAllRequestsInHoldBefore(LocalDate holdEnterDate)
     {
         return getAllRequestsInQueueBefore(PURGE_HOLD_QUEUE, "Hold", "holdEnterDate", holdEnterDate);
@@ -343,15 +353,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         allRecords.setParameter("releaseQueueEnterDate", releaseQueueEnterDate);
 
-        List<FOIARequest> requests = allRecords.getResultList();
-        return requests;
-    }
-
-    public List<FOIARequest> findAllHeldAndAppealedRequests()
-    {
-        String queryText = "SELECT request FROM FOIARequest request"
-                + " WHERE request.queue.name = 'Hold'";
-        TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;
     }

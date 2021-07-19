@@ -39,6 +39,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.kerberos.client.KerberosRestTemplate;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AppConfigurationEntry;
@@ -122,6 +123,23 @@ public abstract class AlfrescoService<T>
         }
 
         return new HttpEntity<>(payload.toString(), headers);
+    }
+
+    protected HttpEntity<MultiValueMap<String, Object>> buildRestEntity(MultiValueMap<String, Object> multipartData)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        // external authentication header is added always, even if Alfresco is not setup to use it
+        headers.set(HttpInvokerUtil.EXTERNAL_AUTH_KEY, HttpInvokerUtil.getExternalUserIdValue());
+
+        // add basic authentication header for the call
+        if (findAlfrescoAuthenticationType().equals(AlfrescoAuthenticationType.BASIC))
+        {
+            headers.set(HttpHeaders.AUTHORIZATION, getBasicAuthenticationHeaderValue());
+        }
+
+        return new HttpEntity<>(multipartData, headers);
     }
 
     private AlfrescoAuthenticationType findAlfrescoAuthenticationType()

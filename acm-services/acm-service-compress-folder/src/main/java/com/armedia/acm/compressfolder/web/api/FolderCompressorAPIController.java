@@ -40,6 +40,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tika.io.FilenameUtils;
+import org.owasp.encoder.Encode;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -162,8 +163,8 @@ public class FolderCompressorAPIController
         {
             try (InputStream fileOutput = FileUtils.openInputStream(new File(filePath)))
             {
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-                response.setContentType("application/zip");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + Encode.forJava(fileName) + "\"");
+                response.setContentType(Encode.forJava("application/zip"));
                 byte[] buffer = new byte[1024];
                 int read;
                 do

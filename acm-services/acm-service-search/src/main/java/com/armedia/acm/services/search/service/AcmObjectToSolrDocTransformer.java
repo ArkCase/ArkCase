@@ -29,12 +29,12 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.json.JSONArray;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/22/14.
@@ -51,8 +51,6 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
 
     SolrAdvancedSearchDocument toSolrAdvancedSearch(T in);
 
-    SolrDocument toSolrQuickSearch(T in);
-
     default JSONArray childrenUpdatesToSolr(T in)
     {
         return null;
@@ -66,4 +64,22 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
     boolean isAcmObjectTypeSupported(Class acmObjectType);
 
     Class<?> getAcmObjectTypeSupported();
+
+    default void mapRequiredProperties(SolrAdvancedSearchDocument doc, Long id, String creator, Date created, String modifier,
+            Date modified, String objectType, String name)
+    {
+        doc.setId(id + "-" + objectType);
+        doc.setObject_id_i(id);
+        doc.setObject_id_s(Long.toString(id));
+        doc.setObject_type_s(objectType);
+        doc.setAuthor(creator);
+        doc.setCreator_lcs(creator);
+        doc.setCreate_date_tdt(created);
+        doc.setModifier_lcs(modifier);
+        doc.setModified_date_tdt(modified);
+        doc.setName(name);
+        doc.setName_lcs(name);
+    }
+
+    void mapAdditionalProperties(T in, Map<String, Object> additionalProperties);
 }

@@ -27,25 +27,40 @@ package com.armedia.acm.plugins.documentrepository.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_ID_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
-import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
 import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTransformer<DocumentRepository>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private UserDao userDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
@@ -60,94 +75,61 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(DocumentRepository in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for DOC_REPO.");
 
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getName());
 
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(DocumentRepositoryConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getName());
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setStatus_lcs(in.getStatus());
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(DocumentRepository in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getName());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
 
         String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
-        solr.setAssignee_id_lcs(assigneeUserId);
-
-        solr.setTitle_parseable_lcs(in.getName());
+        additionalProperties.put(ASSIGNEE_ID_LCS, assigneeUserId);
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
-
         if (assignee != null)
         {
-            solr.setAssignee_first_name_lcs(assignee.getFirstName());
-            solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FIRST_NAME_LCS, assignee.getFirstName());
+            additionalProperties.put(ASSIGNEE_LAST_NAME_LCS, assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, assignee.getFirstName() + " " + assignee.getLastName());
         }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
 
         // This property is used for show in the owning group for the object
-        solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
-        solr.setAdditionalProperty("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        additionalProperties.put("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        additionalProperties.put("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
-        solr.setAdditionalProperty("document_repository_name_s", in.getName());
+        additionalProperties.put("document_repository_name_s", in.getName());
 
-        solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(DocumentRepository in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setId(String.format("%d-%s", in.getId(), in.getObjectType()));
-        solr.setName(in.getName());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(DocumentRepositoryConstants.OBJECT_TYPE);
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setTitle_parseable(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setStatus_s(in.getStatus());
-
-        String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getName());
-
-        solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
-        return solr;
+        additionalProperties.put("repository_type_s", in.getRepositoryType());
     }
 
     @Override

@@ -145,9 +145,9 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
         // facet query for top level folder
         expect(mockSolrQuery.getResultsByPredefinedQuery(
                 mockAuthentication,
-                SolrCore.QUICK_SEARCH,
+                SolrCore.ADVANCED_SEARCH,
                 "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + parentObjectId
-                        + " AND parent_object_type_s:" + parentObjectType,
+                        + " AND parent_type_s:" + parentObjectType,
                 0,
                 1,
                 "object_id_s ASC",
@@ -159,9 +159,9 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
         // sub-folder query for top level folder
         expect(mockSolrQuery.getResultsByPredefinedQuery(
                 mockAuthentication,
-                SolrCore.QUICK_SEARCH,
+                SolrCore.ADVANCED_SEARCH,
                 "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + parentObjectId
-                        + " AND parent_object_type_s:" + parentObjectType,
+                        + " AND parent_type_s:" + parentObjectType,
                 0,
                 1,
                 "object_id_s ASC",
@@ -171,7 +171,7 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
         // facet query for the sub folder
         expect(mockSolrQuery.getResultsByPredefinedQuery(
                 mockAuthentication,
-                SolrCore.QUICK_SEARCH,
+                SolrCore.ADVANCED_SEARCH,
                 "parent_folder_id_i:500",
                 0,
                 1,

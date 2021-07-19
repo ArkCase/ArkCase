@@ -88,28 +88,6 @@ public class ArkCaseSolrUtils
     }
 
     /**
-     * Configure {@link SolrQuery} with given {@link SolrConfig} for {@link SolrCore#QUICK_SEARCH}
-     * For SolrJ
-     *
-     * @return {@link Consumer<>} that will configure SolrQuery
-     */
-    static BiConsumer<SolrConfig, SolrQuery> quickSearchQueryConfigurer()
-    {
-        return (configuration, query) -> getQuickSearchQueryConfigurer().accept(query, configuration);
-    }
-
-    /**
-     * Configure {@link SolrQuery} with given {@link SolrConfig} for for {@link SolrCore#QUICK_SUGGESTER_SEARCH}
-     * For SolrJ
-     *
-     * @return {@link Consumer<>} that will configure SolrQuery
-     */
-    static BiConsumer<SolrConfig, SolrQuery> quickSearchSuggesterQueryConfigurer()
-    {
-        return (configuration, query) -> getQuickSearchSuggesterQueryConfigurer().accept(query, configuration);
-    }
-
-    /**
      * Configure {@link SolrQuery} with given {@link SolrConfig} for {@link SolrCore#ADVANCED_SUGGESTER_SEARCH}
      * For SolrJ
      *
@@ -197,31 +175,6 @@ public class ArkCaseSolrUtils
         return (query, configuration) -> query
                 .setRequestHandler("/" + configuration.getSearchHandler())
                 .setParam(SOLR_PARAM_FACET, true)
-                .setParam(CommonParams.OMIT_HEADER, configuration.isOmitHeader());
-    }
-
-    /**
-     * Allow query configurer to be delegated to runtime {@link SolrConfig}
-     *
-     * @return {@link BiConsumer<>} that will configure SolrQuery
-     */
-    public static BiConsumer<SolrQuery, SolrConfig> getQuickSearchQueryConfigurer()
-    {
-        return (query, configuration) -> query
-                .setRequestHandler("/" + configuration.getSearchHandler())
-                .setParam(CommonParams.OMIT_HEADER, configuration.isOmitHeader());
-    }
-
-    /**
-     * Allow query configurer to be delegated to runtime {@link SolrConfig}
-     *
-     * @return {@link BiConsumer<>} that will configure SolrQuery
-     */
-    public static BiConsumer<SolrQuery, SolrConfig> getQuickSearchSuggesterQueryConfigurer()
-    {
-        return (query, configuration) -> query
-                .setParam(SOLR_PARAM_DEFAULT_FIELD, SOLR_DEFAULT_FIELD_SUGGEST)
-                .setRequestHandler("/" + configuration.getSuggestHandler())
                 .setParam(CommonParams.OMIT_HEADER, configuration.isOmitHeader());
     }
 

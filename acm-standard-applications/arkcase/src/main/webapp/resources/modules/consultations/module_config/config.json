@@ -35,7 +35,7 @@
             {
                 "desc": "consultations.tree.filters.opened",
                 "name": "all-open-consultations",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+                "value": "fq=-status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED",
                 "default": true
             },
             {
@@ -46,17 +46,17 @@
             {
                 "desc": "consultations.tree.filters.iAmAssigned",
                 "name": "my-assigned-consultations",
-                "value": "fq=assignee_s:${user}"
+                "value": "fq=assignee_id_lcs:${user}"
             },
             {
                 "desc": "consultations.tree.filters.iAmFollowing",
                 "name": "my-following-consultations",
-                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+                "value": "fq={!join from=parent_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
             },
             {
                 "desc": "consultations.tree.filters.closed",
                 "name": "all-closed-consultations",
-                "value": "fq=status_s:CLOSED"
+                "value": "fq=status_lcs:CLOSED"
             },
             {
                 "desc": "consultations.tree.filters.noFilter",
@@ -68,12 +68,12 @@
             {
                 "desc": "consultations.tree.sorters.dateAsc",
                 "name": "sort-date-asc",
-                "value": "create_tdt ASC"
+                "value": "create_date_tdt ASC"
             },
             {
                 "desc": "consultations.tree.sorters.dateDesc",
                 "name": "sort-date-desc",
-                "value": "create_tdt DESC",
+                "value": "create_date_tdt DESC",
                 "default": true
             },
             {
@@ -855,7 +855,7 @@
                 },
                 {
                     "name": "assignee",
-                    "field": "assignee_s",
+                    "field": "assignee_id_lcs",
                     "displayName": "consultations.comp.tasks.table.columns.assignee",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
@@ -865,11 +865,11 @@
                     "field": "createDate",
                     "displayName": "consultations.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
-                    "field": "priority_s",
+                    "field": "priority_lcs",
                     "displayName": "consultations.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
@@ -878,11 +878,11 @@
                     "field": "dueDate",
                     "displayName": "consultations.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
-                    "field": "status_s",
+                    "field": "status_lcs",
                     "displayName": "consultations.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }

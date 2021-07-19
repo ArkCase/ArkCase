@@ -92,12 +92,16 @@ angular.module('complaints').controller(
             ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
                 var personTypes = [];
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i].key === "ExternalReferal") {
+                    if (data[i].key === "External Referal") {
                         personTypes.push(data[i]);
                     }
                 }
                 $scope.personTypeExternalReferal = personTypes;
                 return personTypes;
+            });
+
+            ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
+                $scope.contactMethodTypes = contactMethodTypes;
             });
 
             function dispositionTypeChanged() {
@@ -242,6 +246,8 @@ angular.module('complaints').controller(
                 };
             };
             $scope.addPerson = function () {
+                $scope.closeComplaintRequest.disposition.referExternalContactMethod = "";
+                $scope.closeComplaintRequest.contactType = "";
                 pickPerson(null);
             };
 
@@ -272,17 +278,40 @@ angular.module('complaints').controller(
                         PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                             data.person = response.data;
                             $scope.closeComplaintRequest.disposition.referExternalContactPersonName = data.person.givenName + " " + data.person.familyName;
-                            $scope.contactTypes = data.person.contactMethods;
+                            $scope.personContactMethods = data.person.contactMethods;
+                            $scope.contactTypes = setContactMethodTypes($scope.personContactMethods);
                             $scope.closeComplaintRequest.referExternalPersonId = data.person.id;
                         });
                     } else {
                         PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                             $scope.closeComplaintRequest.disposition.referExternalContactPersonName = person.givenName + " " + person.familyName;
-                            $scope.contactTypes = person.contactMethods;
+                            $scope.personContactMethods = person.contactMethods;
+                            $scope.contactTypes = setContactMethodTypes($scope.personContactMethods);
                             $scope.closeComplaintRequest.referExternalPersonId = person.id;
                         });
                     }
+
                 });
+
+                var setContactMethodTypes = function (personContactTypes) {
+                    var contactTypes = [];
+                    for (var i = 0; i < $scope.contactMethodTypes.length; i++) {
+                        for (var j = 0; j < personContactTypes.length; j++) {
+                            if ($scope.contactMethodTypes[i].key == personContactTypes[j].type) {
+                                contactTypes.push($scope.contactMethodTypes[i]);
+                            }
+                        }
+                    }
+                    return contactTypes;
+                }
+            }
+
+            $scope.updateReferExternalContactMethod = function (contactType) {
+                for (var i = 0; i < $scope.personContactMethods.length; i++) {
+                    if ($scope.personContactMethods[i].type == contactType.key) {
+                        $scope.closeComplaintRequest.disposition.referExternalContactMethod = $scope.personContactMethods[i];
+                    }
+                }
             }
 
 
@@ -345,6 +374,26 @@ angular.module('complaints').controller(
                         })
                     }
                 });
+
+                var setContactMethodTypes = function (personContactTypes) {
+                    var contactTypes = [];
+                    for (var i = 0; i < $scope.contactMethodTypes.length; i++) {
+                        for (var j = 0; j < personContactTypes.length; j++) {
+                            if ($scope.contactMethodTypes[i].key == personContactTypes[j].type) {
+                                contactTypes.push($scope.contactMethodTypes[i]);
+                            }
+                        }
+                    }
+                    return contactTypes;
+                }
+            }
+
+            $scope.updateReferExternalContactMethod = function (contactType) {
+                for (var i = 0; i < $scope.personContactMethods.length; i++) {
+                    if ($scope.personContactMethods[i].type == contactType.key) {
+                        $scope.closeComplaintRequest.disposition.referExternalContactMethod = $scope.personContactMethods[i];
+                    }
+                }
             }
 
             function searchCase() {

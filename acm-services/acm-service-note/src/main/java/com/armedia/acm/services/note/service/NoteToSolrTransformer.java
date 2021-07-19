@@ -27,20 +27,34 @@ package com.armedia.acm.services.note.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private UserDao userDao;
     private NoteDao noteDao;
@@ -54,69 +68,48 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Note in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for NOTE.");
 
-        solr.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
+        String name = String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId());
 
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(NoteConstants.OBJECT_TYPE);
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                NoteConstants.OBJECT_TYPE, name);
 
-        solr.setDescription_parseable(in.getNote());
-        solr.setTitle_parseable(in.getNote());
-        solr.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
+        return solrDoc;
+    }
 
+    @Override
+    public void mapAdditionalProperties(Note in, Map<String, Object> additionalProperties)
+    {
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         AcmUser author = getUserDao().quietFindByUserId(in.getAuthor());
         if (author != null)
         {
-            solr.setAdditionalProperty("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
+            additionalProperties.put("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
         }
 
-        solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
-        solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
-        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        solr.setAdditionalProperty("type_s", in.getType());
-        solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(Note in)
-    {
-        SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
-        solrDoc.setObject_type_s(NoteConstants.OBJECT_TYPE);
-        solrDoc.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
-        solrDoc.setObject_id_s(in.getId() + "");
-        solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor(in.getAuthor());
-        solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setType_s(in.getType());
-        solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
-        solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
-        solrDoc.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
-        solrDoc.setTitle_parseable(in.getNote());
-        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
-
-        return solrDoc;
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getNote());
+        additionalProperties.put(TITLE_PARSEABLE, in.getNote());
+        additionalProperties.put(PARENT_TYPE_S, in.getParentType());
+        additionalProperties.put(PARENT_OBJECT_ID_I, in.getParentId());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getParentTitle());
+        additionalProperties.put(TYPE_LCS, in.getType());
+        additionalProperties.put(PARENT_REF_S, String.format("%d-%s", in.getParentId(), in.getParentType()));
     }
 
     @Override

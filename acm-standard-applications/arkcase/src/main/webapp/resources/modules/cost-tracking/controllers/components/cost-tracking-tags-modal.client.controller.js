@@ -54,7 +54,7 @@ angular.module('cost-tracking').controller('CostTracking.TagsModalController',
             // Load tags information
             function loadTags(query) {
                 var deferred = $q.defer();
-                AutoSuggestService.autoSuggest(query, "QUICK", $scope.config.autoSuggestObjectType).then(function(tags) {
+                AutoSuggestService.autoSuggest(query, "ADVANCED", $scope.config.autoSuggestObjectType).then(function(tags) {
                     deferred.resolve(tags);
                 });
                 return deferred.promise;

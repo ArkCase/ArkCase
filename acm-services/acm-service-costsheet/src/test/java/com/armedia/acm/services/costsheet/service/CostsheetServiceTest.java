@@ -268,9 +268,9 @@ public class CostsheetServiceTest
 
         String objectType = "COSTSHEET";
         String searchQuery = "*";
-        String solrQuery = "object_type_s:" + objectType + " AND name:" + searchQuery + " AND -status_s:DELETE";
+        String solrQuery = "object_type_s:" + objectType + " AND name:" + searchQuery + " AND -status_lcs:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
         replay(mocks);
@@ -295,9 +295,9 @@ public class CostsheetServiceTest
         String expected = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("txt/expectedSolrResponse.txt"));
 
         String objectType = "COSTSHEET";
-        String solrQuery = "object_type_s:" + objectType + " AND -status_s:DELETE";
+        String solrQuery = "object_type_s:" + objectType + " AND -status_lcs:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 10, ""))
                 .andReturn(expected);
 
         replay(mocks);

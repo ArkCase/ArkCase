@@ -193,4 +193,37 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         assertEquals(expectedDueDate, result);
     }
 
+    @Test
+    public void testCalculateAmountOfWorkingDaysWithoutWeekendsAndHolidaysIncluded()
+    {
+        setHolidayFile("test/holidayFile.yaml");
+
+        int actualResult = holidayConfigurationService.calculateAmountOfWorkingDays(LocalDate.parse("20210706", DateTimeFormatter.BASIC_ISO_DATE),
+                LocalDate.parse("20210709", DateTimeFormatter.BASIC_ISO_DATE));
+
+        assertEquals(actualResult, 3);
+    }
+
+    @Test
+    public void testCalculateAmountOfWorkingDaysWithoutHolidaysWithWeekendsIncluded()
+    {
+        setHolidayFile("test/holidayFile.yaml");
+
+        int actualResult = holidayConfigurationService.calculateAmountOfWorkingDays(LocalDate.parse("20210707", DateTimeFormatter.BASIC_ISO_DATE),
+                LocalDate.parse("20210713", DateTimeFormatter.BASIC_ISO_DATE));
+
+        assertEquals(actualResult, 4);
+    }
+
+    @Test
+    public void testCalculateAmountOfWorkingDaysWithHolidaysAndWeekendsIncluded()
+    {
+        setHolidayFile("test/holidayFile.yaml");
+
+        int actualResult = holidayConfigurationService.calculateAmountOfWorkingDays(LocalDate.parse("20210701", DateTimeFormatter.BASIC_ISO_DATE),
+                LocalDate.parse("20210709", DateTimeFormatter.BASIC_ISO_DATE));
+
+        assertEquals(actualResult, 5);
+    }
+
 }

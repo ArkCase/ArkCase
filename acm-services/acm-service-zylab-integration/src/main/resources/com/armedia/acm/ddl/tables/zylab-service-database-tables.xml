@@ -108,5 +108,9 @@
         <dropColumn tableName="acm_zylab_file_metadata" columnName="cm_end_bates_number"/>
     </changeSet>
 
+    <changeSet id="07-change-cm-zylab-file-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_zylab_file_metadata" columnName="cm_doc_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_zylab_file_metadata" columnName="cm_production_create_date" newDataType="DATETIME"/>
+    </changeSet>
 
 </databaseChangeLog>

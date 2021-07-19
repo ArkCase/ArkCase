@@ -27,6 +27,12 @@ package com.armedia.acm.services.suggestion.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EXT_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -37,14 +43,13 @@ import com.armedia.acm.services.suggestion.service.SimilarObjectsService;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +63,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
     private static final int MAX_SIMILAR_OBJECTS = 100;
 
-    private final Logger log = LoggerFactory.getLogger(getClass().getName());
+    private final Logger log = LogManager.getLogger(getClass().getName());
 
     private ExecuteSolrQuery executeSolrQuery;
 
@@ -152,7 +157,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
             {
                 JSONObject docFile = fileDocFiles.getJSONObject(i);
 
-                String objectQuery = String.format("object_type_s:%s AND name:\"%s\"", objectType, docFile.getString("parent_number_lcs"));
+                String objectQuery = String.format("object_type_s:%s AND name:\"%s\"", objectType, docFile.getString(PARENT_NUMBER_LCS));
                 if (isPortal && "CASE_FILE".equals(objectType))
                 {
                     objectQuery = objectQuery.concat(" AND queue_name_s:Release");
@@ -230,7 +235,7 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
         SuggestedObject.File file = new SuggestedObject.File();
 
         file.setFileId(docFile.getString("object_id_s"));
-        file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+        file.setFileName(docFile.getString(TITLE_PARSEABLE) + docFile.getString(EXT_S));
 
         return file;
     }
@@ -241,15 +246,15 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         suggestedObject.setId(Long.valueOf(objectDocFile.getString("object_id_s")));
         suggestedObject.setName(objectDocFile.getString("name"));
-        suggestedObject.setTitle(objectDocFile.getString("title_parseable"));
+        suggestedObject.setTitle(objectDocFile.getString(TITLE_PARSEABLE));
         suggestedObject.setModifiedDate(objectDocFile.getString("modified_date_tdt"));
-        suggestedObject.setStatus(objectDocFile.getString("status_lcs"));
+        suggestedObject.setStatus(objectDocFile.getString(STATUS_LCS));
         suggestedObject.setDescription("");
         suggestedObject.setType(objectDocFile.getString("object_type_s"));
 
-        if (!objectDocFile.isNull("description_no_html_tags_parseable"))
+        if (!objectDocFile.isNull(DESCRIPTION_NO_HTML_TAGS_PARSEABLE))
         {
-            suggestedObject.setDescription(objectDocFile.getString("description_no_html_tags_parseable"));
+            suggestedObject.setDescription(objectDocFile.getString(DESCRIPTION_NO_HTML_TAGS_PARSEABLE));
         }
         return suggestedObject;
     }

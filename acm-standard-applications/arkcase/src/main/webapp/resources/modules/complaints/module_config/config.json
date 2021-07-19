@@ -51,23 +51,23 @@
             {
                 "desc": "complaints.tree.filters.opened",
                 "name": "all-open-complaints",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+                "value": "fq=-status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED",
                 "default": true
             },
             {
                 "desc": "complaints.tree.filters.iHaveCreated",
                 "name": "my-complaints-created",
-                "value": "fq=author_s:${user}"
+                "value": "fq=creator_lcs:${user}"
             },
             {
                 "desc": "complaints.tree.filters.iAmAssigned",
                 "name": "my-complaints-assigned",
-                "value": "fq=assignee_s:${user}"
+                "value": "fq=assignee_id_lcs:${user}"
             },
             {
                 "desc": "complaints.tree.filters.iAmFollowing",
                 "name": "my-complaints-following",
-                "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+                "value": "fq={!join from=parent_id_s to=object_id_s}(owner_lcs:${user} AND object_type_s:SUBSCRIPTION)"
             },
             {
                 "desc": "complaints.tree.filters.closedNoFurtherAction",
@@ -94,22 +94,22 @@
             {
                 "desc": "complaints.tree.sorters.incidentDateAsc",
                 "name": "sort-incident-date-asc",
-                "value": "due_tdt ASC"
+                "value": "dueDate_tdt ASC"
             },
             {
                 "desc": "complaints.tree.sorters.incidentDateDesc",
                 "name": "sort-incident-date-asc",
-                "value": "due_tdt ASC"
+                "value": "dueDate_tdt ASC"
             },
             {
                 "desc": "complaints.tree.sorters.createdDateAsc",
                 "name": "sort-created-date-asc",
-                "value": "create_tdt ASC"
+                "value": "create_date_tdt ASC"
             },
             {
                 "desc": "complaints.tree.sorters.createdDateDesc",
                 "name": "sort-created-date-desc",
-                "value": "create_tdt DESC",
+                "value": "create_date_tdt DESC",
                 "default": true
             },
             {
@@ -482,7 +482,7 @@
                         },
                         {
                             "name": "assignee",
-                            "field": "assignee_s",
+                            "field": "assignee_id_lcs",
                             "displayName": "complaints.comp.tasks.table.columns.assignee",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames",
@@ -490,10 +490,10 @@
                         },
                         {
                             "name": "due",
-                            "field": "due_tdt",
+                            "field": "dueDate_tdt",
                             "displayName": "complaints.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "width": 150
                         }
                     ]
@@ -598,7 +598,7 @@
                         {
                             "width": 150,
                             "name": "assignee",
-                            "field": "assignee_s",
+                            "field": "assignee_id_lcs",
                             "displayName": "complaints.comp.approvalRouting.assignee.label",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames"
@@ -606,10 +606,10 @@
                         {
                             "width": 150,
                             "name": "due",
-                            "field": "due_tdt",
+                            "field": "dueDate_tdt",
                             "displayName": "complaints.comp.approvalRouting.dueDate.label",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 }
@@ -1051,34 +1051,34 @@
                 },
                 {
                     "name": "assignee",
-                    "field": "assignee_s",
+                    "field": "assignee_id_lcs",
                     "displayName": "complaints.comp.tasks.table.columns.assignee",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
                 },
                 {
                     "name": "created",
-                    "field": "create_tdt",
+                    "field": "create_date_tdt",
                     "displayName": "complaints.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.create_date_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "priority",
-                    "field": "priority_s",
+                    "field": "priority_lcs",
                     "displayName": "complaints.comp.tasks.table.columns.priority",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "due",
-                    "field": "due_tdt",
+                    "field": "dueDate_tdt",
                     "displayName": "complaints.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                 },
                 {
                     "name": "status",
-                    "field": "status_s",
+                    "field": "status_lcs",
                     "displayName": "complaints.comp.tasks.table.columns.status",
                     "headerCellFilter": "translate"
                 }

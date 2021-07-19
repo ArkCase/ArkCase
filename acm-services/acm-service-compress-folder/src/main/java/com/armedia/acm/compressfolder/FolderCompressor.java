@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.compressfolder;
 
@@ -31,6 +31,7 @@ package com.armedia.acm.compressfolder;
  */
 
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -107,11 +108,13 @@ public interface FolderCompressor
 
     String compressFiles(List<Long> fileIds);
 
+    boolean canBeCompressed(EcmFile file, List<AcmObject> files, AcmFolder folder, CompressNode compressNode);
+
     List<EcmFile> filterConvertedFiles(List<EcmFile> files);
 
     /**
      * Returns path for the compressed folder file
-     * 
+     *
      * @param folder
      * @return the path of the compressed folder file
      */

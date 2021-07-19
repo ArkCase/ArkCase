@@ -462,11 +462,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         log.debug("Taking task objects from Solr for parentObjectType = {} and parentObjectId={}", parentObjectType, parentObjectId);
 
-        String query = "object_type_s:TASK AND parent_object_type_s :" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
+        String query = "object_type_s:TASK AND parent_type_s :" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
 
         try
         {
-            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1000, "");
+            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1000, "");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)
             {
@@ -862,14 +862,14 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         Long businessProcessId = null;
-        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId
-                + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
+        String query = "object_type_s:TASK AND parent_type_s:" + objectType + " AND parent_object_id_i:" + objectId
+                + " AND outcome_name_s:buckslipOutcome AND status_lcs:CLOSED";
         String retval = null;
 
         try
         {
             retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
-                    SolrCore.QUICK_SEARCH,
+                    SolrCore.ADVANCED_SEARCH,
                     query, 0, 1, "business_process_id_i DESC");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)

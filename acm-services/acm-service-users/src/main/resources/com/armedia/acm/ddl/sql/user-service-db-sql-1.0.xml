@@ -99,12 +99,18 @@
     <changeSet id="10-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
         <sql>UPDATE acm_group SET cm_group_display_name = cm_group_name</sql>
     </changeSet>
+
     <changeSet id="11-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
         <update tableName="acm_group">
             <column name="cm_group_display_name"
                 valueComputed="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
             <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
+    </changeSet>
+
+    <changeSet id="12-change-cm-group-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_group" columnName="cm_group_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_group" columnName="cm_group_modified " newDataType="DATETIME"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -4,7 +4,7 @@
         "QTime": 0,
         "params": {
             "q": "object_type_s:CONSULTATION",
-            "facet.field": "status_s",
+            "facet.field": "status_lcs",
             "indent": "true",
             "facet.mincount": "1",
             "rows": "0",
@@ -20,7 +20,7 @@
     "facet_counts": {
         "facet_queries": {},
         "facet_fields": {
-            "status_s": [
+            "status_lcs": [
                 "DRAFT",
                 152,
                 "ACTIVE",

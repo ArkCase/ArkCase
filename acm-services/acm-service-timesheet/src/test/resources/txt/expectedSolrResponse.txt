@@ -6,7 +6,7 @@
       "sort": "",
       "indent": "true",
       "start": "0",
-      "q": "object_type_s:TIMESHEET AND -status_s:DELETE",
+      "q": "object_type_s:TIMESHEET AND -status_lcs:DELETE",
       "wt": "json",
       "fq": [],
       "rows": "10"
@@ -18,12 +18,12 @@
     "docs": [
       {
         "id": "0001-TIMESHEET",
-        "status_s": "DRAFT",
+        "status_lcs": "DRAFT",
         "author": "acm-user",
-        "author_s": "acm-user",
-        "modifier_s": "acm-user",
-        "last_modified_tdt": "2015-03-17T14:00:00Z",
-        "create_tdt": "2015-03-17T14:00:00Z",
+        "creator_lcs": "acm-user",
+        "modifier_lcs": "acm-user",
+        "modified_date_tdt": "2015-03-17T14:00:00Z",
+        "create_date_tdt": "2015-03-17T14:00:00Z",
         "name": "Timesheet 3/15/2015-3/21/2015",
         "object_id_s": "0001",
         "object_type_s": "TIMESHEET",

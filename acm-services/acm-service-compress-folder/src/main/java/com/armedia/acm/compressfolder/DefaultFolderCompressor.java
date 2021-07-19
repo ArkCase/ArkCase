@@ -31,38 +31,6 @@ import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYP
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 import static org.apache.commons.io.IOUtils.copy;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.MDC;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.Authentication;
-
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
 import com.armedia.acm.core.AcmObject;
@@ -82,6 +50,38 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.web.api.MDCConstants;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.MDC;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.Deflater;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Service for compressing folder to a zip file. The folder is recursively traversed and all its' contents is added to
@@ -412,6 +412,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     zos.closeEntry();
                 }
                 compressFolder(zos, childFolder, entryName, compressNode);
+                zos.closeEntry();
             }
             catch (IOException e)
             {
@@ -563,7 +564,8 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                         && fileFolderNode.isFolder());
     }
 
-    private boolean canBeCompressed(EcmFile file, List<AcmObject> files, AcmFolder folder, CompressNode compressNode)
+    @Override
+    public boolean canBeCompressed(EcmFile file, List<AcmObject> files, AcmFolder folder, CompressNode compressNode)
     {
         // TODO : Check isConverted only for Response folder
         if (folderService.isFolderOrParentFolderWithName(folder, "03 Response") && isConverted(file, files))
@@ -587,7 +589,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
     }
 
     /**
-     * @param
+     * @param file
      * @param files
      * @return
      */
@@ -645,9 +647,19 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         return Stream.of(pathParts).collect(Collectors.joining());
     }
 
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
     public void setFolderService(AcmFolderService folderService)
     {
         this.folderService = folderService;
+    }
+
+    public EcmFileService getFileService()
+    {
+        return fileService;
     }
 
     public void setFileService(EcmFileService fileService)
@@ -655,9 +667,19 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
         this.fileService = fileService;
     }
 
+    public long getMaxSize()
+    {
+        return maxSize;
+    }
+
     public void setMaxSize(long maxSize)
     {
         this.maxSize = maxSize;
+    }
+
+    public SizeUnit getSizeUnit()
+    {
+        return sizeUnit;
     }
 
     public void setSizeUnit(String sizeUnit)

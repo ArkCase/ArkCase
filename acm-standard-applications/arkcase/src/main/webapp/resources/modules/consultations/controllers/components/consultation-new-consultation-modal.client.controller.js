@@ -28,8 +28,9 @@ angular.module('consultations').controller(
             var japanStates = ObjectLookupService.getLookupByLookupName('japanStates');
             var states = ObjectLookupService.getStates();
             var commonModuleConfig = ConfigService.getModuleConfig("common");
+            var positionLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
 
-            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup, commonModuleConfig]).then(function (data) {
+            $q.all([moduleConfig, prefixNewConsultation, getCountries, getAddressTypes, canadaProvinces, japanStates, states, personTypesLookup, organizationTypeLookup, commonModuleConfig, positionLookup]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var prefixes = data[1];
@@ -50,6 +51,7 @@ angular.module('consultations').controller(
                 $scope.canadaProvinces = canadaProvinces;
                 $scope.japanStates = japanStates;
                 $scope.personTypes = personTypes;
+                $scope.positions = data[10];
 
                 $scope.config = moduleConfig;
                 $scope.organizationTypes = organizationTypes;
@@ -87,6 +89,9 @@ angular.module('consultations').controller(
                 });
 
             });
+
+            var assocTypeLabel = $translate.instant("consultations.comp.people.type.label");
+            var assocOrgTypeLabel = $translate.instant("consultations.newConsultation.position.label");
 
             var newPersonAssociation = function() {
                 return {
@@ -179,6 +184,16 @@ angular.module('consultations').controller(
                     } else {
                         $scope.confirmationEmail = '';
                     }
+
+                    if(person.defaultOrganization != null) {
+                        $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                        $scope.personPosition = person.defaultOrganization.organization.personAssociations[0].personToOrganizationAssociationType;
+                    } else {
+                        if(person.organizationAssociations[0] != null) {
+                            $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                            $scope.personPosition = person.organizationAssociations[0].organization.personAssociations[0].personToOrganizationAssociationType;
+                        }
+                    }
                 }
             };
 
@@ -204,7 +219,8 @@ angular.module('consultations').controller(
                     isDefault: false,
                     types: $scope.personTypes,
                     type: $scope.personTypes[0].key,
-                    typeEnabled: false
+                    typeEnabled: false,
+                    assocTypeLabel: assocTypeLabel
                 };
 
                 var modalInstance = $modal.open({
@@ -224,13 +240,20 @@ angular.module('consultations').controller(
                 modalInstance.result.then(function (data) {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         $scope.setPerson(person);
+                        if(person.defaultOrganization != null) {
+                            $scope.organizationValue = person.defaultOrganization.organization.organizationValue;
+                            $scope.personPosition = person.defaultOrganization.organization.personAssociations[0].personToOrganizationAssociationType;
+                        } else {
+                            if(person.organizationAssociations[0] != null) {
+                              $scope.organizationValue = person.organizationAssociations[0].organization.organizationValue;
+                              $scope.personPosition = person.organizationAssociations[0].organization.personAssociations[0].personToOrganizationAssociationType;
+                            }
+                        }
                         $scope.existingPerson = angular.copy($scope.config.data.originator.person);
                     });
                 });
 
             };
-
-            
 
             function setOrganizationAssociation(association, data) {
                 association.person = $scope.config.data.originator.person;
@@ -274,7 +297,8 @@ angular.module('consultations').controller(
                     isDefault: false,
                     addNewEnabled: true,
                     types: $scope.organizationTypes,
-                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false
+                    isFirstOrganization: Util.isEmpty(associationFound) ? true : false,
+                    assocTypeLabel: assocOrgTypeLabel
                 };
 
                 var modalInstance = $modal.open({
@@ -297,12 +321,14 @@ angular.module('consultations').controller(
                         $scope.config.data.originator.person.organizations.push(data.organization);
                         setOrganizationAssociation(association, data);
                         $scope.organizationValue = data.organization.organizationValue;
+                        $scope.personPosition = data.type;
                     } else {
                         OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                             data.organization = organization;
                             $scope.organizationValue = data.organization.organizationValue;
                             $scope.config.data.originator.person.organizations.push(data.organization);
                             setOrganizationAssociation(association, data);
+                            $scope.personPosition = data.type;
                         });
                     }
                 });

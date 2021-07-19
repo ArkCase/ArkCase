@@ -55,6 +55,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -64,7 +65,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -179,6 +180,7 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));

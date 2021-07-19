@@ -106,19 +106,6 @@
             <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
-        <beans:bean id="holdedAndAppealedRequestsDueDateUpdate"
-                    class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
-            <beans:property name="requestDao" ref="foiaRequestDao"/>
-            <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="foiaConfig" ref="foiaConfig"/>
-            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
-        </beans:bean>
-
-        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor"
-                    parent="acmJobDescriptor">
-            <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
-        </beans:bean>
-
         <beans:bean id="dueDateReminder" class="gov.foia.service.DueDateReminder">
             <property name="notificationDao" ref="notificationDao"/>
             <property name="foiaRequestDao" ref="foiaRequestDao"/>
@@ -137,6 +124,10 @@
             <beans:property name="outputMimeType" value="application/pdf"/>
         </beans:bean>
 
+        <beans:bean id="extendDatesServiceForRequestsInHoldQueue" class="gov.foia.service.ExtendDatesServiceForRequestsInHoldQueue">
+            <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
         <!-- <beans:bean id="folderNamePredicate" class="gov.foia.service.FolderNameEqualsPredicate">
             <beans:property name="folderName" value="01 Request"/>
         </beans:bean>
@@ -171,6 +162,11 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
+        <beans:bean id="updateHoldEnterDateForRequestInHoldQueue"
+                    class="gov.foia.service.dataupdate.UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="solrReindexFOIAFileExecutor" class="gov.foia.service.dataupdate.SolrReindexFoiaFileExecutor">
             <property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
@@ -191,6 +187,7 @@
                     <beans:ref bean="solrReindexFOIAPersonExecutor"/>
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                     <beans:ref bean="createPersonFromExistingUsersExecutor"/>
+                    <beans:ref bean="updateHoldEnterDateForRequestInHoldQueue"/>
                 </beans:list>
             </beans:property>
 
@@ -407,17 +404,17 @@
             <beans:property name="sortParameterNameToCmisFieldName">
                 <map>
                     <entry key="name" value="name_lcs"/>
-                    <entry key="type" value="type_s"/>
-                    <entry key="created" value="create_tdt"/>
+                    <entry key="type" value="type_lcs"/>
+                    <entry key="created" value="create_date_tdt"/>
                     <entry key="author" value="author"/>
                     <entry key="version" value="version_s"/>
-                    <entry key="modified" value="last_modified_tdt"/>
-                    <entry key="creator" value="author"/>
-                    <entry key="modifier" value="modifier_s"/>
+                    <entry key="modified" value="modified_date_tdt"/>
+                    <entry key="creator" value="creator_lcs"/>
+                    <entry key="modifier" value="modifier_lcs"/>
                     <entry key="category" value="category_s"/>
                     <entry key="redactionStatus" value="redaction_status_s"/>
                     <entry key="reviewStatus" value="review_status_s"/>
-                    <entry key="status" value="status_s"/>
+                    <entry key="status" value="status_lcs"/>
                     <entry key="public" value="public_flag_b"/>
                 </map>
             </beans:property>

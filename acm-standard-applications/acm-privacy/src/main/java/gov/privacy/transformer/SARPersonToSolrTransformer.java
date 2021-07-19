@@ -30,12 +30,9 @@ package gov.privacy.transformer;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Map;
 
 import gov.privacy.model.SARPerson;
 
@@ -69,8 +66,8 @@ public class SARPersonToSolrTransformer extends PersonToSolrTransformer
                 // can't call mapRequestProperties, because SolrAdvancedSearchDocument
                 // has a specific property 'object_sub_type_s', so also setting it via
                 // mapRequestProperties may cause a duplicate key exception.
-                solr.setObject_sub_type_s("SAR_PERSON");
-                solr.getAdditionalProperties().put("position_s", personIn.getPosition());
+                solr.setAdditionalProperty("object_sub_type_s", "SAR_PERSON");
+                solr.setAdditionalProperty("position_s", personIn.getPosition());
             }
 
             return solr;
@@ -83,44 +80,8 @@ public class SARPersonToSolrTransformer extends PersonToSolrTransformer
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(Person in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof SARPerson)
-        {
-            SARPerson personIn = (SARPerson) in;
-            solr = super.toSolrQuickSearch(personIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(personIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return SARPerson.class;
     }
-
-    /**
-     * @param requestIn
-     * @param additionalProperties
-     */
-    protected void mapRequestProperties(SARPerson personIn, Map<String, Object> additionalProperties)
-    {
-        additionalProperties.put("object_sub_type_s", "SAR_PERSON");
-        additionalProperties.put("position_s", personIn.getPosition());
-
-    }
-
 }

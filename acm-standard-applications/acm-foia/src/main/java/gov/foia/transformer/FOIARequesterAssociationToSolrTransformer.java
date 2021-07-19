@@ -30,7 +30,6 @@ package gov.foia.transformer;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -69,30 +68,6 @@ public class FOIARequesterAssociationToSolrTransformer extends PersonAssociation
         else
         {
             log.error("Could not send to advanced search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(PersonAssociation in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIARequesterAssociation)
-        {
-            FOIARequesterAssociation requesterAssociationIn = (FOIARequesterAssociation) in;
-            solr = super.toSolrQuickSearch(requesterAssociationIn);
-
-            if (solr != null)
-            {
-                mapRequestProperties(requesterAssociationIn, solr.getAdditionalProperties());
-            }
-
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
         }
         throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
     }

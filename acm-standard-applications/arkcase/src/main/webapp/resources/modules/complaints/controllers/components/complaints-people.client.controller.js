@@ -20,6 +20,8 @@ angular.module('complaints').controller(
                         return personTypes;
                     });
 
+                    var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
+
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -84,6 +86,7 @@ angular.module('complaints').controller(
 
                         var params = {};
                         params.types = $scope.personTypes;
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (association) {
                             if (association.personType == $scope.initiatorType) {
