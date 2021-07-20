@@ -33,6 +33,7 @@ angular.module('document-details').config([ '$stateProvider', function($statePro
                 $translatePartialLoader.addPart('preference');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('complaints');
+                $translatePartialLoader.addPart('progress-bar');
                 return $translate.refresh();
             } ]
         },

@@ -30,7 +30,6 @@ angular.module('progress-bar').controller('ProgressBarModalController',
                 hide: false
             };
             $scope.$bus.publish('notify-snackbar-progress-status', snackBarIcon);
-            $scope.$bus.publish('disable-file-editing');
             stop = $interval(updateCurrentProcess, 500);
             $scope.stopCount = function () {
                 $interval.cancel(stop);
@@ -49,6 +48,15 @@ angular.module('progress-bar').controller('ProgressBarModalController',
         function updateCurrentProcess() {
             if ($scope.versionedFile.currentProgress >= 99) {
                 $scope.stopCount();
+                $timeout(function () {
+                    var message = {};
+                    message.objectId = $scope.versionedFile.id;
+                    message.objectType = $scope.versionedFile.requestType;
+                    message.success = false;
+                    message.currentProgress = 100;
+                    message.status = ObjectService.UploadFileStatus.FAILED;
+                    $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+                }, 10000);
             } else {
                 var message = {};
                 message.status = ObjectService.UploadFileStatus.IN_PROGRESS;

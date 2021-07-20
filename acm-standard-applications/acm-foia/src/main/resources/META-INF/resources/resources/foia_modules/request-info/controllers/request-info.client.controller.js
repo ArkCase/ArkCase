@@ -158,14 +158,17 @@ angular.module('request-info').controller(
             }
 
             function onHideProgressBar(data) {
-                console.log(data)
                 var message = {};
                 message.objectId = $scope.requestInfo.id;
                 message.objectType = $scope.requestInfo.requestType;
-                message.success = true;
                 message.currentProgress = 100;
-                message.status = ObjectService.UploadFileStatus.FINISH;
-
+                if (data.status === 'OK') {
+                    message.success = true;
+                    message.status = ObjectService.UploadFileStatus.FINISHED;
+                } else {
+                    message.success = false;
+                    message.status = ObjectService.UploadFileStatus.FAILED;
+                }
                 $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
             }
 
