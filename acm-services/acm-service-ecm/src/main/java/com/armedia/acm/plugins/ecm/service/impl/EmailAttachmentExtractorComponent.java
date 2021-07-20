@@ -65,7 +65,7 @@ public class EmailAttachmentExtractorComponent
             message.setReturnNullOnMissingChunk(true);
             AttachmentChunks[] attachmentFiles = message.getAttachmentFiles();
 
-            for (AttachmentChunks attachmentChunks : attachmentFiles)
+            for (AttachmentChunks attachmentChunks : attachmentFiles) 
             {
                 InputStream byteArrayInputStream = new ByteArrayInputStream(attachmentChunks.getEmbeddedAttachmentObject());
 
@@ -77,12 +77,23 @@ public class EmailAttachmentExtractorComponent
                         contentType));
             }
             subject = message.getSubject();
-            if (message.getHeaders() != null)
-            {
-                Optional<String> from = Arrays.stream(message.getHeaders()).filter(m-> m.startsWith("From:")).findFirst();
-                if(from.isPresent())
-                {
-                    sender = StringUtils.substringBetween(from.get(), "<", ">");
+            if (message.getHeaders() != null) {
+                Optional<String> from = Arrays.stream(message.getHeaders()).filter(m -> m.startsWith("From:")).findFirst();
+                if (from.isPresent()) {
+                    if (from.toString().contains("<") && from.toString().contains(">")) {
+                        sender = StringUtils.substringBetween(from.get(), "<", ">");
+                    }
+                    else if (from.get().length() > 6) {
+                        sender = from.get().substring(6);
+                    }
+                }
+            }
+            else{
+                String senderName = message.getMainChunks().getDisplayFromChunk().getValue();
+                String textBodyChunk = message.getMainChunks().getTextBodyChunk().toString();
+                sender = StringUtils.substringBetween(textBodyChunk,senderName+" <", ">");
+                if(sender == null){
+                    sender = senderName;
                 }
             }
         }

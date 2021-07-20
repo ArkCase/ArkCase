@@ -28,86 +28,44 @@ package com.armedia.acm.services.timesheet.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.timesheet.model.TimesheetChargeRoleConfigItem;
+import com.armedia.acm.services.timesheet.model.TimesheetChargeRolesConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConfigDTO;
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimesheetConfigurationService
 {
     private Logger log = LogManager.getLogger(getClass());
 
-    private String configurationFile;
     private ObjectConverter objectConverter;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     private TimesheetConfig timesheetConfig;
+    private TimesheetChargeRolesConfig timesheetChargeRolesConfig;
     private ConfigurationPropertyService configurationPropertyService;
+    private LookupDao lookupDao;
 
-    public TimesheetConfigDTO getConfig()
+    public TimesheetConfigDTO loadTimesheetChargeRolesConfig()
     {
-        String currentLine;
-        StringBuilder timesheetConfigJson = new StringBuilder();
-        TimesheetConfigDTO timesheetConfig = null;
-
-        try (Reader fileReader = new FileReader(new File(getConfigurationFile()));
-                BufferedReader bufferedReader = new BufferedReader(fileReader))
-        {
-            log.info("Trying to read from config file: " + getConfigurationFile());
-
-            lock.readLock().lock();
-
-            while ((currentLine = bufferedReader.readLine()) != null)
-            {
-                timesheetConfigJson.append(currentLine);
-            }
-
-            fileReader.close();
-            timesheetConfig = getObjectConverter().getJsonUnmarshaller().unmarshall(timesheetConfigJson.toString(),
-                    TimesheetConfigDTO.class);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
-
-        return timesheetConfig;
+        TimesheetConfigDTO dto = new TimesheetConfigDTO();
+        dto.setChargeRoleItems(getChargeRoles());
+        return dto;
     }
 
-    public void saveConfig(TimesheetConfigDTO config)
+    public void saveTimesheetChargeRolesConfig(TimesheetConfigDTO timesheetConfigDTO)
     {
-        String timesheetConfigJson = Objects.nonNull(config) ? getObjectConverter().getJsonMarshaller().marshal(config) : "";
-
-        try (FileWriter fileWriter = new FileWriter(new File(getConfigurationFile()), false))
-        {
-            log.info("Trying to write to config file [{}]", getConfigurationFile());
-            lock.writeLock().lock();
-            fileWriter.write(timesheetConfigJson);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+        TimesheetChargeRolesConfig config = new TimesheetChargeRolesConfig();
+        config.setTimesheetConfigurationMap(toChargeRoles(timesheetConfigDTO.getChargeRoleItems()));
+        configurationPropertyService.updateProperties(config);
     }
 
     public void saveProperties(TimesheetConfig timesheetConfig)
@@ -115,19 +73,67 @@ public class TimesheetConfigurationService
         configurationPropertyService.updateProperties(timesheetConfig);
     }
 
+    public List<TimesheetChargeRoleConfigItem> getChargeRoles()
+    {
+        List<TimesheetChargeRoleConfigItem> chargeRoles = new ArrayList<>();
+        Map<String, Map<String, Object>> configMap = timesheetChargeRolesConfig.getTimesheetConfigurationMap();
+        Map<String, Object> chargeRoleItemsMap = configMap.get("chargeRoleItems");
+        if (Objects.nonNull(chargeRoleItemsMap))
+        {
+            for (Map.Entry<String, Object> chargeRoleItem : chargeRoleItemsMap.entrySet())
+            {
+                String chargeRoleItemName = chargeRoleItem.getKey();
+                Map<String, Object> chargeRoleItemProps = (Map<String, Object>) chargeRoleItem.getValue();
+                TimesheetChargeRoleConfigItem timesheetChargeRoleConfigItem = new TimesheetChargeRoleConfigItem();
+                timesheetChargeRoleConfigItem.setChargeRole(chargeRoleItemName);
+                timesheetChargeRoleConfigItem.setActive((String) chargeRoleItemProps.get("active"));
+                timesheetChargeRoleConfigItem.setRate(BigDecimal.valueOf((Integer) chargeRoleItemProps.get("rate")));
+                chargeRoles.add(timesheetChargeRoleConfigItem);
+            }
+        }
+        return chargeRoles;
+    }
+
+    public Map<String, Map<String, Object>> toChargeRoles(List<TimesheetChargeRoleConfigItem> chargeRoleItems)
+    {
+
+        Map<String, Map<String, Object>> configMap = new LinkedHashMap<>();
+        Map<String, Object> chargeRolesMap = new LinkedHashMap<>();
+        configMap.put("chargeRoleItems", chargeRolesMap);
+        Set<String> timesheetChargeRoles = ((List<StandardLookupEntry>) getLookupDao()
+                .getLookupByName("timesheetChargeRoles").getEntries())
+                .stream()
+                .map(StandardLookupEntry::getKey).collect(Collectors.toSet());
+        for (TimesheetChargeRoleConfigItem chargeRoleItem : chargeRoleItems)
+        {
+            String chargeRoleName = chargeRoleItem.getChargeRole();
+            timesheetChargeRoles.remove(chargeRoleName);
+            Map<String, Object> chargeRoleProps = new LinkedHashMap<>();
+            putInMapIfValueNotNull(chargeRoleProps, "chargeRole", chargeRoleItem.getChargeRole());
+            putInMapIfValueNotNull(chargeRoleProps, "active", chargeRoleItem.getActive());
+            putInMapIfValueNotNull(chargeRoleProps, "rate", chargeRoleItem.getRate());
+            chargeRolesMap.put(chargeRoleName, chargeRoleProps);
+        }
+
+        for (String removedChargeRole : timesheetChargeRoles)
+        {
+            chargeRolesMap.put(MergeFlags.REMOVE.getSymbol() + removedChargeRole, null);
+        }
+
+        return configMap;
+    }
+
+    private static <V> void putInMapIfValueNotNull(Map<String, Object> map, String key, V value)
+    {
+        if (Objects.nonNull(value))
+        {
+            map.put(key, value);
+        }
+    }
+
     public TimesheetConfig loadProperties()
     {
         return timesheetConfig;
-    }
-
-    public String getConfigurationFile()
-    {
-        return configurationFile;
-    }
-
-    public void setConfigurationFile(String configurationFile)
-    {
-        this.configurationFile = configurationFile;
     }
 
     public ObjectConverter getObjectConverter()
@@ -158,5 +164,25 @@ public class TimesheetConfigurationService
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
+    }
+
+    public TimesheetChargeRolesConfig getTimesheetChargeRolesConfig()
+    {
+        return timesheetChargeRolesConfig;
+    }
+
+    public void setTimesheetChargeRolesConfig(TimesheetChargeRolesConfig timesheetChargeRolesConfig)
+    {
+        this.timesheetChargeRolesConfig = timesheetChargeRolesConfig;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
     }
 }
