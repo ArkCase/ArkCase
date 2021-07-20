@@ -49,13 +49,15 @@ angular.module('progress-bar').controller('ProgressBarModalController',
             if ($scope.versionedFile.currentProgress >= 99) {
                 $scope.stopCount();
                 $timeout(function () {
-                    var message = {};
-                    message.objectId = $scope.versionedFile.id;
-                    message.objectType = $scope.versionedFile.requestType;
-                    message.success = false;
-                    message.currentProgress = 100;
-                    message.status = ObjectService.UploadFileStatus.FAILED;
-                    $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+                    if ($scope.versionedFile.currentProgress === 99) {
+                        var message = {};
+                        message.objectId = $scope.versionedFile.id;
+                        message.objectType = $scope.versionedFile.requestType;
+                        message.success = false;
+                        message.currentProgress = 100;
+                        message.status = ObjectService.UploadFileStatus.FAILED;
+                        $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+                    }
                 }, 10000);
             } else {
                 var message = {};
