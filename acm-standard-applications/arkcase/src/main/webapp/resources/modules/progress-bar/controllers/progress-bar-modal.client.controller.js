@@ -8,10 +8,6 @@ angular.module('progress-bar').controller('ProgressBarModalController',
             $scope.$bus.publish('progress-bar-modal-hide');
         };
 
-        $scope.$bus.subscribe('progress-snackbar-close', function () {
-            $scope.openNewVersionOfFile();
-        });
-
         $scope.openNewVersionOfFile = function () {
             $modalInstance.close();
             $scope.clearVersionedFileDetails();

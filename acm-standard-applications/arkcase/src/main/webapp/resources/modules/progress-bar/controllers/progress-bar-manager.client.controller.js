@@ -58,11 +58,6 @@ angular.module('progress-bar').controller(
                 $scope.$bus.publish('progress-bar-modal-hide');
             };
 
-            $scope.onClickCloseSnackbar = function () {
-                $scope.hideSnackbar = true;
-                $scope.$bus.publish('progress-snackbar-close');
-            }
-
             $scope.onClickViewDetailsModal = function () {
                 $scope.$bus.publish('progress-bar-modal-show');
             };
