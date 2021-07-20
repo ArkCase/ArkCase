@@ -34,6 +34,7 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('tasks');
+                $translatePartialLoader.addPart('progress-bar');
                 return $translate.refresh();
             } ]
         },
