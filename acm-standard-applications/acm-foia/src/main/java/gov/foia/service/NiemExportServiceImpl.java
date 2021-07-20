@@ -231,6 +231,15 @@ public class NiemExportServiceImpl implements NiemExportService
     private void transformXMLToFile(Document document, FileOutputStream fileOutputStream) throws TransformerException
     {
         TransformerFactory factory = TransformerFactory.newInstance();
+        /**
+         * com.sun.org.apache.xalan.internal.xsltc.trax - JDK
+         * org.apache.xalan.processor - Xalan
+         * org.apache.xalan.xsltc.trax - Xalan
+         * 
+         * those are TransformerFactory implementation providers and not sure which implementation doesn't support below XMLConstants 
+         * that's why suppressing IllegalArgumentException.
+         */
+     
         try
         {
             factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
