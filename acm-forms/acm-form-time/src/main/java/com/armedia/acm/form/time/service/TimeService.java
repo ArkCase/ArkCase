@@ -291,7 +291,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         form.setPeriod(new Date());
 
         // Set timesheet config
-        form.setTimesheetConfig(getTimesheetConfigurationService().getConfig());
+        form.setTimesheetConfig(getTimesheetConfigurationService().loadTimesheetChargeRolesConfig());
 
         LOG.debug("setting form types");
         List<String> types = getStandardLookupEntries("timesheetTypes");

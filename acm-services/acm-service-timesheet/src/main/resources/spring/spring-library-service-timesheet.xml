@@ -55,13 +55,18 @@
     </bean>
 
     <bean id="timesheetConfigurationService" class="com.armedia.acm.services.timesheet.service.TimesheetConfigurationService">
-        <property name="configurationFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetConfiguration.json"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="timesheetConfig" ref="timesheetConfig"/>
+        <property name="timesheetChargeRolesConfig" ref="timesheetChargeRolesConfig"/>
+        <property name="lookupDao" ref="lookupDao"/>
     </bean>
 
     <bean id="timesheetConfig" class="com.armedia.acm.services.timesheet.model.TimesheetConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="timesheetChargeRolesConfig" class="com.armedia.acm.services.timesheet.model.TimesheetChargeRolesConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 
