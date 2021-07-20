@@ -18,7 +18,7 @@
             </div>
             <div class="col-sm-6 form-group">
                 <label for="phoneTypes" translate>organizations.comp.phones.modal.type.label</label><span class="required-asterisk">*</span>
-                <select id="phoneTypes" class="input-md form-control" required="required" ng-model="phone.subLookup"
+                <select id="phoneTypes" class="input-md form-control" ng-required="phone.value" ng-disabled="!phone.value" ng-model="phone.subLookup"
                         ng-init="phone.subLookup = phone.subType"
                         ng-options="item.key as item.value | translate for item in phoneTypes"></select>
             </div>
