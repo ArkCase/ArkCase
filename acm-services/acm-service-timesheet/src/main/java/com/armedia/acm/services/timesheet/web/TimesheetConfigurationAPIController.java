@@ -55,14 +55,14 @@ public class TimesheetConfigurationAPIController
     @ResponseBody
     public void saveTimesheetConfiguration(@RequestBody TimesheetConfigDTO timesheetConfig)
     {
-        getTimesheetConfigurationService().saveConfig(timesheetConfig);
+        getTimesheetConfigurationService().saveTimesheetChargeRolesConfig(timesheetConfig);
     }
 
     @RequestMapping(value = "/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<TimesheetConfigDTO> loadTimesheetConfiguration()
     {
-        return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(getTimesheetConfigurationService().loadTimesheetChargeRolesConfig(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
