@@ -143,7 +143,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
         
         String emailSender = extractEmailAddressFromMessage(message);
-        String fileAndFolderName = makeFileOrFolderName(message, emailSender);
+        String fileAndFolderName = makeFileOrFolderName();
         
         String tempDir = System.getProperty("java.io.tmpdir");
         String messageFileName = fileAndFolderName + ".eml";
@@ -294,12 +294,12 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     }
 
 
-    public String makeFileOrFolderName(Message message, String emailSender) throws MessagingException
+    public String makeFileOrFolderName()
     {
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = formatter.format(date);
-        String fileAndFolderName = message.getSubject().replaceAll("\\W+", "") + "-" + currentDate + "-" + emailSender;
+        String fileAndFolderName = currentDate + "-" + UUID.randomUUID();
         return fileAndFolderName;
     }
     
