@@ -183,7 +183,7 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler
         {
 
             String emailSender = extractEmailAddressFromMessage(message);
-            String fileAndFolderName = makeFileOrFolderName(message, emailSender);
+            String fileAndFolderName = makeFileOrFolderName();
             
             String tempDir = System.getProperty("java.io.tmpdir");
             String messageFileName = fileAndFolderName + ".eml";
