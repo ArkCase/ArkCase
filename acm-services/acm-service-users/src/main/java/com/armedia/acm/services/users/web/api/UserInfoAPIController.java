@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserInfoDTO;
 import com.armedia.acm.services.users.service.AcmUserService;
-
 import com.google.json.JsonSanitizer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -91,7 +91,7 @@ public class UserInfoAPIController
         retval.setDepartment(user.getDepartment());
         retval.setCompany(user.getCompany());
         retval.setTitle(user.getTitle());
-        if (getAcmSpringActiveProfile() != null && !getAcmSpringActiveProfile().isSAMLEnabledEnvironment())
+        if (getAcmSpringActiveProfile() != null && !getAcmSpringActiveProfile().isSSOEnabledEnvironment())
         {
             retval.setNotificationMessage(notificationMessage);
         }
