@@ -55,7 +55,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
         {
             AcmUser user = forgotUsernameEvent.getAcmUser();
 
-            if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+            if (acmSpringActiveProfile.isSSOEnabledEnvironment())
             {
                 throw new UnsupportedOperationException("Won't send forgot username email when SSO environment");
             }

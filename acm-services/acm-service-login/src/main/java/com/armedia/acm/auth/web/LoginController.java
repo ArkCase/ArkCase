@@ -76,7 +76,7 @@ public class LoginController
         else
         {
             boolean showForgotUsernameAndPasswordLink = applicationConfig.getAllowForgotUsernameAndPasswordOnLogin()
-                    && !acmSpringActiveProfile.isSAMLEnabledEnvironment();
+                    && !acmSpringActiveProfile.isSSOEnabledEnvironment();
             model.addAttribute("showForgotUsernameAndPasswordLink", showForgotUsernameAndPasswordLink);
 
             loginWarningMessageService.buildModel(model);
