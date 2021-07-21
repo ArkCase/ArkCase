@@ -49,6 +49,18 @@ public class AcmSpringActiveProfile
         return isProfileActivated(isSamlProfile.or(isExternalSamlProfile));
     }
 
+    public boolean isOIDCEnabledEnvironment()
+    {
+        Predicate<String> isOidcProfile = it -> it.equals("oidc");
+        Predicate<String> isExternalOidcProfile = it -> it.equals("externalOidc");
+        return isProfileActivated(isOidcProfile.or(isExternalOidcProfile));
+    }
+
+    public boolean isSSOEnabledEnvironment()
+    {
+        return isOIDCEnabledEnvironment() && isSAMLEnabledEnvironment();
+    }
+
     public boolean isLdapEnabledEnvironment()
     {
         Predicate<String> isLdapProfile = it -> it.equals("ldap");

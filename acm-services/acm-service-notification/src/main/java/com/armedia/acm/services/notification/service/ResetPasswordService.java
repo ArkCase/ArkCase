@@ -53,7 +53,7 @@ public class ResetPasswordService
 
     public void sendPasswordResetNotification(AcmUser user)
     {
-        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+        if (acmSpringActiveProfile.isSSOEnabledEnvironment())
         {
             throw new UnsupportedOperationException("Won't send password reset email when SSO environment");
         }
