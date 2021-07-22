@@ -86,7 +86,7 @@
         <log4j.version>2.11.0</log4j.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
-        <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <maven.checkstyle.plugin.version>3.1.2</maven.checkstyle.plugin.version>
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
         <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
@@ -104,7 +104,7 @@
         <pdfbox.version>2.0.22</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>2.0.9</powermock.version>
-        <puppycrawl.version>7.8.2</puppycrawl.version>
+        <puppycrawl.version>8.44</puppycrawl.version>
         <reactor-netty.version>1.0.3</reactor-netty.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -268,6 +268,10 @@
         <pluginRepository>
             <id>arkcase-local-repo-third-level</id>
             <url>file://${basedir}/../../../arkcase-lib</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>maven</id>
+            <url>https://repo1.maven.org/maven2/</url>
         </pluginRepository>
     </pluginRepositories>
     <build>
