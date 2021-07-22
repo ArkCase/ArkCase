@@ -40,6 +40,7 @@ import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertie
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_FOLDER_ID_I;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
@@ -167,7 +168,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
-        skipAdditionalPropertiesInURL.add("name_partial");
         skipAdditionalPropertiesInURL.add("url");
 
         solr.setSkipAdditionalPropertiesInURL(skipAdditionalPropertiesInURL);
@@ -213,6 +213,13 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         additionalProperties.put(TYPE_LCS, in.getFileType());
         additionalProperties.put(HIDDEN_B, isHidden(in));
+
+        if (in.getContainer() != null)
+        {
+            additionalProperties.put(PARENT_OBJECT_ID_I, in.getContainer().getContainerObjectId());
+            additionalProperties.put(PARENT_ID_S, Long.toString(in.getContainer().getContainerObjectId()));
+            additionalProperties.put(PARENT_TYPE_S, in.getContainer().getContainerObjectType());
+        }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
