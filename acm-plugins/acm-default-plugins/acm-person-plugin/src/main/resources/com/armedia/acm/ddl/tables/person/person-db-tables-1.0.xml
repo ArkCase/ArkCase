@@ -792,4 +792,11 @@
         <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="55-add-person-default-fax" author="aleksandar.acevski">
+        <addColumn tableName="acm_person">
+            <column name="cm_default_fax" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
