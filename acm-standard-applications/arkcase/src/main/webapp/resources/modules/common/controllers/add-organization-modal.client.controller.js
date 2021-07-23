@@ -94,7 +94,7 @@ angular.module('common').controller(
                         };
                         if ($scope.types && $scope.type) {
                             retValue.type = $scope.type.key;
-                            retValue.inverseType = $scope.type.inverseKey;
+                            retValue.inverseType = $scope.type.value;
                         }
                         if ($scope.showSetPrimary) {
                             retValue.isDefault = $scope.isDefault;
