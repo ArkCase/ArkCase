@@ -200,6 +200,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToOne
     @JoinColumn(name = "cm_default_phone")
     private ContactMethod defaultPhone;
+
+    /**
+     * ContactMethod which is default as fax
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_fax")
+    private ContactMethod defaultFax;
+
     /**
      * ContactMethod which is default as email
      */
@@ -708,6 +716,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setDefaultEmail(ContactMethod defaultEmail)
     {
         this.defaultEmail = defaultEmail;
+    }
+
+    public ContactMethod getDefaultFax()
+    {
+        return defaultFax;
+    }
+
+    public void setDefaultFax(ContactMethod defaultFax)
+    {
+        this.defaultFax = defaultFax;
     }
 
     public PostalAddress getDefaultAddress()
