@@ -5,7 +5,7 @@ var ApplicationConfiguration = (function() {
     // Init module configuration options
     var applicationModuleName = 'ArkCase';
     var applicationModuleVendorDependencies = [ 'cgNotify', 'ngResource', 'ngCookies', 'ngAnimate', 'ngTouch', 'ngSanitize', 'ngAnimate',
-            'ngFileUpload', 'ui.router', 'ui.bootstrap', 'pascalprecht.translate', 'angularMoment',
+            'ngFileUpload', 'ui.router', 'ui.bootstrap', 'pascalprecht.translate', 'angularMoment',   'moment-picker',
             //'ui.utils',
             'ui.grid', 'ui.grid.draggable-rows', 'ui.grid.pagination', 'ui.grid.resizeColumns', 'ui.grid.autoResize', 'ui.grid.selection',
             'ui.grid.expandable', 'ui.grid.edit', 'ui.grid.exporter', 'ui.grid.moveColumns', 'xeditable', 'summernote', 'ngBootbox',
