@@ -57,6 +57,7 @@
                 <value>directives</value>
                 <value>modules</value>
                 <value>services</value>
+                <value>filters</value>
                 <value>lib</value>
             </list>
         </property>
