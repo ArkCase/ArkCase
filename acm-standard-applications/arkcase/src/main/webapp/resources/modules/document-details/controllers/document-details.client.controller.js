@@ -63,21 +63,22 @@ angular.module('document-details').controller(
                 }
 
 
-                function onShowProgressBar() {
+                function onShowProgressBar(data) {
                     var fileDetails = {};
-                    fileDetails.file = $scope.ecmFile;
-                    fileDetails.fileName = $scope.ecmFile.name;
-                    fileDetails.fileType = $scope.ecmFile.fileType;
-                    fileDetails.folderId = $scope.ecmFile.folder.id;
-                    fileDetails.lang = $scope.ecmFile.fileLang;
+                    fileDetails.fileId = data.fileId;
+                    var ecmFile = $scope.ecmFile;
+                    fileDetails.file = ecmFile;
+                    fileDetails.fileName = ecmFile.name;
+                    fileDetails.fileType = ecmFile.fileType;
                     fileDetails.originObjectId = $scope.caseInfo.id;
                     fileDetails.originObjectType = $scope.caseInfo.caseType;
                     fileDetails.parentObjectNumber = $scope.caseInfo.caseNumber;
                     $scope.$bus.publish('open-progress-bar-modal', fileDetails);
                 }
 
-                function onUpdateProgressBar() {
+                function onUpdateProgressBar(data) {
                     var message = {};
+                    message.id = data.fileId;
                     message.objectId = $scope.caseInfo.id;
                     message.objectType = $scope.caseInfo.caseType;
                     message.success = true;
@@ -88,6 +89,7 @@ angular.module('document-details').controller(
 
                 function onHideProgressBar(data) {
                     var message = {};
+                    message.id = data.fileId;
                     message.objectId = $scope.caseInfo.id;
                     message.objectType = $scope.caseInfo.caseType;
                     message.currentProgress = 100;
@@ -303,7 +305,22 @@ angular.module('document-details').controller(
 
 
                 $scope.$bus.subscribe('open-new-version-of-file', function () {
-                    $scope.openSnowboundViewer();
+                    var ecmFile = EcmService.getFiles({
+                        fileIds: $scope.ecmFile.fileId
+                    });
+                    ecmFile.$promise.then(function (file) {
+                        if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                            $scope.ecmFile = file;
+                            $scope.fileId = file.fileId;
+                            $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.versionTag = file.activeVersionTag;
+                            $scope.openSnowboundViewer();
+                            $scope.$broadcast('refresh-ocr');
+                            $scope.$broadcast('refresh-medical-comprehend');
+                        }
+                        onHideLoader();
+                    });
                 });
 
                 // Obtains authentication token for ArkCase
