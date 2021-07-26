@@ -7,6 +7,7 @@ angular.module('progress-bar').controller(
 
             $scope.hideSnackbar = true;
             $scope.hideSnackbarIcon = false;
+            $scope.versionedFiles = [];
 
             var modalInstance = null;
 
@@ -69,11 +70,29 @@ angular.module('progress-bar').controller(
             }
 
             $scope.$bus.subscribe('update-snackbar-current-progress', function (message) {
-                $scope.currentProgress = message.currentProgress;
-            })
+                var file = _.find($scope.versionedFiles, {
+                    fileId: message.id
+                });
+                if (file) file.currentProgress = message.currentProgress;
+            });
+
+            $scope.$bus.subscribe('start-snackbar-progress', function (file) {
+                $scope.versionedFiles.push(file);
+            });
+
+            $scope.$bus.subscribe('clear-versioned-files', function () {
+                $scope.versionedFiles = [];
+            });
 
             $scope.$bus.subscribe('notify-snackbar-progress-status', function (hideSnackbarIcon) {
+                if (hideSnackbarIcon.hide) {
+                    for (var i = 0; i < $scope.versionedFiles.length; i++) {
+                        if ($scope.versionedFiles[i].status !== ObjectService.UploadFileStatus.FINISHED) {
+                            hideSnackbarIcon.hide = false;
+                            break;
+                        }
+                    }
+                }
                 $scope.hideSnackbarIcon = hideSnackbarIcon.hide;
-                ;
-            })
+            });
         }]);

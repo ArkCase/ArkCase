@@ -42,9 +42,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 22.04.2015.
@@ -76,6 +78,25 @@ public class GetEcmFileByIdAPIController
                 log.error("File with fileId: " + fileId + " does not exists");
             }
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EcmFile> getEcmFiles(@RequestParam("fileIds") List<Long> fileIds, Authentication authentication, HttpSession session)
+    {
+        if (log.isInfoEnabled())
+        {
+            log.info("Fetching multiple EcmFiles");
+        }
+        List<EcmFile> result = getFileService().findByIds(fileIds);
+        if (result == null)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Files with fileId: " + fileIds.toString() + " cannot be fetched");
+            }
         }
         return result;
     }
