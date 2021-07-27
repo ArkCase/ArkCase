@@ -469,7 +469,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         catch (Exception e)
         {
             throw new AcmSequenceException(
-                    String.format("Unable to remove sequence [{}] from Used Sequence Registry", sequenceValue),
+                    String.format("Unable to remove sequence [%s] from Used Sequence Registry", sequenceValue),
                     e);
 
         }
@@ -493,7 +493,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public AcmSequenceRegistryUsed saveUsedSequenceRegistry(AcmSequenceRegistryUsed sequenceRegistry) throws AcmSequenceException
     {
         log.info("Saving sequence in to Used Sequence Registry for [{}] [{}] [{}]", sequenceRegistry.getSequenceValue(),
