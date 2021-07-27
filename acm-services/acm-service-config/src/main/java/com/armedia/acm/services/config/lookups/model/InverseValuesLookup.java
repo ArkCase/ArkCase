@@ -108,7 +108,7 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
         inverseLookupEntries.forEach(entry -> {
             Map<String, Object> lookupEntry = new HashMap<>();
             lookupEntry.put("key", entry.getKey());
-            lookupEntry.put("inverseValue", entry.getValue());
+            lookupEntry.put("inverseValue", entry.getInverseValue());
             lookupEntry.put("inverseKey", entry.getInverseKey());
             lookupEntry.put("value", entry.getValue());
             lookupEntry.put("readonly", entry.isReadonly());
