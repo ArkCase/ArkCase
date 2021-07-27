@@ -140,7 +140,7 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
     private void addEmailToRequest(Message message, FOIARequest request, String userId) throws MessagingException
     {
         String emailSender = extractEmailAddressFromMessage(message);
-        String fileAndFolderName = makeFileOrFolderName(message, emailSender);
+        String fileAndFolderName = makeFileOrFolderName();
 
         String tempDir = System.getProperty("java.io.tmpdir");
         String messageFileName = fileAndFolderName + ".eml";
