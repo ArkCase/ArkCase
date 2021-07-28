@@ -134,10 +134,57 @@ angular.module('request-info').controller(
                 $scope.loaderOpened = false;
             }
 
+            function onShowProgressBar(data) {
+                var fileDetails = {};
+                fileDetails.fileId = data.fileId;
+                var ecmFile = _.find($scope.openOtherDocuments, function (file) {
+                    return file.fileId == data.fileId;
+                });
+                fileDetails.file = ecmFile;
+                fileDetails.fileName = ecmFile.name;
+                fileDetails.fileType = ecmFile.fileType;
+                fileDetails.pageCount = ecmFile.pageCount;
+                fileDetails.originObjectId = $scope.requestInfo.id;
+                fileDetails.originObjectType = $scope.requestInfo.requestType;
+                fileDetails.parentObjectNumber = $scope.requestInfo.caseNumber;
+                fileDetails.status = ObjectService.UploadFileStatus.READY;
+                $scope.$bus.publish('open-progress-bar-modal', fileDetails);
+            }
+
+            function onUpdateProgressBar(data) {
+                var message = {};
+                message.id = data.fileId;
+                message.objectId = $scope.requestInfo.id;
+                message.objectType = $scope.requestInfo.requestType;
+                message.success = true;
+                message.currentProgress = 99;
+                message.status = ObjectService.UploadFileStatus.IN_PROGRESS
+                $scope.$bus.publish('update-modal-progressbar-current-progress', message);
+            }
+
+            function onHideProgressBar(data) {
+                var message = {};
+                message.id = data.fileId;
+                message.objectId = $scope.requestInfo.id;
+                message.objectType = $scope.requestInfo.requestType;
+                message.currentProgress = 100;
+                if (data.status === 'OK') {
+                    message.success = true;
+                    message.status = ObjectService.UploadFileStatus.FINISHED;
+                } else {
+                    message.success = false;
+                    message.status = ObjectService.UploadFileStatus.FAILED;
+                }
+                $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+            }
+
 
             $scope.iframeLoaded = function () {
                 ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
                 ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+                ArkCaseCrossWindowMessagingService.addHandler('show-progress-bar', onShowProgressBar);
+                ArkCaseCrossWindowMessagingService.addHandler('update-progress-bar', onUpdateProgressBar);
+                ArkCaseCrossWindowMessagingService.addHandler('hide-progress-bar', onHideProgressBar);
 
                 ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ArkCaseCrossWindowMessagingService.addHandler('document-saved', onDocumentSave);
@@ -283,6 +330,44 @@ angular.module('request-info').controller(
                     videoElement.play();
                 }
             };
+
+            $scope.$bus.subscribe('open-new-version-of-file', function () {
+                if ($scope.openOtherDocuments && $scope.openOtherDocuments.length > 1) {
+                    var fileIds = [];
+                    for (var i = 0; i < $scope.openOtherDocuments.length; i++) {
+                        fileIds.push($scope.openOtherDocuments[i].fileId);
+                    }
+                    var params = {};
+                    params.fileIds = fileIds;
+                    EcmService.getEcmFiles(params).then(function (files) {
+                        $scope.openOtherDocuments = [];
+                        for (var i = 0; i < files.length; i++) {
+                            var file = files[i];
+                            if (file.fileId) {
+                                var fileInfo = buildFileInfo(file, file.container.id);
+                                $scope.openOtherDocuments.push(fileInfo);
+                            }
+                        }
+                        openViewerMultiple();
+                        onHideLoader();
+                    });
+                } else {
+                    var ecmFile = EcmService.getFiles({
+                        fileIds: $scope.ecmFile.fileId
+                    });
+                    ecmFile.$promise.then(function (file) {
+                        if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                            $scope.ecmFile = file;
+                            $scope.fileId = file.fileId;
+                            $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.versionTag = file.activeVersionTag;
+                            openViewerMultiple();
+                        }
+                        onHideLoader();
+                    });
+                }
+            });
 
             $scope.$bus.subscribe('update-viewer-opened-versions', function (openedVersions) {
                 $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
@@ -1634,7 +1719,8 @@ angular.module('request-info').controller(
                     name: file.fileName,
                     mimeType: file.fileActiveVersionMimeType,
                     selectedIds: file.fileId + ':' + file.activeVersionTag,
-                    versionTag: file.activeVersionTag
+                    versionTag: file.activeVersionTag,
+                    pageCount: file.pageCount
                 };
             }
 

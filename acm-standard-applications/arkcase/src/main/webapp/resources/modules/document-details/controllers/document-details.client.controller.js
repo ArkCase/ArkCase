@@ -62,9 +62,54 @@ angular.module('document-details').controller(
                     $scope.loaderOpened = false;
                 }
 
+
+                function onShowProgressBar(data) {
+                    var fileDetails = {};
+                    fileDetails.fileId = data.fileId;
+                    var ecmFile = $scope.ecmFile;
+                    fileDetails.file = ecmFile;
+                    fileDetails.fileName = ecmFile.name;
+                    fileDetails.fileType = ecmFile.fileType;
+                    fileDetails.originObjectId = $scope.caseInfo.id;
+                    fileDetails.originObjectType = $scope.caseInfo.caseType;
+                    fileDetails.parentObjectNumber = $scope.caseInfo.caseNumber;
+                    $scope.$bus.publish('open-progress-bar-modal', fileDetails);
+                }
+
+                function onUpdateProgressBar(data) {
+                    var message = {};
+                    message.id = data.fileId;
+                    message.objectId = $scope.caseInfo.id;
+                    message.objectType = $scope.caseInfo.caseType;
+                    message.success = true;
+                    message.currentProgress = 99;
+                    message.status = ObjectService.UploadFileStatus.IN_PROGRESS
+                    $scope.$bus.publish('update-modal-progressbar-current-progress', message);
+                }
+
+                function onHideProgressBar(data) {
+                    var message = {};
+                    message.id = data.fileId;
+                    message.objectId = $scope.caseInfo.id;
+                    message.objectType = $scope.caseInfo.caseType;
+                    message.currentProgress = 100;
+                    if (data.status === 'OK') {
+                        message.success = true;
+                        message.status = ObjectService.UploadFileStatus.FINISHED;
+                    } else {
+                        message.success = false;
+                        message.status = ObjectService.UploadFileStatus.FAILED;
+                    }
+                    $scope.$bus.publish('finish-modal-progressbar-current-progress', message);
+                }
+
                 $scope.iframeLoaded = function () {
                     ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
                     ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
+                    ArkCaseCrossWindowMessagingService.addHandler('show-progress-bar', onShowProgressBar);
+                    ArkCaseCrossWindowMessagingService.addHandler('update-progress-bar', onUpdateProgressBar);
+                    ArkCaseCrossWindowMessagingService.addHandler('hide-progress-bar', onHideProgressBar);
 
                     ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                         $scope.allAnnotationTags = allAnnotationTags;
@@ -258,7 +303,27 @@ angular.module('document-details').controller(
                         }
                     });
 
-                    // Obtains authentication token for ArkCase
+
+                $scope.$bus.subscribe('open-new-version-of-file', function () {
+                    var ecmFile = EcmService.getFiles({
+                        fileIds: $scope.ecmFile.fileId
+                    });
+                    ecmFile.$promise.then(function (file) {
+                        if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                            $scope.ecmFile = file;
+                            $scope.fileId = file.fileId;
+                            $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.versionTag = file.activeVersionTag;
+                            $scope.openSnowboundViewer();
+                            $scope.$broadcast('refresh-ocr');
+                            $scope.$broadcast('refresh-medical-comprehend');
+                        }
+                        onHideLoader();
+                    });
+                });
+
+                // Obtains authentication token for ArkCase
                     var ticketInfo = TicketService.getArkCaseTicket();
 
                     // Obtains the currently logged in user

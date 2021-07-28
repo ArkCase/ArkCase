@@ -30,6 +30,7 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('core');
+                $translatePartialLoader.addPart('progress-bar');
                 $translatePartialLoader.addPart('request-info');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
