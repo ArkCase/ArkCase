@@ -1074,7 +1074,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         user.setEmail(person.getDefaultEmail().getValue());
 
-        user.setRole(person.getRole());
+        if (StringUtils.isBlank(person.getRole()))
+        {
+            user.setRole(PortalUser.PENDING_USER);
+        }
+        else
+        {
+            user.setRole(person.getRole());
+        }
 
         if (person.getDefaultPicture() != null)
         {
@@ -1141,7 +1148,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             person.setDefaultEmail(email);
         }
 
-        person.setRole(user.getRole());
+        if (StringUtils.isBlank(user.getRole()))
+        {
+            person.setRole(PortalUser.PENDING_USER);
+        }
+        else
+        {
+            person.setRole(user.getRole());
+        }
 
         return person;
     }

@@ -1008,7 +1008,14 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
         }
         user.setEmail(person.getDefaultEmail().getValue());
 
-        user.setRole(person.getPortalRoles().get(portalId));
+        if (StringUtils.isBlank(person.getPortalRoles().get(portalId)))
+        {
+            user.setRole(PortalUser.PENDING_USER);
+        }
+        else
+        {
+            user.setRole(person.getPortalRoles().get(portalId));
+        }
 
         if (person.getDefaultPicture() != null)
         {
