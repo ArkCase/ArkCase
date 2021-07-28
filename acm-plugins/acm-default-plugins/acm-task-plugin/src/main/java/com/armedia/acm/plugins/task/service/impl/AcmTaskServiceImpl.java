@@ -791,7 +791,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         String taskFolderName = "Task-" + task.getTitle() + "-" + task.getId();
         Long parentObjectId = task.getParentObjectId() == null ? task.getAttachedToObjectId() : task.getParentObjectId();
-        String parentObjectType = task.getParentObjectType() == null ? task.getAttachedToObjectType() : task.getParentObjectType();
+        String parentObjectType = task.getParentObjectType() == null || task.getParentObjectType().isEmpty() ? task.getAttachedToObjectType() : task.getParentObjectType();
 
         if (parentObjectType.equals("BUSINESS_PROCESS"))
         {
