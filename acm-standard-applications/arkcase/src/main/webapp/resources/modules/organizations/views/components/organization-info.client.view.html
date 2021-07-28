@@ -47,7 +47,7 @@
                             {{objectInfo.defaultIdentification.identificationNumber || 'common.value.unknown' | translate}}
                         </span>
                         <span class="h4 font-bold" ng-show="objectInfo.defaultIdentification">
-                            ({{objectInfo.defaultIdentification.identificationType | translate}})
+                            ({{objectInfo.defaultIdentification.identificationValue.value | translate}})
                         </span><br />
                         <small class="text-muted"><span translate>organizations.comp.info.identification.label</span>
                         </small>

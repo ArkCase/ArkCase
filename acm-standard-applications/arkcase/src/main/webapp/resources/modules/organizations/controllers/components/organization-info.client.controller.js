@@ -39,10 +39,19 @@ angular.module('organizations').controller(
                         }
                     });
 
+                    ObjectLookupService.getOrganizationIdTypes().then(function(identificationTypes) {
+                        $scope.identificationTypes = identificationTypes;
+                    });
+
                     $scope.organizationId = null;
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.organizationId = objectInfo.organizationId;
                         $scope.objectInfo = objectInfo;
+                        $scope.objectInfo.defaultIdentification.identificationValue = _.find($scope.identificationTypes, function (identificationType) {
+                            if (identificationType.key === $scope.objectInfo.defaultIdentification.identificationType) {
+                                return identificationType.value;
+                            }
+                        });
                     };
 
                     $scope.addParent = function(isSelectedParent, association, rowEntity) {
