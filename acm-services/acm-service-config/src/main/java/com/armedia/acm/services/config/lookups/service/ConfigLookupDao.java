@@ -78,7 +78,7 @@ public class ConfigLookupDao implements LookupDao
 
     private static final Configuration configurationWithSuppressedExceptions = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
             .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-    private static final String ENTRIES_CONFIG_KEY = "entries";
+    public static final String ENTRIES_CONFIG_KEY = "entries";
     private static final String SUBLOOKUP_CONFIG_KEY = "subLookup";
     private transient final Logger log = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
@@ -668,7 +668,8 @@ public class ConfigLookupDao implements LookupDao
         return new HashMap<>();
     }
 
-    private Map<String, Object> convertInAcmLookupMap(Map<String, Object> lookups)
+    @Override
+    public Map<String, Object> convertInAcmLookupMap(Map<String, Object> lookups)
     {
 
         Map<String, Object> acmLookupMap = new HashMap<>();
