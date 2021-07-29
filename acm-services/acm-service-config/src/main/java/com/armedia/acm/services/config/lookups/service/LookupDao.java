@@ -34,6 +34,7 @@ import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by bojan.milenkoski on 25.8.2017
@@ -101,4 +102,6 @@ public interface LookupDao
      */
     String deleteSubLookup(String subLookupName, String parentName, LookupDefinition lookupDefinition)
             throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
+
+    Map<String, Object> convertInAcmLookupMap(Map<String, Object> lookups);
 }
