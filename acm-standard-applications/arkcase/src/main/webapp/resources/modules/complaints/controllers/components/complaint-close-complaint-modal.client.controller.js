@@ -231,6 +231,7 @@ angular.module('complaints').controller(
             // -------------------  people --------------------------------------------------------------------
 
             var ExternalReferalType = 'External Referal';
+            var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
 
             var newPersonAssociation = function () {
                 return {
@@ -257,6 +258,7 @@ angular.module('complaints').controller(
                 params.types = $scope.personTypeExternalReferal;
                 params.type = ExternalReferalType;
                 params.typeEnabled = true;
+                params.assocTypeLabel = assocTypeLabel;
                 association = new newPersonAssociation();
 
                 var modalInstance = $modal.open({
@@ -317,6 +319,8 @@ angular.module('complaints').controller(
 
             //------------------------------- Organizations --------------------------------------------
 
+            var assocOrgTypeLabel = $translate.instant("complaints.comp.organizations.type.label");
+
             var newOrganizationAssociation = function () {
                 return {
                     id: null,
@@ -336,6 +340,7 @@ angular.module('complaints').controller(
             function pickOrganization(association) {
                 var params = {};
                 params.types = $scope.personTypeExternalReferal;
+                params.assocTypeLabel = assocOrgTypeLabel;
 
                 if (association) {
                     angular.extend(params, {
