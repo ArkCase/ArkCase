@@ -105,7 +105,6 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockComplaintService = createMock(ComplaintService.class);
         mockFormsTypeCheckService = createMock(FormsTypeCheckService.class);
 
-        unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
         unit.setComplaintService(mockComplaintService);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
@@ -151,11 +150,12 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Complaint oldComplaint = new Complaint();
         oldComplaint.setComplaintTitle("the old complaint title");
+        expect(mockComplaintService.getSaveComplaintTransaction()).andReturn(mockSaveTransaction);
         expect(mockSaveTransaction.getComplaint(complaint.getComplaintId())).andReturn(oldComplaint);
 
         mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
         expectLastCall().anyTimes();
-        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
+        expect(mockComplaintService.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
         mockEventPublisher.publishComplaintEvent(capture(found), capture(foundOldComplaint), eq(mockAuthentication), eq(false), eq(true));
 
         // MVC test classes must call getName() somehow
@@ -202,7 +202,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
         expectLastCall().anyTimes();
-        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
+        expect(mockComplaintService.saveComplaint(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -257,8 +257,9 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Complaint oldComplaint = new Complaint();
         oldComplaint.setComplaintTitle("the old complaint title");
+        expect(mockComplaintService.getSaveComplaintTransaction()).andReturn(mockSaveTransaction);
         expect(mockSaveTransaction.getComplaint(complaint.getComplaintId())).andReturn(oldComplaint);
-        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication)))
+        expect(mockComplaintService.saveComplaint(capture(found), eq(mockAuthentication)))
                 .andThrow(new CannotCreateTransactionException("testException"));
         mockEventPublisher.publishComplaintEvent(capture(found), capture(foundOldComplaint), eq(mockAuthentication), eq(false), eq(false));
 

@@ -30,17 +30,16 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.config.FormsTypeCheckService;
-import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -59,10 +58,10 @@ public class CreateComplaintAPIController
 {
     private Logger log = LogManager.getLogger(getClass());
 
-    private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
 
-    private FrevvoFormService complaintService;
+    private ComplaintService complaintService;
+
     private ObjectConverter objectConverter;
     private FormsTypeCheckService formsTypeCheckService;
 
@@ -86,11 +85,11 @@ public class CreateComplaintAPIController
             Complaint oldComplaint = null;
             if (!isInsert)
             {
-                String old = getObjectConverter().getJsonMarshaller().marshal(complaintTransaction.getComplaint(in.getComplaintId()));
+                String old = getObjectConverter().getJsonMarshaller()
+                        .marshal(getComplaintService().getSaveComplaintTransaction().getComplaint(in.getComplaintId()));
                 oldComplaint = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Complaint.class);
             }
-
-            Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
+            Complaint saved = getComplaintService().saveComplaint(in, auth);
 
             if (formsTypeCheckService.getTypeOfForm().equals("frevvo"))
             {
@@ -118,16 +117,6 @@ public class CreateComplaintAPIController
 
     }
 
-    public SaveComplaintTransaction getComplaintTransaction()
-    {
-        return complaintTransaction;
-    }
-
-    public void setComplaintTransaction(SaveComplaintTransaction complaintTransaction)
-    {
-        this.complaintTransaction = complaintTransaction;
-    }
-
     public ComplaintEventPublisher getEventPublisher()
     {
         return eventPublisher;
@@ -138,12 +127,12 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public FrevvoFormService getComplaintService()
+    public ComplaintService getComplaintService()
     {
         return complaintService;
     }
 
-    public void setComplaintService(FrevvoFormService complaintService)
+    public void setComplaintService(ComplaintService complaintService)
     {
         this.complaintService = complaintService;
     }
@@ -156,6 +145,11 @@ public class CreateComplaintAPIController
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public FormsTypeCheckService getFormsTypeCheckService()
+    {
+        return formsTypeCheckService;
     }
 
     public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
