@@ -33,12 +33,19 @@ import com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Apply business rules to a Complaint.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 12.08.2015.
  */
 public class ComplaintRulesHandler implements PipelineHandler<Complaint, ComplaintPipelineContext>
 {
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LogManager.getLogger(getClass());
     /**
      * Business rule manager.
      */
@@ -47,7 +54,12 @@ public class ComplaintRulesHandler implements PipelineHandler<Complaint, Complai
     @Override
     public void execute(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.info("Complaint entering ComplaintRulesHandler : [{}]", entity);
+
         entity = saveRule.applyRules(entity);
+
+        log.info("Complaint exiting ComplaintRulesHandler : [{}]", entity);
+
     }
 
     @Override

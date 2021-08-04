@@ -3,10 +3,9 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
-        <property name="complaintTransaction" ref="saveComplaintTransaction"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <lookup-method name="getComplaintService" bean="complaintService"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="complaintService" ref="complaintService"/>
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
     </bean>
 

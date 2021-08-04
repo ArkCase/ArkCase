@@ -46,9 +46,11 @@ import com.armedia.acm.services.tag.service.TagService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -182,6 +184,15 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
         return complaint;
+    }
+
+    @Transactional
+    public Complaint saveComplaint(Complaint in, Authentication auth) throws PipelineProcessException
+    {
+        Complaint saved = getSaveComplaintTransaction().saveComplaint(in, auth);
+        getSaveComplaintTransaction().getComplaintDao().getEm().flush();
+
+        return saved;
     }
 
     protected Complaint saveComplaintObject(ComplaintForm complaint) throws PipelineProcessException
