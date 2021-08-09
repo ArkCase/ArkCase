@@ -140,7 +140,7 @@ public class AcmObjectHistoryServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        AcmObjectHistory saved = acmObjectHistoryService.save(userId, type, obj, objectId, objectType, date, ipAddress);
+        AcmObjectHistory saved = acmObjectHistoryService.save(userId, type, obj, objectId, objectType, date, ipAddress, true);
 
         assertEquals(found.getValue().getObjectId(), saved.getObjectId());
     }

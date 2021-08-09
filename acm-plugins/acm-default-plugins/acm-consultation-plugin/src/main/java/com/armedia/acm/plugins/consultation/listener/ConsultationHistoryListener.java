@@ -57,14 +57,10 @@ public class ConsultationHistoryListener implements ApplicationListener<Consulta
         {
             if (!getNonHistoryGeneratingEvents().contains(event.getEventType()))
             {
-
                 Consultation consultation = (Consultation) event.getSource();
 
                 getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), consultation, consultation.getId(),
-                        ConsultationConstants.OBJECT_TYPE,
-                        event.getEventDate(), event.getIpAddress());
-
-                LOG.debug("Consultation History added to database.");
+                        ConsultationConstants.OBJECT_TYPE, event.getEventDate(), event.getIpAddress(), event.isSucceeded());
             }
         }
     }
