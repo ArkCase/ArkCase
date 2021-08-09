@@ -41,9 +41,10 @@ import java.util.Date;
 public interface AcmObjectHistoryService
 {
 
-    public AcmObjectHistory save(AcmObjectHistory acmObjectHistory, String ipAddress);
+    AcmObjectHistory save(AcmObjectHistory acmObjectHistory, String ipAddress);
 
-    public AcmObjectHistory save(String userId, String type, Object obj, Long objectId, String objectType, Date date, String ipAddress);
+    AcmObjectHistory save(String userId, String type, Object obj, Long objectId, String objectType, Date date, String ipAddress,
+            Boolean succeeded);
 
-    public AcmObjectHistory getAcmObjectHistory(Long objectId, String objectType);
+    AcmObjectHistory getAcmObjectHistory(Long objectId, String objectType);
 }

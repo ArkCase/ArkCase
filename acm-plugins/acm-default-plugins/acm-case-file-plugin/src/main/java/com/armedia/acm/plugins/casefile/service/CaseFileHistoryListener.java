@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
@@ -59,13 +59,10 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent>
         {
             if (!getNonHistoryGeneratingEvents().contains(event.getEventType()))
             {
-
                 CaseFile caseFile = (CaseFile) event.getSource();
 
                 getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), caseFile, caseFile.getId(), OBJECT_TYPE,
-                        event.getEventDate(), event.getIpAddress());
-
-                LOG.debug("Case File History added to database.");
+                        event.getEventDate(), event.getIpAddress(), event.isSucceeded());
             }
         }
     }
