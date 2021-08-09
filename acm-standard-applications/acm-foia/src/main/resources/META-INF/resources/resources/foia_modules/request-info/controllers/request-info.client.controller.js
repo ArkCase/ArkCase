@@ -80,6 +80,7 @@ angular.module('request-info').controller(
             $scope.viewerOnly = false;
             $scope.loaderOpened = false;
             $scope.fileEditingEnabled = false;
+            $scope.fileReloadDisabled = false;
 
             FileEditingEnabled.getFileEditingEnabled().then(function (response) {
                 $scope.fileEditingEnabled = response.data;
@@ -135,6 +136,7 @@ angular.module('request-info').controller(
             }
 
             function onShowProgressBar(data) {
+                $scope.fileReloadDisabled = true;
                 var fileDetails = {};
                 fileDetails.fileId = data.fileId;
                 var ecmFile = _.find($scope.openOtherDocuments, function (file) {
@@ -348,6 +350,7 @@ angular.module('request-info').controller(
                                 $scope.openOtherDocuments.push(fileInfo);
                             }
                         }
+                        $scope.fileReloadDisabled = false;
                         openViewerMultiple();
                         onHideLoader();
                     });
@@ -362,6 +365,7 @@ angular.module('request-info').controller(
                             $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
                             $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
                             $scope.fileInfo.versionTag = file.activeVersionTag;
+                            $scope.fileReloadDisabled = false;
                             openViewerMultiple();
                         }
                         onHideLoader();
@@ -1845,22 +1849,25 @@ angular.module('request-info').controller(
             });
 
             $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function () {
-                var ecmFile = EcmService.getFile({
-                    fileId: $scope.ecmFile.fileId
-                });
-                ecmFile.$promise.then(function (file) {
-                    if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
-                        $scope.ecmFile = file;
-                        $scope.fileId = file.fileId;
-                        $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
-                        $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
-                        $scope.fileInfo.versionTag = file.activeVersionTag;
-                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
-                            $scope.openSnowboundViewer();
-                        });
-                    }
-                    onHideLoader();
-                });
+                //we don't need to reload file while progress bar is loading
+                if (!$scope.fileReloadDisabled) {
+                    var ecmFile = EcmService.getFile({
+                        fileId: $scope.ecmFile.fileId
+                    });
+                    ecmFile.$promise.then(function (file) {
+                        if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
+                            $scope.ecmFile = file;
+                            $scope.fileId = file.fileId;
+                            $scope.fileInfo.id = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.selectedIds = file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.versionTag = file.activeVersionTag;
+                            DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
+                                $scope.openSnowboundViewer();
+                            });
+                        }
+                        onHideLoader();
+                    });
+                }
             });
             $scope.nextAvailableRequest = function () {
                 RequestsService.getNextAvailableRequestInQueue({
