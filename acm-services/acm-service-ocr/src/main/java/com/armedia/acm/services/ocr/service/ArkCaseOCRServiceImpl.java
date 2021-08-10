@@ -76,8 +76,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -189,7 +189,8 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         }
     }
 
-    private void processFailedAttempt(DelegateExecution delegateExecution, MediaEngine mediaEngine) {
+    private void processFailedAttempt(DelegateExecution delegateExecution, MediaEngine mediaEngine)
+    {
         OCR ocr = (OCR) mediaEngine;
         int retryAttempt = Optional.ofNullable(ocr.getOcrRetryAttempt()).orElse(1);
         if (retryAttempt > getConfiguration().getMaxFailedAttempts())
@@ -202,7 +203,8 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         {
             ocr.setOcrRetryAttempt(++retryAttempt);
             ocrDao.save(ocr);
-            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), MediaEngineActionType.PROCESSING.toString());
+            delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
+                    MediaEngineActionType.PROCESSING.toString());
         }
     }
 
@@ -604,7 +606,8 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
     @Override
     public boolean allow(EcmFileVersion ecmFileVersion)
     {
-        return isServiceEnabled() && !isExcludedFileTypes(ecmFileVersion.getFile().getFileType()) && isProcessable(ecmFileVersion);
+        return ecmFileVersion.isValidFile() &&
+                isServiceEnabled() && !isExcludedFileTypes(ecmFileVersion.getFile().getFileType()) && isProcessable(ecmFileVersion);
     }
 
     @Override

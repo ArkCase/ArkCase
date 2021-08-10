@@ -147,6 +147,10 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     @ManyToOne
     @JoinColumn(name = "cm_file_id")
     private EcmFile file;
+    
+    @Column(name = "cm_file_version_valid_file")
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean validFile = Boolean.TRUE;
 
     @Override
     public Date getCreated()
@@ -401,4 +405,16 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     {
         return OBJECT_TYPE;
     }
+
+    public Boolean isValidFile()
+    {
+        return validFile;
+    }
+
+    public void setValidFile(Boolean validFile)
+    {
+        this.validFile = validFile;
+    }
+    
+    
 }

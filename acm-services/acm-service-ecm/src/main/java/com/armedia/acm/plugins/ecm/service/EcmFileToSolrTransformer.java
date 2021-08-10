@@ -53,6 +53,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -103,8 +104,10 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
-        // whether to index file contents or just store document-related metadata
-        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
+        /**
+         * indexing file contents along with file metadata to Solr.
+         */
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().get(in.getVersions().size() - 1).isValidFile())
         {
             return mapContentDocumentProperties(in);
         }
@@ -115,14 +118,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
     {
-        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
-        {
-            return null;
-        }
-        else
+        /**
+         * indexing only file metadata to Solr.
+         */
+        if (!(solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().get(in.getVersions().size() - 1).isValidFile()))
         {
             return mapDocumentProperties(in);
         }
+     
+         return null;
     }
 
     private Long getFileSizeBytes(EcmFile in)
@@ -391,4 +395,5 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     {
         this.fileConfig = fileConfig;
     }
+    
 }

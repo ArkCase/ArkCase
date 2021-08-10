@@ -45,6 +45,7 @@ public class EcmTikaFile
     private String deviceMake;
     private String deviceModel;
     private Double durationSeconds;
+    private Boolean validFile;
 
     public void stampVersionInfo(EcmFileVersion version)
     {
@@ -179,6 +180,16 @@ public class EcmTikaFile
     {
         this.durationSeconds = durationSeconds;
     }
+    
+    public Boolean isValidFile()
+    {
+        return validFile;
+    }
+
+    public void setValidFile(Boolean validFile)
+    {
+        this.validFile = validFile;
+    }
 
     @Override
     public String toString()
@@ -196,6 +207,7 @@ public class EcmTikaFile
                 ", deviceMake='" + deviceMake + '\'' +
                 ", deviceModel='" + deviceModel + '\'' +
                 ", durationSeconds=" + durationSeconds +
+                ", validFile="+validFile+
                 '}';
     }
 }
