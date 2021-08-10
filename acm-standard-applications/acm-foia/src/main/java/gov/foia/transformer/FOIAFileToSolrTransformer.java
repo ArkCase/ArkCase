@@ -85,6 +85,7 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
     @Override
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
+
         SolrContentDocument solr = null;
 
         if (in instanceof FOIAFile)

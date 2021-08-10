@@ -127,25 +127,33 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         if (file.length() > ecmFileConfig.getDocumentSizeBytesLimit())
         {
             logger.warn("File [{}] length [{}], extract metadata manually", fileName, file.length());
-            return extractMetadataManually(fileName);
+            return extractMetadataManually(fileName,true);
         }
         else
         {
-            Map<String, Object> metadata = extract(file, fileName);
-
-            String metadataLog = metadata.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .map(e -> String.format("%s: %s", e.getKey(), e.getValue()))
-                    .collect(Collectors.joining(";\n", "[", "]"));
-            logger.debug("Metadata for file [{}]: {}", fileName, metadataLog);
-
-            return fromMetadata(metadata);
+            try {
+                
+                Map<String, Object> metadata = extract(file, fileName);
+                
+                String metadataLog = metadata.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .map(e -> String.format("%s: %s", e.getKey(), e.getValue()))
+                        .collect(Collectors.joining(";\n", "[", "]"));
+                logger.debug("Metadata for file [{}]: {}", fileName, metadataLog);
+                
+                return fromMetadata(metadata);
+                
+            }
+            catch (Exception e) {
+                logger.warn("Invalid File [{}] length [{}], extract metadata manually", fileName, file.length());
+                return extractMetadataManually(fileName,false);
+            }
         }
 
     }
 
-    private EcmTikaFile extractMetadataManually(String fileName) {
+    private EcmTikaFile extractMetadataManually(String fileName,Boolean isValidFile) {
         String nameExtension = Optional.ofNullable(fileName)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(fileName.lastIndexOf("."))).orElse(null);
@@ -155,6 +163,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         EcmTikaFile ecmTikaFile = new EcmTikaFile();
         ecmTikaFile.setContentType(contentType);
         ecmTikaFile.setNameExtension(nameExtension);
+        ecmTikaFile.setValidFile(isValidFile);
         logger.debug("Manually extracted Metadata for file [{}]: ContentType: [{}], NameExtension: [{}]", fileName, contentType, nameExtension);
         return ecmTikaFile;
     }
@@ -162,6 +171,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     protected EcmTikaFile fromMetadata(Map<String, Object> metadata)
     {
         EcmTikaFile retval = new EcmTikaFile();
+        retval.setValidFile(true);
 
         for (Map.Entry<String, String> mToP : tikaMetadataToFilePropertiesMap.entrySet())
         {
@@ -270,21 +280,6 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
                     (m, n) -> m.put(n, metadata.get(n)),
                     (m, u) -> {
                     });
-        }
-        catch (Error tikaException)
-        {
-            // we have to at least return the mime type and extension, so we just log the parser error, and continue
-            // with the already-detected mime type.
-            logger.warn("Could not extract metadata from file: [{}]", tikaException.getMessage());
-            fileMetadata = new HashMap<>();
-        }
-        finally
-        {
-            if (fileMetadata == null)
-            {
-                logger.warn("Could not extract metadata from file");
-                fileMetadata = new HashMap<>();
-            }
         }
 
         fileMetadata.put("Content-Type", contentType);

@@ -498,7 +498,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     @Override
     public boolean allow(EcmFileVersion ecmFileVersion)
     {
-        return isServiceEnabled() &&
+        return ecmFileVersion.isValidFile() && isServiceEnabled() &&
                 !isExcludedFileTypes(ecmFileVersion.getFile().getFileType()) &&
                 isProcessable(ecmFileVersion) &&
                 isMediaDurationAllowed(ecmFileVersion);

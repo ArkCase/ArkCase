@@ -98,6 +98,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             {
                 EcmTikaFile etf = pipelineContext.getDetectedFileMetadata();
                 etf.stampVersionInfo(version);
+                version.setValidFile(etf.isValidFile());
             }
 
             entity.getVersions().add(version);

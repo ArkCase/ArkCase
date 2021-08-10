@@ -36,9 +36,9 @@ import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.json.JSONArray;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
