@@ -178,11 +178,8 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Transactional(rollbackFor = Exception.class)
     public List<RecycleBinItemDTO> restoreItemsFromRecycleBin(List<RecycleBinItemDTO> itemsToBeRestored, Authentication authentication)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException, LinkAlreadyExistException {
-
-        EcmFile ecmFile = null;
         for (RecycleBinItemDTO fileFromTrash : itemsToBeRestored)
         {
-
             RecycleBinItem recycleBinItem = getRecycleBinItemDao().find(fileFromTrash.getId());
             AcmContainer destinationContainer = getFolderService()
                     .findContainerByFolderIdTransactionIndependent(recycleBinItem.getSourceFolderId());
@@ -192,19 +189,18 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
                 AcmFolder acmFolder = getFolderService().findById(fileFromTrash.getObjectId());
                 AcmFolder destinationFolder = getFolderService().findById(recycleBinItem.getSourceFolderId());
                 getFolderService().moveFolder(acmFolder, destinationFolder);
-
+                removeItemFromRecycleBin(recycleBinItem.getId());
             }
             else
             {
-                ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
+                EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
                 moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                         recycleBinItem.getSourceFolderId());
+                removeItemFromRecycleBin(recycleBinItem.getId());
+                getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
             }
-            removeItemFromRecycleBin(recycleBinItem.getId());
             log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
-            getEcmFileService().checkAndSetDuplicatesByHash(ecmFile);
         }
-
         return itemsToBeRestored;
     }
 
