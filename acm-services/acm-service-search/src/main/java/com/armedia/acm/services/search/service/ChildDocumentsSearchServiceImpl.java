@@ -52,10 +52,6 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
     {
         String query = "object_type_s:" + childType;
 
-        if (!"".equals(childType))
-        {
-            query = query + " AND object_type_s:" + childType;
-        }
         if (activeOnly)
         {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
