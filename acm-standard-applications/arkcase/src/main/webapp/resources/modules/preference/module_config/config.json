@@ -21,7 +21,6 @@
                 "time",
                 "cost",
                 "tags",
-                "calendar",
                 "approvalRouting"
             ]
         },
@@ -42,7 +41,6 @@
                 "time",
                 "cost",
                 "tags",
-                "calendar",
                 "approvalRouting"
             ]
         },
