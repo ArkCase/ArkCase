@@ -141,7 +141,6 @@
                     "time",
                     "cost",
                     "tags",
-                    "calendar",
                     "suggestedCases",
                     "approvalRouting",
                     "billing"
@@ -241,14 +240,6 @@
                 "icon": "fa fa-tags",
                 "components": [
                     "tags"
-                ]
-            },
-            {
-                "type": "p/CASE_FILE/calendar",
-                "label": "cases.tree.nodeTypes.calendar.label",
-                "icon": "fa fa-calendar",
-                "components": [
-                    "calendar"
                 ]
             },
             {
@@ -511,10 +502,6 @@
                             "lookup": "userFullNames"
                         }
                     ]
-                },
-                {
-                    "id": "calendar",
-                    "type": "component"
                 },
                 {
                     "id": "approvalRouting",
@@ -1180,14 +1167,6 @@
             ],
             "filters": "\"Object Type\": TAG",
             "filterName": "Object Type"
-        },
-        {
-            "id": "calendar",
-            "title": "cases.comp.calendar.title",
-            "icon": "fa fa-calendar",
-            "enabled": true,
-            "configurable": true,
-            "type": "empty"
         },
         {
             "id": "merge",

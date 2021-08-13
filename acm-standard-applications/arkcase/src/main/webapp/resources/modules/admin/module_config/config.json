@@ -1631,20 +1631,6 @@
                 ]
             },
             {
-                "type": "p/security/calendar",
-                "label": "admin.security.calendarConfiguration.title",
-                "components": [
-                    "security-calendar-configuration"
-                ]
-            },
-            {
-                "type": "p/security/calcred",
-                "label": "admin.security.calendarCredentialsConfiguration.title",
-                "components": [
-                    "security-calendar-credentials-configuration"
-                ]
-            },
-            {
                 "type": "p/security/email",
                 "label": "admin.security.emailConfiguration.title",
                 "components": [
