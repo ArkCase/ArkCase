@@ -50,7 +50,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             boolean exceptDeletedOnly, List<String> extra, String sort, int startRow, int maxRows, Authentication authentication)
             throws SolrException
     {
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
+        String query = "object_type_s:" + childType;
 
         if (!"".equals(childType))
         {
@@ -67,6 +67,8 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
                 query += " AND -status_s:DELETED";
             }
         }
+        
+        
         if (extra != null && extra.size() > 0)
         {
             for (String extraParam : extra)
@@ -75,6 +77,8 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             }
         }
 
+        query = query.concat("&fq=+parent_type_s:"+parentType+" +parent_id_s:"+parentId);
+        
         log.debug("User [{}] is searching by query [{}]", authentication.getName(), query);
 
         return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
