@@ -107,7 +107,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
         additionalProperties.put(TITLE_PARSEABLE_LCS, in.getTitle());
-        additionalProperties.put(PARENT_ID_S, Long.toString(in.getParentId()));
+        additionalProperties.put(PARENT_ID_S, (in.getParentId() + ""));
         additionalProperties.put(PARENT_TYPE_S, in.getParentType());
         additionalProperties.put(PARENT_NUMBER_LCS, in.getParentName());
         additionalProperties.put(PARENT_NAME_T, in.getParentTitle());
