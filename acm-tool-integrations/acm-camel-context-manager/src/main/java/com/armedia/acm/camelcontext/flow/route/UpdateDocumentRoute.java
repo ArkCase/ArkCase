@@ -53,6 +53,8 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
     public void configure()
     {
         onException(Exception.class).handled(false)
+                .maximumRedeliveries(3)
+                .redeliveryDelay(1000)
                 .process(x -> {
                     Exception exception = (Exception) x.getProperty(Exchange.EXCEPTION_CAUGHT);
                     String causeMessage = String.valueOf(exception.getCause());
@@ -70,7 +72,6 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
                 })
-                .delayer(1000)
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
