@@ -132,7 +132,6 @@
                     "time",
                     "cost",
                     "tags",
-                    "calendar",
                     "suggestedConsultations"
                 ]
             },
@@ -230,14 +229,6 @@
                 "icon": "fa fa-tags",
                 "components": [
                     "tags"
-                ]
-            },
-            {
-                "type": "p/CONSULTATION/calendar",
-                "label": "consultations.tree.nodeTypes.calendar.label",
-                "icon": "fa fa-calendar",
-                "components": [
-                    "calendar"
                 ]
             },
             {
@@ -481,10 +472,6 @@
                             "lookup": "userFullNames"
                         }
                     ]
-                },
-                {
-                    "id": "calendar",
-                    "type": "component"
                 }
             ]
         },
@@ -1120,14 +1107,6 @@
             ],
             "filters": "\"Object Type\": TAG",
             "filterName": "Object Type"
-        },
-        {
-            "id": "calendar",
-            "title": "consultations.comp.calendar.title",
-            "icon": "fa fa-calendar",
-            "enabled": true,
-            "configurable": true,
-            "type": "empty"
         },
         {
             "id": "referenceSearchGrid",
