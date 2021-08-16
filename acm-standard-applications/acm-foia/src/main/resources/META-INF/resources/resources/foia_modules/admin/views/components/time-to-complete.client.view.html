@@ -23,20 +23,20 @@
                     <div class="col-lg-4 form-group">
                         <label for="intake" translate>admin.queues.timeToComplete.label.intake
                         </label>
-                        <input name="intake" type="number" id="intake" ng-model="timeToComplete.request.intake" class="form-control"
+                        <input name="intake" type="number" min="0" id="intake" ng-model="timeToComplete.request.intake" class="form-control"
                                 ng-change="requestCalculation()" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
 
                     <div class="col-lg-4 form-group">
                         <label for="requestFulfill" translate>admin.queues.timeToComplete.label.fulfill
                         </label>
-                        <input name="requestFulfill" type="number" id="requestFulfill" ng-model="timeToComplete.request.fulfill"
+                        <input name="requestFulfill" type="number" min="0" id="requestFulfill" ng-model="timeToComplete.request.fulfill"
                                 ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
                     <div class="col-lg-4 form-group">
                         <label for="requestApprove" translate>admin.queues.timeToComplete.label.approve
                         </label>
-                        <input name="requestApprove" type="number" id="requestApprove" ng-model="timeToComplete.request.approve"
+                        <input name="requestApprove" type="number" min="0" id="requestApprove" ng-model="timeToComplete.request.approve"
                                 ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
                 </div>
@@ -45,21 +45,21 @@
                     <div class="col-lg-4 form-group">
                         <label for="requestGeneralCounsel" translate>admin.queues.timeToComplete.label.generalCounsel
                         </label>
-                        <input name="requestGeneralCounsel" type="number" id="requestGeneralCounsel"
+                        <input name="requestGeneralCounsel" type="number" min="0" id="requestGeneralCounsel"
                                 ng-change="requestCalculation()" ng-model="timeToComplete.request.generalCounsel" class="form-control"
                                 ng-keypress="ignoreNonDigits($event)" required />
                     </div>
                     <div class="col-lg-4 form-group">
                         <label for="requestBilling" translate>admin.queues.timeToComplete.label.billing
                         </label>
-                        <input name="requestBilling" type="number" id="requestBilling" ng-model="timeToComplete.request.billing"
+                        <input name="requestBilling" type="number" min="0" id="requestBilling" ng-model="timeToComplete.request.billing"
                                 ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
 
                     <div class="col-lg-4 form-group">
                         <label for="requestRelease" translate>admin.queues.timeToComplete.label.release
                         </label>
-                        <input name="requestRelease" type="number" id="requestRelease" ng-model="timeToComplete.request.release"
+                        <input name="requestRelease" type="number" min="0" id="requestRelease" ng-model="timeToComplete.request.release"
                                 ng-change="requestCalculation()" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                         <div class="col-lg-4 form-group">
                             <label for="requestDeadlineIndicator" translate>admin.queues.timeToComplete.label.deadlineIndicator
                             </label>
-                            <input name="requestDeadlineIndicator" type="number" id="requestDeadlineIndicator"
+                            <input name="requestDeadlineIndicator" type="number" min="0" id="requestDeadlineIndicator"
                                     ng-model="timeToComplete.request.deadlineIndicator" class="form-control" ng-keypress="ignoreNonDigits($event)" required />
                         </div>
                         <div class="col-lg-4 form-group">
