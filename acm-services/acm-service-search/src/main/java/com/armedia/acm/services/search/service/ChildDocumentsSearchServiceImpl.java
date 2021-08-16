@@ -51,16 +51,17 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             throws SolrException
     {
         String query = "object_type_s:" + childType;
+        query = query.concat("&fq=+parent_type_s:"+parentType+" +parent_id_s:"+parentId);
 
         if (activeOnly)
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
+            query = query.concat(" -status_lcs:COMPLETE -status_lcs:DELETE -status_lcs:CLOSED -status_lcs:CLOSE");
         }
         if (exceptDeletedOnly)
         {
             if (!activeOnly)
             {
-                query += " AND -status_s:DELETED";
+                query = query.concat(" -status_lcs:DELETE");
             }
         }
         
@@ -73,8 +74,6 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             }
         }
 
-        query = query.concat("&fq=+parent_type_s:"+parentType+" +parent_id_s:"+parentId);
-        
         log.debug("User [{}] is searching by query [{}]", authentication.getName(), query);
 
         return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
