@@ -33,8 +33,10 @@ import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.component.cmis.CamelCMISActions;
 import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,6 +55,10 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
     public void configure()
     {
         onException(Exception.class).handled(false)
+                .maximumRedeliveries(5)
+                .redeliveryDelay(1000)
+                .retriesExhaustedLogLevel(LoggingLevel.ERROR)
+                .retryAttemptedLogLevel(LoggingLevel.WARN)
                 .process(x -> {
                     Exception exception = (Exception) x.getProperty(Exchange.EXCEPTION_CAUGHT);
                     String causeMessage = String.valueOf(exception.getCause());
@@ -73,9 +79,9 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .delayer(1000)
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
+                    ObjectId checkedOutId = (ObjectId) exchange.getMessage().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, checkedOutId.getId());
                     exchange.getIn().getHeaders().put("cmis:checkinComment",
                             routeProperties.get(ArkCaseCMISConstants.CHECKIN_COMMENT));
                     exchange.getIn().getHeaders().put("cmis:contentStreamMimeType",
