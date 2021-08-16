@@ -50,23 +50,22 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             boolean exceptDeletedOnly, List<String> extra, String sort, int startRow, int maxRows, Authentication authentication)
             throws SolrException
     {
-        String query = "parent_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
+        String query = "object_type_s:" + childType;
+        query = query.concat("&fq=+parent_type_s:"+parentType+" +parent_id_s:"+parentId);
 
-        if (!"".equals(childType))
-        {
-            query = query + " AND object_type_s:" + childType;
-        }
         if (activeOnly)
         {
-            query += " AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED AND -status_lcs:CLOSE";
+            query = query.concat(" -status_lcs:COMPLETE -status_lcs:DELETE -status_lcs:CLOSED -status_lcs:CLOSE");
         }
         if (exceptDeletedOnly)
         {
             if (!activeOnly)
             {
-                query += " AND -status_lcs:DELETED";
+                query = query.concat(" -status_lcs:DELETE");
             }
         }
+        
+        
         if (extra != null && extra.size() > 0)
         {
             for (String extraParam : extra)
