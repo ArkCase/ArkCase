@@ -16,8 +16,9 @@ angular.module('admin').controller(
                 outputFormat: '',
                 reportEmailAddresses: ''
             };
-
-            $scope.reportSchedule = angular.copy(params.reportSchedule);
+            if (params.isEdit) {
+                $scope.reportSchedule = angular.copy(params.reportSchedule);
+            }
             $scope.isEdit = params.isEdit;
             // instantiate the promise to pull from acm-reports-server.config.properties
             var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");

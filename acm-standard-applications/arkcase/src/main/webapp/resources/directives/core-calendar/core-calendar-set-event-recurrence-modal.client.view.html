@@ -11,8 +11,7 @@
                     <span translate>common.directive.coreCalendar.addNewEventDialog.form.startDate.label</span>
                     <span class="required-asterisk">*</span>
                 </label>
-                <date-time-picker data="recurrenceTmpModel.start" property="recurrenceTmpModel.start"
-                        date-picker-id="recurrenceTmpModel.start"></date-time-picker>
+                <date-time-picker data="recurrenceTmpModel.start" show-time="true" is-required="true"></date-time-picker>
             </div>
         </div>
         <div class="row">
@@ -20,8 +19,7 @@
                 <label for="endDate">
                     <span translate>common.directive.coreCalendar.addNewEventDialog.form.endDate.label</span>
                 </label>
-                <date-time-picker data="recurrenceTmpModel.end" property="recurrenceTmpModel.end"
-                        date-picker-id="recurrenceTmpModel.end"></date-time-picker>
+                <date-time-picker data="recurrenceTmpModel.end" show-time="true"></date-time-picker>
             </div>
             <div class="col-sm-12 form-group" ng-if="!validDuration">
                 <p class="text-danger" translate>
@@ -235,8 +233,7 @@
                         common.directive.coreCalendar.recurrencePatternDialog.recurrenceRange.endBy.text
                     </span>
                         </label>
-                        <date-time-picker data="recurrenceTmpModel.recurrenceEndBy" property="recurrenceTmpModel.recurrenceEndBy"
-                                date-picker-id="recurrenceTmpModel.recurrenceEndBy" time-format-disabled="true"></date-time-picker>
+                        <date-time-picker data="recurrenceTmpModel.recurrenceEndBy"></date-time-picker>
                     </div>
                 </div>
             </fieldset>

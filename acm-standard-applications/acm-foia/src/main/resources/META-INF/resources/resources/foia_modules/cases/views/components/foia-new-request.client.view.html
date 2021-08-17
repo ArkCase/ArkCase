@@ -18,11 +18,7 @@
                     <label for="subject" translate>cases.newRequest.receivedDate.label</label>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <div class="input-group">
-                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
-                                          on-after-save="receivedDateChanged()"
-                                          date-picker-id="receivedDate"></date-time-picker>
-                    </div>
+                    <date-time-picker data="config.data.receivedDate" show-time="true" min-date="minDate"></date-time-picker>
                 </div>
             </div>
             <div class="row" ng-if="!isNewRequestType()">
@@ -450,8 +446,7 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <date-time-picker data="config.data.recordSearchDateFrom" property="startDate"
-                                              date-picker-id="recordSearchDateFrom"></date-time-picker>
+                            <date-time-picker data="config.data.recordSearchDateFrom" show-time="true"></date-time-picker>
                         </div>
                         <span class="text-danger" ng-if="dateRangeInvalid && formInvalid" translate>
                                 cases.newRequest.dateRange.validation.error</span>
@@ -461,8 +456,7 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <date-time-picker data="config.data.recordSearchDateTo" property="dueDate"
-                                              date-picker-id="recordSearchDateTo"></date-time-picker>
+                            <date-time-picker data="config.data.recordSearchDateTo" show-time="true"></date-time-picker>
                         </div>
                     </div>
                 </div>

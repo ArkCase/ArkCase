@@ -43,6 +43,8 @@ angular.module('complaints').controller(
                     });
                     var promiseUsers = gridHelper.getUsers();
 
+                    var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
+
                     ConfigService.getComponentConfig("complaints", "participants").then(function(componentConfig) {
                         $scope.config = componentConfig;
                     });
@@ -176,12 +178,20 @@ angular.module('complaints').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
-                        $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        if(!Util.isEmpty($scope.objectInfo.dueDate)){
+                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
+                            $scope.dueDateInfo = moment($scope.dateInfo.dueDate);
+                        }
+                        else {
+                            $scope.dateInfo.dueDate = null;
+                            $scope.dueDateInfo = new Date();
+                            $scope.dueDateInfo = moment($scope.dueDateInfo);
+                        }
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
                         var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
-                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
-                        $scope.minYear = new Date(objectInfo.created).getFullYear();
+                        $scope.maxDate = moment(utcDate).add(1, 'years');
+                        $scope.minDate = moment(new Date(objectInfo.created));
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
@@ -230,21 +240,34 @@ angular.module('complaints').controller(
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
                     };
-                    $scope.updateDueDate = function(data) {
+                    $scope.updateDueDate = function(data, oldValue) {
                         if (!Util.isEmpty(data)) {
-                            var correctedDueDate = new Date(data);
-                            var startDate = new Date($scope.objectInfo.create_date_tdt);
-                            if(correctedDueDate < startDate){
-                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
-                                DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
-                            }else {
-                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                                $scope.saveComplaint();
+                            if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.dueDate)) {
+                                var correctedDueDate = new Date(data);
+                                var startDate = new Date($scope.objectInfo.created);
+                                if(correctedDueDate < startDate){
+                                    $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                    DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                                }else {
+                                    $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
+                                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                                    $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                                    $scope.saveComplaint();
+                                }
                             }
                         }else {
-                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                            $scope.saveComplaint();
+                            if (!oldValue) {
+                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                                $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                                $scope.saveComplaint();
+                            }
                         }
                     };
+                    $scope.$watch('datepickerDueDateOptions.dueDateInfo', function(newValue, oldValue) {
+                        if (newValue) {
+                            $scope.updateDueDate(newValue);
+                        }
+                    });
 
                 } ]);
