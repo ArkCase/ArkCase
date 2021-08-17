@@ -10,9 +10,7 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <div class="input-group">
-                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
-                                          on-after-save="receivedDateChanged()"
-                                          date-picker-id="receivedDate"></date-time-picker>
+                        <date-time-picker data="config.data.receivedDate" show-time="true" on-date-select="receivedDateChanged"></date-time-picker>
                     </div>
                 </div>
             </div>
@@ -317,10 +315,7 @@
                             <div class="col-sm-4 form-group">
                                 <fieldset ng-disabled="isExistingSubject && existingSubject.dateOfBirth">
                                     <div class="form-group">
-                                        <date-time-picker data="config.data.subject.person.dateOfBirth" property="dateOfBirth"
-                                                          on-after-save="dateOfBirthChanged(config.data.subject.person.dateOfBirth)"
-                                                          date-picker-id="dateOfBirth"
-                                                          time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker data="config.data.subject.person.dateOfBirth" min-date="minDate"></date-time-picker>
                                     </div>
                                 </fieldset>
                                 <span class="text-danger"

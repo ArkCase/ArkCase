@@ -45,8 +45,7 @@
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.startDate.label</span>
             <span class="required-asterisk">*</span>
         </label>
-        <date-time-picker data="eventDataModel.start" property="eventDataModel.start" date-picker-id="eventDataModel.start"
-                time-format-disabled="{{eventDataModel.allDayEvent}}"></date-time-picker>
+        <date-time-picker data="eventDataModel.start" is-required="true" show-time="{{eventDataModel.allDayEvent}}"></date-time-picker>
     </div>
     <div class="col-sm-4 form-group">
         <label for="priority">
@@ -67,8 +66,7 @@
         <label for="endDate">
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.endDate.label</span>
         </label>
-        <date-time-picker data="eventDataModel.end" property="eventDataModel.end" date-picker-id="eventDataModel.end"
-                time-format-disabled="{{eventDataModel.allDayEvent}}"></date-time-picker>
+        <date-time-picker data="eventDataModel.end" show-time="{{eventDataModel.allDayEvent}}"></date-time-picker>
     </div>
     <div class="col-sm-4 form-group">
         <label for="reminder">

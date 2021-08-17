@@ -125,6 +125,8 @@ angular.module('tasks').controller(
                     }
 
                     $scope.taskPersonTypes = taskPersonTypes;
+                    $scope.minStartDate = moment(new Date());
+                    $scope.minDueDate = moment($scope.config.data.taskStartDate);
                 });
 
             $scope.opened = {};
@@ -132,7 +134,7 @@ angular.module('tasks').controller(
             $scope.opened.openedEnd = false;
             $scope.saved = false;
             $scope.minStartDate = new Date();
-            $scope.minDueDate = new Date();
+            $scope.minDueDate = new Date($scope.minStartDate);
 
             // --------------  mention --------------
             $scope.params = {
@@ -145,36 +147,13 @@ angular.module('tasks').controller(
                 usersMentioned: []
             };
 
-            $scope.onComboAfterSave = function (dateType) {
-                if (dateType == "startDate") {
-                    $scope.startDateChanged();
-                } else if (dateType == "dueDate") {
-                    $scope.dueDateChanged();
+            $scope.startDateChanged = function (data) {
+                if ($scope.config && $scope.config.data && $scope.config.data &&
+                    moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
+                    $scope.config.data.dueDate = data.dateInPicker;
+                    $scope.dateChangedManually = true;
                 }
-            };
-
-            $scope.startDateChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
-                    $scope.config.data.taskStartDate = todayDate;
-                } else if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
-                    $scope.config.data.dueDate = $scope.config.data.taskStartDate;
-                } else {
-                    $scope.config.data.taskStartDate = $scope.config.data.taskStartDate;
-                }
-
-            };
-
-            $scope.dueDateChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.dueDate) || moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
-                    $scope.config.data.dueDate = $scope.config.data.taskStartDate;
-                } else if (moment($scope.config.data.dueDate).isBefore(todayDate)) {
-                    $scope.config.data.dueDate = todayDate;
-                } else {
-                    $scope.config.data.dueDate = $scope.config.data.dueDate;
-                }
-
+                $scope.minDueDate = moment($scope.config.data.taskStartDate);
             };
 
             $scope.saveNewTask = function () {

@@ -9,14 +9,14 @@
                     <label for="assignee" translate> tasks.newTask.assignee.label </label>
                     <span class="required-asterisk">*</span>
                     <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
-                            placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
-                            style="background-color: white;" ng-click="userOrGroupSearch()" readonly required>
+                           placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
+                           style="background-color: white;" ng-click="userOrGroupSearch()" readonly required>
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label for="candidateGroups" translate> tasks.newTask.candidateGroups.label </label>
                     <input type="text" id="candidateGroups" ng-disabled="true" ng-model="groupName" class="input-md form-control"
-                            id="candidateGroups">
+                           id="candidateGroups">
                 </div>
 
                 <div class="form-group col-sm-2">
@@ -31,16 +31,16 @@
                 <div class="col-sm-4 form-group">
                     <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                     <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
-                            class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject"
-                            ng-click="objectSearch()">
+                           class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
+                           id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject"
+                           ng-click="objectSearch()">
                 </div>
 
                 <div class="col-sm-6 form-group" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
                     <label for="contactPersonAssociation" translate> tasks.newTask.contactPersonAssociation.label </label>
                     <input type="text" id="contactPersonAssociation" ng-model="contactPersonName"
-                            placeholder="{{ 'tasks.newTask.contactPersonAssociation.placeholder' | translate }}"
-                            class="input-md form-control" id="contactAssociation" ng-click="addPerson()">
+                           placeholder="{{ 'tasks.newTask.contactPersonAssociation.placeholder' | translate }}"
+                           class="input-md form-control" id="contactAssociation" ng-click="addPerson()">
                 </div>
 
             </div>
@@ -49,7 +49,7 @@
                     <label translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
                     <mention-input ng-model="config.data.title" params="params"
-                            placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
+                                   placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
                 </div>
                 <div class="form-group col-sm-4" ng-if="config.data.attachedToObjectType=='CASE_FILE'">
                     <label class="control-label">{{ 'tasks.newTask.caseTaskType.label' | translate }}</label>
@@ -66,16 +66,14 @@
                     <label translate> tasks.newTask.taskStartDate.label </label>
                     <span class="required-asterisk">*</span>
                     <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1"
-                                on-after-save="onComboAfterSave(dateType)"></date-time-picker>
+                        <date-time-picker data="config.data.taskStartDate" show-time="true" min-date="minStartDate" on-date-select="startDateChanged"></date-time-picker>
                     </div>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.dueDate.label </label>
                     <span class="required-asterisk">*</span>
                     <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2"
-                                on-after-save="onComboAfterSave(dateType)"></date-time-picker>
+                        <date-time-picker data="config.data.dueDate" show-time="true" min-date="minDueDate"></date-time-picker>
                     </div>
                 </div>
                 <div class="form-group col-sm-4">
@@ -92,8 +90,8 @@
                 <div class="col-sm-4 form-group">
                     <label for="percentComplete" translate> tasks.newTask.percentComplete.label </label>
                     <input id="percentComplete" type="number" min="0" max="100" ng-model="config.data.percentComplete"
-                            class="input-md form-control" name="percentComplete"
-                            placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}" id="percentComplete">
+                           class="input-md form-control" name="percentComplete"
+                           placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}" id="percentComplete">
                 </div>
                 <div class="form-group col-sm-4">
                     <label class="control-label">{{ 'tasks.newTask.businessProcessTypes.label' | translate }}</label>
@@ -112,7 +110,7 @@
                         <fieldset id="docsToReview" class="well-sm">
                             <label ng-repeat="node in documentsToReview" class="checkbox-inline">
                                 <input type="checkbox" value="{{node.data.objectId}}" ng-click="onSelectFile(node.data.objectId)"
-                                        ng-checked="documentsToReviewIds.indexOf(node.data.objectId) > -1">
+                                       ng-checked="documentsToReviewIds.indexOf(node.data.objectId) > -1">
                                 <span>
                               {{node.data.name + '' + node.data.ext}}
                           </span>
@@ -126,13 +124,13 @@
                         <label ng-repeat="file in filesToUpload">
                             <ul>
                                 <li><input type="checkbox" value="{{file.name}}" ng-click="onSelectAttachment(file)" ng-checked="true"
-                                        ng-model="opened.isFileAllowed">{{filesToUpload[$index].name}}
+                                           ng-model="opened.isFileAllowed">{{filesToUpload[$index].name}}
                                 </li>
                             </ul>
                         </label>
                     </fieldset>
                     <span ng-if="(!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow'"
-                            class="text-danger" translate>
+                          class="text-danger" translate>
                           tasks.newTask.noSelectedReviewDocsErrorMsg
                         </span>
                 </div>
