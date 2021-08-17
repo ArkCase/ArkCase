@@ -10,9 +10,8 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <div class="input-group">
-                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
-                                on-after-save="receivedDateChanged()"
-                                date-picker-id="receivedDate"></date-time-picker>
+                        <date-time-picker data="config.data.receivedDate" show-time="true"
+                                on-date-select="receivedDateChanged"></date-time-picker>
                     </div>
                 </div>
             </div>
@@ -312,9 +311,8 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <date-time-picker data="config.data.dueDate" property="dueDate"
-                                    on-after-save="dueDateChanged()"
-                                    date-picker-id="dueDate"></date-time-picker>
+                            <date-time-picker data="config.data.dueDate" show-time="true"
+                                    on-date-select="dueDateChanged"></date-time-picker>
                         </div>
                     </div>
                 </div>
