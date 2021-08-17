@@ -88,6 +88,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 {
 
     private static final String AWS_TRANSCRIBE_PLUGIN = "AWS_TRANSCRIBE";
+    private static final String JOB_NOT_FOUND = "The requested job couldn't be found. Check the job name and try your request again.";
     private final Logger LOG = LogManager.getLogger(getClass());
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
@@ -138,6 +139,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     {
         if (StringUtils.isNotEmpty(remoteId))
         {
+            TranscribeDTO transcribeDTO = new TranscribeDTO();
             try
             {
                 GetTranscriptionJobRequest request = new GetTranscriptionJobRequest();
@@ -147,7 +149,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 String resultStatus = result.getTranscriptionJob().getTranscriptionJobStatus();
                 String failureReason = result.getTranscriptionJob().getFailureReason();
 
-                TranscribeDTO transcribeDTO = new TranscribeDTO();
                 if (TranscriptionJobStatus.COMPLETED.toString().equals(resultStatus))
                 {
                     transcribeDTO.setTranscribeItems(generateTranscribeItems(result, props));
@@ -175,8 +176,20 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             }
             catch (AmazonServiceException e)
             {
-                throw new GetMediaEngineToolException(String.format("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage()),
-                        e);
+                if (e.getStatusCode() == 400 && e.getErrorMessage().equalsIgnoreCase(JOB_NOT_FOUND))
+                {
+                    transcribeDTO.setMessage(e.getErrorMessage());
+                    transcribeDTO.setStatus(MediaEngineStatusType.FAILED.toString());
+                    transcribeDTO.setRemoteId(remoteId);
+
+                    return transcribeDTO;
+                }
+                else
+                {
+                    throw new GetMediaEngineToolException(
+                            String.format("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage()),
+                            e);
+                }
             }
         }
         throw new GetMediaEngineToolException("Unable to get transcribe job on Amazon. Remote ID not provided.");
