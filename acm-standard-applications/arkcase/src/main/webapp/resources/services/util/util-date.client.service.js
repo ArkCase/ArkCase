@@ -505,7 +505,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
          *
          * @Returns {Object} {endDate: endDate}
          */
-        compareDatesForUpdate(pickerDate,originalDate) {
+        compareDatesForUpdate: function(pickerDate, originalDate) {
             // when switching between object type nodes (cases,complaints..) we are using same controller, just changing objectInfo data which means change detection for
             // datepicker will be invoked. That is why we need to check if current data in datepicker is not same as change detection date
             // so we won't make unnecessary backend call when switching and also we need another condition to check if chosen date is not same
