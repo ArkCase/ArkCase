@@ -18,7 +18,7 @@
                     <label for="subject" translate>cases.newRequest.receivedDate.label</label>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <date-time-picker data="config.data.receivedDate" show-time="true" min-date="minDate"></date-time-picker>
+                    <date-time-picker data="config.data.receivedDate" show-time="true" max-date="maxDate"></date-time-picker>
                 </div>
             </div>
             <div class="row" ng-if="!isNewRequestType()">
