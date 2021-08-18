@@ -14,7 +14,7 @@ angular.module('cases').controller(
             $scope.enableTitle = false;
             $scope.isPickExistingPerson = false;
             $scope.primaryAddressIndex = 0;
-            $scope.minDate = moment.utc(new Date());
+            $scope.maxDate = moment.utc(new Date());
             $scope.receivedDate = new Date();
 
             var descriptionDocumentType = "Description Document";
@@ -209,7 +209,6 @@ angular.module('cases').controller(
                 if ($scope.config.data.originator.person.addresses[0] && !Util.isEmpty($scope.config.data.originator.person.addresses[0].country)) {
                     $scope.changeStates($scope.config.data.originator.person.addresses[0].country);
                 }
-                $scope.minDate = moment.utc(new Date());
             });
 
             $scope.isEmailDaliveryMethod = false;
