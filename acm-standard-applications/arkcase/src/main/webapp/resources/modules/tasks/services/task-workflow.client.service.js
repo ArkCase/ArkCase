@@ -211,6 +211,9 @@ angular.module('tasks').factory('Task.WorkflowService', [ '$resource', '$transla
     Service.completeTaskWithOutcome = function(taskInfo, outcome) {
         var found = null;
         var fieldsRequiredWhenOutcomeIsChosen = null;
+        const map = new Map();
+        map.set('reworkInstructions', 'Rework Details. Please add Rework Details');
+       
         if (TaskInfoService.validateTaskInfo(taskInfo)) {
             found = _.find(taskInfo.availableOutcomes, {
                 name: outcome
@@ -222,7 +225,7 @@ angular.module('tasks').factory('Task.WorkflowService', [ '$resource', '$transla
         }
         for (var i = 0; i < fieldsRequiredWhenOutcomeIsChosen.length; i++) {
             if (Util.isEmpty(taskInfo[fieldsRequiredWhenOutcomeIsChosen[i]])) {
-                return Util.errorPromise($translate.instant("tasks.comp.actions.error.outcomeFieldMissing") + ": " + fieldsRequiredWhenOutcomeIsChosen[i]);
+                return Util.errorPromise($translate.instant("tasks.comp.actions.error.outcomeFieldMissing") + " " + map.get(fieldsRequiredWhenOutcomeIsChosen[i]));
             }
         }
         taskInfo.taskOutcome = found;
