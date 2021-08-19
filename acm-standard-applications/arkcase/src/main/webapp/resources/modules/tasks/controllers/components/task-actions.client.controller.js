@@ -205,7 +205,7 @@ angular.module('tasks').controller(
                                 }
                                 return taskInfo;
                             }, function(error) {
-                                $scope.showErrorDialog(error);
+                                $scope.showErrorDialog(error,taskInfo.taskId);
                             });
                         }
                     };
@@ -280,7 +280,7 @@ angular.module('tasks').controller(
                         return promiseSaveInfo;
                     };
 
-                    $scope.showErrorDialog = function(error) {
+                    $scope.showErrorDialog = function(error,taskId) {
                         $modal.open({
                             animation: true,
                             templateUrl: 'modules/tasks/views/components/task-actions-error-dialog.client.view.html',
@@ -289,6 +289,9 @@ angular.module('tasks').controller(
                             resolve: {
                                 errorMessage: function() {
                                     return error;
+                                },
+                                taskId: function(){
+                                    return taskId;
                                 }
                             }
                         });
@@ -334,10 +337,19 @@ angular.module('tasks').controller(
                         });
                     };
                 } ]);
-angular.module('tasks').controller('Tasks.ActionsErrorDialogController', [ '$scope', '$modalInstance', 'errorMessage', function($scope, $modalInstance, errorMessage) {
+angular.module('tasks').controller('Tasks.ActionsErrorDialogController', [ '$scope', '$modalInstance', 'errorMessage','taskId','$state', function($scope, $modalInstance, errorMessage,taskId,$state) {
     $scope.errorMessage = errorMessage;
     $scope.onClickOk = function() {
         $modalInstance.dismiss('cancel');
+        var params = {
+            id: taskId,
+            type: 'TASK'
+        };
+        $state.transitionTo('tasks.reworkdetails', params, {
+            reload: true,
+            notify: true
+        });
+        
     };
 } ]);
 angular.module('tasks').controller('Tasks.RejectDialogController', [ '$scope', '$modalInstance', 'aValue', function($scope, $modalInstance, aValue) {
