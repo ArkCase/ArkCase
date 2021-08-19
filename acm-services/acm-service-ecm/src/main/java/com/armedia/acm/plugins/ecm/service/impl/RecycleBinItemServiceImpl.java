@@ -244,7 +244,9 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         if (recycleBinContainer == null)
         {
             log.debug("Recycle Bin container for cmis repository {} is not found, and will be created", cmisRepositoryId);
-            return getEcmFileService().createContainerFolder(objectType, 0L, cmisRepositoryId);
+            String currentDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            long objectId = Long.parseLong(currentDate);
+            return getEcmFileService().createContainerFolder(objectType, objectId, cmisRepositoryId);
         }
         else
         {
