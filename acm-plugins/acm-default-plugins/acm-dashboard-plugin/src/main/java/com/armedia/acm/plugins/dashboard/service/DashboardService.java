@@ -155,7 +155,7 @@ public class DashboardService
         String defaultDashboard = dashboardConfig.getDefaultDashboard();
         if (StringUtils.isNotBlank(defaultDashboard))
         {
-            if (moduleName.equals(defaultDashboard))
+            if (moduleName.equals(DashboardConstants.DASHBOARD_MODULE_NAME))
             {
                 d.setDashboardConfig(defaultDashboard);
             }
