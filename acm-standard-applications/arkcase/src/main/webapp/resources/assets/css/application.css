@@ -1980,6 +1980,12 @@ select[multiple]:hover, select[size]:hover {
 .busy-indicator-container .waitPopup_msg {
     text-align: center;
 }
+
 .moment-picker {
     z-index: 1080 !important;
+}
+
+.custom-select {
+    margin-right: 11px;
+    margin-top: 4px;
 }
