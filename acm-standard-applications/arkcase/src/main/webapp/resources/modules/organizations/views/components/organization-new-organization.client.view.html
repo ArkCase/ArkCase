@@ -70,7 +70,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued"></date-time-picker>
+                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued" is-readonly="!organization.defaultIdentification.identificationNumber"
+                                                  no-default-date="true" disable="!organization.defaultIdentification.identificationNumber"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -117,7 +118,8 @@
                                     <div>
                                         <label translate>
                                             organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"></date-time-picker>
+                                        <date-time-picker data="identification.identificationYearIssued" is-readonly="!identification.identificationNumber"
+                                                          disable="!identification.identificationNumber" no-default-date="true"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">

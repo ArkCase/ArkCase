@@ -355,9 +355,11 @@ angular.module('cases').controller(
                 }
             }
             $scope.onComboAfterSave = function () {
-                if (moment(moment.utc($scope.objectInfo.dispositionClosedDate)).isBefore(moment.utc($scope.objectInfo.receivedDate))) {
-                    $scope.objectInfo.dispositionClosedDate = null;
-                    DialogService.alert($translate.instant('cases.comp.main.dispositionClosedDate.wrongDateMessage ') + " " + moment($scope.objectInfo.receivedDate).format('MM/DD/YYYY h:mm A'));
+                if ($scope.objectInfo) {
+                    if (moment(moment.utc($scope.objectInfo.dispositionClosedDate)).isBefore(moment.utc($scope.objectInfo.receivedDate))) {
+                        $scope.objectInfo.dispositionClosedDate = null;
+                        DialogService.alert($translate.instant('cases.comp.main.dispositionClosedDate.wrongDateMessage ') + " " + moment($scope.objectInfo.receivedDate).format('MM/DD/YYYY h:mm A'));
+                    }
                 }
             };
 

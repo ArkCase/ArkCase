@@ -440,7 +440,7 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <date-time-picker data="config.data.recordSearchDateFrom" show-time="true"></date-time-picker>
+                            <date-time-picker data="config.data.recordSearchDateFrom" no-default-date="true" show-time="true"></date-time-picker>
                         </div>
                         <span class="text-danger" ng-if="dateRangeInvalid && formInvalid" translate>
                                 cases.newRequest.dateRange.validation.error</span>
@@ -450,7 +450,7 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <date-time-picker data="config.data.recordSearchDateTo" show-time="true"></date-time-picker>
+                            <date-time-picker data="config.data.recordSearchDateTo" no-default-date="true" show-time="true"></date-time-picker>
                         </div>
                     </div>
                 </div>

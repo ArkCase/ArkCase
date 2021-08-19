@@ -179,7 +179,7 @@ angular.module('consultations').controller(
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.dueDateInfo = $scope.dateInfo.dueDate;
+                    $scope.dueDateInfo = moment($scope.dateInfo.dueDate);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;

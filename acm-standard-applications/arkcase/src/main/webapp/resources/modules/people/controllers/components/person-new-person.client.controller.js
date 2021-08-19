@@ -292,7 +292,7 @@ angular.module('people').controller(
                     id: $scope.person.id
                 };
                 association.organization = data.organization;
-                association.personToOrganizationAssociationType = data.inverseType;
+                association.personToOrganizationAssociationType = $translate.instant(data.inverseType);
                 association.organizationToPersonAssociationType = data.type;
 
                 if (data.isDefault) {
@@ -354,7 +354,14 @@ angular.module('people').controller(
                 }
                 //identifications
                 if (person.defaultIdentification) {
-                    person.identifications.push(person.defaultIdentification);
+                    // this is rare scenario in identifications when user choose only issuer date for example and then remove this date
+                    // we need to delete all properties that are null cause otherwise backend will throw error
+                    person.defaultIdentification = _.pick(person.defaultIdentification, _.identity);
+                    if (_.isEmpty(person.defaultIdentification)) {
+                        person = _.omit(person, ['defaultIdentification']);
+                    } else {
+                        person.identifications.push(person.defaultIdentification);
+                    }
                 }
 
                 //remove empty organizations before save

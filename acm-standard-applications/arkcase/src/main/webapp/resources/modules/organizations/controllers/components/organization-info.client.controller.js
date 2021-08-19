@@ -34,7 +34,7 @@ angular.module('organizations').controller(
                     ObjectLookupService.getOrganizationTypes().then(function(organizationTypes) {
                         $scope.organizationTypes = organizationTypes;
                         var defaultOrganizationType = ObjectLookupService.getPrimaryLookup($scope.organizationTypes);
-                        if ($scope.organization.isNew && defaultOrganizationType) {
+                        if ($scope.organization && $scope.organization.isNew && defaultOrganizationType) {
                             $scope.organization.organizationType = defaultOrganizationType.key;
                         }
                     });
@@ -43,6 +43,13 @@ angular.module('organizations').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.organizationId = objectInfo.organizationId;
                         $scope.objectInfo = objectInfo;
+                        if ($scope.objectInfo.defaultIdentification) {
+                            $scope.objectInfo.defaultIdentification.identificationValue = _.find($scope.identificationTypes, function (identificationType) {
+                                if (identificationType.key === $scope.objectInfo.defaultIdentification.identificationType) {
+                                    return identificationType.value;
+                                }
+                            });
+                        }
                     };
 
                     $scope.addParent = function(isSelectedParent, association, rowEntity) {
