@@ -22,6 +22,6 @@
           <i class="fa fa-calendar"></i>
     </span>
 </div>
-<p class="text-danger" style="padding-top: 5px;">
-    {{message}}
+<p class="text-danger" ng-if="message" style="padding-top: 5px;">
+    {{message}} <span ng-if="message === invalidFormatMessage"> Valid format: {{validFormat}}</span>
 </p>
