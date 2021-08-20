@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +57,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -104,6 +106,7 @@ public class ReplaceFileAPIController
         EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced,
                 fileToBeReplaced.getActiveVersionTag());
         EcmFile replacedFile;
+        File tempFile = null;
 
         try (InputStream replacementStream = getInputStreamFromAttachment(request, fileToBeReplacedId))
         {
@@ -115,7 +118,10 @@ public class ReplaceFileAPIController
 
             String fileExtension = getFileExtensionFromAttachment(request, fileToBeReplacedId);
 
-            replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream,
+            tempFile = File.createTempFile("arkcase-update-file-transaction", null);
+            FileUtils.copyInputStreamToFile(replacementStream, tempFile);
+
+            replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, tempFile,
                     fileExtension);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, fileToBeReplacedVersion, authentication, ipAddress, true);
         }
@@ -128,6 +134,11 @@ public class ReplaceFileAPIController
                     fileToBeReplacedId, e.getMessage(), e);
 
         }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFile);
+        }
+
         return replacedFile;
     }
 

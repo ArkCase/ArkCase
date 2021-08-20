@@ -1,34 +1,27 @@
 package com.armedia.acm.webdav;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 /*-
  * #%L
  * ACM Service: WebDAV Integration Library
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -42,12 +35,21 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.milton.common.ContentTypeUtils;
 import io.milton.common.RangeUtils;
@@ -145,14 +147,17 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, acmFile.getCmisRepositoryId() == null ? ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID : acmFile.getCmisRepositoryId());
+            messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID,
+                    acmFile.getCmisRepositoryId() == null ? ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID
+                            : acmFile.getCmisRepositoryId());
             messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, getResourceFactory().getCmisFileId(acmFile));
-            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
-            
-            LOGGER.info("User {} is sending object id {} in repository {}", 
-                messageProps.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY),
-                messageProps.get(CamelCMISConstants.CMIS_OBJECT_ID),
-                messageProps.get(ArkCaseCMISConstants.CMIS_REPOSITORY_ID));
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
+
+            LOGGER.info("User {} is sending object id {} in repository {}",
+                    messageProps.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY),
+                    messageProps.get(CamelCMISConstants.CMIS_OBJECT_ID),
+                    messageProps.get(ArkCaseCMISConstants.CMIS_REPOSITORY_ID));
             Object result = getResourceFactory().getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
 
             if (result instanceof ContentStream)
@@ -195,18 +200,28 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     @Override
     public void replaceContent(InputStream in, Long length) throws BadRequestException, ConflictException, NotAuthorizedException
     {
-        try
+        if (length != 0)
         {
-            Authentication auth = getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket);
-            LOGGER.info("Authenticated user {} replacing file content for file {}", 
-                auth.getName(), acmFile.getFileId());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            getResourceFactory().getAuditPropertyEntityAdapter().setUserId(auth.getName());
-            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
-        }
-        catch (ArkCaseFileRepositoryException | IOException e)
-        {
-            LOGGER.error("Error while uploading file via Camel.", e);
+            File file = null;
+            try
+            {
+                file = File.createTempFile("arkcase-webdav-file-transaction-", null);
+                FileUtils.copyInputStreamToFile(in, file);
+                Authentication auth = getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket);
+                LOGGER.info("Authenticated user {} replacing file content for file {}",
+                        auth.getName(), acmFile.getFileId());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                getResourceFactory().getAuditPropertyEntityAdapter().setUserId(auth.getName());
+                getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, file);
+            }
+            catch (ArkCaseFileRepositoryException | IOException e)
+            {
+                LOGGER.error("Error while uploading file.", e);
+            }
+            finally
+            {
+                FileUtils.deleteQuietly(file);
+            }
         }
 
     }

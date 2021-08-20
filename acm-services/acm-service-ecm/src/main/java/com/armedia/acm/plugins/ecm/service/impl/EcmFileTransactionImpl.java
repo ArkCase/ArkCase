@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -279,7 +279,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, EcmFile metadata, Document existingCmisDocument, MultipartFile file) throws ArkCaseFileRepositoryException, IOException
+            String targetCmisFolderId, EcmFile metadata, Document existingCmisDocument, MultipartFile file)
+            throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -577,65 +578,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
 
-            if (ecmFile.getFileActiveVersionNameExtension() != null
-                    && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
-            {
-                ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
-            }
-
-            log.debug("Creating ecm file pipeline context");
-            EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
-
-            pipelineContext.setAuthentication(authentication);
-            pipelineContext.setEcmFile(ecmFile);
             file = File.createTempFile("arkcase-update-file-transaction-", null);
             FileUtils.copyInputStreamToFile(fileInputStream, file);
-            pipelineContext.setFileContents(file);
-
-            try (InputStream is = FileUtils.openInputStream(file))
-            {
-                String fileHash = DigestUtils.md5Hex(is);
-                pipelineContext.setFileHash(fileHash);
-            }
-
-            EcmTikaFile ecmTikaFile = new EcmTikaFile();
-
-            try
-            {
-                if (Objects.isNull(fileExtension))
-                {
-                    ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
-                }
-                else
-                {
-                    String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())
-                            ? ecmFile.getFileName()
-                            : ecmFile.getFileName() + "." + fileExtension;
-
-                    ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
-                }
-            }
-            catch (TikaException | SAXException | IOException e1)
-            {
-                log.debug("Can not auto detect file using Tika");
-                ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
-                ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
-            }
-
-            pipelineContext.setDetectedFileMetadata(ecmTikaFile);
-
-            if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
-            {
-                ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
-            }
-            ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
-
-            boolean searchablePDF = false;
-            if (ecmFileConfig.getSnowboundEnableOcr())
-            {
-                searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
-            }
-            pipelineContext.setSearchablePDF(searchablePDF);
+            EcmFileTransactionPipelineContext pipelineContext = getEcmFileTransactionPipelineContext(authentication, ecmFile, file,
+                    fileExtension);
 
             try
             {
@@ -652,11 +598,95 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             FileUtils.deleteQuietly(file);
         }
 
-        log.debug("Returning from updateFileTransaction method");
         return ecmFile;
     }
 
     @Override
+    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, File file, String fileExtension)
+            throws ArkCaseFileRepositoryException, IOException
+    {
+
+        EcmFileTransactionPipelineContext pipelineContext = getEcmFileTransactionPipelineContext(authentication, ecmFile, file,
+                fileExtension);
+
+        try
+        {
+            log.debug("Calling pipeline manager handlers");
+            return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> pipelineContext.getEcmFile());
+        }
+        catch (Exception e)
+        {
+            log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            throw new ArkCaseFileRepositoryException(e);
+        }
+
+    }
+
+    private EcmFileTransactionPipelineContext getEcmFileTransactionPipelineContext(Authentication authentication, EcmFile ecmFile,
+            File file, String fileExtension) throws IOException
+    {
+        if (ecmFile.getFileActiveVersionNameExtension() != null
+                && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
+        {
+            ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
+        }
+
+        log.debug("Creating ecm file pipeline context");
+        EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
+
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setEcmFile(ecmFile);
+        pipelineContext.setFileContents(file);
+
+        try (InputStream is = FileUtils.openInputStream(file))
+        {
+            String fileHash = DigestUtils.md5Hex(is);
+            pipelineContext.setFileHash(fileHash);
+        }
+
+        EcmTikaFile ecmTikaFile = new EcmTikaFile();
+
+        try
+        {
+            if (Objects.isNull(fileExtension))
+            {
+                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
+            }
+            else
+            {
+                String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())
+                        ? ecmFile.getFileName()
+                        : ecmFile.getFileName() + "." + fileExtension;
+
+                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
+            }
+        }
+        catch (TikaException | SAXException | IOException e1)
+        {
+            log.debug("Can not auto detect file using Tika");
+            ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
+            ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
+        }
+
+        pipelineContext.setDetectedFileMetadata(ecmTikaFile);
+
+        if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
+        {
+            ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
+        }
+        ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
+
+        boolean searchablePDF = false;
+        if (ecmFileConfig.getSnowboundEnableOcr())
+        {
+            searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
+        }
+        pipelineContext.setSearchablePDF(searchablePDF);
+        return pipelineContext;
+    }
+
+    @Override
+    @Deprecated
     public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws IOException
     {
@@ -665,11 +695,33 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
+    @Deprecated
     public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream,
             String fileExtension) throws IOException
     {
 
         ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream, fileExtension);
+        return publishUpdateFileTransactionEvent(authentication, ecmFile);
+    }
+
+    @Override
+    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, File file, String fileExtension)
+            throws ArkCaseFileRepositoryException, IOException
+    {
+        ecmFile = updateFileTransaction(authentication, ecmFile, file, fileExtension);
+        return publishUpdateFileTransactionEvent(authentication, ecmFile);
+    }
+
+    @Override
+    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, File file)
+            throws ArkCaseFileRepositoryException, IOException
+    {
+        ecmFile = updateFileTransaction(authentication, ecmFile, file, null);
+        return publishUpdateFileTransactionEvent(authentication, ecmFile);
+    }
+
+    private EcmFile publishUpdateFileTransactionEvent(Authentication authentication, EcmFile ecmFile)
+    {
         String ipAddress = null;
         if (authentication != null)
         {
@@ -683,7 +735,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         getFileEventPublisher().publishFileUpdatedEvent(ecmFile, authentication, true);
 
         return ecmFile;
-
     }
 
     @Override

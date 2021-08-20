@@ -32,9 +32,12 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -73,16 +76,32 @@ public interface EcmFileTransaction
             String targetCmisFolderId, EcmFile metadata, MultipartFile file)
             throws ArkCaseFileRepositoryException, IOException;
 
+    @Deprecated
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws IOException;
 
+    @Deprecated
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
             throws ArkCaseFileRepositoryException, IOException;
 
+    @Deprecated
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws ArkCaseFileRepositoryException, IOException;
 
+    @Deprecated
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
+            throws ArkCaseFileRepositoryException, IOException;
+
+    @Retryable(maxAttempts = 5, value = ArkCaseFileRepositoryException.class, backoff = @Backoff(delay = 1000))
+    EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, File file, String fileExtension)
+            throws ArkCaseFileRepositoryException, IOException;
+
+    @Retryable(maxAttempts = 5, value = ArkCaseFileRepositoryException.class, backoff = @Backoff(delay = 1000))
+    EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, File file)
+            throws ArkCaseFileRepositoryException, IOException;
+
+    @Retryable(maxAttempts = 5, value = ArkCaseFileRepositoryException.class, backoff = @Backoff(delay = 1000))
+    EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, File file, String fileExtension)
             throws ArkCaseFileRepositoryException, IOException;
 
     String downloadFileTransaction(EcmFile ecmFile) throws ArkCaseFileRepositoryException;
