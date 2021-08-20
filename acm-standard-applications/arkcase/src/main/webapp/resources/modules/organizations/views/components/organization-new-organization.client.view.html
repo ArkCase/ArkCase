@@ -279,7 +279,7 @@
                             <label for="state" translate>
                                 organizations.comp.newOrganization.locations.state</label>
                             <span ng-if="checkLocationRules(organization.defaultAddress)"
-                                  class="required-asterisk">*</span>
+                                  class="required-asterisk-state-label">*</span>
                             <select id="state" class="form-control" ng-model="organization.defaultAddress.state"
                                     ng-required="checkLocationRules(organization.defaultAddress)">
                                 <option ng-repeat="option in states" value="{{option.key}}">
@@ -297,7 +297,7 @@
                                 organizations.comp.newOrganization.locations.state
                             </label>
                             <span ng-if="checkLocationRules(organization.defaultAddress)"
-                                  class="required-asterisk">*</span>
+                                  class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="organization.defaultAddress.state" class="input-md form-control"
                                    ng-required="checkLocationRules(organization.defaultAddress)"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
