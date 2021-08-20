@@ -34,6 +34,8 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             var inputElement = element.children()[0].firstElementChild;
             $scope.message = null;
             $scope.format = $scope.showTime ? $translate.instant("common.defaultDateTimePickerFormat") : $translate.instant("common.defaultDateFormat");
+            $scope.validFormat = $scope.showTime ? $translate.instant("common.validDateTimeFormat") : $translate.instant("common.defaultDateFormat");
+            $scope.invalidFormatMessage =  $translate.instant("common.invalidDateFormat");
             $scope.datepickerOptions = {isOpen: false};
             $scope.placeholder = $scope.noDefaultDate && $scope.disable ? '' : $translate.instant("common.defaultDateInputPlaceholder");
             if ($scope.minDate) {
@@ -166,7 +168,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
              *
              */
             function isValidDate(date) {
-                if (moment(date, $scope.format).isValid()) {
+                if (moment(date, $scope.format, true).isValid()) {
                     if ($scope.minDate) {
                         if (moment(date).isBefore(moment($scope.minDate))) {
                             $scope.message = $translate.instant("common.invalidMinDate");
@@ -180,6 +182,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         }
                         return true;
                     }
+                    return true;
 
                 } else {
                     $scope.message = $translate.instant("common.invalidDateFormat");
