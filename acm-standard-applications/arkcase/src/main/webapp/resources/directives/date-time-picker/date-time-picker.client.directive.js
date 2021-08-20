@@ -23,15 +23,19 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             minDate: '=?',
             maxDate: '=?',
             onSelectClose: '=?',
-            placeholder: '=?',
             isRequired: '=',
             disableWeekends: '=?',
             onDateSelect: '=?',
-            isReadonly: '=?'
+            isReadonly: '=?',
+            noDefaultDate: "=?",
+            pickerId: "@"
         },
-        link: function ($scope, element) {
+        link: function ($scope, element, attrs) {
+            var inputElement = element.children()[0].firstElementChild;
+            $scope.message = null;
             $scope.format = $scope.showTime ? $translate.instant("common.defaultDateTimePickerFormat") : $translate.instant("common.defaultDateFormat");
             $scope.datepickerOptions = {isOpen: false};
+            $scope.placeholder = $scope.noDefaultDate && $scope.disable ? '' : $translate.instant("common.defaultDateInputPlaceholder");
             if ($scope.minDate) {
                 $scope.minDate = moment($scope.minDate)
             }
@@ -55,7 +59,9 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     }
                     $scope.dateInPicker = moment(UtilDateService.isoToDate($scope.today));
                 } else {
-                    $scope.dateInPicker = moment(new Date());
+                    if (!$scope.noDefaultDate) {
+                        $scope.dateInPicker = moment(new Date());
+                    }
                 }
             };
 
@@ -86,19 +92,27 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
              * @description
              * On date selection update date picker date and data
              *
-             * @param {Date} newValue  DocTree object defined in doc-tree directive
+             * @param {String|Date} newValue  new date
              *
              */
             $scope.onDateChange = function (newValue) {
-                if (!$scope.disable) {
-                    // TODO find better way to handle manually changing data. This is hack to update datepicker data with
-                    // TODO for example in new task when user choose today date later than due date and we update due date manually
-                    if ($scope.$parent.dateChangedManually) {
-                        $scope.dateInPicker = moment($scope.data);
-                        $scope.$parent.dateChangedManually = false;
-                        $scope.updateDate($scope.data);
-                    } else {
-                        $scope.updateDate(newValue);
+                if (newValue) {
+                    if (!$scope.disable) {
+                        // TODO find better way to handle manually changing data. This is hack to update datepicker data with
+                        // TODO for example in new task when user choose today date later than due date and we update due date manually
+                        if ($scope.$parent.dateChangedManually) {
+                            $scope.dateInPicker = moment($scope.data);
+                            inputElement.value = $scope.data;
+                            $scope.message = null;
+                            $scope.$parent.dateChangedManually = false;
+
+                        } else {
+                            if (!moment(inputElement.value).isSame(moment($scope.dateInPicker))) {
+                                inputElement.value = $scope.dateInPicker;
+                            }
+                            $scope.updateDate(newValue);
+
+                        }
                     }
                 }
 
@@ -111,12 +125,65 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
              * @description
              * On manually entered date update date picker date and data
              *
-             * @param {String} date  DocTree object defined in doc-tree directive
+             * @param {String|Date} date  new date
              *
              */
             $scope.onBlur = function (date) {
-                if ($scope.dateInPicker !== date) {
-                    $scope.updateDate(date);
+                if (!$scope.disable) {
+                    // check if date is entered manually, otherwise user removed data manually
+                    if (date.target.value) {
+                        // if user enter date manually or blur is triggered after user close picker
+                        // check if input date is same as datepicker chosen, if yes do nothing else
+                        // update datepicker and date with manually entered date
+                        if (!moment(date.target.value).isSame(moment($scope.dateInPicker))) {
+                            if (isValidDate(date.target.value)) {
+                                $scope.updateDate(date.target.value);
+                            } else {
+                                // set all dates to null
+                                $scope.dateInPicker = null;
+                                $scope.data = null;
+                                inputElement.value = null;
+                            }
+                        }
+                    } else {
+                        // set all dates to null
+                        $scope.dateInPicker = null;
+                        $scope.data = null;
+                        inputElement.value = null;
+                    }
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name isValidDate
+             * @methodOf directives:dateTimePicker
+             *
+             * @description
+             * On manually entered date check for validation
+             *
+             * @param {String|Date} date to be validated
+             *
+             */
+            function isValidDate(date) {
+                if (moment(date, $scope.format).isValid()) {
+                    if ($scope.minDate) {
+                        if (moment(date).isBefore(moment($scope.minDate))) {
+                            $scope.message = $translate.instant("common.invalidMinDate");
+                            return false;
+                        }
+                        return true;
+                    } else if ($scope.maxDate) {
+                        if (moment(date).isAfter(moment($scope.maxDate))) {
+                            $scope.message = $translate.instant("common.invalidMaxDate");
+                            return false;
+                        }
+                        return true;
+                    }
+
+                } else {
+                    $scope.message = $translate.instant("common.invalidDateFormat");
+                    return false;
                 }
             }
 
@@ -135,6 +202,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 $scope.dateInPicker = moment(date);
                 $scope.data = $scope.showTime ? $scope.data = UtilDateService.dateToIsoDateTime($scope.dateInPicker)
                     : $scope.data = UtilDateService.localDateToIso($scope.dateInPicker.toDate());
+                $scope.message = null;
             }
         },
         controller: function ($scope) {

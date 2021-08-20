@@ -18,6 +18,7 @@ angular.module('cases').controller(
             $scope.isPickExistingOriginator = false;
             $scope.isPickExistingSubject = false;
             $scope.subjectSameAsRequester = false;
+            $scope.maxDate = moment.utc(new Date());
 
             $scope.receivedDate = new Date();
 
@@ -267,13 +268,6 @@ angular.module('cases').controller(
                         $location.hash('topSection1');
                         $anchorScroll();
                     }
-                }
-            };
-
-            $scope.receivedDateChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.receivedDate) || moment($scope.config.data.receivedDate).isAfter(todayDate)) {
-                    $scope.config.data.receivedDate = todayDate;
                 }
             };
 

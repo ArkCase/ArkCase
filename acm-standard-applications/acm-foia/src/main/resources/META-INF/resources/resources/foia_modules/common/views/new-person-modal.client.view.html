@@ -72,7 +72,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newPerson.identification.identificationYearIssued</label>
-                                <date-time-picker data="person.defaultIdentification.identificationYearIssued"></date-time-picker>
+                                <date-time-picker data="person.defaultIdentification.identificationYearIssued" is-readonly="!person.defaultIdentification.identificationNumber"
+                                                  disable="!person.defaultIdentification.identificationNumber" no-default-date="true"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -116,7 +117,8 @@
                                     <div>
                                         <label translate>
                                             common.newPerson.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"></date-time-picker>
+                                        <date-time-picker data="identification.identificationYearIssued" is-readonly="!identification.identificationNumber" no-default-date="true"
+                                                          disable="!identification.identificationNumber"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
