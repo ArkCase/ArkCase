@@ -7,19 +7,21 @@
      autoclose="onSelectClose"
      show-header="showHeader"
      change="onDateChange(newValue, oldValue)"
-     placeholder="placeholder"
      selectable="selectable(date, type)"
      start-view="month"
      is-open="datepickerOptions.isOpen"
 >
     <input class="form-control"
-           placeholder="Select a date"
+           placeholder="{{placeholder}}"
            ng-model="dateInPicker"
            ng-required="isRequired"
            ng-readonly="isReadonly"
-           ng-blur="onBlur(dateInPicker)"
+           ng-blur="onBlur($event)"
     >
     <span class="input-group-addon">
           <i class="fa fa-calendar"></i>
     </span>
 </div>
+<p class="text-danger" style="padding-top: 5px;">
+    {{message}}
+</p>

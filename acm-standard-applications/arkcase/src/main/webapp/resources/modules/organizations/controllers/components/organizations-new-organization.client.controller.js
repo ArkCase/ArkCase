@@ -416,7 +416,14 @@ angular.module('organizations').controller(
 
                         //identifications
                         if (organization.defaultIdentification) {
-                            organization.identifications.push(organization.defaultIdentification);
+                            // this is rare scenario in identifications when user choose only issuer date for example and then remove this date
+                            // we need to delete all properties that are null cause otherwise backend will throw error
+                            organization.defaultIdentification = _.pick(organization.defaultIdentification, _.identity);
+                            if (_.isEmpty(organization.defaultIdentification)) {
+                                organization = _.omit(organization, ['defaultIdentification']);
+                            } else {
+                                organization.identifications.push(organization.defaultIdentification);
+                            }
                         }
 
                         //addresses
