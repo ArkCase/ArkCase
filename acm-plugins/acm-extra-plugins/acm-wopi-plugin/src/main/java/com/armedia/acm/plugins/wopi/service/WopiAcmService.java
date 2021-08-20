@@ -49,11 +49,13 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Period;
@@ -123,7 +125,17 @@ public class WopiAcmService implements AcmConfigurablePlugin
         {
             throw new AcmObjectNotFoundException("FILE", id, "File not found");
         }
-        fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
+
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("arkcase-update-file-transaction", null);
+            FileUtils.copyInputStreamToFile(resource.getInputStream(), tempFile);
+            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, tempFile);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFile);
+        }
     }
 
     public WopiLockInfo getSharedLock(Long fileId)

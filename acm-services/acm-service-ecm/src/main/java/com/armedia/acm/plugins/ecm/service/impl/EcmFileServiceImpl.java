@@ -412,10 +412,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         log.info("The user '{}' is updating file: '{}'", authentication.getName(), ecmFile.getFileName());
 
         EcmFileUpdatedEvent event = null;
-
+        File tempFile = null;
         try
         {
-            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, inputStream);
+            tempFile = File.createTempFile("arkcase-update-file-transaction", null);
+            FileUtils.copyInputStreamToFile(inputStream, tempFile);
+
+            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, tempFile, null);
 
             event = new EcmFileUpdatedEvent(updated, authentication);
 
@@ -424,11 +427,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return updated;
         }
-        catch (IOException e)
+        catch (IOException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not update file: {} ", e.getMessage(), e);
             throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);
         }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFile);
+        }
+
     }
 
     @Override
