@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.BusinessHoursController',
-    ['$scope', 'Admin.BusinessHoursService', function ($scope, BusinessHoursService) {
+    ['$scope', 'Admin.BusinessHoursService','MessageService', function ($scope, BusinessHoursService,MessageService) {
 
         BusinessHoursService.getBusinessHoursConfig().then(function (response) {
             $scope.businessDayHoursEnabled = response.data[BusinessHoursService.PROPERTIES.BUSINESS_DAY_HOURS_FLAG];
@@ -16,6 +16,7 @@ angular.module('admin').controller('Admin.BusinessHoursController',
             $scope.configDataModel[BusinessHoursService.PROPERTIES.START_OF_BUSINESS_DAY_TIME] = $scope.startOfBusinessDayTime;
 
             BusinessHoursService.saveBusinessHoursConfig($scope.configDataModel);
+            MessageService.succsessAction();
         };
 
     }]);
