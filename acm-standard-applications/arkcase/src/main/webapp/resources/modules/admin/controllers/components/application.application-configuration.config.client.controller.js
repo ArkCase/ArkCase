@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ApplicationConfigurationController',
-    ['$scope', 'Admin.ApplicationSettingsService', 'Object.LookupService', function ($scope, ApplicationSettingsService, ObjectLookupService) {
+    ['$scope', 'Admin.ApplicationSettingsService', 'Object.LookupService','MessageService', function ($scope, ApplicationSettingsService, ObjectLookupService,MessageService) {
 
         $scope.isTimezoneValid = true;
 
@@ -84,6 +84,7 @@ angular.module('admin').controller('Admin.ApplicationConfigurationController',
         $scope.applyChanges = function () {
             if ($scope.isSomethingChanged($scope.configDataModel)) {
                 ApplicationSettingsService.saveApplicationPropertyConfig($scope.configDataModel);
+                MessageService.succsessAction();
             }
         };
 
