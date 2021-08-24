@@ -11,7 +11,7 @@
                 <div class="col-sm-4 form-group">
                     <div class="input-group">
                         <date-time-picker data="config.data.receivedDate" show-time="true"
-                                on-date-select="receivedDateChanged"></date-time-picker>
+                                max-date="maxReceivedDate" on-date-select="receivedDateChanged"></date-time-picker>
                     </div>
                 </div>
             </div>
@@ -359,7 +359,7 @@
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
                             <date-time-picker data="config.data.dueDate" show-time="true"
-                                    on-date-select="dueDateChanged"></date-time-picker>
+                                    min-date="minDueDate"></date-time-picker>
                         </div>
                     </div>
                 </div>
