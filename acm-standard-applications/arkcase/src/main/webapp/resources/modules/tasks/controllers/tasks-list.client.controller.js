@@ -4,12 +4,6 @@ angular.module('tasks').controller(
         'TasksListController',
         [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Task.InfoService', 'Task.ListService', 'Helper.ObjectBrowserService', 'MessageService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, TaskInfoService, TaskListService, HelperObjectBrowserService, MessageService) {
-
-                    var eventName = "object.inserted";
-                    $scope.$bus.subscribe(eventName, function(data) {
-                        MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
-                    });
-
                     //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
                     new HelperObjectBrowserService.Tree({
                         scope: $scope,
