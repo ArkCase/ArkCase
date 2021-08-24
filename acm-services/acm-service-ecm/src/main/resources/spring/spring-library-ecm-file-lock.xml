@@ -5,6 +5,7 @@
     <bean id="defaultEcmObjectLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.DefaultEcmObjectLockingProvider">
         <property name="objectLockService" ref="objectLockService"/>
         <property name="expiryTimeInMilliseconds" value="600000"/>
+        <property name="userDao" ref="userJpaDao" />
     </bean>
 
     <bean id="fileLockingProvider" class="com.armedia.acm.plugins.ecm.service.lock.FileLockingProvider"
