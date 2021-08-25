@@ -844,17 +844,20 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
 
-        PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setCountry(user.getCountry());
-        postalAddress.setType(user.getAddressType());
-        postalAddress.setCity(user.getCity());
-        postalAddress.setState(user.getState());
-        postalAddress.setStreetAddress(user.getAddress1());
-        postalAddress.setStreetAddress2(user.getAddress2());
-        postalAddress.setZip(user.getZipCode());
-        person.setDefaultAddress(postalAddress);
+        if (!isAddressesTheSame(user, person))
+        {
+            PostalAddress postalAddress = new PostalAddress();
+            postalAddress.setCountry(user.getCountry());
+            postalAddress.setType(user.getAddressType());
+            postalAddress.setCity(user.getCity());
+            postalAddress.setState(user.getState());
+            postalAddress.setStreetAddress(user.getAddress1());
+            postalAddress.setStreetAddress2(user.getAddress2());
+            postalAddress.setZip(user.getZipCode());
+            person.setDefaultAddress(postalAddress);
 
-        person.getAddresses().add(postalAddress);
+            person.getAddresses().add(postalAddress);
+        }
 
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
         {
@@ -899,6 +902,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         return portalUserFromPortalPerson((PortalFOIAPerson) saved);
 
+    }
+
+    private boolean isAddressesTheSame(PortalUser user, Person person)
+    {
+        return person.getDefaultAddress().getCity().equals(user.getCity()) &&
+                person.getDefaultAddress().getCountry().equals(user.getCountry()) &&
+                person.getDefaultAddress().getType().equals(user.getAddressType()) &&
+                person.getDefaultAddress().getStreetAddress().equals(user.getAddress1()) &&
+                person.getDefaultAddress().getStreetAddress2().equals(user.getAddress2()) &&
+                person.getDefaultAddress().getZip().equals(user.getZipCode()) &&
+                person.getDefaultAddress().getState().equals(user.getState());
     }
 
     @Override
