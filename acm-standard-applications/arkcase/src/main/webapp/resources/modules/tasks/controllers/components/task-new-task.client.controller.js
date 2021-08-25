@@ -90,6 +90,11 @@ angular.module('tasks').controller(
                         $scope.config.data.attachedToObjectName = $scope.modalParams.parentObject;
                         $scope.config.data.attachedToObjectType = $scope.modalParams.parentType;
                         $scope.config.data.attachedToObjectId = $scope.modalParams.parentId;
+
+                        $scope.config.data.parentObjectName = $scope.modalParams.parentObject;
+                        $scope.config.data.parentObjectType = $scope.modalParams.parentType;
+                        $scope.config.data.parentObjectId = $scope.modalParams.parentId;
+                       
                         if (!Util.isEmpty($scope.modalParams.parentTitle)) {
                             $scope.config.data.parentObjectTitle = $scope.modalParams.parentTitle;
                         }
@@ -169,10 +174,10 @@ angular.module('tasks').controller(
                 var taskData = angular.copy($scope.config.data);
                 taskData.dueDate = $scope.config.data.dueDate;
                 taskData.taskStartDate = $scope.config.data.taskStartDate;
-                if ($scope.config.data.attachedToObjectId !== undefined && $scope.config.data.attachedToObjectType !== undefined) {
-                    taskData.parentObjectId = $scope.config.data.attachedToObjectId;
-                    taskData.parentObjectType = $scope.config.data.attachedToObjectType;
-                }
+                // if ($scope.config.data.attachedToObjectId !== undefined && $scope.config.data.attachedToObjectType !== undefined) {
+                //     taskData.parentObjectId = $scope.config.data.attachedToObjectId;
+                //     taskData.parentObjectType = $scope.config.data.attachedToObjectType;
+                // }
                 if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'notDefinedWorkflow' && $scope.filesToUpload.length < 1) {
                     taskData.documentsToReview = processDocumentsUnderReview();
                     TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);

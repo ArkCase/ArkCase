@@ -592,8 +592,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
         List<String> reviewers = new ArrayList<>();
         reviewers.add(task.getAssignee());
         List<AcmTask> createdAcmTasks = new ArrayList<>();
-        Long parentObjectId = task.getAttachedToObjectId();
-        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
+        Long parentObjectId = task.getParentObjectId();
+        String parentObjectType = task.getParentObjectType();
+        
 
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
         {
@@ -619,8 +620,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                pVars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
-                pVars.put("PARENT_OBJECT_ID", task.getParentObjectId());
+                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                pVars.put("PARENT_OBJECT_NAME", task.getParentObjectName());
+                pVars.put("PARENT_OBJECT_TITLE", task.getParentObjectTitle());
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pVars, businessProcessName);
@@ -628,6 +631,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 createdAcmTask.setDocumentUnderReview(documentToReview);
                 if (task.getAttachedToObjectId() != null && task.getAttachedToObjectType() != null)
                 {
+                    
                     createdAcmTask.setAttachedToObjectId(task.getAttachedToObjectId());
                     createdAcmTask.setAttachedToObjectType(task.getAttachedToObjectType());
                 }
@@ -667,7 +671,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         if (filesToUpload != null)
         {
-
+ 
             for (MultipartFile file : filesToUpload)
             {
 

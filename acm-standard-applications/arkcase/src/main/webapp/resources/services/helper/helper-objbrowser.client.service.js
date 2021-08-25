@@ -429,7 +429,12 @@ angular.module('services').factory(
                                         if (data.objectNumber) {
                                             MessageService.info(objectTypeString + " with number " + data.objectNumber + " was updated.");
                                         } else {
-                                            MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+                                            if(objectTypeString == 'Task'){
+                                                MessageService.info(objectTypeString + " with id " + objectId + " was updated.");
+                                            }
+                                            else{
+                                                MessageService.info(objectTypeString + " with number " + objectNumber + " was updated.");
+                                            }
                                         }
 
                                         var frevvoRequest = null;
