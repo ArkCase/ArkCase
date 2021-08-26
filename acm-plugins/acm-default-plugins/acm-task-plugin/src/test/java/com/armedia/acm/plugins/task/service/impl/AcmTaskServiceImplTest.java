@@ -187,6 +187,8 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("PARENT_OBJECT_ID", attachedToObjectId);
         pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
         pVars.put("DETAILS", "Details");
+        pVars.put("PARENT_OBJECT_NAME", null);
+        pVars.put("PARENT_OBJECT_TITLE", null);
 
 
         String documentsUnderReviewFolderName = "Documents Under Review";
