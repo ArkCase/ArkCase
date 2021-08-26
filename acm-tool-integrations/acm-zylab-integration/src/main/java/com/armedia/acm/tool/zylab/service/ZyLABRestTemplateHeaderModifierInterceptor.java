@@ -80,7 +80,7 @@ public class ZyLABRestTemplateHeaderModifierInterceptor implements ClientHttpReq
         return execution.execute(request, body);
     }
 
-    private String getAntiForgeryToken(HttpRequest request) throws RestClientException
+    private String getAntiForgeryToken(HttpRequest request)
     {
         String simpleResourceUrl = zylabIntegrationConfig.getBaseUrl() + zylabIntegrationConfig.getSimpleResourcePath();
 
@@ -95,8 +95,9 @@ public class ZyLABRestTemplateHeaderModifierInterceptor implements ClientHttpReq
 
         if (setCookieValue == null)
         {
-            log.error("No CSRF token returned from ZyLAB despite a successful GET request");
-            throw new RestClientException("Unable to gather the obligatory SQRS token for POST requests");
+            // The cookie might be missing due to a ZyLAB configuration to not request the anti forgery tokens
+            log.warn("No CSRF token returned from ZyLAB despite a successful GET request");
+            return "";
         }
         else
         {
