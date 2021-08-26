@@ -774,6 +774,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             pvars.put("approver", task.getAssignee());
 
+            pvars.put("DETAILS", task.getDetails());
+
             pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", task.getCandidateGroups());
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
