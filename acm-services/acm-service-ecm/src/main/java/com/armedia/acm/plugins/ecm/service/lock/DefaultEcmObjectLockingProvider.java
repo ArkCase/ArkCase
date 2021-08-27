@@ -62,7 +62,7 @@ public class DefaultEcmObjectLockingProvider implements ObjectLockingProvider
                     " {} not able to {} object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
                     userId, acquireLock ? "acquire" : "release", objectId, objectType, lockType, existingLock.getLockType(),
                     existingLock.getCreator());
-            throw new AcmObjectLockException(acmUserFullName);
+            throw new AcmObjectLockException("This document is locked by " + acmUserFullName);
         }
     }
 

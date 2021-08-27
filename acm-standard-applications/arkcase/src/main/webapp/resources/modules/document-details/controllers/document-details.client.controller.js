@@ -467,11 +467,8 @@ angular.module('document-details').controller(
                                 return true;
                             });
                         }, function(errorMessage) {
-                            MessageService.error($translate.instant("documentDetails.object.lock.error", {
-                                userName: errorMessage.data
-                            }));
+                            MessageService.error(errorMessage.data);
                         });
-
                     };
 
                     // Release editing lock on window unload, if acquired
