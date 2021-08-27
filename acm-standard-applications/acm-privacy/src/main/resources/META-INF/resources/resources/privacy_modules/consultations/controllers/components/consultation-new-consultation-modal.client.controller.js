@@ -84,6 +84,8 @@ angular.module('consultations').controller(
                 $scope.config.data.organizationAssociations = [];
                 $scope.config.data.receivedDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                 $scope.config.data.dueDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                $scope.minDueDate = moment($scope.config.data.receivedDate);
+                $scope.maxReceivedDate = moment(new Date());
 
                 $scope.consultationPeopleConfig = _.find(moduleConfig.components, {
                     id: "people"
@@ -120,22 +122,15 @@ angular.module('consultations').controller(
                 usersMentioned: []
             };
 
-            
 
-            $scope.receivedDateChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.receivedDate) || moment($scope.config.data.receivedDate).isAfter(todayDate)) {
-                    $scope.config.data.receivedDate = todayDate;
-                }
-            };
 
-            $scope.dueDateChanged = function() {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if(Util.isEmpty($scope.config.data.dueDate) || moment($scope.config.data.dueDate).isBefore($scope.config.data.receivedDate)) {
-                    $scope.config.data.dueDate = todayDate;
-                } else {
-                    $scope.config.data.dueDate = $scope.config.data.dueDate;
+            $scope.receivedDateChanged = function (data) {
+                if ($scope.config && $scope.config.data &&
+                    moment($scope.config.data.receivedDate).isAfter($scope.config.data.dueDate)) {
+                    $scope.config.data.dueDate = data.dateInPicker;
+                    $scope.dateChangedManually = true;
                 }
+                $scope.minDueDate = moment($scope.config.data.receivedDate);
             };
 
             $scope.pickExistingUserChange = function () {
