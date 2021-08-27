@@ -861,12 +861,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
         {
-            ContactMethod contactMethodPhone;
-            contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
-            contactMethodPhone.setValue(user.getPhoneNumber());
+            if (!user.getPhoneNumber().equals(person.getDefaultPhone().getValue()))
+            {
+                ContactMethod contactMethodPhone;
+                contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
+                contactMethodPhone.setValue(user.getPhoneNumber());
 
-            person.setDefaultPhone(contactMethodPhone);
-            person.getContactMethods().add(contactMethodPhone);
+                person.setDefaultPhone(contactMethodPhone);
+                person.getContactMethods().add(contactMethodPhone);
+            }
 
         }
 
