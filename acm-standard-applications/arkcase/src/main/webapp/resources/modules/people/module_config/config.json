@@ -285,7 +285,7 @@
                             "displayName": "people.comp.pictures.table.columns.thumbnail",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
-                            "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                            "cellTemplate": "<center><img class='img-thumbnail' ng-src='{{row.entity.object_id_s | personPictureSrc}}'></img></center>",
                             "width": 100
                         },
                         {
@@ -771,7 +771,7 @@
                     "displayName": "people.comp.pictures.table.columns.thumbnail",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                    "cellTemplate": "<center><img class='img-thumbnail' ng-src='{{row.entity.object_id_s | personPictureSrc}}'></img></center>",
                     "width": 100
                 },
                 {
