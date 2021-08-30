@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+
+    <!--    The timeToIdleSeconds is set to 4 days : 4*24*3600. We picked timeToIdleSeconds instead of timeToLiveSeconds
+    because with the latter the cached value expires regardless of use -->
+    <cache name="webdav_auth_token_cache" maxEntriesLocalHeap="1000" eternal="false" overflowToDisk="true"
+           diskSpoolBufferSizeMB="5"
+           timeToIdleSeconds="3456000" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+    <cache name="webdav_container_id_cache" maxEntriesLocalHeap="1000" eternal="false" overflowToDisk="true"
+           diskSpoolBufferSizeMB="5"
+           timeToIdleSeconds="3456000" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+</ehcache>

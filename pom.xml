@@ -90,7 +90,7 @@
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <xalan.version>2.7.2</xalan.version>
         <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
-        <milton.version>3.0.0.215</milton.version>
+        <milton.version>3.0.0.246</milton.version>
         <mockito.core.version>3.7.7</mockito.core.version>
         <mysql.version>8.0.16</mysql.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version

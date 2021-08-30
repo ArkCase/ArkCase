@@ -6,36 +6,26 @@ package com.armedia.acm.services.authenticationtoken.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.cache.Cache;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.time.temporal.TemporalAmount;
 import java.util.HashSet;
@@ -44,12 +34,26 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.context.request.RequestContextHolder;
+
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+
 /**
  * Created by armdev on 8/5/14.
  */
 public class AuthenticationTokenService
 {
     private Cache authenticationTokenCache;
+    private EhCacheCacheManager webDavAuthenticationTokenCacheManager;
+
     private AuthenticationTokenDao authenticationTokenDao;
 
     public static final int EMAIL_TICKET_EXPIRATION_DAYS = 3;
@@ -61,7 +65,7 @@ public class AuthenticationTokenService
      * <p/>
      * The token remains valid as long as service calls using the token are made at least every half hour. After
      * 30 minutes of non-use (e.g. no service calls made with the token), the token is no longer valid.
-     * 
+     *
      * @param auth
      * @return
      */
@@ -69,6 +73,7 @@ public class AuthenticationTokenService
     {
         String key = UUID.randomUUID().toString();
         getAuthenticationTokenCache().put(key, auth);
+        getWebDavAuthenticationTokenCache().put(auth.getPrincipal(), auth);
         storeTokenForAuthenticationPerSession(key);
         return key;
     }
@@ -108,7 +113,17 @@ public class AuthenticationTokenService
      */
     public Authentication getAuthenticationForToken(String key) throws IllegalArgumentException
     {
-        Cache.ValueWrapper found = getAuthenticationTokenCache().get(key);
+        return getAuthenticationForToken(getAuthenticationTokenCache(), key);
+    }
+
+    public Authentication getWebDAVAuthentication(String key) throws IllegalArgumentException
+    {
+        return getAuthenticationForToken(getWebDavAuthenticationTokenCache(), key);
+    }
+
+    public Authentication getAuthenticationForToken(Cache cache, String key) throws IllegalArgumentException
+    {
+        Cache.ValueWrapper found = cache.get(key);
 
         if (found == null || found.get() == null)
         {
@@ -130,8 +145,8 @@ public class AuthenticationTokenService
         }
     }
 
-    
-    public String generateAndSaveAuthenticationToken(List<String> relativePaths, Long tokenExpiry, String emailAddress, Authentication authentication)
+    public String generateAndSaveAuthenticationToken(List<String> relativePaths, Long tokenExpiry, String emailAddress,
+            Authentication authentication)
     {
         log.debug("Generation authentication token for email address [{}]", emailAddress);
         String token = getUncachedTokenForAuthentication(authentication);
@@ -163,6 +178,7 @@ public class AuthenticationTokenService
 
     /**
      * Calculates when an access token expires, by adding temporalValidityAmount to the creation time.
+     * 
      * @param token
      * @param temporalValidityAmount
      * @return number of milliseconds since January 1, 1970 UTC (the date epoch in JavaScript)
@@ -177,6 +193,11 @@ public class AuthenticationTokenService
     public void saveAuthenticationToken(AuthenticationToken token)
     {
         authenticationTokenDao.save(token);
+    }
+
+    public Cache getWebDavAuthenticationTokenCache()
+    {
+        return getWebDavAuthenticationTokenCacheManager().getCache("webdav_auth_token_cache");
     }
 
     public Cache getAuthenticationTokenCache()
@@ -197,5 +218,15 @@ public class AuthenticationTokenService
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
         this.authenticationTokenDao = authenticationTokenDao;
+    }
+
+    public EhCacheCacheManager getWebDavAuthenticationTokenCacheManager()
+    {
+        return webDavAuthenticationTokenCacheManager;
+    }
+
+    public void setWebDavAuthenticationTokenCacheManager(EhCacheCacheManager webDavAuthenticationTokenCacheManager)
+    {
+        this.webDavAuthenticationTokenCacheManager = webDavAuthenticationTokenCacheManager;
     }
 }
