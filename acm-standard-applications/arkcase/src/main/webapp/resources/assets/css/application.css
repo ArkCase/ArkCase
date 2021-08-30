@@ -167,6 +167,10 @@ span.fancytree-title {
     padding: 20px;
 }
 
+.img-thumbnail {
+    height: 30px;
+}
+
 /* Buttons */
 
 .btn {
