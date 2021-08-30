@@ -13,8 +13,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                 '$httpProvider',
                 'AnalyticsProvider',
                 '$provide',
+                'momentPickerProvider',
                 function($locationProvider, $translateProvider, $translatePartialLoaderProvider, dynamicLocaleProvider, $httpProvider,
-                        AnalyticsProvider, $provide) {
+                        AnalyticsProvider, $provide, momentPickerProvider) {
                     $locationProvider.hashPrefix('!');
 
                     $httpProvider.interceptors.push(httpInterceptor);
@@ -27,6 +28,12 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                             return JSOG.parse(data);
                         }
                         return data;
+                    });
+
+                    // angular moment picker global configuration. For all available properties refer to github repo
+                    // https://github.com/indrimuska/angular-moment-picker#momentpickerprovider
+                    momentPickerProvider.options({
+                        minutesStep: 1
                     });
 
                     var timezoneOffset = new Date().toString().match(/([\+-][0-9]+)/g);
