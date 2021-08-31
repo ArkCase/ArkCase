@@ -197,7 +197,7 @@ angular.module('tasks').controller(
                 if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
                     $scope.minDate = moment(today);
                 } else {
-                    $scope.minDate = moment(new Date($scope.dateInfo.taskStartDate));
+                    $scope.minDate = moment.utc(new Date($scope.dateInfo.taskStartDate)).local();
                 }
 
                 var owningGroupParticipantType = 'owning group';

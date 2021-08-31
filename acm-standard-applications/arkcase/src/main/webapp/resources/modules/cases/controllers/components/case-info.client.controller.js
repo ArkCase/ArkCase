@@ -191,7 +191,7 @@ angular.module('cases').controller(
 
                         var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
                         $scope.maxDate = moment(utcDate).add(1, 'years');
-                        $scope.minDate = moment(new Date(data.created));
+                        $scope.minDate = moment.utc(new Date(data.created)).local();
 
                         CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                             var options = [];

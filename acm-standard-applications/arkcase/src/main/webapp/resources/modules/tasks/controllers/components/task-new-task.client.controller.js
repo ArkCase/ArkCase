@@ -126,7 +126,7 @@ angular.module('tasks').controller(
 
                     $scope.taskPersonTypes = taskPersonTypes;
                     $scope.minStartDate = moment(new Date());
-                    $scope.minDueDate = moment($scope.config.data.taskStartDate);
+                    $scope.minDueDate = moment.utc($scope.config.data.taskStartDate).local();
                 });
 
             $scope.opened = {};
@@ -153,7 +153,7 @@ angular.module('tasks').controller(
                     $scope.config.data.dueDate = data.dateInPicker;
                     $scope.dateChangedManually = true;
                 }
-                $scope.minDueDate = moment($scope.config.data.taskStartDate);
+                $scope.minDueDate = moment.utc($scope.config.data.taskStartDate).local();
             };
 
             $scope.saveNewTask = function () {

@@ -191,7 +191,7 @@ angular.module('complaints').controller(
 
                         var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
                         $scope.maxDate = moment(utcDate).add(1, 'years');
-                        $scope.minDate = moment(new Date(objectInfo.created));
+                        $scope.minDate = moment.utc(new Date(objectInfo.created)).local();
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
