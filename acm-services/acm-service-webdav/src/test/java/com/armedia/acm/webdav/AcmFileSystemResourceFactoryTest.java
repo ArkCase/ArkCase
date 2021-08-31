@@ -27,9 +27,12 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
@@ -40,6 +43,9 @@ import org.junit.Test;
 import java.util.regex.Pattern;
 
 import io.milton.resource.Resource;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 
 /**
  * Created by dmiller on 7/20/16.
@@ -48,18 +54,29 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
 {
     private AcmFileSystemResourceFactory unit;
     private EcmFileDao mockEcmFileDao;
-
+    private AcmFolderDao mockFolderDao;
+    private Cache cache;
     private AcmWebDAVSecurityManager mockAcmWebDAVSecurityManager;
 
     @Before
     public void setUp() throws Exception
     {
         mockEcmFileDao = createMock(EcmFileDao.class);
+        mockFolderDao = createMock(AcmFolderDao.class);
         mockAcmWebDAVSecurityManager = createMock(AcmWebDAVSecurityManager.class);
 
         unit = new AcmFileSystemResourceFactory();
         unit.setFileDao(mockEcmFileDao);
+        unit.setFolderDao(mockFolderDao);
         unit.setSecurityManager(mockAcmWebDAVSecurityManager);
+
+        Pattern urlPattern = Pattern.compile("^.*\\/(.*)\\/(.*)\\/([\\d]*)\\/.*\\/([\\d]*)\\/([\\d]*)\\/(.*\\.[doc|docx|xlsx|xls|ppt|pptx|pdf|tmp]*)$");
+        unit.setRealDocumentUrlPattern(urlPattern);
+
+        cache = createMock(Cache.class);
+        EhCacheCacheManager cacheManager = createMock(EhCacheCacheManager.class);
+        unit.setWebDAVContainerIdCacheManager(cacheManager);
+
     }
 
     @Test
@@ -67,6 +84,10 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
     {
         String host = "www.dead.net";
         String path = "/123-456-78-90/FILE/EDIT_WORD_LOCK";
+
+        expect(unit.getCache()).andReturn(cache);
+        expect(cache.get(anyString())).andReturn(null);
+        replayAll();
 
         Resource resource = unit.getResource(host, path);
 
@@ -79,6 +100,10 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
         String host = "www.dead.net";
         String path = "/123-456-78-90/FILE/EDIT_WORD_LOCK/jgarcia12345.docx";
 
+        expect(unit.getCache()).andReturn(cache);
+        expect(cache.get(anyString())).andReturn(null);
+        replayAll();
+
         Resource resource = unit.getResource(host, path);
 
         assertTrue(resource instanceof AcmRootResource);
@@ -88,12 +113,14 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
     public void getResource_returnsFileResourceForFileRequest() throws Exception
     {
         String host = "www.dead.net";
-        String path = "/webdav/123-456-78-90/FILE/EDIT_WORD_LOCK/12345.docx";
+        String path = "/arkcase/webdav/arkcase-admin@arkcase.org/CASE_FILE/102/01 Request/109/110/Test.docx";
 
         unit.setFileExtensionPattern(Pattern.compile("\\.(doc|dot|docx|dotx|docm|dotm|docb)$"));
         unit.setFilterMapping("webdav");
+        expect(unit.getCache()).andReturn(cache);
+        cache.put(anyString(), anyObject());
 
-        expect(mockEcmFileDao.find(12345L)).andReturn(new EcmFile());
+        expect(mockEcmFileDao.find(110L)).andReturn(new EcmFile());
 
         replayAll();
 
