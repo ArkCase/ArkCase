@@ -80,7 +80,7 @@ angular.module('consultations').controller(
                 $scope.config.data.originator.person.addresses[0].type = defaultAddressType ? defaultAddressType.key : addressTypes[0].key;
 
                 $scope.config.data.organizationAssociations = [];
-                $scope.minDueDate = moment($scope.config.data.receivedDate);
+                $scope.minDueDate = moment.utc($scope.config.data.receivedDate).local();
                 $scope.maxReceivedDate = moment(new Date());
 
                 $scope.consultationPeopleConfig = _.find(moduleConfig.components, {
@@ -126,7 +126,7 @@ angular.module('consultations').controller(
                     $scope.config.data.dueDate = data.dateInPicker;
                     $scope.dateChangedManually = true;
                 }
-                $scope.minDueDate = moment($scope.config.data.receivedDate);
+                $scope.minDueDate = moment.utc($scope.config.data.receivedDate).local();
             };
 
             $scope.pickExistingUserChange = function () {
