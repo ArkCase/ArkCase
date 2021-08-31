@@ -22,7 +22,7 @@ angular.module('cases').controller(
                 $scope.requestAlreadyExtended = objectInfo.extensionFlag;
                 $scope.originalRequestTrack = objectInfo.requestTrack;
                 $scope.wrongDate = false;
-                $scope.minDispositionClosedDate = moment($scope.config.receivedDate);
+                $scope.minDispositionClosedDate = moment.utc($scope.objectInfo.receivedDate).local();
 
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
