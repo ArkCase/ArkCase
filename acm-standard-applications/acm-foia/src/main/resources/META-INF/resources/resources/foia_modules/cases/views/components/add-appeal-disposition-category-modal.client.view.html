@@ -42,7 +42,6 @@
                         ng-options="otherReason.key as otherReason.value | translate for otherReason in otherReasonsLookup"
                         class="form-control input-md" ng-change="changeOtherReason()" ng-required="isOtherRequired && showDispositionReasons"
                         ng-disabled="!isOtherRequired">
-                    <option value="" translate>cases.comp.main.addAppealDispositionCategory.selectOtherReason</option>
                 </select>
             </div>
             <div class="form-group col-sm-6">
