@@ -2,16 +2,17 @@
 
 angular.module('reports').controller('Reports.DatepickersController', [ '$scope', 'UtilService', 'Util.DateService', 'LookupService', function($scope, Util, UtilDateService, LookupService) {
 
-    $scope.startDateChanged = function() {
-        var validateDate = UtilDateService.validateFromDate($scope.data.startDate, $scope.data.endDate);
-        $scope.data.startDate = validateDate.from;
-        $scope.data.endDate = validateDate.to;
-    };
+    $scope.maxDate = moment(new Date());
+    $scope.minDate = moment.utc($scope.data.startDate).local();
 
-    $scope.endDateChanged = function() {
-        var validateDate = UtilDateService.validateToDate($scope.data.startDate, $scope.data.endDate);
-        $scope.data.startDate = validateDate.from;
-        $scope.data.endDate = validateDate.to;
+    $scope.startDateChanged = function(data) {
+        if (data) {
+            if (data && moment($scope.data.startDate).isAfter($scope.data.endDate)) {
+                $scope.data.endDate = data.dateInPicker;
+                $scope.dateChangedManually = true;
+            }
+            $scope.minDate = moment.utc($scope.data.startDate).local();
+        }
     };
 
     $scope.opened = {};
