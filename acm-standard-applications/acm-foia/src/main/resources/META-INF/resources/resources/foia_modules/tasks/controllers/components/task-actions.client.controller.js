@@ -30,6 +30,7 @@ angular.module('tasks').controller(
             $scope.showBtnReject = false;
             $scope.showBtnOutcomes = false;
             $scope.showBtnApprove = false;
+            $scope.isClicked = false;
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
@@ -179,6 +180,7 @@ angular.module('tasks').controller(
         };
         $scope.onClickOutcome = function (name) {
             var taskInfo = Util.omitNg($scope.objectInfo);
+            $scope.isClicked = true;
 
             //QUICK FIX TO BE REMOVED AFTER THE DEMO
             //REMOVES THE MILLISECONDS AFTER THE DOT(.) AND ADD "Z" for UTC
@@ -202,11 +204,13 @@ angular.module('tasks').controller(
                         // wait solr to index the change, and update the tree i.e. remove task from tree
                         setTimeout(function () {
                             $scope.$emit("report-tree-updated", taskInfo);
+                            $scope.isClicked = false;
                         }, 4000);
                     }
                     return taskInfo;
                 }, function (error) {
                     $scope.showErrorDialog(error);
+                    $scope.isClicked = false;
                 });
             }
         };
