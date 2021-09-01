@@ -1063,7 +1063,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
-            acmTask.setTaskStartDate(hti.getStartTime());
+            // If start date is not provided, set start date as creation date
+            if (acmTask.getTaskStartDate() == null)
+            {
+                acmTask.setTaskStartDate(hti.getStartTime());
+            }
             acmTask.setCreateDate(hti.getStartTime());
             acmTask.setTaskFinishedDate(hti.getEndTime());
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
@@ -1088,7 +1092,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
-            acmTask.setTaskStartDate(hti.getStartTime());
+            // If start date is not provided, set start date as creation date
+            if (acmTask.getTaskStartDate() == null)
+            {
+                acmTask.setTaskStartDate(hti.getStartTime());
+            }
             acmTask.setTaskFinishedDate(hti.getEndTime());
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
             acmTask.setCompleted(true);
@@ -1114,7 +1122,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         // represent an active task
         AcmTask retval;
         retval = new AcmTask();
-        retval.setTaskStartDate(hti.getStartTime());
+        // If start date is not provided, set start date as creation date
+        if (retval.getTaskStartDate() == null)
+        {
+            retval.setTaskStartDate(hti.getStartTime());
+        }
         retval.setCreateDate(hti.getStartTime());
         retval.setTaskFinishedDate(hti.getEndTime());
         retval.setTaskDurationInMillis(hti.getDurationInMillis());
