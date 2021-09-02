@@ -40,7 +40,6 @@ angular.module('tasks').controller(
                 }
             });
 
-            $scope.datepickerDueDateOptions = {};
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -162,18 +161,23 @@ angular.module('tasks').controller(
                 });
 
             };
+            $scope.datepickerDueDateOptions = {
+                dueDateInfo: null,
+                dueDateInfoUIPicker: null
+            };
 
             var onObjectInfoRetrieved = function(objectInfo) {
                 $scope.objectInfo = objectInfo;
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.datepickerDueDateOptions.dueDateInfo = moment($scope.dateInfo.dueDate);
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
                     $scope.datepickerDueDateOptions.dueDateInfo = new Date();
                     $scope.datepickerDueDateOptions.dueDateInfo = moment($scope.datepickerDueDateOptions.dueDateInfo);
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = $scope.datepickerDueDateOptions.dueDateInfo;
                 }
                 if(!Util.isEmpty($scope.objectInfo.taskStartDate)){
                     $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
@@ -281,16 +285,16 @@ angular.module('tasks').controller(
                             DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }else {
                             $scope.objectInfo.dueDate = moment.utc(dueDate).format();
-                            $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                            $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfo).format(defaultDateTimeUTCFormat);
+                            $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                             $scope.saveTask();
                         }
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                        $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                        $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfo).format(defaultDateTimeUTCFormat);
+                        $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                         $scope.saveTask();
                     }
                 }
@@ -303,6 +307,6 @@ angular.module('tasks').controller(
                 if (newValue) {
                     $scope.updateDueDate(newValue);
                 }
-            });
+            }, true);
 
         } ]);
