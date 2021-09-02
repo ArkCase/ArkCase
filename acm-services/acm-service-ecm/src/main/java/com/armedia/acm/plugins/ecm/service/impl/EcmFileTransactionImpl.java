@@ -335,6 +335,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 detectedMetadata.setContentType(detectedMetadata.getContentType().split(";")[0]);
             }
+            if (detectedMetadata.getContentType() == null && file.getContentType() != null)
+            {
+                detectedMetadata.setContentType(file.getContentType());
+            }
             if (activeVersionMimeType != null && detectedMetadata != null
                     && isFileTypeUploadAllowed(detectedMetadata, activeVersionMimeType))
             {
