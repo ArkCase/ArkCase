@@ -79,25 +79,30 @@ angular.module('cases').controller(
                 if (!Util.isEmpty(data)) {
                     if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.dueDate)) {
                         var correctedDueDate = new Date(data);
-                        var startDate = new Date($scope.objectInfo.created);
+                        var startDate = new Date($scope.objectInfo.receivedDate);
                         if (correctedDueDate < startDate) {
                             $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                             DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         } else {
                             $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
-                            $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                            $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format('MM/DD/YYYY');
+                            $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
                             $scope.saveCase();
                         }
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");;
-                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                        $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format('MM/DD/YYYY');
+                        $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
                         $scope.saveCase();
                     }
                 }
+            };
+
+            $scope.dueDate = {
+                dueDateInfo: null,
+                dueDateInfoUIPicker: null
             };
 
             var onObjectInfoRetrieved = function (data) {
@@ -108,11 +113,12 @@ angular.module('cases').controller(
                     $scope.dateInfo = $scope.dateInfo || {};
                     if (!Util.isEmpty($scope.objectInfo.dueDate)) {
                         $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
-                        $scope.dueDateInfo = moment($scope.dateInfo.dueDate);
+                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
                     } else {
                         $scope.dateInfo.dueDate = null;
-                        $scope.dueDateInfo = new Date();
-                        $scope.dueDateInfo = moment($scope.dueDateInfo);
+                        $scope.dueDate.dueDateInfo = new Date();
+                        $scope.dueDate.dueDateInfo = moment($scope.dueDate.dueDateInfo);
+                        $scope.dueDate.dueDateInfoUIPicker = $scope.dueDate.dueDateInfo;
                     }
                     $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
@@ -132,9 +138,9 @@ angular.module('cases').controller(
                         return approvers;
                     });
 
-                    var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
+                    var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.receivedDate))).format();
                     $scope.maxDate = moment(utcDate).add(1, 'years');
-                    $scope.minDate = moment.utc(new Date(data.created)).local();
+                    $scope.minDate = moment.utc(new Date(data.receivedDate)).local();
                 });
 
                 $scope.notificationGroup = null;
@@ -329,5 +335,10 @@ angular.module('cases').controller(
                 }
             }
 
+            $scope.$watch('dueDate.dueDateInfo', function(newValue, oldValue) {
+                if (newValue) {
+                    $scope.updateDueDate(newValue);
+                }
+            }, true);
 
         } ]);
