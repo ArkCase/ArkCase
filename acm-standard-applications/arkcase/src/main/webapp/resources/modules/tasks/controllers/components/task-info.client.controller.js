@@ -177,23 +177,19 @@ angular.module('tasks').controller(
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
-                    $scope.datepickerDueDateOptions.dueDateInfo = new Date();
-                    $scope.datepickerDueDateOptions.dueDateInfo = moment($scope.datepickerDueDateOptions.dueDateInfo);
-                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = $scope.datepickerDueDateOptions.dueDateInfo;
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment(new Date()).format(defaultDateTimePickerFormat);
                 }
                 if(!Util.isEmpty($scope.objectInfo.taskStartDate)){
                     $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.startDate.startDateInfoUIPicker = moment($scope.dateInfo.taskStartDate)
+                    $scope.startDate.startDateInfoUIPicker = moment($scope.objectInfo.taskStartDate).format(defaultDateTimePickerFormat);
                 }
                 else {
                     $scope.dateInfo.taskStartDate = null;
-                    $scope.startDate.startDateInfo = new Date();
-                    $scope.startDate.startDateInfo = moment($scope.startDate.startDateInfo);
-                    $scope.startDate.startDateInfoUIPicker = $scope.startDate.startDateInfo;
+                    $scope.startDate.startDateInfoUIPicker = moment(new Date()).format(defaultDateTimePickerFormat);
                 }
                 $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
                 $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
@@ -292,16 +288,18 @@ angular.module('tasks').controller(
                             DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }else {
                             $scope.objectInfo.dueDate = moment.utc(dueDate).format();
-                            $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
-                            $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
+                            $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                            $scope.dateInfo.dueDate = $scope.datepickerDueDateOptions.dueDateInfo;
                             $scope.saveTask();
                         }
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                        $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
-                        $scope.dateInfo.dueDate = moment($scope.datepickerDueDateOptions.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
+                        $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                        $scope.dateInfo.dueDate = $scope.datepickerDueDateOptions.dueDateInfo;
                         $scope.saveTask();
                     }
                 }
