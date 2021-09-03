@@ -18,6 +18,8 @@ angular.module('cases').controller(
                 }
             });
 
+            var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
+
             AdminPrivacyConfigService.getPrivacyConfig().then(function (response) {
                 $scope.isNotificationGroupEnabled = response.data.notificationGroupsEnabled;
             },function(err){
@@ -84,16 +86,18 @@ angular.module('cases').controller(
                             $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                             DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         } else {
-                            $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
-                            $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format(defaultDateTimeUTCFormat);
+                            $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
                             $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
                             $scope.saveCase();
                         }
                     }
                 } else {
                     if (!oldDate) {
-                        $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");;
-                        $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format(defaultDateTimeUTCFormat);
+                        $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
                         $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
                         $scope.saveCase();
                     }
@@ -112,13 +116,11 @@ angular.module('cases').controller(
 
                     $scope.dateInfo = $scope.dateInfo || {};
                     if (!Util.isEmpty($scope.objectInfo.dueDate)) {
-                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
-                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
+                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
                     } else {
                         $scope.dateInfo.dueDate = null;
-                        $scope.dueDate.dueDateInfo = new Date();
-                        $scope.dueDate.dueDateInfo = moment($scope.dueDate.dueDateInfo);
-                        $scope.dueDate.dueDateInfoUIPicker = $scope.dueDate.dueDateInfo;
+                        $scope.dueDate.dueDateInfoUIPicker = moment(new Date).format(defaultDateTimeUTCFormat);
                     }
                     $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
