@@ -174,17 +174,23 @@ angular.module('consultations').controller(
 
             };
 
+            $scope.dueDate = {
+                dueDateInfo: null,
+                dueDateInfoUIPicker: null
+            };
+
             var onObjectInfoRetrieved = function(data) {
                 $scope.objectInfo.objType = 'Consultation';
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.dueDateInfo = moment($scope.dateInfo.dueDate);
+                    $scope.dueDate.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
-                    $scope.dueDateInfo = new Date();
-                    $scope.dueDateInfo = moment($scope.dueDateInfo);
+                    $scope.dueDate.dueDateInfo = new Date();
+                    $scope.dueDate.dueDateInfo = moment($scope.dueDate.dueDateInfo);
+                    $scope.dueDate.dueDateInfoUIPicker = $scope.dueDate.dueDateInfo;
                 }
                 $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                 $scope.owningGroup = ObjectModelService.getGroup(data);
@@ -239,22 +245,22 @@ angular.module('consultations').controller(
                 if (!Util.isEmpty(data)) {
                     if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.dueDate)) {
                         var correctedDueDate = new Date(data);
-                        var startDate = new Date($scope.objectInfo.created);
+                        var startDate = new Date($scope.objectInfo.receivedDate);
                         if(correctedDueDate < startDate){
                             $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                             DialogService.alert($translate.instant("consultations.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }else {
                             $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
-                            $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local()
-                            $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                            $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                             $scope.saveConsultation();
                         }
                     }
                 }else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                        $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                        $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                         $scope.saveConsultation();
                     }
                 }
@@ -265,5 +271,11 @@ angular.module('consultations').controller(
                     id: $scope.objectInfo.id
                 });
             };
+
+            $scope.$watch('dueDate.dueDateInfo', function(newValue, oldValue) {
+                if (newValue) {
+                    $scope.updateDueDate(newValue);
+                }
+            }, true);
 
         } ]);

@@ -175,17 +175,23 @@ angular.module('complaints').controller(
 
                     };
 
+                    $scope.dueDate = {
+                        dueDateInfo: null,
+                        dueDateInfoUIPicker: null
+                    };
+
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
                         if(!Util.isEmpty($scope.objectInfo.dueDate)){
                             $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                            $scope.dueDateInfo = moment($scope.dateInfo.dueDate);
+                            $scope.dueDate.dueDateInfoUIPicker = moment($scope.dateInfo.dueDate);
                         }
                         else {
                             $scope.dateInfo.dueDate = null;
-                            $scope.dueDateInfo = new Date();
-                            $scope.dueDateInfo = moment($scope.dueDateInfo);
+                            $scope.dueDate.dueDateInfo = new Date();
+                            $scope.dueDate.dueDateInfo = moment($scope.dueDate.dueDateInfo);
+                            $scope.dueDate.dueDateInfoUIPicker = $scope.dueDate.dueDateInfo;
                         }
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
@@ -250,24 +256,25 @@ angular.module('complaints').controller(
                                     DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                                 }else {
                                     $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
-                                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                                    $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                                    $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                                    $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                                     $scope.saveComplaint();
                                 }
                             }
                         }else {
                             if (!oldValue) {
                                 $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                                $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                                $scope.dateInfo.dueDate = moment($scope.dueDateInfo).format(defaultDateTimeUTCFormat);
+                                $scope.dueDate.dueDateInfoUIPicker = moment.utc($scope.objectInfo.dueDate).local();
+                                $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format(defaultDateTimeUTCFormat);
                                 $scope.saveComplaint();
                             }
                         }
                     };
-                    $scope.$watch('datepickerDueDateOptions.dueDateInfo', function(newValue, oldValue) {
+
+                    $scope.$watch('dueDate.dueDateInfo', function(newValue, oldValue) {
                         if (newValue) {
                             $scope.updateDueDate(newValue);
                         }
-                    });
+                    }, true);
 
                 } ]);

@@ -161,6 +161,12 @@ angular.module('tasks').controller(
                 });
 
             };
+
+            $scope.startDate = {
+                startDateInfo: null,
+                startDateInfoUIPicker: null
+            };
+
             $scope.datepickerDueDateOptions = {
                 dueDateInfo: null,
                 dueDateInfoUIPicker: null
@@ -181,12 +187,13 @@ angular.module('tasks').controller(
                 }
                 if(!Util.isEmpty($scope.objectInfo.taskStartDate)){
                     $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.startDateInfo = moment($scope.dateInfo.taskStartDate)
+                    $scope.startDate.startDateInfoUIPicker = moment($scope.dateInfo.taskStartDate)
                 }
                 else {
                     $scope.dateInfo.taskStartDate = null;
-                    $scope.startDateInfo = new Date();
-                    $scope.startDateInfo = moment($scope.startDateInfo);
+                    $scope.startDate.startDateInfo = new Date();
+                    $scope.startDate.startDateInfo = moment($scope.startDate.startDateInfo);
+                    $scope.startDate.startDateInfoUIPicker = $scope.startDate.startDateInfo;
                 }
                 $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
                 $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
@@ -306,6 +313,12 @@ angular.module('tasks').controller(
             $scope.$watch('datepickerDueDateOptions.dueDateInfo', function(newValue, oldValue) {
                 if (newValue) {
                     $scope.updateDueDate(newValue);
+                }
+            }, true);
+
+            $scope.$watch('startDate.startDateInfo', function(newValue, oldValue) {
+                if (newValue) {
+                    $scope.updateStartDate(newValue);
                 }
             }, true);
 
