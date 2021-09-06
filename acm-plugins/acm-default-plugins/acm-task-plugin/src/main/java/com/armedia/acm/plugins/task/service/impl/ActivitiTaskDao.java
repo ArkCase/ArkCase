@@ -402,11 +402,10 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
-                if (container.getAttachmentFolder().getParticipants().isEmpty())
-                {
-                    container.getAttachmentFolder()
-                            .setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
-                }
+
+                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(),
+                        container.getFolder().getParticipants(),
+                        container, in.getRestricted());
             }
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
@@ -1288,7 +1287,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     public void updateVariableForTask(Task activitiTask, String variableName, String variableValue)
     {
-        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName,variableValue);
+        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName, variableValue);
     }
 
     protected void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
@@ -1652,7 +1651,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     }
 
     @Override
-    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException {
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName)
+            throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         ProcessInstance pi = getAcmBpmnService().startBusinessProcess(businessProcessName, pVars);
         Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
@@ -1663,7 +1664,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
                 createdAcmTask.getTaskId());
         createdAcmTask.setContainer(container);
-        getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(), container.getFolder().getParticipants(),
+        getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(),
+                container.getFolder().getParticipants(),
                 container, createdAcmTask.getRestricted());
 
         return createdAcmTask;
@@ -1992,11 +1994,13 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         this.acmBpmnService = acmBpmnService;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 
