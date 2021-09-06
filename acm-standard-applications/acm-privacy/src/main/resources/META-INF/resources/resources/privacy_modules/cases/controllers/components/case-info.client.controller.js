@@ -87,26 +87,21 @@ angular.module('cases').controller(
                             DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         } else {
                             $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format(defaultDateTimeUTCFormat);
-                            $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                            $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
-                            $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
+                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
                             $scope.saveCase();
                         }
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format(defaultDateTimeUTCFormat);
-                        $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
-                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
-                        $scope.dateInfo.dueDate = moment($scope.dueDate.dueDateInfoUIPicker).format('MM/DD/YYYY');
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
                         $scope.saveCase();
                     }
                 }
             };
 
             $scope.dueDate = {
-                dueDateInfo: null,
-                dueDateInfoUIPicker: null
+                dueDateInfo: null
             };
 
             var onObjectInfoRetrieved = function (data) {
@@ -117,10 +112,8 @@ angular.module('cases').controller(
                     $scope.dateInfo = $scope.dateInfo || {};
                     if (!Util.isEmpty($scope.objectInfo.dueDate)) {
                         $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimeUTCFormat);
                     } else {
                         $scope.dateInfo.dueDate = null;
-                        $scope.dueDate.dueDateInfoUIPicker = moment(new Date).format(defaultDateTimeUTCFormat);
                     }
                     $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
