@@ -38,7 +38,7 @@
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-commons-validator.version>1.6</apache-commons-validator.version>
         <apache-commons-email.version>1.5</apache-commons-email.version>
-        <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
+        <apache-httpcomponents-httpclient.version>4.5.13</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.24</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
         <aspectj.version>1.7.4</aspectj.version>
