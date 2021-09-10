@@ -345,6 +345,13 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             } else {
                 $scope.emailDataModel.subject = $scope.subject;
             }
+            if($scope.template === "documentLinked.html") {
+                $scope.emailSendConfiguration.allowDocuments = false;
+                $scope.emailDataModel.selectedFilesToEmail = [];
+            } else {
+                $scope.emailSendConfiguration.allowDocuments = true;
+                $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
+            }
             if ($scope.template === "plainEmail.html") {
                 $('#plain').summernote('code', "");
             } else {
