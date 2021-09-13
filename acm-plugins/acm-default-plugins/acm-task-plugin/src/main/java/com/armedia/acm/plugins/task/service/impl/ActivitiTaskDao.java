@@ -271,6 +271,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         activitiTask.setDueDate(in.getDueDate());
         activitiTask.setName(in.getTitle());
 
+        List<AcmParticipant> originalTaskParticipants = getParticipantDao()
+                .findParticipantsForObject("TASK", in.getTaskId());
+
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
@@ -404,8 +407,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                         ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
 
                 getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(),
-                        container.getFolder().getParticipants(),
-                        container, in.getRestricted());
+                        originalTaskParticipants, container, in.getRestricted());
             }
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
