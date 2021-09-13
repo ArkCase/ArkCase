@@ -72,15 +72,8 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
 
         if (ctx.isNewCase())
         {
-            try
-            {
-                // ensure the data changes of all prior handlers is visible to this handler
-                requestDao.getEm().flush();
-            }
-            catch (Exception exception)
-            {
-                log.error("Could nor flush the entity manager", exception);
-            }
+            // ensure the data changes of all prior handlers is visible to this handler
+            requestDao.getEm().flush();
 
             FOIARequest businessObject = requestDao.find(request.getId());
             FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(businessObject, FOIAConstants.REQ);
