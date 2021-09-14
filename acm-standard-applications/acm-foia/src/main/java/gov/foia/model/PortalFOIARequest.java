@@ -108,6 +108,8 @@ public class PortalFOIARequest implements Serializable
     
     private String addressType;
 
+    private String portalRequestTrackingId;
+
     /**
      * @return the prefix
      */
@@ -626,6 +628,16 @@ public class PortalFOIARequest implements Serializable
     public void setAddressType(String addressType) 
     {
         this.addressType = addressType;
+    }
+
+    public String getPortalRequestTrackingId()
+    {
+        return portalRequestTrackingId;
+    }
+
+    public void setPortalRequestTrackingId(String portalRequestTrackingId)
+    {
+        this.portalRequestTrackingId = portalRequestTrackingId;
     }
 
     /*
