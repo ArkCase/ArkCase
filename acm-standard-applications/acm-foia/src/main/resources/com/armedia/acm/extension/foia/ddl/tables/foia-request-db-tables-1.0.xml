@@ -936,5 +936,11 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="60-add-portal_request_tracking_id" author="samuel.klutse">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_portal_request_tracking_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

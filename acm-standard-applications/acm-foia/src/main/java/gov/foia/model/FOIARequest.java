@@ -256,6 +256,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_difficulty_rating")
     private String difficultyRating;
 
+    @Column(name="fo_portal_request_tracking_id")
+    private String portalRequestTrackingId;
+
     /**
      * @return the receivedDate
      */
@@ -952,6 +955,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     public void setDeclaredAsRecord(Boolean declaredAsRecord) {
         this.declaredAsRecord = declaredAsRecord;
+    }
+
+    public String getPortalRequestTrackingId()
+    {
+        return portalRequestTrackingId;
+    }
+
+    public void setPortalRequestTrackingId(String portalRequestTrackingId)
+    {
+        this.portalRequestTrackingId = portalRequestTrackingId;
     }
 
     /*
