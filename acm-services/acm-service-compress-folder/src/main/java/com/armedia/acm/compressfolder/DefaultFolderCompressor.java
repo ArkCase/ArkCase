@@ -595,17 +595,19 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
     {
         // TODO: Currently, base file name is used to link the original file with the PDF rendition. We should devise a
         // way to associate the rendition with the original file trough means other than base file name.
-        if (".pdf".equalsIgnoreCase(file.getFileActiveVersionNameExtension()))
-        {
-            return false;
-        }
-        else
+        if (".docx".equalsIgnoreCase(file.getFileActiveVersionNameExtension())
+        || ".pptx".equalsIgnoreCase(file.getFileActiveVersionNameExtension()))
         {
             return files.stream()
                     .map(EcmFile.class::cast)
                     .filter(f -> ".pdf".equalsIgnoreCase(f.getFileActiveVersionNameExtension()))
                     .anyMatch(f -> f.getFileName().equals(file.getFileName())
                             || f.getFileName().equals(file.getFileName() + "-converted-" + EcmFile.class.cast(file).getActiveVersionTag()));
+
+        }
+        else
+        {
+            return false;
         }
     }
 
