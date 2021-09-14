@@ -1,7 +1,8 @@
 <div ng-controller="Admin.SecurityEmailTemplatesController">
+    <form name="securityEmailTemplatesForm">
     <div class="pull-right well">
         <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="save()">
+            <button class="btn btn-xs btn-link" ng-click="save()" ng-disabled="emailReceiverConfiguration.user_case == emailReceiverConfiguration.user_complaint">
                 <i class="fa fa-save"></i>
                 <span translate>admin.security.emailTemplates.settings.btnSave</span>
             </button>
@@ -20,8 +21,10 @@
                     <label for="emailCaseFile" translate>
                         admin.security.emailTemplates.settings.emailCaseFile.label
                     </label>
-                    <input ng-model="emailReceiverConfiguration.user_case" type="email"
+                    <input ng-model="emailReceiverConfiguration.user_case" type="email" name="emailReceiverConfigurationUserCase"
                             placeholder="{{'admin.security.emailTemplates.settings.email.placeholder' | translate}}" class="form-control">
+                    <span class="alert alert-danger col-sm-12" ng-show="securityEmailTemplatesForm.emailReceiverConfigurationUserCase.$touched &&
+                    emailReceiverConfiguration.user_case == emailReceiverConfiguration.user_complaint" translate>admin.security.emailTemplates.settings.emailCaseFile.label.error</span>
                 </div>
                 <div class="col-lg-4 form-group">
                     <label for="passEmailCaseFile" translate>
@@ -43,8 +46,10 @@
                     <label for="emailComplaint" translate>
                         admin.security.emailTemplates.settings.emailComplaint.label
                     </label>
-                    <input ng-model="emailReceiverConfiguration.user_complaint" type="email"
+                    <input ng-model="emailReceiverConfiguration.user_complaint" type="email" name="emailReceiverConfigurationUserComplaint"
                            placeholder="{{'admin.security.emailTemplates.settings.email.placeholder' | translate}}" class="form-control">
+                    <span class="alert alert-danger col-sm-12" ng-show="securityEmailTemplatesForm.emailReceiverConfigurationUserComplaint.$touched
+                    && emailReceiverConfiguration.user_complaint == emailReceiverConfiguration.user_case " translate>admin.security.emailTemplates.settings.emailComplaint.label.error</span>
                 </div>
                 <div class="col-lg-4 form-group">
                     <label for="passEmailComplaint" translate>
@@ -77,4 +82,5 @@
             </div>
         </div>
     </panel-view>
+    </form>
 </div>
