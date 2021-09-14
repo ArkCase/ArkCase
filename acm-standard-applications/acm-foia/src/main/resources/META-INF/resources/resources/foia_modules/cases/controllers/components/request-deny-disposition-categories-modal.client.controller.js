@@ -10,8 +10,6 @@ angular.module('cases').controller('Cases.RequestDenyDispositionCategoriesModalC
         var defaultRequestDispositionCategory = ObjectLookupService.getPrimaryLookup($scope.requestDispositionCategories);
         if (defaultRequestDispositionCategory) {
             $scope.requestDispositionCategory = defaultRequestDispositionCategory.key;
-        } else {
-            $scope.requestDispositionCategory = $scope.requestDispositionCategories[0].key;
         }
     });
 
