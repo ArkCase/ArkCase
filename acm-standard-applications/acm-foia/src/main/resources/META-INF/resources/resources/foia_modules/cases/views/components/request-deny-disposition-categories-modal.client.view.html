@@ -10,6 +10,7 @@
             <select ng-model="requestDispositionCategory" class="form-control input-md"
                     ng-options="requestDispositionCategory.key as requestDispositionCategory.value | translate for requestDispositionCategory in requestDispositionCategories"
                     ng-change="changeDispositionCategory(requestDispositionCategory)">
+                <option value='' selected ng-value="null" translate>core.lookups.requestDispositionType.selectDispositionCategory</option>
             </select>
         </div>
         <div class="col-lg-6">
