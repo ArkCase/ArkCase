@@ -141,7 +141,7 @@ public class PortalCreateRequestService
         request.setOriginalRequestNumber(in.getOriginalRequestNumber());
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
-
+        request.setPortalRequestTrackingId(in.getPortalRequestTrackingId());
         if (in.getTitle() != null)
         {
             request.setTitle(in.getTitle());
