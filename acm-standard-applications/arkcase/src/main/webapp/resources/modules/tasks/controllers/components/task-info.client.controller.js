@@ -163,7 +163,7 @@ angular.module('tasks').controller(
             };
 
             $scope.startDate = {
-                startDateInfo: null
+                startDateInfo: null,
             };
 
             $scope.datepickerDueDateOptions = {
@@ -171,19 +171,31 @@ angular.module('tasks').controller(
             };
 
             var onObjectInfoRetrieved = function(objectInfo) {
+                // unbind both watchers when user switch between tasks. When we call $watch() method,
+                // angularJS returns an unbind function that will kill the $watch() listener when its called.
+                dueDateWatch();
+                startDateWatch();
                 $scope.objectInfo = objectInfo;
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
                     $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
+                    $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
+                    $scope.datepickerDueDateOptions.dueDateInfo = moment.utc(new Date()).local();
+                    $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment(new Date()).format(defaultDateTimePickerFormat);
                 }
                 if(!Util.isEmpty($scope.objectInfo.taskStartDate)) {
                     $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
+                    $scope.startDate.startDateInfo = moment($scope.objectInfo.taskStartDate).local();
+                    $scope.startDate.startDateInfoUIPicker = moment($scope.objectInfo.taskStartDate).format(defaultDateTimePickerFormat);
                 }
                 else {
                     $scope.dateInfo.taskStartDate = null;
+                    $scope.startDate.startDateInfo = moment(new Date()).local();
+                    $scope.startDate.startDateInfoUIPicker = moment(new Date()).format(defaultDateTimePickerFormat);
                 }
                 $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
                 $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate)) && $scope.objectInfo.status !== "CLOSED";
@@ -255,6 +267,7 @@ angular.module('tasks').controller(
                     $scope.updateDueDate($scope.dateInfo.dueDate);
                 } else {
                     $scope.saveTask();
+                    startDateWatch();
                 }
             };
 
@@ -263,11 +276,21 @@ angular.module('tasks').controller(
                     if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.taskStartDate)) {
                         var startDate = new Date(data);
                         $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso(startDate)).format();
-                        $scope.validateStartDueDate()
+                        $scope.startDate.startDateInfo = moment($scope.objectInfo.taskStartDate).local();
+                        $scope.startDate.startDateInfoUIPicker = moment($scope.objectInfo.taskStartDate).format(defaultDateTimePickerFormat);
+                        // unbind start date watcher before task save so that when user switch to different task
+                        // watcher won't be fired before landing on that different task
+                        startDateWatch();
+                        $scope.validateStartDueDate();
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.taskStartDate = $scope.taskStartDateBeforeChange;
+                        $scope.startDate.startDateInfo = moment($scope.objectInfo.taskStartDate).local();
+                        $scope.startDate.startDateInfoUIPicker = moment($scope.objectInfo.taskStartDate).format(defaultDateTimePickerFormat);
+                        // unbind start date watcher before task save so that when user switch to different task
+                        // watcher won't be fired before landing on that different task
+                        startDateWatch();
                     }
                 }
             };
@@ -282,14 +305,24 @@ angular.module('tasks').controller(
                             DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }else {
                             $scope.objectInfo.dueDate = moment.utc(dueDate).format();
-                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimePickerFormat);
+                            $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                            $scope.dateInfo.dueDate = $scope.datepickerDueDateOptions.dueDateInfo;
+                            // unbind due date watcher before task save so that when user switch to different task
+                            // watcher won't be fired before landing on that different task
+                            dueDateWatch();
                             $scope.saveTask();
                         }
                     }
                 } else {
                     if (!oldDate) {
                         $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimePickerFormat);
+                        $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                        $scope.dateInfo.dueDate = $scope.datepickerDueDateOptions.dueDateInfo;
+                        // unbind due date watcher before task save so that when user switch to different task
+                        // watcher won't be fired before landing on that different task
+                        dueDateWatch();
                         $scope.saveTask();
                     }
                 }
@@ -298,16 +331,31 @@ angular.module('tasks').controller(
                 ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             };
 
-            $scope.$watch('datepickerDueDateOptions.dueDateInfo', function(newValue, oldValue) {
-                if (newValue) {
-                    $scope.updateDueDate(newValue);
-                }
-            }, true);
+            // store function references returned by $watch statement in variables
+            var dueDateWatch = $scope.$watch('datepickerDueDateOptions.dueDateInfo', dueDateChangeFn, true);
+            var startDateWatch = $scope.$watch('startDate.startDateInfo', startDateChangeFn, true);
 
-            $scope.$watch('startDate.startDateInfo', function(newValue, oldValue) {
-                if (newValue) {
-                    $scope.updateStartDate(newValue);
+            // update due date and save task
+            var dueDateChangeFn = function (newValue, oldValue) {
+                if (newValue && !moment(newValue).isSame(moment(oldValue)) && $scope.datepickerDueDateOptions.isOpen) {
+                    $scope.updateDueDate(newValue, oldValue);
                 }
-            }, true);
+            }
+
+            // update start date and save task
+            var startDateChangeFn = function (newValue, oldValue) {
+                if (newValue && !moment(newValue).isSame(moment(oldValue)) && $scope.startDate.isOpen) {
+                    $scope.updateStartDate(newValue, oldValue);
+                }
+            }
+
+            // register watchers when user open date picker
+            $scope.registerWatchers = function (dateType) {
+                if (dateType === 'dueDate') {
+                    dueDateWatch = $scope.$watch('datepickerDueDateOptions.dueDateInfo', dueDateChangeFn, true);
+                } else {
+                    startDateWatch = $scope.$watch('startDate.startDateInfo', startDateChangeFn, true);
+                }
+            }
 
         } ]);
