@@ -83,6 +83,12 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
         }
+
+        if (file.getStatus().equals(EcmFileConstants.RECORD)){
+            return copyRecord(file.getId(), targetFolder.getId(), targetContainer.getContainerObjectType(),
+                    targetContainer.getContainerObjectId(), SecurityContextHolder.getContext().getAuthentication());
+        }
+
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));

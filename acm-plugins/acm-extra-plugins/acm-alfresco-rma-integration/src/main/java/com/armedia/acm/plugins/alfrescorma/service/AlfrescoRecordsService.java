@@ -162,7 +162,7 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
                     categoryFolder = findFolder(container.getContainerObjectType());
                 }
 
-                Folder parentFolder = addDateInAlfrescoStructure(categoryFolder);
+                Folder parentFolder = addDateInAlfrescoStructure(categoryFolder, container.getCreated());
 
                 String recordFolderId = createOrFindRecordFolderOrRecordCategory(recordFolderName, parentFolder, "Record Folder");
                 log.debug("recordFolderId: {}", recordFolderId);
@@ -196,8 +196,14 @@ public class AlfrescoRecordsService implements AcmConfigurablePlugin
 
     public Folder addDateInAlfrescoStructure(Folder categoryFolder) throws AlfrescoServiceException
     {
+        return addDateInAlfrescoStructure(categoryFolder, new Date());
+    }
 
+    public Folder addDateInAlfrescoStructure(Folder categoryFolder, Date date) throws AlfrescoServiceException
+    {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String month = parseMonthOrDay(calendar.get(Calendar.MONTH) + 1);
         String day = parseMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
