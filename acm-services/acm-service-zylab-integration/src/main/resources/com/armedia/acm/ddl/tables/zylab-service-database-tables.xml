@@ -113,4 +113,19 @@
         <modifyDataType tableName="acm_zylab_file_metadata" columnName="cm_production_create_date" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="08-add_name_field_to_zylab-file-metadata" author="aleksandar.acevski" dbms="mysql">
+        <addColumn tableName="acm_zylab_file_metadata">
+            <column name="cm_name" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="08-add_name_field_to_zylab-file-metadata" author="aleksandar.acevski"
+               dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_zylab_file_metadata">
+            <column name="cm_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+
+
 </databaseChangeLog>
