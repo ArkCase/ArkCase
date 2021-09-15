@@ -34,6 +34,7 @@ public interface ZylabLoadFileColumns
 {
 
     String ZYLAB_ID = "ZyLAB_ID";
+    String NAME = "Name";
     String PRODUCED_PAGES = "Produced_Pages";
     String PRODUCTION_CREATE_DATE = "Production_CreateDate";
     String CONTAINS_REDACTION = "Contains_Redaction";
