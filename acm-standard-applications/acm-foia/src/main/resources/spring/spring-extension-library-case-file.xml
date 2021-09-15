@@ -274,6 +274,7 @@
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
             <beans:property name="objectAssociationService" ref="objectAssociationService"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
