@@ -75,7 +75,7 @@ public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public void mapAdditionalProperties(AcmUser in, Map<String, Object> additionalProperties)
     {
-        additionalProperties.put(TYPE_LCS, "SYSTEM USER");
+        additionalProperties.put(TYPE_LCS,  in.getUserDirectoryName().equals("") ? "SYSTEM USER" : "USER");
         additionalProperties.put(EMAIL_LCS, in.getMail());
     }
 
