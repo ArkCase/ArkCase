@@ -582,27 +582,6 @@ angular.module('request-info').controller(
                     return approvers;
                 });
 
-                PermissionsService.getActionPermission('lock', objectInfo, {
-                    objectType: "CASE_FILE"
-                }).then(function (result) {
-                    if (result) {
-                        RequestsService.lockRequest({
-                            requestId: $stateParams['id']
-                        }).$promise.then(function (lockInfo) {
-                            $scope.readOnly = false;
-                            requestLockDeferred.resolve(lockInfo);
-                        }, function (error) {
-                            $scope.readOnly = true;
-                            requestLockDeferred.resolve(null);
-                        });
-                    } else {
-                        $scope.readOnly = true;
-                        requestLockDeferred.resolve(null);
-                    }
-                }, function (error) {
-                    $scope.readOnly = true;
-                    requestLockDeferred.resolve(null);
-                });
 
                 $scope.$broadcast('request-info-retrieved', $scope.requestInfo);
 

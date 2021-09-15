@@ -55,7 +55,7 @@ public class UserEmailToSolrTransformer implements AcmObjectToSolrDocTransformer
         solrDocument.setObject_type_s("EMAIL");
         solrDocument.setId(in.getUserId() + "-EMAIL");
         solrDocument.setObject_id_s(in.getUserId() + "");
-        solrDocument.setType_lcs("SYSTEM USER");
+        solrDocument.setType_lcs(in.getUserDirectoryName().equals("") ? "SYSTEM USER" : "USER");
         solrDocument.setEmail_lcs(in.getMail());
         solrDocument.setName(in.getFullName());
 
