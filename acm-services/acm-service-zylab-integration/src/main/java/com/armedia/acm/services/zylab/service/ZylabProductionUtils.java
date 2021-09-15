@@ -27,6 +27,20 @@ package com.armedia.acm.services.zylab.service;
  * #L%
  */
 
+import com.armedia.acm.services.zylab.model.ZylabFile;
+import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
+import com.armedia.acm.services.zylab.model.ZylabLoadFileColumns;
+import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.util.LinkedCaseInsensitiveMap;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,20 +54,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.input.BOMInputStream;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.util.LinkedCaseInsensitiveMap;
-
-import com.armedia.acm.services.zylab.model.ZylabFile;
-import com.armedia.acm.services.zylab.model.ZylabFileMetadata;
-import com.armedia.acm.services.zylab.model.ZylabLoadFileColumns;
-import com.armedia.acm.tool.zylab.exception.ZylabProductionSyncException;
 
 /**
  * Created by Aleksandar Acevski <aleksandar.acevski@armedia.com> on March, 2021
@@ -109,6 +109,7 @@ public class ZylabProductionUtils
 
         zylabFileMetadata.setMatterId(matterId);
         zylabFileMetadata.setProductionKey(productionKey);
+        zylabFileMetadata.setName(dataMap.get(ZylabLoadFileColumns.NAME));
 
         if (NumberUtils.isParsable(dataMap.get(ZylabLoadFileColumns.ZYLAB_ID)))
         {
@@ -161,23 +162,27 @@ public class ZylabProductionUtils
         for (ZylabFileMetadata zylabFileMetadata : zylabFileMetadataList)
         {
             Long zylabId = zylabFileMetadata.getZylabId();
+            String zylabName = zylabFileMetadata.getName();
             if (zylabId == null)
             {
                 throw new ZylabProductionSyncException(
                         "ZyLAB_ID field not set in load file for entry " + zylabFileMetadata);
             }
-
-            String fileNameInSentFolder = String.valueOf(zylabId);
+            else if (zylabName == null)
+            {
+                throw new ZylabProductionSyncException(
+                        "Name field not set in load file for entry " + zylabFileMetadata);
+            }
 
             productionFiles.stream()
-                    .filter(file -> file.getName().startsWith(fileNameInSentFolder))
+                    .filter(file -> file.getName().startsWith(zylabName))
                     .map(file -> new ZylabFile(file, zylabFileMetadata))
                     .forEach(zylabFiles::add);
         }
         if (zylabFiles.isEmpty())
         {
             throw new ZylabProductionSyncException(
-                    "No files found in production. Files in production must be named with the ZyLAB ID field.");
+                    "No files found in production. Files in production must be named with the name field (FamilyID_ZylabID)");
         }
         return zylabFiles;
     }

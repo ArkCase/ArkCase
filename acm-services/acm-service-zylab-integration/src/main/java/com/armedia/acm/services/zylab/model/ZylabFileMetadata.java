@@ -75,6 +75,9 @@ public class ZylabFileMetadata
     @Column(name = "cm_zylab_id")
     private Long zylabId;
 
+    @Column(name = "cm_name")
+    private String name;
+
     @Column(name = "cm_produced_pages")
     private Integer producedPages;
 
@@ -194,6 +197,14 @@ public class ZylabFileMetadata
     public void setZylabId(Long zylabId)
     {
         this.zylabId = zylabId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getProducedPages()
@@ -429,6 +440,7 @@ public class ZylabFileMetadata
                 ", matterId=" + matterId +
                 ", productionKey='" + productionKey + '\'' +
                 ", zylabId=" + zylabId +
+                ", name=" + name +
                 ", producedPages=" + producedPages +
                 ", productionCreateDate=" + productionCreateDate +
                 ", containsRedaction=" + containsRedaction +
