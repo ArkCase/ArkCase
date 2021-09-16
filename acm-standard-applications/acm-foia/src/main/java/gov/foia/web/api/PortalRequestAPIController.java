@@ -185,6 +185,14 @@ public class PortalRequestAPIController
         throw new Exception(translationService.translate(NotificationConstants.PORTAL_RESPONSE_EXPIRY));
     }
 
+
+    @RequestMapping(value = "/external/anonymous/status/{portalRequestTrackingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(@PathVariable("portalRequestTrackingId") String portalRequestTrackingId)
+            throws AcmObjectNotFoundException
+    {
+        return getPortalRequestService().getExternalAnonymousRequests(portalRequestTrackingId);
+    }
     /**
      * @return the portalRequestService
      */

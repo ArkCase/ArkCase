@@ -379,4 +379,16 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
         return nextRequestQuery.getResultList();
     }
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId)
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.portalRequestTrackingId = :portalRequestTrackingId";
+
+        TypedQuery<FOIARequest> query = getEm().createQuery(queryText, FOIARequest.class);
+        query.setParameter("portalRequestTrackingId", portalRequestTrackingId);
+        List<FOIARequest> requests = query.getResultList();
+
+        return populateRequestStatusList(requests);
+    }
+
 }
