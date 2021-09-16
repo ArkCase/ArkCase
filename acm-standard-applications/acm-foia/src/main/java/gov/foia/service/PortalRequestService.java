@@ -639,6 +639,17 @@ public class PortalRequestService implements ApplicationEventPublisherAware
         return responseRequests;
     }
 
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId) throws AcmObjectNotFoundException
+    {
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getExternalAnonymousRequests(portalRequestTrackingId);
+        if (responseRequests.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
+                    "FOIA Requests not found for the request tracking id  [" + portalRequestTrackingId + "]");
+        }
+        return responseRequests;
+    }
+
     public TranslationService getTranslationService()
     {
         return translationService;
