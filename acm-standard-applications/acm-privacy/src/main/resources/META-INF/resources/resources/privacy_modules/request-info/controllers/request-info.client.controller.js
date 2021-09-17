@@ -370,8 +370,8 @@ angular.module('request-info').controller(
                         onHideLoader();
                     });
                 } else {
-                    var ecmFile = EcmService.getFiles({
-                        fileIds: $scope.ecmFile.fileId
+                    var ecmFile = EcmService.getFile({
+                        fileId: $scope.ecmFile.fileId
                     });
                     ecmFile.$promise.then(function (file) {
                         if ($scope.fileInfo.id !== file.fileId + ':' + file.activeVersionTag) {
