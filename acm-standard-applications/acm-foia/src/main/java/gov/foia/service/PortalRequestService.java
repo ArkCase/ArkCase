@@ -58,6 +58,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
 
+import gov.foia.model.event.RequestReleasedDcoumentsDownloadedEvent;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -67,6 +68,8 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,7 +115,7 @@ import gov.foia.model.WithdrawRequest;
  * @author sasko.tanaskoski
  *
  */
-public class PortalRequestService
+public class PortalRequestService implements ApplicationEventPublisherAware
 {
     private static final int MAX_READING_ROOM_RESULTS = 500;
 
@@ -149,6 +152,7 @@ public class PortalRequestService
     private final String WITHDRAW_REQUEST_TITLE = "Withdraw Request";
 
     private CorrespondenceTemplateManager templateManager;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus portalRequestStatus) throws AcmObjectNotFoundException
     {
@@ -294,6 +298,9 @@ public class PortalRequestService
         {
             return;
         }
+
+        RequestReleasedDcoumentsDownloadedEvent event = new RequestReleasedDcoumentsDownloadedEvent(request);
+        applicationEventPublisher.publishEvent(event);
 
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
@@ -690,4 +697,9 @@ public class PortalRequestService
         this.templateManager = templateManager;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }
