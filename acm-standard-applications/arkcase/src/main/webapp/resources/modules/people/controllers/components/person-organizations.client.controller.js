@@ -61,7 +61,7 @@ angular.module('people').controller(
                             return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
                         }).forEach(function(association) {
                             if (association.organization.organizationId == data.organizationId) {
-                                if (data.type === association.personToOrganizationAssociationType) {
+                                if (data.inverseType === association.personToOrganizationAssociationType) {
                                     validationResult.valid = false;
                                     validationResult.duplicateOrganizationRoleError = true;
                                 }
