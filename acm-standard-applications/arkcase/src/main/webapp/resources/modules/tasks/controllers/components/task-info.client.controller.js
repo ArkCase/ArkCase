@@ -208,10 +208,11 @@ angular.module('tasks').controller(
 
                 var today = new Date();
                 if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
-                    $scope.minDate = moment(today);
-                } else {
                     $scope.minDate = moment.utc(new Date($scope.dateInfo.taskStartDate)).local();
+                } else {
+                    $scope.minDate = moment(today);
                 }
+                $scope.maxStartDate = moment.utc(new Date($scope.dateInfo.dueDate)).local();
 
                 var owningGroupParticipantType = 'owning group';
                 $scope.owningGroup = 'Unknown';
