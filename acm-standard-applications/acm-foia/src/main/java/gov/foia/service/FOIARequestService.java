@@ -320,9 +320,9 @@ public class FOIARequestService
         String originalRequestFolderName = String.format(getOriginalRequestFolderNameFormat(),
                 originalRequest.getCaseNumber());
 
-        AcmFolder originalRequestFolderInNewRequest = acmFolderService.addNewFolder(newRequestRootFolder, originalRequestFolderName);
-
-        acmFolderService.copyFolderStructure(originalRequestRootFolder.getId(), newRequestContainer, originalRequestFolderInNewRequest);
+        acmFolderService.copyFolderAsLink(originalRequestRootFolder, newRequestRootFolder,
+                newRequestContainer.getContainerObjectId(), newRequestContainer.getContainerObjectType(),
+                originalRequestFolderName);
     }
 
     /**
