@@ -45,9 +45,13 @@
                 <ref bean="solrReindexOrganizationExecutor"/>
                 <ref bean="createPersonFromExistingUsersExecutor"/>
                 <ref bean="solrReindexTaskExecutor" />
+<<<<<<< HEAD
                 <ref bean="solrReindexCaseFileExecutor" />
                 <ref bean="solrReindexConsultationExecutor" />
                 <ref bean="createAlfrescoAndRmFoldersExecutor" />
+=======
+                <ref bean="solrReindexConsultationExecutor" />
+>>>>>>> e897e6741a (Fix the Consultation Summary text)
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
