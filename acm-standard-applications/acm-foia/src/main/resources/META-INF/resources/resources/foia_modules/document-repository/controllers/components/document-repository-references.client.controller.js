@@ -54,6 +54,13 @@ angular.module('document-repository').controller(
                         var parentType = Util.goodMapValue(rowEntity, "parentType");
                         var fileName = Util.goodMapValue(rowEntity, "targetName");
 
+                        var targetTypeChanged = false;
+                        var originalTargetType = targetType;
+                        if(targetType == "REQUEST") {
+                            targetType = ObjectService.ObjectTypes.CASE_FILE;
+                            targetTypeChanged = true;
+                        }
+
                         if (targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked) {
                             gridHelper.openObject(targetId, parentId, parentType, fileName);
                         } else {
@@ -65,6 +72,10 @@ angular.module('document-repository').controller(
                                 objectId: targetId,
                                 objectType: targetType
                             });
+                        }
+
+                        if (targetTypeChanged) {
+                            targetType = originalTargetType;
                         }
                     };
 
