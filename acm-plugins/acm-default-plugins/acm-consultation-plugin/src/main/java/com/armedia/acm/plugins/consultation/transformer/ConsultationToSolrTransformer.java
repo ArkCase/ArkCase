@@ -103,6 +103,7 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public void mapAdditionalProperties(Consultation in, Map<String, Object> additionalProperties)
     {
         additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put("consultation_summary_parseable", in.getConsultationDetailsSummary());
         additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
         additionalProperties.put(PRIORITY_LCS, in.getPriority());
         additionalProperties.put(STATUS_LCS, in.getStatus());
