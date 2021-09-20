@@ -1732,8 +1732,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     "in current directory");
         }
 
-        getFileParticipantService().setFolderParticipantsFromParentFolder(linkFolder);
-        getFolderDao().save(linkFolder);
         return linkFolder;
     }
 
@@ -1754,6 +1752,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder folderLink = copyFolderProperties(toBeCopied, dstFolder);
         folderLink.setName(newFolderName);
         folderLink.setLink(true);
+        getFileParticipantService().setFolderParticipantsFromParentFolder(folderLink);
+
         return getFolderDao().save(folderLink);
     }
 
