@@ -69,20 +69,6 @@ public class HolidayConfigurationService
         return getHolidayConfigurationFromProps(holidayConfigurationProps);
     }
 
-    public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
-    {
-        LocalDate returnDate = date;
-        for (int i = 0; i < workingDays;)
-        {
-            returnDate = returnDate.plusDays(1);
-            if (isWorkingDay(returnDate))
-            {
-                i++;
-            }
-        }
-        return returnDate;
-    }
-
     public LocalDate subtractWorkingDaysFromDate(LocalDate dueDate, Integer workingDays)
     {
         LocalDate returnDate = dueDate;
@@ -119,10 +105,32 @@ public class HolidayConfigurationService
      */
     public Date addWorkingDaysToDate(Date date, int workingDays)
     {
-        LocalDate localDate = getDateTimeService().toUTCDate(date);
+        LocalDateTime localDate = getDateTimeService().toUTCDateTime(date);
         localDate = addWorkingDaysToDate(localDate, workingDays);
 
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public LocalDateTime addWorkingDaysToDate(LocalDateTime date, int workingDays)
+    {
+        LocalTime localTime = date.toLocalTime();
+        LocalDate localDate = addWorkingDaysToDate(date.toLocalDate(), workingDays);
+
+        return LocalDateTime.of(localDate, localTime);
+    }
+
+    public LocalDate addWorkingDaysToDate(LocalDate date, int workingDays)
+    {
+        LocalDate returnDate = date;
+        for (int i = 0; i < workingDays;)
+        {
+            returnDate = returnDate.plusDays(1);
+            if (isWorkingDay(returnDate))
+            {
+                i++;
+            }
+        }
+        return returnDate;
     }
 
     /**
@@ -135,19 +143,17 @@ public class HolidayConfigurationService
     {
         LocalDateTime ldt = getDateTimeService().fromDateToLocalDateTime(date);
 
-        LocalDate localDate = ldt.toLocalDate();
-
         if (isFirstDayFullWorkingDay(ldt))
         {
             // if first day is full working day we need to subtrack it
-            localDate = addWorkingDaysToDate(localDate, workingDays - 1);
+            ldt = addWorkingDaysToDate(ldt, workingDays - 1);
         }
         else
         {
-            localDate = addWorkingDaysToDate(localDate, workingDays);
+            ldt = addWorkingDaysToDate(ldt, workingDays);
         }
 
-        return setEndOfLocalTimeBusinessHoursToDate(localDate);
+        return setEndOfLocalTimeBusinessHoursToDate(ldt.toLocalDate());
     }
 
     /**
