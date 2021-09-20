@@ -1733,6 +1733,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
 
         getFileParticipantService().setFolderParticipantsFromParentFolder(linkFolder);
+        getFolderDao().save(linkFolder);
         return linkFolder;
     }
 
