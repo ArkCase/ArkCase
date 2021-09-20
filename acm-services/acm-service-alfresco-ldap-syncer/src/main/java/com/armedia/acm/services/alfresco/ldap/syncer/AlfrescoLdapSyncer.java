@@ -101,12 +101,10 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
 
                 if (result.getBody().isSuccess())
                 {
-                    syncResult.setMessage("Alfresco sync with LDAP server succeeded.");
                     log.debug("Alfresco sync with LDAP server succeeded.");
                 }
                 else
                 {
-                    syncResult.setMessage("Alfresco sync with LDAP server failed.");
                     log.warn("Alfresco sync with LDAP server failed.");
                 }
 
@@ -129,7 +127,6 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
                 String userName = authentication.getName();
                 syncResult.setUser(userName);
                 syncResult.setResult(false);
-                syncResult.setMessage("Sync with Alfresco failed due to: [" + ex.getMessage() + "]");
 
                 applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(syncResult));
             }
