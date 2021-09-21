@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
     'People.NewPersonController',
-    ['$scope', '$stateParams', '$translate', '$q', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, $q, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'EmailValidationService',
+        function ($scope, $stateParams, $translate, $q, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, EmailValidationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -413,6 +413,7 @@ angular.module('people').controller(
                 regEx = regExp;
             });
 
+
             function openDuplicatePersonPicker(result) {
 
                 var params = {};
@@ -469,6 +470,9 @@ angular.module('people').controller(
                     $scope.showPhoneError = validateObject.showPhoneError;
                 } else if (inputType === 'email' && caValue) {
                     $scope.checkExistingEmail(caValue);
+                    var validateObject = EmailValidationService.validateInput(caValue);
+                    $scope.person.defaultEmail.value = validateObject.inputValue;
+                    $scope.showEmailError = validateObject.showEmailError;
                 }
             };
 

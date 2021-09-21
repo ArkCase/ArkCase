@@ -5,4 +5,8 @@
     <bean id="phoneRegexController" class="com.armedia.acm.plugins.addressable.web.api.PhoneRegexAPIController">
         <property name="phoneRegexConfig" ref="phoneRegexConfig"/>
     </bean>
+
+    <bean id="emailRegexController" class="com.armedia.acm.plugins.addressable.web.api.EmailRegexAPIController">
+        <property name="emailRegexConfig" ref="emailRegexConfig"/>
+    </bean>
 </beans>

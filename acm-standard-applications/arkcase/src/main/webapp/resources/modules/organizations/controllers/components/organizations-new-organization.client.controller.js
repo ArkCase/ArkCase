@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-    ['$scope', '$stateParams', '$translate', '$q', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService',
-        function ($scope, $stateParams, $translate, $q, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService','EmailValidationService',
+        function ($scope, $stateParams, $translate, $q, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService, EmailValidationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -468,7 +468,8 @@ angular.module('organizations').controller(
                 regEx = regExp;
             });
 
-            $scope.validatePhone = function (type, data, isDefaultPhone) {
+
+            $scope.validateContact = function (type, data, isDefaultPhone) {
                 if (type === 'phone' || type === 'fax') {
                     var validateObject = PhoneValidationService.validateInput(data.value, regEx);
                     data.value = validateObject.inputValue;
@@ -477,6 +478,11 @@ angular.module('organizations').controller(
                     } else {
                         data['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = validateObject.showPhoneError;
                     }
+                }
+                if(type === 'email') {
+                    var validateObject = EmailValidationService.validateInput(data.value);
+                    data.value = validateObject.inputValue;
+                    $scope.showEmailError = validateObject.showEmailError;
                 }
             }
 
