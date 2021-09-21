@@ -438,9 +438,10 @@
                                 <input type="{{caType}}" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}"
-                                       ng-blur="validatePhone(caType, organization['default'+capitalizeFirstLetter(caType)], true)">
+                                       ng-blur="validateContact(caType, organization['default'+capitalizeFirstLetter(caType)], true)">
                                 <span ng-if="caType == 'phone' && showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                                 <span ng-if="caType == 'fax' && showFaxError == true" translate>organizations.comp.newOrganization.communicationAccounts.faxValidationMessage</span>
+                                <span ng-if="caType == 'email' && showEmailError == true" translate>organizations.comp.newOrganization.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
@@ -474,7 +475,7 @@
                                 <input id="caType" type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}"
-                                       ng-blur="validatePhone(contactMethod.type, contactMethod, false)">
+                                       ng-blur="validateContact(contactMethod.type, contactMethod, false)">
                                 <span ng-if="contactMethod.type === 'phone' && contactMethod.showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                                 <span ng-if="contactMethod.type === 'fax' && contactMethod.showFaxError == true" translate>organizations.comp.newOrganization.communicationAccounts.faxValidationMessage</span>
                             </div>
