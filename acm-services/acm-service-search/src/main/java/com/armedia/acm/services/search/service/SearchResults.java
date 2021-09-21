@@ -28,12 +28,13 @@ package com.armedia.acm.services.search.service;
  */
 
 import com.armedia.acm.services.search.model.SearchConstants;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -116,6 +117,17 @@ public class SearchResults
         {
             String dateText = doc.getString(dateField);
             Date date = solrFormat.parse(dateText);
+            return date;
+        }
+        return null;
+    }
+
+    public LocalDateTime extractLocalDateTime(DateTimeFormatter solrFormat, JSONObject doc, String dateField) throws ParseException
+    {
+        if (doc.has(dateField))
+        {
+            String dateText = doc.getString(dateField);
+            LocalDateTime date = LocalDateTime.parse(dateText, solrFormat);
             return date;
         }
         return null;

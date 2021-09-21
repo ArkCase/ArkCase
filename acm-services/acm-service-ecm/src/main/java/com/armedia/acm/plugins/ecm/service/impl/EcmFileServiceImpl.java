@@ -81,7 +81,6 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -111,7 +110,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1083,6 +1081,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         object.setDuplicate(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_DUPLICATE));
 
         object.setCustodian(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CUSTODIAN));
+
+        object.setMadePublicDate(getSearchResults().extractLocalDateTime(DateTimeFormatter.ofPattern(SearchConstants.SOLR_DATE_FORMAT),
+                doc, SearchConstants.PROPERTY_MADE_PUBLIC_DATE));
 
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {

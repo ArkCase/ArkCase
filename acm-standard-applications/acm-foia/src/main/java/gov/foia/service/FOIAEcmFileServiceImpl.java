@@ -129,6 +129,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setDuplicate(file.isDuplicate());
 
             fileCopy.setPublicFlag(file.getPublicFlag());
+            fileCopy.setMadePublicDate(file.getMadePublicDate());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
             fileCopyVersion.setCmisObjectId(

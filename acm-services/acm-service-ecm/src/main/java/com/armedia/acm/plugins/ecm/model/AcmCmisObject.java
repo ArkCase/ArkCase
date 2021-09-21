@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +64,7 @@ public class AcmCmisObject implements Serializable
     private boolean link;
     private boolean duplicate;
     private String custodian;
+    private LocalDateTime madePublicDate;
 
     public Long getObjectId()
     {
@@ -288,5 +290,15 @@ public class AcmCmisObject implements Serializable
 
     public void setCustodian(String custodian) {
         this.custodian = custodian;
+    }
+
+    public LocalDateTime getMadePublicDate()
+    {
+        return madePublicDate;
+    }
+
+    public void setMadePublicDate(LocalDateTime madePublicDate)
+    {
+        this.madePublicDate = madePublicDate;
     }
 }
