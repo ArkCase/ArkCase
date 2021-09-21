@@ -178,20 +178,12 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted, String auditEntityUserId)
     {
-        log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
-                participant.getParticipantType(), folder.getId(), folder.getName());
-        if (folder.isLink()) {
-            AcmFolder targetFolder = getFolderDao().findByCmisFolderId(folder.getCmisFolderId());
-            Authentication _auth = new UsernamePasswordAuthenticationToken(auditEntityUserId, auditEntityUserId);
-            AcmAuthentication auth = new AcmAuthentication(_auth);
-            if (!getArkPermissionEvaluator().hasPermission(auth, targetFolder.getId(), "FOLDER", "write|group-write"))
-            {
-                log.debug("Folder [{}-{}] is a link. Participants won't be inherited to children.", folder.getId(), folder.getName());
-                return;
-            }
+        if (!folder.isLink()) {
+            log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
+                    participant.getParticipantType(), folder.getId(), folder.getName());
+            getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
+            setParticipantToFolderChildrenRecursively(folder, participant, restricted, auditEntityUserId);
         }
-        getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
-        setParticipantToFolderChildrenRecursively(folder, participant, restricted, auditEntityUserId);
     }
 
     private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted, String auditEntityUserId)
