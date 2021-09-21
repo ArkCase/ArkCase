@@ -233,28 +233,36 @@ angular.module('queues').controller(
                                     }
 
                                     if (holidaySchedule.data.includeWeekends) {
-                                        dueDateTotal = DueDateService.dueDateWithWeekends(request.create_date_tdt, queuesTotal, holidaySchedule.data.holidays);
+                                        dueDateTotal = DueDateService.dueDateWithWeekends(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
 
-                                        request.queueDueDate = DueDateService.dueDateWithWeekends(request.queue_enter_date_tdt, numDays, holidaySchedule.data.holidays);
+                                        request.queueDueDate = DueDateService.dueDateWithWeekends(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
                                         //calculate to show the due date on the entered queue with working days and weekends without holidays
 
-                                        request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt, holidaySchedule.data.holidays);
+                                        request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
 
-                                        var totalDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal);
-                                        var queueDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate);
+                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal) :
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate) :
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
                                         request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     } else {
                                         dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
-                                        request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt, numDays, holidaySchedule.data.holidays);
+                                        request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
                                         //calculate to show the due date on the entered queue with working days without holidays and weekends
 
-                                        request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt, holidaySchedule.data.holidays);
+                                        request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
 
-                                        var totalDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal);
-                                        var queueDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate);
+                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal) :
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate) :
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
                                         request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     }

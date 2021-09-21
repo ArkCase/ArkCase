@@ -144,9 +144,9 @@ public class DateTimeService {
         return date.atZone(getDefaultClientZoneId()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public LocalDate toUTCDate(Date date)
+    public LocalDateTime toUTCDateTime(Date date)
     {
-        return getZonedDateTimeAtUTC(date).toLocalDate();
+        return getZonedDateTimeAtUTC(date).toLocalDateTime();
     }
 
     public LocalDate toUTCDate(LocalDateTime date)

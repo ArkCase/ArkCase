@@ -31,13 +31,11 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-
+import gov.foia.model.FOIARequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-
-import gov.foia.model.FOIARequest;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 23, 2016
@@ -141,6 +139,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         }
 
         additionalProperties.put("queue_enter_date_tdt", requestIn.getQueueEnterDate());
+        additionalProperties.put("hold_enter_date_tdt", requestIn.getHoldEnterDate());
 
         additionalProperties.put("record_search_date_from_tdt", requestIn.getRecordSearchDateFrom());
         additionalProperties.put("record_search_date_to_tdt", requestIn.getRecordSearchDateTo());
