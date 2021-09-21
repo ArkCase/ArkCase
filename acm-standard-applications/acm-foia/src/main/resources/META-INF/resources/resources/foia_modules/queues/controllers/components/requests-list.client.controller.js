@@ -241,8 +241,12 @@ angular.module('queues').controller(
                                         request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
 
-                                        var totalDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal);
-                                        var queueDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate);
+                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal) :
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate) :
+                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
                                         request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     } else {
@@ -253,8 +257,12 @@ angular.module('queues').controller(
                                         request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
 
-                                        var totalDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal);
-                                        var queueDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate);
+                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal) :
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate) :
+                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
                                         request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     }

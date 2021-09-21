@@ -80,16 +80,11 @@ angular.module('cases').controller(
                     $scope.holidays = response.data.holidays;
                     $scope.includeWeekends = response.data.includeWeekends;
 
-                    $scope.calculateDaysObj = {};
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
-                    if ($scope.objectInfo.dueDate != null) {
-                        if (!$scope.includeWeekends) {
-                            $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-                        }
-                        else {
-                            $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                        }
+
+                    if ($scope.objectInfo !== null) {
+                        calculateDaysObj($scope.objectInfo);
                         $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY h:mmA');
                     }
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
@@ -290,12 +285,7 @@ angular.module('cases').controller(
             function dueDateChanged(e, newDueDate) {
                 $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
                 $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY h:mmA');
-                if(!$scope.includeWeekends) {
-                    $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
-                }
-                else {
-                    $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                }
+                calculateDaysObj($scope.objectInfo);
             }
 
             $scope.updateNotificationGroup = function() {
@@ -329,7 +319,24 @@ angular.module('cases').controller(
                     $scope.objectInfo.externalIdentifier = data;
                     $scope.saveCase();
                 }
-            }
+            };
 
+            var calculateDaysObj = function(objectInfo) {
+
+                $scope.calculateDaysObj = {};
+                if (objectInfo != null) {
+                    if (!$scope.includeWeekends) {
+                        $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, objectInfo.dueDate);
+                        if ($scope.objectInfo.queue.name === "Hold") {
+                            $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, objectInfo.dueDate, objectInfo.holdEnterDate);
+                        }
+                    } else {
+                        $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, objectInfo.dueDate);
+                        if ($scope.objectInfo.queue.name === "Hold") {
+                            $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, objectInfo.dueDate, objectInfo.holdEnterDate);
+                        }
+                    }
+                }
+            };
 
         } ]);

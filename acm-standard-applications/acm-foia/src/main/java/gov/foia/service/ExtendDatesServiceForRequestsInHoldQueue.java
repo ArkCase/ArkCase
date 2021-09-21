@@ -32,7 +32,6 @@ import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class ExtendDatesServiceForRequestsInHoldQueue
 {
@@ -46,9 +45,11 @@ public class ExtendDatesServiceForRequestsInHoldQueue
        if (request != null)
        {
 
-           request.setPerfectedDate(LocalDateTime.now());
+           request.setPerfectedDate(getHolidayConfigurationService()
+                   .addWorkingDaysToDate(request.getPerfectedDate(), getHolidayConfigurationService()
+                           .calculateAmountOfWorkingDays(request.getHoldEnterDate(), LocalDate.now())));
            request.setDueDate(getHolidayConfigurationService()
-                   .addWorkingDaysToDateAndSetTimeToBusinessHours(request.getDueDate(), getHolidayConfigurationService()
+                   .addWorkingDaysToDate(request.getDueDate(), getHolidayConfigurationService()
                            .calculateAmountOfWorkingDays(request.getHoldEnterDate(), LocalDate.now())));
 
            requestDao.save(request);
