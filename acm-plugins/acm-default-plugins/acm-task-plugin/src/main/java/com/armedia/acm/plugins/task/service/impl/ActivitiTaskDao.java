@@ -479,6 +479,29 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             in.getParticipants().add(assignee);
         }
+
+        List<String> candidateGroups = in.getCandidateGroups();
+
+        // Add candidate group as collaborators
+        for (String group : candidateGroups)
+        {
+            Boolean found = false;
+            for (AcmParticipant participant : in.getParticipants())
+            {
+                if (participant.getParticipantLdapId().equals(group))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                AcmParticipant participant = new AcmParticipant();
+                participant.setParticipantType("collaborator group");
+                participant.setParticipantLdapId(group);
+                in.getParticipants().add(participant);
+            }
+        }
     }
 
     @Override
