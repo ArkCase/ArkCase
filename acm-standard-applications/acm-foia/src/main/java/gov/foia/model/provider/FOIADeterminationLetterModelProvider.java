@@ -75,7 +75,7 @@ public class FOIADeterminationLetterModelProvider implements TemplateModelProvid
             exemptionCodes = new ArrayList<>();
         }
 
-        determinationLetterCorrespondence.setExemptionCodesAndDescription(getFoiaTemplateModelExemption().exemptionCodesAndDescription(exemptionCodes));
+        determinationLetterCorrespondence.setExemptionCodeSummary(getFoiaTemplateModelExemption().exemptionCodesAndSummary(exemptionCodes));
         determinationLetterCorrespondence.setExemptionCodesAndDescription(getFoiaTemplateModelExemption().exemptionCodesAndDescription(exemptionCodes));
 
         String requestAssignee = ParticipantUtils.getAssigneeIdFromParticipants(request.getParticipants());

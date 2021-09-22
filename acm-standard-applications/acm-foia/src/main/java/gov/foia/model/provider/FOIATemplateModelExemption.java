@@ -17,7 +17,7 @@ public class FOIATemplateModelExemption
     private FOIAExemptionService foiaExemptionService;
     private LookupDao lookupDao;
 
-    protected String exemptionCodesAndSummary (List<ExemptionCode> exemptionCodes)
+    public String exemptionCodesAndSummary (List<ExemptionCode> exemptionCodes)
     {
         String exemptionCodesNames = exemptionCodes.stream()
                 .map(ExemptionCode::getExemptionCode)
@@ -26,7 +26,7 @@ public class FOIATemplateModelExemption
         return exemptionCodesNames;
     }
 
-    protected FormattedMergeTerm exemptionCodesAndDescription (List<ExemptionCode> exemptionCodes)
+    public FormattedMergeTerm exemptionCodesAndDescription (List<ExemptionCode> exemptionCodes)
     {
         FormattedMergeTerm exemptionCodesAndDescription = new FormattedMergeTerm();
         List<FormattedRun> runs = getExemptionCodesAndDescriptionRuns(exemptionCodes);
