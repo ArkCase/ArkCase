@@ -308,13 +308,12 @@ public class FOIARequestService
     }
 
     private void copyOriginalRequestFiles(CaseFile saved, CaseFile originalRequest)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
 
-        AcmContainer originalRequestContainer = getEcmFileService().getOrCreateContainer(originalRequest.getObjectType(),
-                originalRequest.getId());
+        AcmContainer originalRequestContainer = originalRequest.getContainer();
         AcmFolder originalRequestRootFolder = originalRequestContainer.getFolder();
 
-        AcmContainer newRequestContainer = getEcmFileService().getOrCreateContainer(saved.getObjectType(), saved.getId());
+        AcmContainer newRequestContainer = saved.getContainer();
         AcmFolder newRequestRootFolder = newRequestContainer.getFolder();
 
         String originalRequestFolderName = String.format(getOriginalRequestFolderNameFormat(),
