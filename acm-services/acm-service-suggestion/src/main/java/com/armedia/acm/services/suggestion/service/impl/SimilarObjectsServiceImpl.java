@@ -44,7 +44,12 @@ import org.springframework.security.core.Authentication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
+<<<<<<< HEAD
 import java.text.SimpleDateFormat;
+=======
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+>>>>>>> 7e5576df9c (1025 adding madePublicDate additional changes)
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -231,6 +236,8 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         file.setFileId(docFile.getString("object_id_s"));
         file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+        LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
+        file.setMadePublicDate(date);
 
         return file;
     }

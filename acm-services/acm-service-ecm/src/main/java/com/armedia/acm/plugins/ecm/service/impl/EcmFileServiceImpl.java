@@ -1082,9 +1082,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setCustodian(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CUSTODIAN));
 
-        object.setMadePublicDate(getSearchResults().extractLocalDateTime(DateTimeFormatter.ofPattern(SearchConstants.SOLR_DATE_FORMAT),
-                doc, SearchConstants.PROPERTY_MADE_PUBLIC_DATE));
-
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());

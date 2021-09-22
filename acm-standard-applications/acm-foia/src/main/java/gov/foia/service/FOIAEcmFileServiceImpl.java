@@ -238,6 +238,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         fileCopy.setSecurityField(originalFile.getSecurityField());
 
         fileCopy.setPublicFlag(originalFile.getPublicFlag());
+        fileCopy.setMadePublicDate(originalFile.getMadePublicDate());
 
         ObjectAssociation personCopy = copyObjectAssociation(originalFile.getPersonAssociation());
         fileCopy.setPersonAssociation(personCopy);

@@ -61,7 +61,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -132,7 +131,6 @@ public class FOIAQueueCorrespondenceService
                 FOIAFile letterCopy = new FOIAFile();
                 BeanUtils.copyProperties(letter, letterCopy);
                 letterCopy.setPublicFlag(true);
-                letterCopy.setMadePublicDate(LocalDateTime.now());
 
                 ecmFileService.updateFile(letterCopy);
                 emailCorrespondenceLetter(request, letter);
