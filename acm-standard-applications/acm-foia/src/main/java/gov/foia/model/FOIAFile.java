@@ -31,7 +31,9 @@ package gov.foia.model;
  */
 
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -40,7 +42,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -66,6 +68,11 @@ public class FOIAFile extends EcmFile
     @Column(name = "fo_public_flag")
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean publicFlag;
+
+    @Column(name = "fo_made_public_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime madePublicDate;
 
     /**
      * @return the exemptionCodes
@@ -100,5 +107,15 @@ public class FOIAFile extends EcmFile
 
     public void setExemptionStatutes(List<String> exemptionStatutes) {
         this.exemptionStatutes = exemptionStatutes;
+    }
+
+    public LocalDateTime getMadePublicDate()
+    {
+        return madePublicDate;
+    }
+
+    public void setMadePublicDate(LocalDateTime madePublicDate)
+    {
+        this.madePublicDate = madePublicDate;
     }
 }

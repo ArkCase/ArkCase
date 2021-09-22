@@ -33,14 +33,13 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-
+import gov.foia.dao.FOIAFileDao;
+import gov.foia.model.FOIAFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.Set;
-
-import gov.foia.dao.FOIAFileDao;
-import gov.foia.model.FOIAFile;
 
 public class PublicFlagService
 {
@@ -70,6 +69,7 @@ public class PublicFlagService
             }
 
             foiaFile.setPublicFlag(publicFlag);
+            foiaFile.setMadePublicDate(LocalDateTime.now());
 
             getEcmFileService().updateFile(foiaFile);
         }

@@ -50,6 +50,8 @@ import org.springframework.security.core.Authentication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -236,6 +238,8 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         file.setFileId(docFile.getString("object_id_s"));
         file.setFileName(docFile.getString(TITLE_PARSEABLE) + docFile.getString(EXT_S));
+        LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
+        file.setMadePublicDate(date);
 
         return file;
     }
