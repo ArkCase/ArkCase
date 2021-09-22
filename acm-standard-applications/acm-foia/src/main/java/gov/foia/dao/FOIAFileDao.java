@@ -28,8 +28,11 @@ package gov.foia.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import gov.foia.model.FOIAFile;
+
+import javax.persistence.Query;
+import java.util.List;
 
 /**
  * @author sasko.tanaskoski
@@ -48,4 +51,19 @@ public class FOIAFileDao extends AcmAbstractDao<FOIAFile>
         return FOIAFile.class;
     }
 
+    @Override
+    public String getSupportedObjectType()
+    {
+        return EcmFileConstants.OBJECT_FILE_TYPE;
+    }
+
+    public List<FOIAFile> getPublicFiles()
+    {
+        String queryText = "SELECT foiaFile FROM FOIAFile foiaFile WHERE foiaFile.publicFlag = true AND foiaFile.madePublicDate IS NOT NULL";
+        Query query = getEm().createQuery(queryText);
+
+        List<FOIAFile> results = query.getResultList();
+
+        return results;
+    }
 }
