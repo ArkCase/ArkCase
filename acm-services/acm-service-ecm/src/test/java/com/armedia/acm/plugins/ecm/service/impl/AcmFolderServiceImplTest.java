@@ -201,9 +201,14 @@ public class AcmFolderServiceImplTest extends EasyMockSupport
     @Test
     public void testCopyChildFolderIntoSameParentFolder() throws ArkCaseFileRepositoryException
     {
+        AcmFolder rootFolder = new AcmFolder();
+        rootFolder.setId(100L);
+        rootFolder.setParticipants(new ArrayList<>());
+
         AcmFolder dstFolder = new AcmFolder();
         dstFolder.setId(101L);
         dstFolder.setParticipants(new ArrayList<>());
+        dstFolder.setParentFolder(rootFolder);
 
         AcmFolder source = new AcmFolder();
         source.setId(102L);
