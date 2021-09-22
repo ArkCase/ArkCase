@@ -176,6 +176,7 @@
             <beans:property name="foiaDataUpdateExecutors">
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
+                    <beans:ref bean="foiaFileSetMadePublicDateUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
                     <beans:ref bean="foiaRequestStatusChangeExecutor"/>
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
@@ -188,7 +189,6 @@
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                     <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                     <beans:ref bean="updateHoldEnterDateForRequestInHoldQueue"/>
-                    <beans:ref bean="foiaFileSetMadePublicDateUpdateExecutor"/>
                 </beans:list>
             </beans:property>
 
