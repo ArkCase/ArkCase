@@ -28,6 +28,8 @@ package com.armedia.acm.plugins.task.model;
  */
 
 import java.util.List;
+import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.model.AcmEvent;
 
 public class Response
 {
