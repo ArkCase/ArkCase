@@ -176,6 +176,7 @@
             <beans:property name="foiaDataUpdateExecutors">
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
+                    <beans:ref bean="foiaFileSetMadePublicDateUpdateExecutor"/>
                     <beans:ref bean="solrReindexFOIAFileExecutor"/>
                     <beans:ref bean="foiaRequestStatusChangeExecutor"/>
                     <beans:ref bean="foiaExemptionCodeMigrationExecutor"/>
@@ -196,6 +197,10 @@
         <beans:bean id="foiaExemptionCodeMigrationExecutor"
                     class="gov.foia.service.dataupdate.FOIAExemptionCodeMigrationExecutor">
             <beans:property name="foiaExemptionService" ref="foiaExemptionService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaFileSetMadePublicDateUpdateExecutor" class="gov.foia.service.dataupdate.FoiaFileSetMadePublicDateUpdateExecutor">
+            <beans:property name="foiaFileDao" ref="foiaFileDao"/>
         </beans:bean>
 
         <beans:bean id="solrReindexFOIAPortalPersonExecutor"
