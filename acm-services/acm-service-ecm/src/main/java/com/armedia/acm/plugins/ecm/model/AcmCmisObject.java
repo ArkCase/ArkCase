@@ -289,5 +289,4 @@ public class AcmCmisObject implements Serializable
     public void setCustodian(String custodian) {
         this.custodian = custodian;
     }
-
 }
