@@ -363,6 +363,8 @@
             <beans:property name="applicationConfig" ref="applicationProperties"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="userOrgService" ref="acmUserOrgService"/>
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
+            <beans:property name="lookupDao" ref="lookupDao" />
         </beans:bean>
 
         <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
