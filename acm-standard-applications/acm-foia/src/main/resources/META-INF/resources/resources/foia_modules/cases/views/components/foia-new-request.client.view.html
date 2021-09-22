@@ -29,7 +29,7 @@
                 <div class="col-sm-4 form-group">
                     <input type="text" class="form-control" id="originalRequestNumber" ng-model="config.data.originalRequestNumber"
                             placeholder="{{'cases.newRequest.originalRequestNumber.placeholder' | translate}}" name="originalRequestNumber"
-                            ng-blur="populateAppeal()" ng-click="requestInReleaseStatusSearch()" required="required">
+                            ng-blur="populateAppeal()" ng-click="requestInReleaseStatusSearch()" required="required" onkeydown="return event.keyCode !== 13;">
                 </div>
             </div>
             <div class="panel panel-default" id="topSection1">
