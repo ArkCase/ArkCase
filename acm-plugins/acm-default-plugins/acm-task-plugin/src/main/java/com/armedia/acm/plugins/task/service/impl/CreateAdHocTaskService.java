@@ -106,7 +106,14 @@ public class CreateAdHocTaskService
             if (objectId != null)
             {
                 in.setAttachedToObjectId(objectId);
-                in.setAttachedToObjectType(parentObjectType);
+                if (StringUtils.isBlank(parentObjectType))
+                {
+                    in.setAttachedToObjectType(attachedToObjectType);
+                }
+                else
+                {
+                    in.setAttachedToObjectType(parentObjectType);
+                }
                 in.setAttachedToObjectName(attachedToObjectName);
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
