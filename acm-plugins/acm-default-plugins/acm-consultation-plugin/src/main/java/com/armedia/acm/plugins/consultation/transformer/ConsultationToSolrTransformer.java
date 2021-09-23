@@ -39,6 +39,7 @@ import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertie
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.SUMMARY_PARSEABLE_LCS;
 
 import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
@@ -103,7 +104,7 @@ public class ConsultationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public void mapAdditionalProperties(Consultation in, Map<String, Object> additionalProperties)
     {
         additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
-        additionalProperties.put("consultation_summary_parseable", in.getConsultationDetailsSummary());
+        additionalProperties.put(SUMMARY_PARSEABLE_LCS, in.getConsultationDetailsSummary());
         additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
         additionalProperties.put(PRIORITY_LCS, in.getPriority());
         additionalProperties.put(STATUS_LCS, in.getStatus());

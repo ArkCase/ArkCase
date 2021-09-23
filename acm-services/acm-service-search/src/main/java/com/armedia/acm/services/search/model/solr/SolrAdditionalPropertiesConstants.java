@@ -39,7 +39,7 @@ public final class SolrAdditionalPropertiesConstants
     public static final String CREATOR_FULL_NAME_LCS = "creator_full_name_lcs";
     public static final String MODIFIER_FULL_NAME_LCS = "modifier_full_name_lcs";
 
-    /////////////////// for complaints, case files, other objects with a title or description ////////////
+    /////////////////// for complaints, case files, consultations other objects with a title or description ////////////
     public static final String TITLE_PARSEABLE = "title_parseable";
     public static final String DESCRIPTION_PARSEABLE = "description_parseable";
     public static final String SUMMARY_PARSEABLE_LCS = "summary_parseable_lcs";
