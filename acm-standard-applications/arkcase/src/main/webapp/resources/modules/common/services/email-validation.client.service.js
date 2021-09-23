@@ -31,8 +31,8 @@ angular.module('services').factory('EmailValidationService', ['$http', function 
     }
 
     function setEmailRegex() {
-        getEmailRegex().then((data) => {
-        emailRegEx = new RegExp(data.data);
-        })
+        getEmailRegex().then(function(response) {
+          emailRegEx = new RegExp(response.data);
+       })
     }
 }]);
