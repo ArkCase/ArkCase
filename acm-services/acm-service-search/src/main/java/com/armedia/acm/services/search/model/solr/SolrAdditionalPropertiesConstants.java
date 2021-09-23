@@ -42,6 +42,7 @@ public final class SolrAdditionalPropertiesConstants
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     public static final String TITLE_PARSEABLE = "title_parseable";
     public static final String DESCRIPTION_PARSEABLE = "description_parseable";
+    public static final String SUMMARY_PARSEABLE_LCS = "summary_parseable_lcs";
 
     // for sorting//
     public static final String TITLE_PARSEABLE_LCS = "title_parseable_lcs";

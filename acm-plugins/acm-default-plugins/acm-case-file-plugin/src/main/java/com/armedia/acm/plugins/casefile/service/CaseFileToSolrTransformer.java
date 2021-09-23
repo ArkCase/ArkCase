@@ -40,6 +40,8 @@ import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertie
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
 import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.SUMMARY_PARSEABLE_LCS;
+
 
 import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -106,6 +108,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     {
         additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
         additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put(SUMMARY_PARSEABLE_LCS, in.getCaseDetailsSummary());
         additionalProperties.put(PRIORITY_LCS, in.getPriority());
         additionalProperties.put(INCIDENT_TYPE_LCS, in.getCaseType());
         additionalProperties.put(STATUS_LCS, in.getStatus());
