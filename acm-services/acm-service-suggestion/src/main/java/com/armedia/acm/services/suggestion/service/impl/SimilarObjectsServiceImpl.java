@@ -41,10 +41,10 @@ import com.armedia.acm.services.suggestion.model.SuggestedObject;
 import com.armedia.acm.services.suggestion.service.SimilarObjectsService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 
 import java.io.UnsupportedEncodingException;
@@ -238,8 +238,12 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         file.setFileId(docFile.getString("object_id_s"));
         file.setFileName(docFile.getString(TITLE_PARSEABLE) + docFile.getString(EXT_S));
-        LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
-        file.setMadePublicDate(date);
+
+        if (docFile.has("made_public_date_tdt"))
+        {
+            LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
+            file.setMadePublicDate(date);
+        }
 
         return file;
     }
