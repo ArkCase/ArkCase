@@ -285,13 +285,32 @@ public class AcmSchedulerService
         }
     }
 
+    /**
+     * We need to reuse existing Trigger instead of creating new one.
+     * This way we can update the prev_fire_time and next_fire_time in QRTZ_TRIGGERS table.
+     *
+     * @param jobName
+     *            existing job name from QRTZ_JOB_DETAILS
+     */
     @Transactional
     public void triggerJob(String jobName)
     {
         try
         {
             logger.info("Trigger job [{}].", jobName);
-            scheduler.triggerJob(JobKey.jobKey(jobName));
+
+            List<? extends Trigger> triggers = scheduler.getTriggersOfJob(JobKey.jobKey(jobName));
+            for (Trigger it : triggers)
+            {
+                Trigger newTrigger = it.getTriggerBuilder().startAt(new Date()).build();
+                scheduler.rescheduleJob(it.getKey(), newTrigger);
+
+                Trigger.TriggerState state = getTriggerState(newTrigger.getKey().getName());
+
+                publishSchedulerActionEvent(AcmJobEventPublisher.JOB_TRIGGERED,
+                        new AcmJobState(jobName, newTrigger.getKey().getName(),
+                                newTrigger.getPreviousFireTime(), newTrigger.getNextFireTime(), true, false, state.toString()));
+            }
         }
         catch (SchedulerException e)
         {

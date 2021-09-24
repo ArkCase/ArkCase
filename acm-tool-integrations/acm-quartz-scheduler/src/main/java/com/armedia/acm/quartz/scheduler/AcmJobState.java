@@ -77,6 +77,18 @@ public class AcmJobState
         this.isPaused = isPaused;
     }
 
+    public AcmJobState(String jobName, String triggerName, Date lastRun, Date nextRun, boolean isRunning,
+            boolean isPaused, String triggerState)
+    {
+        this.jobName = jobName;
+        this.triggerName = triggerName;
+        this.lastRun = lastRun;
+        this.nextRun = nextRun;
+        this.isRunning = isRunning;
+        this.isPaused = isPaused;
+        this.triggerState = triggerState;
+    }
+
     public String getTriggerName()
     {
         return triggerName;
