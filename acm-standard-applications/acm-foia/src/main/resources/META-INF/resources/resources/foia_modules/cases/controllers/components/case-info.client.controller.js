@@ -85,7 +85,6 @@ angular.module('cases').controller(
 
                     if ($scope.objectInfo !== null) {
                         calculateDaysObj($scope.objectInfo);
-                        $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY h:mmA');
                     }
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
@@ -284,7 +283,6 @@ angular.module('cases').controller(
 
             function dueDateChanged(e, newDueDate) {
                 $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
-                $scope.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY h:mmA');
                 calculateDaysObj($scope.objectInfo);
             }
 
