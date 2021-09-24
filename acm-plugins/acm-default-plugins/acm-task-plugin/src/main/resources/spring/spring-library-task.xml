@@ -206,6 +206,7 @@
         <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="notificationService" ref="notificationService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="upcomingTaskNotifierJobDescription" class="com.armedia.acm.plugins.task.service.UpcomingTaskNotifierJobDescription"
@@ -220,6 +221,7 @@
         <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="notificationService" ref="notificationService"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
     </bean>
 
     <bean id="overdueTaskNotifierJobDescriptor" class="com.armedia.acm.plugins.task.service.OverdueTaskNotifierJobDescriptor"
