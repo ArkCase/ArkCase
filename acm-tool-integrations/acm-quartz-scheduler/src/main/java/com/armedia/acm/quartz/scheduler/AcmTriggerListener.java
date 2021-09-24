@@ -46,7 +46,8 @@ public class AcmTriggerListener extends TriggerListenerSupport
         String triggerName = trigger.getKey().getName();
         logger.debug("Trigger [{}] for job [{}] fired. Next fire time is [{}].", triggerName, jobName, trigger.getNextFireTime());
         jobEventPublisher.publishJobEvent(new AcmJobState(jobName, triggerName, trigger.getPreviousFireTime(),
-                trigger.getNextFireTime(), true), AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId());
+                trigger.getNextFireTime(), true, false, Trigger.TriggerState.NORMAL.toString()), AcmJobEventPublisher.JOB_TRIGGERED,
+                context.getFireInstanceId());
     }
 
     @Override
@@ -56,7 +57,8 @@ public class AcmTriggerListener extends TriggerListenerSupport
         String triggerName = trigger.getKey().getName();
         logger.debug("Trigger [{}] for job [{}] completed.", triggerName, jobName);
         jobEventPublisher.publishJobEvent(new AcmJobState(jobName, triggerName, trigger.getPreviousFireTime(),
-                trigger.getNextFireTime(), false), AcmJobEventPublisher.JOB_COMPLETED, context.getFireInstanceId());
+                trigger.getNextFireTime(), false, false, Trigger.TriggerState.NORMAL.toString()), AcmJobEventPublisher.JOB_COMPLETED,
+                context.getFireInstanceId());
     }
 
     @Override
