@@ -37,7 +37,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
 
         }
-        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
+        return momentObject.toISOString();
     }
 
     function dueDateWithWeekends(startDate, days, holidays) {
@@ -54,7 +54,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
 
         }
-        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
+        return momentObject.toISOString();
     }
 
     function workingDays(startDate, holidays) {
