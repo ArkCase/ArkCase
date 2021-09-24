@@ -233,8 +233,11 @@ public class SimilarObjectsServiceImpl implements SimilarObjectsService
 
         file.setFileId(docFile.getString("object_id_s"));
         file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
-        LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
-        file.setMadePublicDate(date);
+        if (docFile.has("made_public_date_tdt"))
+        {
+            LocalDateTime date = LocalDateTime.parse(docFile.getString("made_public_date_tdt"), DateTimeFormatter.ISO_DATE_TIME);
+            file.setMadePublicDate(date);
+        }
 
         return file;
     }
