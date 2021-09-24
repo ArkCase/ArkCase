@@ -44,12 +44,9 @@ import org.springframework.security.core.Authentication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-<<<<<<< HEAD
 import java.text.SimpleDateFormat;
-=======
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
->>>>>>> 7e5576df9c (1025 adding madePublicDate additional changes)
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
