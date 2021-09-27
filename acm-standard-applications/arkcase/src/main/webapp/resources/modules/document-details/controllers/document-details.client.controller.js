@@ -386,6 +386,9 @@ angular.module('document-details').controller(
                                 break;
                             }
                         }
+                        if($stateParams.containerType === "TASK"  || $stateParams.containerType === "CONSULTATION" || $stateParams.containerType === "DOC_REPO") {
+                            $scope.billingPrivilege = false;
+                        }
 
                         $timeout(function() {
                             $scope.$broadcast('document-data', $scope.ecmFile);
