@@ -43,7 +43,7 @@ public class FoiaFileSetMadePublicDateUpdateExecutor implements AcmDataUpdateExe
     @Override
     public String getUpdateId()
     {
-        return "foia-file-set-madePublicDate";
+        return "foia-file-set-madePublicDate-v2";
     }
 
     @Override
