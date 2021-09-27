@@ -51,7 +51,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
             throws SolrException
     {
         String query = "object_type_s:" + childType;
-        query = query.concat("&fq=+parent_type_s:"+parentType+" +parent_id_s:"+parentId);
+        query = query.concat("&fq=+parent_object_type_s:"+parentType+" +parent_object_id_i:"+parentId);
 
         if (activeOnly)
         {
