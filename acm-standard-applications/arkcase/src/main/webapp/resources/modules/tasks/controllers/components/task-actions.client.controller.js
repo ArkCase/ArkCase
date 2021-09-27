@@ -156,6 +156,9 @@ angular.module('tasks').controller(
                         if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
                             TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(function(taskInfo) {
                                 $scope.$emit("report-object-updated", taskInfo);
+                                setTimeout(function() {
+                                    $scope.$emit("report-tree-updated", taskInfo);
+                                }, 4000);
                                 return taskInfo;
                             });
                         }
