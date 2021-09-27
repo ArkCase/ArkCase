@@ -44,6 +44,30 @@ angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilSer
             url: 'api/latest/plugin/:type/byId/:id',
             cache: objectCache,
             isArray: false
+        },
+
+        /**
+         * @ngdoc method
+         * @name getCostOrTimeSheet
+         * @methodOf services:Object.InfoService
+         *
+         * @description
+         * Query object data from database.
+         *
+         * @param {Object} params Map of input parameter.
+         * @param {Number} params.type  Type in REST path. Can be 'costsheet' or 'timesheet'
+         * @param {Number} params.id  Object ID
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+
+        getCostOrTimeSheet: {
+            method: 'GET',
+            url: 'api/v1/service/:type/:id',
+            cache: objectCache,
+            isArray: false
         }
 
         /**
@@ -119,6 +143,33 @@ angular.module('services').factory('Object.InfoService', [ '$resource', 'UtilSer
             }
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name getCostOrTimeSheetObjectInfo
+     * @methodOf services:Object.InfoService
+     *
+     * @description
+     * Query association data
+     *
+     * @param {Number} type  Type in REST path. Can be 'costsheet' or 'timesheet'
+     * @param {Number} id  Object ID
+     *
+     * @returns {Object} Object returned by $resource
+     */
+
+    Service.getCostOrTimeSheetObjectInfo = function(type, id) {
+        return Util.serviceCall({
+            service: Service.getCostOrTimeSheet,
+            param: {
+                type: type,
+                id: id
+            },
+            onSuccess: function (data) {
+                return data;
+            }
+        });
+    };;
 
     return Service;
 } ]);

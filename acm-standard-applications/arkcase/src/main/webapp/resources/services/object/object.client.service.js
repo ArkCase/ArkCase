@@ -49,7 +49,9 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             COMPLAINT: "complaint",
             TASK: "task",
             DOC_REPO: "documentrepository",
-            CONSULTATION: "consultation"
+            CONSULTATION: "consultation",
+            COSTSHEET: "costsheet",
+            TIMESHEET: "timesheet"
         }
 
         ,
