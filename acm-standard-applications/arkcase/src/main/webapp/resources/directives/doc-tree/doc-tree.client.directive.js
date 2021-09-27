@@ -361,7 +361,7 @@ angular.module('directives').directive(
                                             return false;
                                         }
                                         if ("RECORD" === Util.goodValue(node.data.status)) {
-                                            return false;
+                                            return true;
                                         }
                                         if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                             return false;
