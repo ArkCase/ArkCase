@@ -42,7 +42,7 @@ public class SolrReindexFoiaFileExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-foia-files-reindex-2";
+        return "solr-foia-files-reindex-3";
     }
 
     @Override
