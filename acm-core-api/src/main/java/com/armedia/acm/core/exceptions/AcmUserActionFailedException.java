@@ -87,7 +87,7 @@ public class AcmUserActionFailedException extends Exception
             message += "Server encountered exception: " + super.getMessage() + "\n";
         }
 
-        message += "Exception type was: '" + getClass().getName() + "'.";
+        message += "Exception type was: '" + getClass().getSimpleName() + "'.";
 
         return message;
     }
