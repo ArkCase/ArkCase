@@ -59,7 +59,7 @@ public class FOIAFileDao extends AcmAbstractDao<FOIAFile>
 
     public List<FOIAFile> getPublicFiles()
     {
-        String queryText = "SELECT foiaFile FROM FOIAFile foiaFile WHERE foiaFile.publicFlag = true AND foiaFile.madePublicDate IS NOT NULL";
+        String queryText = "SELECT foiaFile FROM FOIAFile foiaFile WHERE foiaFile.publicFlag = true AND foiaFile.madePublicDate IS NULL";
         Query query = getEm().createQuery(queryText);
 
         List<FOIAFile> results = query.getResultList();
