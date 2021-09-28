@@ -349,6 +349,22 @@
             <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
         </beans:bean>
 
+        <beans:bean id="foiaExtensionDataUpdateExecutor"
+                    class="gov.privacy.service.dataupdate.PrivacyExtensionDataUpdateExecutor">
+            <beans:property name="privacyDataUpdateExecutors">
+                <beans:list>
+                    <beans:ref bean="createPrivacyAlfrescoAndRmFoldersExecutor"/>
+                </beans:list>
+            </beans:property>
+
+        </beans:bean>
+
+        <beans:bean id="createPrivacyAlfrescoAndRmFoldersExecutor" class="gov.privacy.service.dataupdate.CreatePrivacyAlfrescoAndRmFoldersExecutor">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
+            <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
+        </beans:bean>
+
 
     </beans:beans>
 </beans:beans>
