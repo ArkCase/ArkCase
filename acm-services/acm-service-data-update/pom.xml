@@ -82,6 +82,17 @@
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-alfresco-rma-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-consultation-plugin</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

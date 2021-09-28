@@ -188,6 +188,7 @@
                     <beans:ref bean="multiplePortalUsersWithSameEmailCleanupExecutor"/>
                     <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                     <beans:ref bean="updateHoldEnterDateForRequestInHoldQueue"/>
+                    <beans:ref bean="createFOIAAlfrescoAndRmFoldersExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -493,6 +494,12 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        </beans:bean>
+
+        <beans:bean id="createFOIAAlfrescoAndRmFoldersExecutor" class="gov.foia.service.dataupdate.CreateFOIAAlfrescoAndRmFoldersExecutor">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
+            <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         </beans:bean>
 
     </beans:beans>
