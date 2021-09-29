@@ -480,9 +480,10 @@ angular.module('organizations').controller(
                     }
                 }
                 if(type === 'email') {
-                    var validateObject = EmailValidationService.validateInput(data.value);
-                    data.value = validateObject.inputValue;
-                    $scope.showEmailError = validateObject.showEmailError;
+                    EmailValidationService.validateInput(data.value).then(function (response){
+                        data.value = response.inputValue;
+                        $scope.showEmailError = response.showEmailError;
+                    });
                 }
             }
 

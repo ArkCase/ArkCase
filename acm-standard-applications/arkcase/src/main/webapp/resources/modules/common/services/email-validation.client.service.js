@@ -1,7 +1,7 @@
-angular.module('services').factory('EmailValidationService', ['$http', function ($http) {
+angular.module('services').factory('EmailValidationService', ['$http', '$q', function ($http, $q) {
+    var emailRegEx = null;
     return {
-        validateInput: validateInput,
-        setEmailRegex: setEmailRegex()
+        validateInput: validateInput
     }
 
     function getEmailRegex() {
@@ -14,7 +14,23 @@ angular.module('services').factory('EmailValidationService', ['$http', function 
         });
     }
 
+
     function validateInput(inputValue) {
+        var deferred = $q.defer();
+        if (!emailRegEx) {
+            getEmailRegex().then(function(response) {
+                emailRegEx = new RegExp(response.data);
+                deferred.resolve(validate(inputValue));
+            })
+        } else {
+            deferred.resolve(validate(inputValue))
+
+        }
+        return deferred.promise
+    }
+
+
+    function validate(inputValue) {
         var value = inputValue;
         var showEmailError = false;
         if (emailRegEx.test(value)) {
@@ -24,15 +40,8 @@ angular.module('services').factory('EmailValidationService', ['$http', function 
             inputValue = null;
             showEmailError = true;
         }
-        return {
-            inputValue: inputValue,
-            showEmailError: showEmailError
-        };
+        return { inputValue: inputValue,
+            showEmailError: showEmailError}
     }
 
-    function setEmailRegex() {
-        getEmailRegex().then(function(response) {
-          emailRegEx = new RegExp(response.data);
-       })
-    }
 }]);
