@@ -414,6 +414,7 @@ angular.module('people').controller(
             });
 
 
+
             function openDuplicatePersonPicker(result) {
 
                 var params = {};
@@ -470,9 +471,10 @@ angular.module('people').controller(
                     $scope.showPhoneError = validateObject.showPhoneError;
                 } else if (inputType === 'email' && caValue) {
                     $scope.checkExistingEmail(caValue);
-                    var validateObject = EmailValidationService.validateInput(caValue);
-                    $scope.person.defaultEmail.value = validateObject.inputValue;
-                    $scope.showEmailError = validateObject.showEmailError;
+                    EmailValidationService.validateInput(caValue).then(function (response){
+                        $scope.person.defaultEmail.value = response.inputValue;
+                        $scope.showEmailError = response.showEmailError;
+                    });
                 }
             };
 
