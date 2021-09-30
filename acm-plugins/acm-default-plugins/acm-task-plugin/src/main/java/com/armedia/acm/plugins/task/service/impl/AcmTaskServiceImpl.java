@@ -592,8 +592,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         List<String> reviewers = new ArrayList<>();
         reviewers.add(task.getAssignee());
         List<AcmTask> createdAcmTasks = new ArrayList<>();
-        Long parentObjectId = task.getParentObjectId();
-        String parentObjectType = task.getParentObjectType();
+        Long parentObjectId = task.getParentObjectId() != null ? task.getParentObjectId() : task.getAttachedToObjectId();
+        String parentObjectType = StringUtils.isBlank(task.getAttachedToObjectType()) ? task.getAttachedToObjectType() : task.getParentObjectType();
         
 
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
@@ -739,8 +739,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         source.setFileType("file");
         configuration.setEcmFile(source);
 
-        Long parentObjectId = task.getAttachedToObjectId();
-        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
+        Long parentObjectId = task.getAttachedToObjectId() != null ? task.getAttachedToObjectId() : task.getParentObjectId();
+        String parentObjectType = StringUtils.isBlank(task.getAttachedToObjectType()) ? task.getAttachedToObjectType() : task.getParentObjectType();
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
