@@ -51,7 +51,6 @@ import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
@@ -247,6 +246,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
+        adHoc.setParentObjectType(type);
         adHoc.setAttachedToObjectName(name);
         adHoc.setAttachedToObjectType(type);
 
