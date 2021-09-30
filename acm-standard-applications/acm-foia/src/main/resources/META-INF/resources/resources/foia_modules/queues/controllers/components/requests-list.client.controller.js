@@ -237,6 +237,7 @@ angular.module('queues').controller(
 
                                         request.queueDueDate = DueDateService.dueDateWithWeekends(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
                                         //calculate to show the due date on the entered queue with working days and weekends without holidays
+                                        request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
 
                                         request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
@@ -253,6 +254,7 @@ angular.module('queues').controller(
                                         dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
                                         request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
                                         //calculate to show the due date on the entered queue with working days without holidays and weekends
+                                        request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
 
                                         request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
                                         //calculate how many days the request is in the queue
