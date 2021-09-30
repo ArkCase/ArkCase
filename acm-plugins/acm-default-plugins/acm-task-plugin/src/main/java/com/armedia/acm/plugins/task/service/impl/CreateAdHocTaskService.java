@@ -74,7 +74,6 @@ public class CreateAdHocTaskService
     {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
-        String attachedToObjectType = in.getAttachedToObjectType();
         String attachedToObjectName = in.getAttachedToObjectName();
         try
         {
@@ -82,17 +81,18 @@ public class CreateAdHocTaskService
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
 
-            String parentObjectType = in.getParentObjectType();
-            Long objectId = in.getAttachedToObjectId();
-            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) && objectId == null)
+            String parentObjectType = StringUtils.isBlank(in.getAttachedToObjectType()) ? in.getAttachedToObjectType() : in.getParentObjectType();
+            Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
+
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
-                String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
+                String obj = getObjectsFromSolr(parentObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
                     JSONObject result = results.getJSONObject(0);
-                    objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
+                    parentObjectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 }
                 else
@@ -103,19 +103,12 @@ public class CreateAdHocTaskService
                 }
             }
 
-            if (objectId != null)
+            if (parentObjectId != null)
             {
-                in.setAttachedToObjectId(objectId);
-                if (StringUtils.isBlank(parentObjectType))
-                {
-                    in.setAttachedToObjectType(attachedToObjectType);
-                }
-                else
-                {
-                    in.setAttachedToObjectType(parentObjectType);
-                }
+                in.setAttachedToObjectId(parentObjectId);
                 in.setAttachedToObjectName(attachedToObjectName);
-                in.setParentObjectId(objectId);
+                in.setAttachedToObjectType(parentObjectType);
+                in.setParentObjectId(parentObjectId);
                 in.setParentObjectType(parentObjectType);
                 in.setParentObjectName(attachedToObjectName);
             }
