@@ -915,7 +915,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 person.getDefaultAddress().getCountry().equals(user.getCountry()) &&
                 person.getDefaultAddress().getType().equals(user.getAddressType()) &&
                 person.getDefaultAddress().getStreetAddress().equals(user.getAddress1()) &&
-                person.getDefaultAddress().getStreetAddress2().equals(user.getAddress2()) &&
+                (person.getDefaultAddress().getStreetAddress2() != null && person.getDefaultAddress().getStreetAddress2().equals(user.getAddress2())) &&
                 person.getDefaultAddress().getZip().equals(user.getZipCode()) &&
                 person.getDefaultAddress().getState().equals(user.getState());
     }
@@ -951,11 +951,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 else
                 {
-                    Map<String, Organization> organizationByName = organizationsByGivenName.stream()
-                            .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
+                    Map<Long, Organization> organizationByName = organizationsByGivenName.stream()
+                            .collect(Collectors.toMap(Organization::getOrganizationId, Function.identity()));
 
                     PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
-                            .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()))
+                            .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationId()))
                             .findFirst()
                             .orElse(null);
 
