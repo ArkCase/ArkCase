@@ -253,25 +253,27 @@ angular.module('consultations').controller(
                             $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
                             DialogService.alert($translate.instant("consultations.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
                         }else {
+                            // unbind due date watcher before consultation save so that when user switch to different consultation
+                            // watcher won't be fired before landing on that different consultation
+                            dueDateWatch();
                             $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
                             $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
                             $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
                             $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
-                            // unbind due date watcher before consultation save so that when user switch to different consultation
-                            // watcher won't be fired before landing on that different consultation
-                            dueDateWatch();
+
                             $scope.saveConsultation();
                         }
                     }
                 }else {
                     if (!oldDate) {
+                        // unbind due date watcher before consultation save so that when user switch to different consultation
+                        // watcher won't be fired before landing on that different consultation
+                        dueDateWatch();
                         $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
                         $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
                         $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
                         $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
-                        // unbind due date watcher before consultation save so that when user switch to different consultation
-                        // watcher won't be fired before landing on that different consultation
-                        dueDateWatch();
+
                         $scope.saveConsultation();
                     }
                 }
