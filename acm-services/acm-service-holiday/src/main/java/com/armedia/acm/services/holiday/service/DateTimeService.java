@@ -28,9 +28,9 @@ package com.armedia.acm.services.holiday.service;
  */
 
 import com.armedia.acm.core.model.ApplicationConfig;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -114,27 +114,12 @@ public class DateTimeService {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDateTime();
     }
 
-    public LocalDate fromDateToClientLocalDate(Date date)
-    {
-        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDate();
-    }
-
     public LocalDate toClientLocalDate(LocalDateTime date)
     {
         return getZonedDateTimeAtDefaultClientTimezone(date).toLocalDate();
     }
 
-    public LocalTime fromDateToClientTimeTimezone(LocalDateTime date)
-    {
-        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
-    }
-
-    public LocalTime toClientLocalTime(LocalDateTime date)
-    {
-        return getZonedDateTimeAtDefaultClientTimezone(date).toLocalTime();
-    }
-
-    public LocalDateTime fromDateToLocalDateTime(Date date)
+    public LocalDateTime fromDateToUTCLocalDateTime(Date date)
     {
         return getZonedDateTimeAtUTC(date).toLocalDateTime();
     }
@@ -142,16 +127,6 @@ public class DateTimeService {
     public LocalDateTime fromClientLocalDateTimeToUTCDateTime(LocalDateTime date)
     {
         return date.atZone(getDefaultClientZoneId()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-    }
-
-    public LocalDateTime toUTCDateTime(Date date)
-    {
-        return getZonedDateTimeAtUTC(date).toLocalDateTime();
-    }
-
-    public LocalDate toUTCDate(LocalDateTime date)
-    {
-        return getZonedDateTimeAtUTC(date).toLocalDate();
     }
 
     public ZonedDateTime getZonedDateTimeAtDefaultClientTimezone(Date date)
