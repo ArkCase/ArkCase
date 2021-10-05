@@ -288,18 +288,15 @@ public class PortalRequestService
 
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
-        String members = "";
+        List<String> members = new ArrayList<>();
         try
         {
             List<StandardLookupEntry> downloadResponseNotificationGroup = (List<StandardLookupEntry>) getLookupDao()
                     .getLookupByName("downloadResponseNotificationGroup").getEntries();
-            StandardLookupEntry groupNameLookupEntry = downloadResponseNotificationGroup.stream()
-                    .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("groupName")).findFirst().orElse(null);
-
-            if (Objects.nonNull(groupNameLookupEntry))
+            for (StandardLookupEntry lookupEntry : downloadResponseNotificationGroup)
             {
-                members = getGroupService().getUserMembersForGroup(groupNameLookupEntry.getValue(), Optional.empty(),
-                        SecurityContextHolder.getContext().getAuthentication());
+                members.add(getGroupService().getUserMembersForGroup(lookupEntry.getValue(), Optional.empty(),
+                        SecurityContextHolder.getContext().getAuthentication()));
             }
 
         }
@@ -308,18 +305,21 @@ public class PortalRequestService
             log.warn("Could not read members of request download notification group");
         }
 
-        if (StringUtils.isNotBlank(members))
+        if (!members.isEmpty())
         {
-            JSONArray membersArray = getSearchResults().getDocuments(members);
-
-            for (int i = 0; i < membersArray.length(); i++)
+            for (String groupMembers : members)
             {
-                JSONObject memberObject = membersArray.getJSONObject(i);
-                String memberState = getSearchResults().extractString(memberObject, "status_lcs");
-                if (memberState.equals(AcmUserState.VALID.name()))
+                JSONArray membersArray = getSearchResults().getDocuments(groupMembers);
+
+                for (int i = 0; i < membersArray.length(); i++)
                 {
-                    String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
-                    officersGroupMemberEmailAddresses.add(emailAddress);
+                    JSONObject memberObject = membersArray.getJSONObject(i);
+                    String memberState = getSearchResults().extractString(memberObject, "status_lcs");
+                    if (memberState.equals(AcmUserState.VALID.name()))
+                    {
+                        String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+                        officersGroupMemberEmailAddresses.add(emailAddress);
+                    }
                 }
             }
         }
