@@ -378,7 +378,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     public String translatedPersonTitle()
     {
-        if (Strings.isBlank(getTitle()))
+        if (Strings.isBlank(getTitle()) || getTitle().equals("-"))
             return null;
         List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
         String labelKey = lookupEntries.stream()

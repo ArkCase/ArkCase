@@ -99,8 +99,10 @@ public class CreatePersonFromUser implements ApplicationListener<UserPersistence
                 ((AcmUser) object.getSource()).getFirstName() != null ? ((AcmUser) object.getSource()).getFirstName() : "Unknown");
         person.setFamilyName(
                 ((AcmUser) object.getSource()).getLastName() != null ? ((AcmUser) object.getSource()).getLastName() : "Unknown");
-        person.setTitle("-");
-
+        if (person.getTitle().isEmpty())
+        {
+            person.setTitle("-");
+        }
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();
         contactMethodEmail.setType("email");
