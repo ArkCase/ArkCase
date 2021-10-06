@@ -102,8 +102,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_hold_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate holdEnterDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime holdEnterDate;
 
     @Column(name = "fo_expedite_flag")
     @Convert(converter = BooleanToStringConverter.class)
@@ -347,7 +347,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the holdEnterDate
      */
-    public LocalDate getHoldEnterDate()
+    public LocalDateTime getHoldEnterDate()
     {
         return holdEnterDate;
     }
@@ -356,7 +356,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param holdEnterDate
      *            the holdEnterDate to set
      */
-    public void setHoldEnterDate(LocalDate holdEnterDate)
+    public void setHoldEnterDate(LocalDateTime holdEnterDate)
     {
         this.holdEnterDate = holdEnterDate;
     }

@@ -47,10 +47,10 @@ public class ExtendDatesServiceForRequestsInHoldQueue
 
            request.setPerfectedDate(getHolidayConfigurationService()
                    .addWorkingDaysToDate(request.getPerfectedDate(), getHolidayConfigurationService()
-                           .calculateAmountOfWorkingDays(request.getHoldEnterDate(), LocalDate.now())));
+                           .calculateAmountOfWorkingDays(request.getHoldEnterDate().toLocalDate(), LocalDate.now())));
            request.setDueDate(getHolidayConfigurationService()
                    .addWorkingDaysToDate(request.getDueDate(), getHolidayConfigurationService()
-                           .calculateAmountOfWorkingDays(request.getHoldEnterDate(), LocalDate.now())));
+                           .calculateAmountOfWorkingDays(request.getHoldEnterDate().toLocalDate(), LocalDate.now())));
 
            requestDao.save(request);
        }
