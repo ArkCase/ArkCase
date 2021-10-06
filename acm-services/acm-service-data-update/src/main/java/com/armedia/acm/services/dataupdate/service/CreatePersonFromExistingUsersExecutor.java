@@ -94,7 +94,10 @@ public class CreatePersonFromExistingUsersExecutor implements AcmDataUpdateExecu
         person.setLdapUserId(acmUser.getUserId());
         person.setGivenName(acmUser.getFirstName() != null ? acmUser.getFirstName() : "Unknown");
         person.setFamilyName(acmUser.getLastName() != null ? acmUser.getLastName() : "Unknown");
-        person.setTitle("-");
+        if (person.getTitle().isEmpty())
+        {
+            person.setTitle("-");
+        }
 
         List<ContactMethod> contactMethods = new ArrayList<>();
         ContactMethod contactMethodEmail = new ContactMethod();
