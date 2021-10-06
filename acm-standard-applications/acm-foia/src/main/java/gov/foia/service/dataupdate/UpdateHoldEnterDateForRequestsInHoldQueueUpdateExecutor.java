@@ -33,6 +33,7 @@ import gov.foia.model.FOIARequest;
 import org.springframework.scheduling.annotation.Async;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor implements AcmDataUpdateExecutor
@@ -53,7 +54,7 @@ public class UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor implements 
 
         for (FOIARequest request : requestList)
         {
-            request.setHoldEnterDate(LocalDate.now());
+            request.setHoldEnterDate(LocalDateTime.now());
             requestDao.save(request);
         }
     }

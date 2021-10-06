@@ -51,6 +51,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import gov.foia.model.FOIARequest;
 
@@ -84,7 +85,6 @@ public class CaseFileRuleTest
             {
                 log.error("Error building rules: " + error);
             }
-
             throw new RuntimeException("Could not build rules from " + xls.getFile().getAbsolutePath());
         }
 
@@ -172,14 +172,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         request.setHoldEnterDate(null);
 
         assertNull(request.getHoldEnterDate());
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getHoldEnterDate();
+        LocalDateTime setByRule = request.getHoldEnterDate();
 
         assertTrue(setByRule.isAfter(yesterday));
 
@@ -195,14 +195,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         request.setHoldEnterDate(yesterday);
 
         assertNotNull(request.getHoldEnterDate());
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getHoldEnterDate();
+        LocalDateTime setByRule = request.getHoldEnterDate();
 
         assertTrue(setByRule.equals(yesterday));
 
@@ -218,14 +218,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         request.setHoldEnterDate(now);
 
         assertTrue(request.getHoldEnterDate().equals(now));
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getHoldEnterDate();
+        LocalDateTime setByRule = request.getHoldEnterDate();
 
         assertNull(setByRule);
 
