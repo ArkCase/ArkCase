@@ -951,11 +951,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 else
                 {
-                    Map<Long, Organization> organizationByName = organizationsByGivenName.stream()
+                    Map<Long, Organization> organizationById = organizationsByGivenName.stream()
                             .collect(Collectors.toMap(Organization::getOrganizationId, Function.identity()));
 
                     PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
-                            .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationId()))
+                            .filter(poa -> organizationById.containsKey(poa.getOrganization().getOrganizationId()))
                             .findFirst()
                             .orElse(null);
 

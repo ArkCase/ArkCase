@@ -39,6 +39,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.model.FOIAPerson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.solr.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class CreateFOIAPersonFromExistingUsersExecutor implements AcmDataUpdateE
         person.setLdapUserId(acmUser.getUserId());
         person.setGivenName(acmUser.getFirstName() != null ? acmUser.getFirstName() : "Unknown");
         person.setFamilyName(acmUser.getLastName() != null ? acmUser.getLastName() : "Unknown");
-        if (person.getTitle().isEmpty())
+        if (StringUtils.isEmpty(person.getTitle()))
         {
             person.setTitle("-");
         }
