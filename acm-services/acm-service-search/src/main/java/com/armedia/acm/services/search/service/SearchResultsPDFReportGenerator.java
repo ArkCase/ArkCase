@@ -89,7 +89,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
     /**
      * Formatter for formatting dates.
      */
-    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("MM-dd-yy hh:mm a");
 
     private static final String OBJECT_TYPE_CASE_FILE = "CASE_FILE";
 

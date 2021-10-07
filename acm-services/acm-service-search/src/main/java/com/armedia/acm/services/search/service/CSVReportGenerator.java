@@ -74,7 +74,7 @@ public class CSVReportGenerator extends ReportGenerator
     /**
      * Formatter for formatting dates and times so Excel recognizes them.
      */
-    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("M-dd-yy hh:mm a");
 
     private transient final Logger log = LogManager.getLogger(getClass());
 
