@@ -38,6 +38,7 @@ import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public abstract class AbstractScheduledQueuePurger
             }
             try
             {
-                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDate.now().minusDays(getMaxDaysInQueueProperty()));
+                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDateTime.now().minusDays(getMaxDaysInQueueProperty()));
 
                 auditPropertyEntityAdapter.setUserId(getProcessUser());
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, getProcessUser());
@@ -108,7 +109,7 @@ public abstract class AbstractScheduledQueuePurger
         }
     }
 
-    protected abstract List<FOIARequest> getAllRequestsInQueueBefore(LocalDate date);
+    protected abstract List<FOIARequest> getAllRequestsInQueueBefore(LocalDateTime date);
 
     protected abstract String getProcessUser();
 
