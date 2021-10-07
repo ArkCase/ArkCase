@@ -16,6 +16,7 @@
         <aop:scoped-proxy/>
         <property name="wopiConfig" ref="wopiConfig"/>
         <property name="tokenService" ref="authenticationTokenService"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
 </beans>
