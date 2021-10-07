@@ -50,7 +50,7 @@ public class UpdateHoldEnterDateForRequestsInHoldQueueUpdateExecutor implements 
     @Override
     public void execute()
     {
-        List<FOIARequest> requestList = getRequestDao().findAllHoldRequestsBefore(LocalDate.now());
+        List<FOIARequest> requestList = getRequestDao().findAllHoldRequestsBefore(LocalDateTime.now());
 
         for (FOIARequest request : requestList)
         {

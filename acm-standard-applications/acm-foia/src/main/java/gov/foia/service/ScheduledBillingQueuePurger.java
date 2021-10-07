@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import gov.foia.model.FOIARequest;
@@ -75,9 +76,9 @@ public class ScheduledBillingQueuePurger extends AbstractScheduledQueuePurger
     }
 
     @Override
-    protected List<FOIARequest> getAllRequestsInQueueBefore(LocalDate date)
+    protected List<FOIARequest> getAllRequestsInQueueBefore(LocalDateTime date)
     {
-        return getRequestDao().getAllRequestsInBillingBefore(LocalDate.now().minusDays(getMaxDaysInQueue()));
+        return getRequestDao().getAllRequestsInBillingBefore(LocalDateTime.now().minusDays(getMaxDaysInQueue()));
     }
 
     @Override
