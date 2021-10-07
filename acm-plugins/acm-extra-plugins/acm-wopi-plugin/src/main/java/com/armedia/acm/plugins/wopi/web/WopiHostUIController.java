@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.wopi.web;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.plugins.wopi.model.WopiConfig;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -44,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/plugin/office")
@@ -53,6 +55,7 @@ public class WopiHostUIController
 
     private WopiConfig wopiConfig;
     private AuthenticationTokenService tokenService;
+    private ApplicationConfig applicationConfig;
 
     @Value("${tokenExpiration.wopiLinks}")
     private Long tokenExpiry;
@@ -62,11 +65,10 @@ public class WopiHostUIController
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
-
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
-        String requestUrl = wopiConfig.getWopiHostUrl(fileId, accessToken);
-        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
+
+        tokenService.addTokenToRelativePaths(generateRelativePaths(accessToken, fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -82,13 +84,19 @@ public class WopiHostUIController
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
-        String requestUrl = wopiConfig.getWopiHostValidationUrl(fileId, accessToken);
-        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
+        tokenService.addTokenToRelativePaths(generateRelativePaths(accessToken, fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
         model.addObject("url", wopiConfig.getWopiHostValidationUrl(fileId, accessToken));
         return model;
+    }
+
+    private List<String> generateRelativePaths(String accessToken, Long fileId)
+    {
+        String relativePathUsers = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users?acm_email_ticket=" + accessToken + "&ecmFileId=" + fileId;
+        String relativePathFile = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId + "?acm_email_ticket=" + accessToken + "&ecmFileId=" + fileId;
+        return Arrays.asList(relativePathUsers, relativePathFile);
     }
 
     public void setWopiConfig(WopiConfig wopiConfig)
@@ -99,5 +107,10 @@ public class WopiHostUIController
     public void setTokenService(AuthenticationTokenService tokenService)
     {
         this.tokenService = tokenService;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
