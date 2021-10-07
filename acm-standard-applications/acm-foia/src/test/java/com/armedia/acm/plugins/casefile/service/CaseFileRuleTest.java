@@ -103,14 +103,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         request.setBillingEnterDate(null);
 
         assertNull(request.getBillingEnterDate());
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getBillingEnterDate();
+        LocalDateTime setByRule = request.getBillingEnterDate();
 
         assertTrue(setByRule.isAfter(yesterday));
 
@@ -126,14 +126,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         request.setBillingEnterDate(yesterday);
 
         assertNotNull(request.getBillingEnterDate());
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getBillingEnterDate();
+        LocalDateTime setByRule = request.getBillingEnterDate();
 
         assertTrue(setByRule.equals(yesterday));
 
@@ -149,14 +149,14 @@ public class CaseFileRuleTest
 
         request.setQueue(queue);
 
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         request.setBillingEnterDate(now);
 
         assertTrue(request.getBillingEnterDate().equals(now));
 
         workingMemory.execute(request);
 
-        LocalDate setByRule = request.getBillingEnterDate();
+        LocalDateTime setByRule = request.getBillingEnterDate();
 
         assertNull(setByRule);
 

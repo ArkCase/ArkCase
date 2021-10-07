@@ -97,8 +97,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_billing_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate billingEnterDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime billingEnterDate;
 
     @Column(name = "fo_hold_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -330,7 +330,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the billingEnterDate
      */
-    public LocalDate getBillingEnterDate()
+    public LocalDateTime getBillingEnterDate()
     {
         return billingEnterDate;
     }
@@ -339,7 +339,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param billingEnterDate
      *            the billingEnterDate to set
      */
-    public void setBillingEnterDate(LocalDate billingEnterDate)
+    public void setBillingEnterDate(LocalDateTime billingEnterDate)
     {
         this.billingEnterDate = billingEnterDate;
     }
