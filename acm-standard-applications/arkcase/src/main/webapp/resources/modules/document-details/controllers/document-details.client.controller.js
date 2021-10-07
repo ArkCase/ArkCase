@@ -68,14 +68,17 @@ angular.module('document-details').controller(
                     $scope.fileReloadDisabled = true;
                     var fileDetails = {};
                     fileDetails.fileId = data.fileId;
-                    var ecmFile = $scope.ecmFile;
-                    fileDetails.file = ecmFile;
-                    fileDetails.fileName = ecmFile.name;
-                    fileDetails.fileType = ecmFile.fileType;
-                    fileDetails.originObjectId = $scope.caseInfo.id;
-                    fileDetails.originObjectType = $scope.caseInfo.caseType;
-                    fileDetails.parentObjectNumber = $scope.caseInfo.caseNumber;
-                    $scope.$bus.publish('open-progress-bar-modal', fileDetails);
+                    EcmService.getFile({
+                        fileId: data.fileId
+                    }).$promise.then(function(res) {
+                        fileDetails.file = res;
+                        fileDetails.fileName = res.fileName;
+                        fileDetails.fileType = res.fileType;
+                        fileDetails.originObjectId = $scope.caseInfo.id;
+                        fileDetails.originObjectType = $scope.caseInfo.caseType;
+                        fileDetails.parentObjectNumber = $scope.caseInfo.caseNumber;
+                        $scope.$bus.publish('open-progress-bar-modal', fileDetails);
+                    })
                 }
 
                 function onUpdateProgressBar(data) {
