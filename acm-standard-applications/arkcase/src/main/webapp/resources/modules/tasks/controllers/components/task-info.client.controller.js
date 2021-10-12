@@ -45,7 +45,6 @@ angular.module('tasks').controller(
                 scope: $scope
             });
             var promiseUsers = gridHelper.getUsers();
-            var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
             var defaultDateTimePickerFormat = $translate.instant("common.defaultDateTimePickerFormat");
 
             ConfigService.getComponentConfig("tasks", "info").then(function(componentConfig) {
@@ -178,17 +177,17 @@ angular.module('tasks').controller(
                 $scope.objectInfo = objectInfo;
                 $scope.dateInfo = $scope.dateInfo || {};
                 if(!Util.isEmpty($scope.objectInfo.dueDate)){
-                    $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
-                    $scope.datepickerDueDateOptions.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                    $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).local().format(defaultDateTimePickerFormat);
+                    $scope.datepickerDueDateOptions.dueDateInfo = moment($scope.objectInfo.dueDate).local();
                     $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
                 }
                 else {
                     $scope.dateInfo.dueDate = null;
-                    $scope.datepickerDueDateOptions.dueDateInfo = moment.utc(new Date()).local();
+                    $scope.datepickerDueDateOptions.dueDateInfo = moment(new Date()).local();
                     $scope.datepickerDueDateOptions.dueDateInfoUIPicker = moment(new Date()).format(defaultDateTimePickerFormat);
                 }
                 if(!Util.isEmpty($scope.objectInfo.taskStartDate)) {
-                    $scope.dateInfo.taskStartDate = moment.utc($scope.objectInfo.taskStartDate).local().format(defaultDateTimeUTCFormat);
+                    $scope.dateInfo.taskStartDate = moment($scope.objectInfo.taskStartDate).local().format(defaultDateTimePickerFormat);
                     $scope.startDate.startDateInfo = moment($scope.objectInfo.taskStartDate).local();
                     $scope.startDate.startDateInfoUIPicker = moment($scope.objectInfo.taskStartDate).format(defaultDateTimePickerFormat);
                 }
