@@ -245,6 +245,10 @@
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.country &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.country.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
@@ -255,6 +259,10 @@
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.type &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.type.validation.error</span>
                         </div>
                     </div>
                     <div class="row">
@@ -264,7 +272,12 @@
                             <span ng-if="checkLocationRules(person.defaultAddress)"
                                   class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.streetAddress &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.streetAddress.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate>
@@ -280,7 +293,12 @@
                             <span ng-if="checkLocationRules(person.defaultAddress)"
                                   class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.city &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.city.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country == 'US' || person.defaultAddress.country == 'CA' || person.defaultAddress.country == 'JP'">
@@ -293,6 +311,10 @@
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.state &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country != 'US' && person.defaultAddress.country != 'CA' && person.defaultAddress.country != 'JP'">
@@ -302,7 +324,11 @@
                             <span ng-if="checkLocationRules(person.defaultAddress)"
                                   class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}" ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.state &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
@@ -310,7 +336,12 @@
                             <span ng-if="checkLocationRules(person.defaultAddress)"
                                   class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.zip &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.zip.validation.error</span>
                         </div>
 
                         <div class="col-sm-2 form-group">
