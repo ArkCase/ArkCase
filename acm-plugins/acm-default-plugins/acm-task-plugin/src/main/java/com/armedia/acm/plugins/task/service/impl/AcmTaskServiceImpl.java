@@ -592,9 +592,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         List<String> reviewers = new ArrayList<>();
         reviewers.add(task.getAssignee());
         List<AcmTask> createdAcmTasks = new ArrayList<>();
-        Long parentObjectId = task.getParentObjectId();
-        String parentObjectType = task.getParentObjectType();
-        
+        Long parentObjectId = task.getParentObjectId() != null ? task.getParentObjectId() : task.getAttachedToObjectId();
+        String parentObjectType = task.getAttachedToObjectType() != null ? task.getAttachedToObjectType() : task.getParentObjectType();
 
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
         {

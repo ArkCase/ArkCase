@@ -82,9 +82,10 @@ public class CreateAdHocTaskService
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
 
-            String parentObjectType = in.getParentObjectType();
-            Long objectId = in.getAttachedToObjectId();
-            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) && objectId == null)
+            String parentObjectType = in.getAttachedToObjectType() != null ? in.getAttachedToObjectType() : in.getParentObjectType();
+            Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
+
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
                 String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
