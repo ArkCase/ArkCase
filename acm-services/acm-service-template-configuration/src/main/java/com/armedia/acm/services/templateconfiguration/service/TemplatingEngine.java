@@ -73,9 +73,9 @@ public class TemplatingEngine
     {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
         cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_22));
-        cfg.setClassicCompatible(true); // does't throw error on null values
+        cfg.setClassicCompatible(true); // doesn't throw error on null values
         cfg.setDateFormat("MM/dd/yyyy");
-        cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
+        cfg.setDateTimeFormat("MM/dd/yyyy hh:mm a");
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
