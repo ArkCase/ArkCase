@@ -739,8 +739,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         source.setFileType("file");
         configuration.setEcmFile(source);
 
-        Long parentObjectId = task.getAttachedToObjectId();
-        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
+        Long parentObjectId = task.getAttachedToObjectId() != null ? task.getAttachedToObjectId() : task.getParentObjectId();
+        String parentObjectType = task.getAttachedToObjectType() != null ? task.getAttachedToObjectType() : task.getParentObjectType();
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
