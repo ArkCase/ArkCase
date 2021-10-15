@@ -424,7 +424,7 @@ angular
                                         return false;
                                     }
                                     if ("RECORD" === Util.goodValue(node.data.status)) {
-                                        return false;
+                                        return true;
                                     }
                                     if (DocTree.editSetting.isEditing) {
                                         return false;
