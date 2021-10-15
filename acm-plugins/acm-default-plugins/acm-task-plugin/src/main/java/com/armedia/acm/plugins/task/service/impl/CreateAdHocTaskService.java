@@ -81,7 +81,7 @@ public class CreateAdHocTaskService
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
 
-            String parentObjectType = StringUtils.isBlank(in.getAttachedToObjectType()) ? in.getAttachedToObjectType() : in.getParentObjectType();
+            String parentObjectType = in.getAttachedToObjectType() != null ? in.getAttachedToObjectType() : in.getParentObjectType();
             Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
 
             if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
