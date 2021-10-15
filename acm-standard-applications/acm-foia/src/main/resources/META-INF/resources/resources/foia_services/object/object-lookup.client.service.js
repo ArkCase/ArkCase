@@ -11,7 +11,7 @@
  * LookupService contains functions to lookup data (typically static data).
  */
 
-angular.module('services').factory('Object.LookupService', ['$q', '$resource', 'Acm.StoreService', 'UtilService', 'LookupService', 'SearchService', function ($q, $resource, Store, Util, LookupService, SearchService) {
+angular.module('services').factory('Object.LookupService', ['$q', '$translate', '$resource', 'Acm.StoreService', 'UtilService', 'LookupService', 'SearchService', function ($q, $translate, $resource, Store, Util, LookupService, SearchService) {
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -734,11 +734,17 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
      *
      * @returns {Object} An array returned by $resource
      */
-    Service.getCountries = function () {
+     Service.getCountries = function() {
         var selectEntry = {key: null, value: "core.lookups.countries.selectCountry"};
         var countriesTypes = [];
         return Service.getLookupByLookupName("countries").then(function (countries) {
             countriesTypes = countries;
+            countriesTypes.sort(function(a,b){
+                countriesTypes.shift();
+                a.value = $translate.instant(a.value)
+                b.value = $translate.instant(b.value)
+                return a.value.localeCompare(b.value)
+            });
             countriesTypes.unshift(selectEntry);
             return countriesTypes;
         });
