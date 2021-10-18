@@ -96,7 +96,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/), '$1/$2/$3');
+        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var days = 0;
         if (momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {
@@ -129,7 +129,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/), '$1/$2/$3');
+        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var days = 0;
         if(momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {
