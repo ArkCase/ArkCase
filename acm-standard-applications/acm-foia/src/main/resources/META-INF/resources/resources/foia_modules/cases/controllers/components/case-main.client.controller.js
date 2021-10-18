@@ -182,8 +182,8 @@ angular.module('cases').controller(
 
             $scope.requestTrackChanged = function (requestTrack) {
                 // Automatically sets the extension flag if the 'complex' request track is selected.
-                if ($scope.complexRequestTrackOptionEnabled) {
-                    $scope.objectInfo.extensionFlag = (requestTrack === 'complex');
+                if ($scope.complexRequestTrackOptionEnabled && requestTrack === 'complex') {
+                    $scope.objectInfo.extensionFlag = true;
                 }
 
                 if (requestTrack === 'expedite') {
