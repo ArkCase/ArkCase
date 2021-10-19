@@ -33,10 +33,9 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -205,9 +204,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
             {
-                String requestUrl = request.getRequestURL() + "?" + request.getQueryString();
-                if (token.equals(authenticationToken.getKey())
-                        && Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(requestUrl))
+                if (token.equals(authenticationToken.getKey()) && validatePaths(request, authenticationToken))
                 {
                     log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
                     // token expires after 3 days, configured in arkcase.yaml (tokenExpiration)
@@ -236,6 +233,25 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             }
         }
 
+    }
+
+    private boolean validatePaths(HttpServletRequest request, AuthenticationToken authenticationToken)
+    {
+        boolean result = false;
+
+        if (StringUtils.isNotEmpty(authenticationToken.getRelativePath()))
+        {
+            String requestUrl = request.getRequestURL() + "?" + request.getQueryString();
+            result = Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(requestUrl);
+        }
+
+        if (!result && StringUtils.isNotEmpty(authenticationToken.getGenericPath()))
+        {
+            String requestUrl = request.getRequestURL().toString();
+            result = Arrays.stream(authenticationToken.getGenericPath().split("__comma__")).anyMatch(requestUrl::contains);
+        }
+
+        return result;
     }
 
     /**
