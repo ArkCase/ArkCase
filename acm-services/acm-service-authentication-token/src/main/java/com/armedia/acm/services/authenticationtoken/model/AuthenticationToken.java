@@ -88,6 +88,9 @@ public class AuthenticationToken implements Serializable, AcmEntity
     @Column(name = "cm_authentication_token_relative_path")
     private String relativePath;
 
+    @Column(name = "cm_authentication_token_generic_path")
+    private String genericPath;
+
     @Column(name = "cm_authentication_token_expiry_milliseconds")
     private Long tokenExpiry;
 
@@ -149,6 +152,16 @@ public class AuthenticationToken implements Serializable, AcmEntity
     public void setRelativePath(String relativePath)
     {
         this.relativePath = relativePath;
+    }
+
+    public String getGenericPath()
+    {
+        return genericPath;
+    }
+
+    public void setGenericPath(String genericPath)
+    {
+        this.genericPath = genericPath;
     }
 
     public Long getTokenExpiry()

@@ -68,7 +68,8 @@ public class WopiHostUIController
          AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
 
-        tokenService.addTokenToRelativePaths(generateRelativePaths(accessToken, fileId), accessToken, tokenExpiry, user.getMail());
+        tokenService.addTokenToRelativeAndGenericPaths(generateWopiRelativePaths(accessToken, fileId),
+                generateWopiGenericPaths(fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -84,7 +85,8 @@ public class WopiHostUIController
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
-        tokenService.addTokenToRelativePaths(generateRelativePaths(accessToken, fileId), accessToken, tokenExpiry, user.getMail());
+        tokenService.addTokenToRelativeAndGenericPaths(generateWopiRelativePaths(accessToken, fileId),
+                generateWopiGenericPaths(fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -92,11 +94,20 @@ public class WopiHostUIController
         return model;
     }
 
-    private List<String> generateRelativePaths(String accessToken, Long fileId)
+    private List<String> generateWopiGenericPaths(Long fileId)
+    {
+        String wopiFileGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "?";
+        String wopiFileContentsGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/contents";
+        String wopiFileLockGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/lock";
+        String wopiFileRenameGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/rename";
+        String wopiUsersGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users/resource/" + fileId + "?";
+        return Arrays.asList(wopiFileGenericPath, wopiUsersGenericPath, wopiFileContentsGenericPath, wopiFileLockGenericPath, wopiFileRenameGenericPath);
+    }
+
+    private List<String> generateWopiRelativePaths(String accessToken, Long fileId)
     {
         String relativePathUsers = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users?acm_email_ticket=" + accessToken + "&ecmFileId=" + fileId;
-        String relativePathFile = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId + "?acm_email_ticket=" + accessToken + "&ecmFileId=" + fileId;
-        return Arrays.asList(relativePathUsers, relativePathFile);
+        return Arrays.asList(relativePathUsers);
     }
 
     public void setWopiConfig(WopiConfig wopiConfig)
