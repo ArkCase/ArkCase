@@ -171,6 +171,19 @@ public class AuthenticationTokenService
         authenticationTokenDao.save(authenticationToken);
     }
 
+    public void addTokenToRelativeAndGenericPaths(List<String> relativePaths, List<String> genericPaths, String token,
+                                                  Long tokenExpiry, String emailAddress)
+    {
+        AuthenticationToken authenticationToken = new AuthenticationToken();
+        authenticationToken.setKey(token);
+        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
+        authenticationToken.setEmail(emailAddress);
+        authenticationToken.setRelativePath(relativePaths.stream().collect(Collectors.joining("__comma__")));
+        authenticationToken.setGenericPath(genericPaths.stream().collect(Collectors.joining("__comma__")));
+        authenticationToken.setTokenExpiry(tokenExpiry);
+        authenticationTokenDao.save(authenticationToken);
+    }
+
     public AuthenticationToken findByKey(String key)
     {
         return authenticationTokenDao.findAuthenticationTokenByKey(key);
