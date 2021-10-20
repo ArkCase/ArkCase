@@ -27,24 +27,26 @@ package com.armedia.acm.services.authenticationtoken.service;
  * #L%
  */
 
-import java.time.temporal.TemporalAmount;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import javax.servlet.http.HttpServletRequest;
+import java.time.temporal.TemporalAmount;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 8/5/14.
@@ -187,6 +189,59 @@ public class AuthenticationTokenService
     public AuthenticationToken findByKey(String key)
     {
         return authenticationTokenDao.findAuthenticationTokenByKey(key);
+    }
+
+    public boolean validateToken(HttpServletRequest request, String token)
+    {
+        AuthenticationToken authenticationToken = findByKey(token);
+
+        if (authenticationToken == null) {
+            log.trace("Token doesn't exist [{}]", token);
+            return false;
+        }
+
+        if (!AuthenticationTokenConstants.ACTIVE.equals(authenticationToken.getStatus())) {
+            log.trace("Token is not active [{}]", token);
+            return false;
+        }
+
+        if (!token.equals(authenticationToken.getKey()) || !validatePaths(request, authenticationToken)) {
+            log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
+            return false;
+        }
+
+        if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() < new Date().getTime())
+        {
+            authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
+            authenticationToken.setModifier(authenticationToken.getCreator());
+            authenticationToken.setModified(new Date());
+            saveAuthenticationToken(authenticationToken);
+            log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
+                    authenticationToken.getCreator());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePaths(HttpServletRequest request, AuthenticationToken authenticationToken)
+    {
+
+        String url;
+        boolean result = false;
+
+        if (StringUtils.isNotEmpty(authenticationToken.getRelativePath()))
+        {
+            url = request.getRequestURL() + "?" + request.getQueryString();
+            result = Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(url);
+        }
+
+        if (!result && StringUtils.isNotEmpty(authenticationToken.getGenericPath()))
+        {
+            url = request.getRequestURL().toString();
+            result = Arrays.stream(authenticationToken.getGenericPath().split("__comma__")).anyMatch(url::contains);
+        }
+
+        return result;
     }
 
     /**

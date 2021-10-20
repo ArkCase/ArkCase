@@ -8,5 +8,6 @@
 
     <bean id="acmPluginRoleBasedAccessInterceptor" class="com.armedia.acm.pluginmanager.web.AcmPluginRoleBasedAccessInterceptor">
         <property name="pluginPrivilegesConfig" ref="appPluginPrivileges"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 </beans>
