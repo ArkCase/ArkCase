@@ -53,6 +53,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -81,11 +82,12 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
@@ -95,6 +97,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.owasp.encoder.Encode;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -109,9 +112,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -136,7 +139,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * Created by armdev on 5/1/14.
@@ -2631,6 +2633,140 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
 
         return files;
+    }
+
+    @Override
+    public void download(HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
+            throws IOException, ArkCaseFileRepositoryException, AcmObjectNotFoundException
+    {
+
+        String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(ecmFile, version);
+
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisFileId);
+
+        Object result = getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+        if (result instanceof ContentStream)
+        {
+            handleFilePayload((ContentStream) result, response, isInline, ecmFile, version);
+        }
+        else
+        {
+            fileNotFound(ecmFile.getId());
+        }
+
+    }
+
+    // called for normal processing - file was found
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile,
+                                   String version) throws IOException
+    {
+        String mimeType = filePayload.getMimeType();
+
+        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, version);
+        // OpenCMIS thinks this is an application/octet-stream since the file has no extension
+        // we will use what Tika detected in such cases
+        if (ecmFileVersion != null)
+        {
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFileVersion.getVersionMimeType())))
+            {
+                mimeType = ecmFileVersion.getVersionMimeType();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFile.getFileActiveVersionMimeType())))
+            {
+                mimeType = ecmFile.getFileActiveVersionMimeType();
+            }
+        }
+
+        String fileName = filePayload.getFileName();
+        // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
+        // extension... so the extension can be null. So we have to guard against it.
+        if (ecmFileVersion != null)
+        {
+            if (ecmFile != null && ecmFileVersion.getVersionFileNameExtension() != null
+                    && !fileName.endsWith(ecmFileVersion.getVersionFileNameExtension()))
+            {
+                fileName = fileName + ecmFileVersion.getVersionFileNameExtension();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
+                    && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+            {
+                fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+            }
+        }
+
+        InputStream fileIs = null;
+
+        try
+        {
+            fileIs = filePayload.getStream();
+            if (!isInline)
+            {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                // add file metadata so it can be displayed in Snowbound
+                JSONObject fileMetadata = new JSONObject();
+                fileMetadata.put("fileName", ecmFile.getFileName());
+                fileMetadata.put("fileType", ecmFile.getFileType());
+                String versionTag = (version == null || version.equals("")) ? ecmFile.getActiveVersionTag() : version;
+                fileMetadata.put("fileNameWithVersion", String.format("%s:%s", ecmFile.getFileName(), versionTag));
+                fileMetadata.put("fileTypeCapitalized",
+                        ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
+                response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
+            }
+            response.setContentType(Encode.forJava(mimeType));
+            byte[] buffer = new byte[1024];
+            int read;
+            do
+            {
+                read = fileIs.read(buffer, 0, buffer.length);
+                if (read > 0)
+                {
+                    response.getOutputStream().write(buffer, 0, read);
+                }
+            } while (read > 0);
+            response.getOutputStream().flush();
+        }
+        finally
+        {
+            if (fileIs != null)
+            {
+                try
+                {
+                    fileIs.close();
+                }
+                catch (IOException e)
+                {
+                    log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void fileNotFound(Long fileId) throws AcmObjectNotFoundException
+    {
+        throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, String.format("File %d not found", fileId), null);
+    }
+
+    @Override
+    public void publishEcmFileDownloadedEvent(String ipAddress, EcmFile ecmFile, Authentication auth)
+    {
+        EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(ecmFile);
+
+        String userId = auth != null ? auth.getName() : "EMAIL_USER";
+        event.setUserId(userId);
+        event.setSucceeded(true);
+
+        getApplicationEventPublisher().publishEvent(event);
     }
 
     private AcmFolder getFolderLinkTarget(AcmFolder folderLink)
