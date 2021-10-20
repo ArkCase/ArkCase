@@ -28,12 +28,9 @@ package com.armedia.acm.auth;
  */
 
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -54,12 +51,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
@@ -196,62 +190,25 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         }
     }
 
-
     private void authenticate(HttpServletRequest request, String token) throws ServletRequestBindingException
     {
+
         AuthenticationToken authenticationToken = authenticationTokenService.findByKey(token);
-        if (authenticationToken != null)
+
+        if (authenticationTokenService.validateToken(request, token))
         {
-            if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
+            try
             {
-                if (token.equals(authenticationToken.getKey()) && validatePaths(request, authenticationToken))
-                {
-                    log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
-                    // token expires after 3 days, configured in arkcase.yaml (tokenExpiration)
-                    if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() < new Date().getTime())
-                    {
-                        authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
-                        authenticationToken.setModifier(authenticationToken.getCreator());
-                        authenticationToken.setModified(new Date());
-                        authenticationTokenService.saveAuthenticationToken(authenticationToken);
-                        log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
-                                authenticationToken.getCreator());
-                        return;
-                    }
-                    try
-                    {
-                        authenticateUser(request, authenticationToken.getCreator());
-                        log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
-                                authenticationToken.getCreator(), token);
-                    }
-                    catch (AuthenticationServiceException e)
-                    {
-                        log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
-                                token);
-                    }
-                }
+                authenticateUser(request, authenticationToken.getCreator());
+                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                        authenticationToken.getCreator(), token);
+            }
+            catch (AuthenticationServiceException e)
+            {
+                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                        token);
             }
         }
-
-    }
-
-    private boolean validatePaths(HttpServletRequest request, AuthenticationToken authenticationToken)
-    {
-        boolean result = false;
-
-        if (StringUtils.isNotEmpty(authenticationToken.getRelativePath()))
-        {
-            String requestUrl = request.getRequestURL() + "?" + request.getQueryString();
-            result = Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(requestUrl);
-        }
-
-        if (!result && StringUtils.isNotEmpty(authenticationToken.getGenericPath()))
-        {
-            String requestUrl = request.getRequestURL().toString();
-            result = Arrays.stream(authenticationToken.getGenericPath().split("__comma__")).anyMatch(requestUrl::contains);
-        }
-
-        return result;
     }
 
     /**

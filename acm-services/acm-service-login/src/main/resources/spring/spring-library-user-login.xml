@@ -64,8 +64,6 @@
     <bean id="acmRestAuthenticationFailureHandler"
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
 
-    <bean id="acmTicketAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
-
     <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
 
     <bean id="acmStaticResourcesAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>

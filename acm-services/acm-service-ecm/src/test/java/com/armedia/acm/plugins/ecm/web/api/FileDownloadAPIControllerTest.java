@@ -27,26 +27,18 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
@@ -79,6 +71,12 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-ecm-plugin-test.xml", "/spring/spring-web-acm-web.xml" })
 public class FileDownloadAPIControllerTest extends EasyMockSupport
@@ -87,14 +85,13 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private MockHttpSession mockHttpSession;
 
     private FileDownloadAPIController unit;
-
-    private EcmFileDao mockFileDao;
+    private EcmFileServiceImpl ecmFileService;
+    private EcmFileDao mockEcmFileDao;
     private Authentication mockAuthentication;
     private ApplicationEventPublisher mockEventPublisher;
-    private CamelContextManager camelContextManager;
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
-    private CmisConfigUtils mockCmisConfigUtils;
+    private CamelContextManager camelContextManager;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -104,24 +101,24 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        mockFileDao = createMock(EcmFileDao.class);
+
+        mockEcmFileDao = createMock(EcmFileDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
-        camelContextManager = createMock(CamelContextManager.class);
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
-        mockCmisConfigUtils = createMock(CmisConfigUtils.class);
+        camelContextManager = createMock(CamelContextManager.class);
 
         unit = new FileDownloadAPIController();
-
-        unit.setFileDao(mockFileDao);
-        unit.setApplicationEventPublisher(mockEventPublisher);
-        unit.setCamelContextManager(camelContextManager);
-        unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
-        unit.setCmisConfigUtils(mockCmisConfigUtils);
-        unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        ecmFileService = new EcmFileServiceImpl();
+        ecmFileService.setApplicationEventPublisher(mockEventPublisher);
+        ecmFileService.setCamelContextManager(camelContextManager);
+        ecmFileService.setFolderAndFilesUtils(mockFolderAndFilesUtils);
+        ecmFileService.setEcmFileDao(mockEcmFileDao);
+        unit.setEcmFileService(ecmFileService);
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
+
 
         MDC.clear();
 
@@ -162,7 +159,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
-        expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
+        expect(mockEcmFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
@@ -242,7 +239,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
-        expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
+        expect(mockEcmFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, version)).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, version)).andReturn(ecmFileVersion);
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
@@ -323,7 +320,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
-        expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
+        expect(mockEcmFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
@@ -370,7 +367,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String user = "user";
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
-        expect(mockFileDao.find(ecmFileId)).andReturn(null);
+        expect(mockEcmFileDao.find(ecmFileId)).andReturn(null);
 
         replayAll();
 
