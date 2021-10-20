@@ -5,6 +5,7 @@
 
     <bean id="wopiUsersApiController" class="com.armedia.acm.plugins.wopi.api.WopiUserApiController">
         <property name="wopiService" ref="wopiAcmService"/>
+        <property name="userDao" ref="userDao"/>
     </bean>
 
     <bean id="wopiFilesApiController" class="com.armedia.acm.plugins.wopi.api.WopiFilesApiController">
