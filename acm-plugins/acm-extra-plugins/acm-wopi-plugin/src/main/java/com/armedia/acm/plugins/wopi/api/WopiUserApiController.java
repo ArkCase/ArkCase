@@ -30,20 +30,14 @@ package com.armedia.acm.plugins.wopi.api;
 import com.armedia.acm.plugins.wopi.model.WopiSessionInfo;
 import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 import com.armedia.acm.plugins.wopi.service.WopiAcmService;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/api/latest/plugin/wopi/users")
@@ -51,14 +45,15 @@ public class WopiUserApiController
 {
     private static final Logger log = LogManager.getLogger(WopiUserApiController.class);
     private WopiAcmService wopiService;
+    private UserDao userDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public WopiUserInfo getUserInfo(@RequestParam("acm_email_ticket") String token,
-            HttpSession session)
+                                    Authentication authentication)
     {
         log.info("Getting user info per email ticket [{}]", token);
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        AcmUser user = userDao.findByUserId(authentication.getName());
         return wopiService.getUserInfo(user, token);
     }
 
@@ -74,5 +69,10 @@ public class WopiUserApiController
     public void setWopiService(WopiAcmService wopiService)
     {
         this.wopiService = wopiService;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }
