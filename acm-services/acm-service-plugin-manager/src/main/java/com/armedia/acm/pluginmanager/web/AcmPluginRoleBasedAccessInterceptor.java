@@ -66,7 +66,7 @@ public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerIntercep
     {
         String queryString = request.getQueryString();
 
-        if (OPEN_URL_REGEX.matcher(queryString).matches())
+        if (StringUtils.isNotBlank(queryString) && OPEN_URL_REGEX.matcher(queryString).matches())
         {
             return validateToken(request);
         }
