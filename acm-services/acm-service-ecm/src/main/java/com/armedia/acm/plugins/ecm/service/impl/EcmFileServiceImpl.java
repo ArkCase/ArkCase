@@ -97,7 +97,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.owasp.encoder.Encode;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -2722,7 +2721,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                         ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
                 response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
             }
-            response.setContentType(Encode.forJava(mimeType));
+            response.setContentType(mimeType);
             byte[] buffer = new byte[1024];
             int read;
             do
