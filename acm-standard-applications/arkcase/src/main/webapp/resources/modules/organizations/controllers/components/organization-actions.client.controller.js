@@ -2,9 +2,9 @@
 
 angular.module('organizations').controller(
         'Organizations.ActionsController',
-        [ '$scope', '$state', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService', 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
+        [ '$scope', '$state', '$window', '$stateParams', '$q', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService', 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
                 'Profile.UserInfoService', '$translate',
-                function($scope, $state, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService, ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
+                function($scope, $state, $window, $stateParams, $q, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService, ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -58,14 +58,18 @@ angular.module('organizations').controller(
 
                     $scope.activate = function() {
                         $scope.objectInfo.status = 'ACTIVE';
-                        $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
+                        $scope.activationIcon = "fa fa-circle-o-notch";
+                        $scope.refreshPage = "fa fa-refresh";
                         saveObjectInfoAndRefresh();
+                        $window.location.reload();
                     };
 
                     $scope.deactivate = function() {
                         $scope.objectInfo.status = 'INACTIVE';
-                        $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
+                        $scope.activationIcon = "fa fa-circle-o-notch";
+                        $scope.refreshPage = "fa fa-refresh";
                         saveObjectInfoAndRefresh();
+                        $window.location.reload();
                     };
 
                     $scope.merge = function() {
