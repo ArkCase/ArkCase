@@ -50,6 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -126,6 +127,7 @@ public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventP
         AcmQueue queue = getAcmQueueDao().findByName(queueName);
         caseFile.setPreviousQueue(caseFile.getQueue());
         caseFile.setQueue(queue);
+        caseFile.setQueueEnterDate(LocalDateTime.now());
 
         caseFile = getCaseFileDao().save(caseFile);
 
