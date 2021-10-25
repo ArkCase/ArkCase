@@ -32,6 +32,7 @@ angular.module('tasks').factory('Task.AlertsService', function() {
             //for all tasks that suspense date was before today we will show overdue alert
             var today = new Date();
             today.setHours(0, 0, 0, 0);
+            today = today.toISOString();
 
             if (dueDate < today) {
                 return true;
@@ -57,7 +58,9 @@ angular.module('tasks').factory('Task.AlertsService', function() {
             today.setHours(0, 0, 0, 0);
             var deadline = new Date();
             deadline.setDate(today.getDate() + days + 1);
-            deadline.setHours(0, 0, 0, 0);
+            deadline.setHours(0, 0, 0, 0)
+            deadline = deadline.toISOString();
+            today = today.toISOString();
 
             if (dueDate >= today && dueDate < deadline) {
                 return true;
