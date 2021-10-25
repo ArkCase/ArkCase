@@ -155,7 +155,7 @@ angular.module('tasks').controller(
             $scope.startDateChanged = function (data) {
                 if ($scope.config && $scope.config.data && $scope.config.data &&
                     moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
-                    $scope.config.data.dueDate = data.dateInPicker;
+                    $scope.config.data.dueDate = data.dateInPicker.format($translate.instant("common.defaultDateTimeUTCFormat"));
                     $scope.dateChangedManually = true;
                 }
                 $scope.minDueDate = moment.utc($scope.config.data.taskStartDate).local();
