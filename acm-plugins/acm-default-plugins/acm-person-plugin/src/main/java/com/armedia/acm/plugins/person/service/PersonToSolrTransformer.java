@@ -135,6 +135,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
+
+        additionalProperties.put("anonymous_flag_b", in.getAnonymousFlag());
     }
 
     private String getDefaultEmail(Person person)
