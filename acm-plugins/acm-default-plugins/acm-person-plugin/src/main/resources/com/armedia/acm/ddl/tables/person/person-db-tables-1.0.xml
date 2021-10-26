@@ -798,5 +798,13 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="add-person-anonymous-flag" author="adrijana.maneva">
+        <addColumn tableName="acm_person">
+            <column name="cm_anonymous_flag" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

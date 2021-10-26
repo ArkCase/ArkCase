@@ -38,7 +38,7 @@ public class SolrReindexPersonExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-person-reindex-v5";
+        return "solr-person-reindex-v6";
     }
 
     @Override

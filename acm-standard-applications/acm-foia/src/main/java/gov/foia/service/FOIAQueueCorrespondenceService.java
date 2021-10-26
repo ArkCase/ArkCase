@@ -51,6 +51,7 @@ import com.armedia.acm.services.notification.service.NotificationService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import com.sun.xml.fastinfoset.stax.events.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -193,24 +194,28 @@ public class FOIAQueueCorrespondenceService
 
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
 
-            String emailSubject = "";
-            Template template = templateManager.findTemplate("requestDocumentAttached.html");
-            if(template != null)
+            if(!Util.isEmptyString(emailAddress))
             {
-                emailSubject = template.getEmailSubject();
+                String emailSubject = "";
+                Template template = templateManager.findTemplate("requestDocumentAttached.html");
+                if(template != null)
+                {
+                    emailSubject = template.getEmailSubject();
+                }
+
+                Notification notification = notificationService.getNotificationBuilder()
+                        .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
+                                request.getObjectType(), requestId, user != null ? user.getUserId() : null)
+                        .withFiles(Arrays.asList(ecmFileVersions))
+                        .withEmailAddresses(emailAddress)
+                        .forObjectWithNumber(request.getCaseNumber())
+                        .forObjectWithTitle(request.getTitle())
+                        .withSubject(emailSubject)
+                        .build();
+
+                notificationService.saveNotification(notification);
             }
 
-            Notification notification = notificationService.getNotificationBuilder()
-                    .newNotification("requestDocumentAttached", String.format("%s %s", request.getRequestType(), request.getCaseNumber()),
-                            request.getObjectType(), requestId, user != null ? user.getUserId() : null)
-                    .withFiles(Arrays.asList(ecmFileVersions))
-                    .withEmailAddresses(emailAddress)
-                    .forObjectWithNumber(request.getCaseNumber())
-                    .forObjectWithTitle(request.getTitle())
-                    .withSubject(emailSubject)
-                    .build();
-
-            notificationService.saveNotification(notification);
 
         }
         catch (Exception e)

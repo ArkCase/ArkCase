@@ -254,6 +254,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Column(name = "cm_ldap_user_id")
     private String ldapUserId;
 
+    @Column(name = "cm_anonymous_flag")
+    private boolean anonymousFlag;
+
     @Transient
     private static LookupDao lookupDao;
 
@@ -726,6 +729,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setDefaultFax(ContactMethod defaultFax)
     {
         this.defaultFax = defaultFax;
+    }
+
+    public boolean getAnonymousFlag()
+    {
+        return anonymousFlag;
+    }
+
+    public void setAnonymousFlag(boolean anonymousFlag)
+    {
+        this.anonymousFlag = anonymousFlag;
     }
 
     public PostalAddress getDefaultAddress()
