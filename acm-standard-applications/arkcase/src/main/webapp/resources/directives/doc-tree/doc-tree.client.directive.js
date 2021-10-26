@@ -2787,11 +2787,10 @@ angular.module('directives').directive(
                                         newNode.renderTitle();
                                         dfd.resolve(copyFolderInfo);
                                     }, function(errorData) {
-                                        if (errorData.data && errorData.data.message)
-                                        {
-                                            MessageService.error(errorData.data.message);
-                                        } else if (errorData.data) {
-                                            MessageService.error(errorData.data)
+                                        if (copyService == Ecm.copyFolderAsLink) {
+                                            MessageService.error($translate.instant("common.directive.docTree.copyFolderAsLinkError"));
+                                        } else {
+                                            MessageService.error($translate.instant("common.directive.docTree.copyFolderError"));
                                         }
                                         DocTree.markNodeError(newNode);
                                         dfd.reject();
