@@ -3017,7 +3017,11 @@ angular
                                     newNode.renderTitle();
                                     dfd.resolve(copyFolderInfo);
                                 }, function(errorData) {
-                                    MessageService.error(errorData.data)
+                                    if (copyService == Ecm.copyFolderAsLink) {
+                                        MessageService.error($translate.instant("common.directive.docTree.copyFolderAsLinkError"));
+                                    } else {
+                                        MessageService.error($translate.instant("common.directive.docTree.copyFolderError"));
+                                    }
                                     DocTree.markNodeError(newNode);
                                     dfd.reject();
                                 });
