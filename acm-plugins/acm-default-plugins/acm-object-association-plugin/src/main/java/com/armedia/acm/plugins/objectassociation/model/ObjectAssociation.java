@@ -30,14 +30,20 @@ package com.armedia.acm.plugins.objectassociation.model;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -53,7 +59,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "acm_object_association")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "className", defaultImpl = ObjectAssociation.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.objectassociation.model.ObjectAssociation")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ObjectAssociation implements AcmEntity, Serializable
 {
@@ -119,6 +130,9 @@ public class ObjectAssociation implements AcmEntity, Serializable
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_inverse_association_id")
     private ObjectAssociation inverseAssociation;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @PrePersist
     protected void beforeInsert()
@@ -311,6 +325,16 @@ public class ObjectAssociation implements AcmEntity, Serializable
     public void setInverseAssociation(ObjectAssociation inverseAssociation)
     {
         this.inverseAssociation = inverseAssociation;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
     @Override

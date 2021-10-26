@@ -195,5 +195,15 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_object_assn_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <!-- adding discriminator column, needed for extensibility -->
+    <changeSet id="13-add-discriminator-column-extensibility" author="aleksandar.acevski">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_class_name" type="VARCHAR(400)"
+                    defaultValue="com.armedia.acm.plugins.objectassociation.model.ObjectAssociation">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
