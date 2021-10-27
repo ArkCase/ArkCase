@@ -58,7 +58,7 @@ public class AuthenticationTokenService
 
     private AuthenticationTokenDao authenticationTokenDao;
 
-    public static final int EMAIL_TICKET_EXPIRATION_DAYS = 3;
+    public static final int WOPI_TICKET_EXPIRATION_DAYS = 3;
     private Logger log = LogManager.getLogger(getClass());
 
     /**

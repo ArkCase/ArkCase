@@ -106,7 +106,7 @@ public class WopiHostUIController
 
     private List<String> generateWopiRelativePaths(String accessToken, Long fileId)
     {
-        String relativePathUsers = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users?acm_email_ticket=" + accessToken + "&ecmFileId=" + fileId;
+        String relativePathUsers = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users?ecmFileId=" + fileId + "&acm_wopi_ticket=" + accessToken;
         return Arrays.asList(relativePathUsers);
     }
 
