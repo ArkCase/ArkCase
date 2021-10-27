@@ -88,7 +88,7 @@ public class WopiAcmService implements AcmConfigurablePlugin
         if (authToken.isActive())
         {
             tokenTtl = tokenService.calculateTokenTimeToLive(authToken,
-                    Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS));
+                    Period.ofDays(AuthenticationTokenService.WOPI_TICKET_EXPIRATION_DAYS));
         }
         return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang(), tokenTtl);
     }

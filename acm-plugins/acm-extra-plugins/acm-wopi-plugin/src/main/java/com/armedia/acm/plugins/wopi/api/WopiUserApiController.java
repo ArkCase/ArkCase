@@ -54,7 +54,7 @@ public class WopiUserApiController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public WopiUserInfo getUserInfo(@RequestParam("acm_email_ticket") String token,
+    public WopiUserInfo getUserInfo(@RequestParam("acm_wopi_ticket") String token,
             HttpSession session)
     {
         log.info("Getting user info per email ticket [{}]", token);
@@ -64,7 +64,7 @@ public class WopiUserApiController
 
     @RequestMapping(value = "/resource/{file_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public WopiSessionInfo getSessionInfo(@PathVariable("file_id") Long fileId, @RequestParam("acm_email_ticket") String token,
+    public WopiSessionInfo getSessionInfo(@PathVariable("file_id") Long fileId, @RequestParam("acm_wopi_ticket") String token,
             Authentication authentication)
     {
         log.info("Getting wopi session info per email ticket [{}]", token);

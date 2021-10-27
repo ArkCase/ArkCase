@@ -97,11 +97,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         case AUTH_REQUEST_TYPE_TOKEN:
             tokenAuthentication(request, response);
             break;
-        case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
-            emailTokenAuthentication(request);
-            break;
-        case AUTH_REQUEST_TYPE_TOUCHNET_TOKEN:
-            touchnetTokenAuthentication(request);
+        case AUTH_REQUEST_TYPE_WOPI_TOKEN:
+            wopiTokenAuthentication(request);
             break;
         case AUTH_REQUEST_TYPE_CLIENT_CERT:
             certificateAuthentication(request);
@@ -172,21 +169,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      * @throws ServletException
      *             on error
      */
-    private void emailTokenAuthentication(HttpServletRequest request) throws ServletException
+    private void wopiTokenAuthentication(HttpServletRequest request) throws ServletException
     {
-        String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
-        if (emailToken != null)
+        String wopiToken = ServletRequestUtils.getStringParameter(request, "acm_wopi_ticket");
+        if (wopiToken != null)
         {
-            authenticate(request,emailToken);
-        }
-    }
-
-    private void touchnetTokenAuthentication(HttpServletRequest request) throws ServletException
-    {
-        String touchnetToken = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
-        if (touchnetToken != null)
-        {
-            authenticate(request, touchnetToken);
+            authenticate(request, wopiToken);
         }
     }
 
@@ -200,12 +188,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             try
             {
                 authenticateUser(request, authenticationToken.getCreator());
-                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                log.trace("User [{}] successfully authenticated using acm_wopi_ticket [{}]",
                         authenticationToken.getCreator(), token);
             }
             catch (AuthenticationServiceException e)
             {
-                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                log.warn("User [{}] failed authenticating using acm_wopi_ticket [{}]", authenticationToken.getCreator(),
                         token);
             }
         }
@@ -324,15 +312,10 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             log.trace("Token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
         }
-        else if (request.getParameter("acm_email_ticket") != null)
+        else if (request.getParameter("acm_wopi_ticket") != null)
         {
-            log.trace("Email token authentication requested");
-            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_EMAIL_TOKEN;
-        }
-        else if (request.getParameter("EXT_TRANS_ID") != null)
-        {
-            log.trace("Touchnet token authentication requested");
-            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOUCHNET_TOKEN;
+            log.trace("Wopi token authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_WOPI_TOKEN;
         }
         else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
         {
@@ -395,8 +378,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private enum AuthRequestType
     {
         AUTH_REQUEST_TYPE_TOKEN,
-        AUTH_REQUEST_TYPE_EMAIL_TOKEN,
-        AUTH_REQUEST_TYPE_TOUCHNET_TOKEN,
+        AUTH_REQUEST_TYPE_WOPI_TOKEN,
         AUTH_REQUEST_TYPE_CLIENT_CERT,
         AUTH_REQUEST_TYPE_BASIC,
         AUTH_REQUEST_TYPE_OTHER
