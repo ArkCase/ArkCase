@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -380,7 +381,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException
     {
         FOIAPerson person = (FOIAPerson) personDao.find(personId);
@@ -422,7 +423,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             createPortalUser(portalUser, portalPerson, null);
 
             UserResetRequest resetRequest = createUserResetRequest(portalUser, portalId);
-            requestPasswordResetForRequester(portalId, resetRequest);
+            requestPasswordResetForRequester(portalId, resetRequest, requestId);
 
             return UserRegistrationResponse.accepted();
         }
@@ -438,12 +439,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest)
+    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest, Long requestId)
             throws PortalUserServiceException
     {
         String templateName = "portalUserCreatedFromArkcasePasswordResetLink";
         String emailTitle = translationService.translate(NotificationConstants.NEW_PORTAL_USER_PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, requestId);
     }
 
     public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
@@ -630,7 +631,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         String templateName = "portalPasswordResetRequestLink";
         String emailTitle = translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, null);
     }
 
     /*
@@ -654,7 +655,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle, Long requestId)
             throws PortalUserServiceException
     {
         AcmUser acmPortalUser = checkForExistingUser(resetRequest.getEmailAddress());
@@ -697,7 +698,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 notification.setEmailAddresses(resetRequest.getEmailAddress());
                 notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
                 notification.setSubject(emailSubject);
-                notification.setParentType("USER");
+                notification.setParentType(CaseFileConstants.OBJECT_TYPE);
+                notification.setParentId(requestId);
 
                 getNotificationDao().save(notification);
 

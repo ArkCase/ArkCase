@@ -348,7 +348,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException
     {
         SARPerson person = (SARPerson) personDao.find(personId);
@@ -390,7 +390,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
             createPortalUser(portalId, portalUser, portalPerson, null);
 
             UserResetRequest resetRequest = createUserResetRequest(portalUser, portalId);
-            requestPasswordResetForRequester(portalId, resetRequest);
+            requestPasswordResetForRequester(portalId, resetRequest, requestId);
 
             return UserRegistrationResponse.accepted();
         }
@@ -407,12 +407,12 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest)
+    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest, Long requestId)
             throws PortalUserServiceException
     {
         String templateName = "portalUserCreatedFromArkcasePasswordResetLink";
         String emailTitle = translationService.translate(NotificationConstants.NEW_PORTAL_USER_PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, requestId);
     }
 
     public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
@@ -575,7 +575,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     {
         String templateName = "portalPasswordResetRequestLink";
         String emailTitle = translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, null);
     }
 
     /*
@@ -599,7 +599,7 @@ public class SARPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle, Long requestId)
             throws PortalUserServiceException
     {
         AcmUser acmPortalUser = getPortalAcmUser(resetRequest.getEmailAddress());
