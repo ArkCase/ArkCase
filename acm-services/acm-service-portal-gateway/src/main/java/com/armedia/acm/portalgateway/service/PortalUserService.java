@@ -133,7 +133,7 @@ public interface PortalUserService
     UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException, InvalidAttributeValueException;
 
-    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException;
 
     PortalUser retrieveUser(String portalUserId, String portalId) throws PortalUserServiceException;
