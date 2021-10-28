@@ -123,12 +123,13 @@ public class ArkCasePortalGatewayUserAPIController
     @ResponseBody
     public UserRegistrationResponse registerUserFromPerson(Authentication auth,
             @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestParam (value = "requestId") Long requestId,
             @RequestBody Long personId)
             throws PortalUserServiceException
     {
         log.debug("Registering user for person with ID [{}] at portal with ID [{}] from Arkcase.",
                 personId, portalId);
-        return portalUserService.registerUserFromPerson(portalId, personId);
+        return portalUserService.registerUserFromPerson(portalId, personId, requestId);
     }
 
     @CheckPortalUserAssignement

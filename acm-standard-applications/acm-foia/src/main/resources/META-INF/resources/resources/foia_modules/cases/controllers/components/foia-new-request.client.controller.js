@@ -544,9 +544,9 @@ angular.module('cases').controller(
 
             };
 
-            function createNewPortalUser(personId) {
+            function createNewPortalUser(personId, requestId) {
 
-                RequestInfoService.saveNewPortalUser(personId, $scope.config.portal.portalId).then(function (response) {
+                RequestInfoService.saveNewPortalUser(personId, $scope.config.portal.portalId, requestId).then(function (response) {
                     if (response.registrationStatus === "REGISTRATION_EXISTS") {
                         MessageService.error($translate.instant('cases.newRequest.portalUser.message.error.exists'));
                     } else if (response.registrationStatus === "REGISTRATION_REJECTED") {
@@ -567,7 +567,7 @@ angular.module('cases').controller(
                     $scope.loadingIcon = "fa fa-floppy-o";
                     ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, response.id);
                     if ($scope.config.data.createNewPortalUser) {
-                        createNewPortalUser(response.data.originator.person.id);
+                        createNewPortalUser(response.data.originator.person.id, response.data.id);
                     }
                 }, function (error) {
                     $scope.loading = false;

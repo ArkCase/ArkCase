@@ -81,10 +81,10 @@ public interface PortalUserServiceProvider
      */
     PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException;
 
-    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException;
 
-    UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
+    UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest, Long requestId) throws PortalUserServiceException;
 
     /**
      * @param portalId
@@ -108,7 +108,7 @@ public interface PortalUserServiceProvider
      */
     UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
 
-    UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+    UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle, Long requestId)
             throws PortalUserServiceException;
 
     /**
