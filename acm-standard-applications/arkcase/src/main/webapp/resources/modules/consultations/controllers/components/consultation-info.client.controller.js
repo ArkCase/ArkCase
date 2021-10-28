@@ -199,8 +199,6 @@ angular.module('consultations').controller(
                 $scope.owningGroup = ObjectModelService.getGroup(data);
                 $scope.assignee = ObjectModelService.getAssignee(data);
 
-                var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.receivedDate))).format();
-                $scope.maxDate = moment(utcDate).add(1, 'years');
                 $scope.minDate = moment.utc(new Date(data.receivedDate)).local();
 
                 ConsultationLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
