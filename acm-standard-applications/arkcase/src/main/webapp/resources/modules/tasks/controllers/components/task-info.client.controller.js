@@ -202,8 +202,7 @@ angular.module('tasks').controller(
                 $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
                 $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
-                var utcDate = moment.utc(UtilDateService.dateToIso(new Date($scope.dateInfo.taskStartDate))).format();
-                $scope.maxDate = moment(utcDate).add(1, 'years');
+
 
                 var today = new Date();
                 if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
