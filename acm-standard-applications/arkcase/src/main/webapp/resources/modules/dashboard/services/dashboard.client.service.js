@@ -64,7 +64,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryMyCases: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' + 'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' + 'AND+object_type_s\\:CASE_FILE+' + 'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                    url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' + 'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' + 'AND+object_type_s\\:CASE_FILE+' + 'AND+NOT+status_lcs\\:CLOSED+AND+NOT+status_lcs\\:DELETED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                     isArray: false,
                     data: ''
                 },
@@ -76,7 +76,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryMyConsultations: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' + 'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' + 'AND+object_type_s\\:CONSULTATION+' + 'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                    url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' + 'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' + 'AND+object_type_s\\:CONSULTATION+' + 'AND+NOT+status_lcs\\:CLOSED+AND+NOT+status_lcs\\:DELETED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                     isArray: false,
                     data: ''
                 },
