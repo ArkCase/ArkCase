@@ -8,12 +8,13 @@
     <div class="row">
         <div class="col-sm-6 form-group">
             <label>{{'admin.application.lookups.config.lookupName' | translate}}</label><span class="required-asterisk">*</span>
-            <input id="lookupName" ng-model="entry.name" class="input-md form-control"
+            <input id="lookupName" ng-model="entry.name" class="input-md form-control" ng-change="validateInput(entry.name)"
                     placeholder="{{ 'admin.application.lookups.config.placeholder' | translate }}" required>
+            <span ng-if="showError" translate>admin.application.lookup.config.validationMessage</span>
         </div>
         <div class="col-sm-6 form-group">
             <label translate>{{'admin.application.lookups.config.label' | translate}}</label><span class="required-asterisk">*</span>
-            <select id="lookupTypes" class="input-md form-control" ng-model="entry.lookupType" ng-options="item for item in lookupTypes" required>
+            <select id="lookupTypes" class="input-md form-control" ng-model="entry.lookupType" ng-change="validateInput(entry.name)" ng-options="item for item in lookupTypes" required>
             </select>
         </div>
     </div>
