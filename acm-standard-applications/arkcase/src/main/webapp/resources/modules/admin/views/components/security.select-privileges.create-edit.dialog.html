@@ -10,8 +10,9 @@
     <label for="dialogRoleName" class="label">
         <span translate>admin.security.selectPrivileges.name</span>
     </label>
-    <input id="dialogRoleName" type="text" ng-model="roleName" class="form-control" required
+    <input id="dialogRoleName" type="text" ng-model="roleName" ng-change="validateInput(roleName)" class="form-control" required
             placeholder="{{'admin.security.selectPrivileges.name'| translate}}">
+    <span ng-if="showRegexError" translate>common.configuration.validationMessage</span>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" ng-click="cancel()">

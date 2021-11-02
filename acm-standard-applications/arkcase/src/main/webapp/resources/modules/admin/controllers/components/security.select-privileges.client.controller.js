@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope', 'Admin.SelectPrivilegesService', '$q', '$modal', '$translate', '$log', 'UtilService', 'MessageService', function($scope, SelectPrivilegesService, $q, $modal, $translate, $log, Util, MessageService) {
+angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope', 'Admin.SelectPrivilegesService', '$q', '$modal', '$translate', '$log', 'UtilService', 'MessageService', 'RegexValidationService', 'ObjectService', function($scope, SelectPrivilegesService, $q, $modal, $translate, $log, Util, MessageService, RegexValidationService, ObjectService) {
     var tempAppRolesPromise = SelectPrivilegesService.getAppRoles();
 
     $scope.fillList = fillList;
@@ -204,14 +204,18 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
         $scope.showModal($scope.lastSelectedRole.key);
     };
 
+
     //dialog for edit or create new role
     $scope.showModal = function(value) {
         var modalInstance = $modal.open({
             animation: true,
             templateUrl: 'modules/admin/views/components/security.select-privileges.create-edit.dialog.html',
             controller: function($scope, $modalInstance) {
-                $scope.inputValid = true;
-                $scope.roleName = value;
+                $scope.validateInput = function(value) {
+                    var validatedObject = RegexValidationService.validateInput(value, ObjectService.RegexTypes.RULE_REGEX);
+                        $scope.roleName = validatedObject.inputValue;
+                        $scope.showRegexError = validatedObject.showRegexError;
+                };
                 if (value == null) {
                     $scope.saveBtnText = $translate.instant('admin.security.selectPrivileges.createRole');
                 } else {
@@ -220,7 +224,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
 
                 //watch the input to enable/disable ok button
                 $scope.$watch('roleName', function(newValue) {
-                    if (newValue) {
+                    if (newValue && !$scope.showRegexError) {
                         $scope.inputValid = false;
                     } else {
                         $scope.inputValid = true;
