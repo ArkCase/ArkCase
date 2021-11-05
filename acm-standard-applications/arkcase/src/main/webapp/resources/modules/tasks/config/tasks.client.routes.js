@@ -23,6 +23,7 @@ angular.module('tasks').config(
                                                 $translatePartialLoader.addPart('dashboard');
                                                 $translatePartialLoader.addPart('tasks');
                                                 $translatePartialLoader.addPart('preference');
+                                                $translatePartialLoader.addPart('document-details');
                                                 $translate.resetDataDict().addDataDictFromLabels(LocaleService.getLabelResources([ "tasks", "common" ], "en")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes")).addDataDictFromLookup(
                                                         ObjectLookupService.getLookupByLookupName("priorities")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("taskOutcomes"));
                                                 return $translate.refresh();
