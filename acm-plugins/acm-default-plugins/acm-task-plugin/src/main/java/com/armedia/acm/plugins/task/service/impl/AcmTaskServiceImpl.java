@@ -610,6 +610,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("assignee", task.getAssignee());
                 pVars.put("taskName", task.getTitle());
                 pVars.put("dueDate", task.getDueDate());
+                pVars.put("taskStartDate", task.getTaskStartDate());
                 pVars.put("documentAuthor", authentication.getName());
                 pVars.put("pdfRenditionId", documentToReview.getFileId());
                 pVars.put("formXmlId", null);
@@ -777,8 +778,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             pvars.put("currentTaskName", task.getTitle());
             pvars.put("owningGroup", task.getCandidateGroups());
-            pvars.put("dueDate", configuration.getTaskDueDateExpression());
-
+            pvars.put("dueDate", task.getDueDate() == null ? configuration.getTaskDueDateExpression() : task.getDueDate());
+            pvars.put("taskStartDate", task.getTaskStartDate());
             AcmTask createdAcmTask = getTaskDao().startBusinessProcess(pvars, processName);
             createdAcmTask.setDocumentsToReview(task.getDocumentsToReview());
 
