@@ -1527,7 +1527,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         // If start date is not provided, set start date as creation date
         if (acmTask.getTaskStartDate() == null)
         {
-            acmTask.setTaskStartDate(activitiTask.getCreateTime());
+            if (processVariables.get("taskStartDate") == null) {
+                acmTask.setTaskStartDate(activitiTask.getCreateTime());
+            } else {
+                acmTask.setTaskStartDate((Date) processVariables.get("taskStartDate"));
+            }
         }
 
         String status = findTaskStatus(activitiTask);
