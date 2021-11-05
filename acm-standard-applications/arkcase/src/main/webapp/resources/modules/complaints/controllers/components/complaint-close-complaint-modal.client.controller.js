@@ -13,6 +13,7 @@ angular.module('complaints').controller(
             $scope.searchCase = searchCase;
             $scope.save = save;
             $scope.cancelModal = cancelModal;
+            $scope.showApprover= modalParams.showApprover;
             //Objects
             $scope.complaintInfo = {};
             $scope.closeComplaintRequest = {
