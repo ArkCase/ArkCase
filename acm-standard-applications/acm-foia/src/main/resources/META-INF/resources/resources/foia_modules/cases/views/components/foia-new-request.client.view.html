@@ -241,7 +241,7 @@
                             <select id="country" class="form-control"
                                     ng-model="config.data.originator.person.addresses[primaryAddressIndex].country"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
-                                     || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                     || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     ng-disabled="isExistingPerson && (existingPerson.addresses[primaryAddressIndex].country ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))"
                                     ng-change="changeStates(config.data.originator.person.addresses[primaryAddressIndex].country)">
@@ -265,7 +265,7 @@
                             <select id="addressType" class="form-control"
                                     ng-model="config.data.originator.person.addresses[primaryAddressIndex].type"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
-                                    || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                    || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     ng-disabled="isExistingPerson &&
                                     ((existingPerson.addresses[primaryAddressIndex].type && existingPerson.addresses[primaryAddressIndex].streetAddress) ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
@@ -292,7 +292,7 @@
                                     ng-model="config.data.originator.person.addresses[primaryAddressIndex].streetAddress"
                                     placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
-                                    || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                    || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     ng-disabled="isExistingPerson && (existingPerson.addresses[primaryAddressIndex].streetAddress ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                             <span class="text-danger"
@@ -325,7 +325,7 @@
                                     ng-model="config.data.originator.person.addresses[primaryAddressIndex].city"
                                     placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
-                                    || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                    || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     ng-disabled="isExistingPerson && (existingPerson.addresses[primaryAddressIndex].city ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                             <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex]))
@@ -356,7 +356,7 @@
                                         ng-model="config.data.originator.person.addresses[primaryAddressIndex].state"
                                         class="input-md form-control" placeholder="{{ 'cases.newRequest.state.placeholder' | translate }}"
                                         ng-required="config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser
-                                        || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                        || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                         ng-disabled="isExistingPerson && (existingPerson.addresses[primaryAddressIndex].state ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                             </div>
@@ -379,7 +379,7 @@
                                     ng-model="config.data.originator.person.addresses[0].zip"
                                     placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
                                     ng-required="config.data.deliveryMethodOfResponse == 'Mail'  || config.data.createNewPortalUser
-                                    || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
+                                    || !isExistingPerson && checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex])"
                                     ng-disabled="isExistingPerson && (existingPerson.addresses[primaryAddressIndex].zip ||
                                     (config.data.deliveryMethodOfResponse != 'Mail'  && !config.data.createNewPortalUser))">
                             <span class="text-danger" ng-if="(config.data.deliveryMethodOfResponse == 'Mail' || config.data.createNewPortalUser || checkLocationRules(config.data.originator.person.addresses[primaryAddressIndex]))

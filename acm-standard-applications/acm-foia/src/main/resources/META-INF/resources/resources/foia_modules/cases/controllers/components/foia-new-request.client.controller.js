@@ -489,6 +489,9 @@ angular.module('cases').controller(
                 var formdata = new FormData();
                 var basicData = {};
 
+                if($scope.config.data.originator.person.addresses.length && Util.isEmpty($scope.config.data.originator.person.addresses[0].country) && Util.isEmpty($scope.config.data.originator.person.addresses[0].type)){
+                    $scope.config.data.originator.person.addresses.shift();
+                }
 
                 if (Util.isEmpty($scope.config.data.originator.person.defaultPhone) || !$scope.config.data.originator.person.defaultPhone.value) {
                     $scope.config.data.originator.person.defaultPhone = null;
