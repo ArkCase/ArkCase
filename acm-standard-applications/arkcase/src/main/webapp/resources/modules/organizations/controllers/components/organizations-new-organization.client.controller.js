@@ -469,20 +469,23 @@ angular.module('organizations').controller(
             });
 
 
-            $scope.validateContact = function (type, data, isDefaultPhone) {
+            $scope.validateContact = function (type, data, isDefaultValue) {
                 if (type === 'phone' || type === 'fax') {
                     var validateObject = PhoneValidationService.validateInput(data.value, regEx);
                     data.value = validateObject.inputValue;
-                    if (isDefaultPhone) {
+                    if (isDefaultValue) {
                         $scope['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = validateObject.showPhoneError;
                     } else {
                         data['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = validateObject.showPhoneError;
                     }
                 }
                 if(type === 'email') {
-                    EmailValidationService.validateInput(data.value).then(function (response){
+                    EmailValidationService.validateInput(data.value).then(function (response) {
                         data.value = response.inputValue;
-                        $scope.showEmailError = response.showEmailError;
+                        if(isDefaultValue) {
+                            $scope['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = response.showEmailError;
+                        }
+                        data['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = response.showEmailError;
                     });
                 }
             }

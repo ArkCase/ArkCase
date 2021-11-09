@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
     'People.NewPersonController',
-    ['$scope', '$stateParams', '$translate', '$q', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
-        function ($scope, $stateParams, $translate, $q, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'EmailValidationService',
+        function ($scope, $stateParams, $translate, $q, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, EmailValidationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -465,14 +465,24 @@ angular.module('people').controller(
                 });
             };
 
-            $scope.validateInput = function (caType, caValue) {
+            $scope.validateInput = function (caType, caValue, isDefaultValue) {
                 var inputType = caType;
                 if (inputType === 'phone') {
                     var validateObject = PhoneValidationService.validateInput(caValue, regEx);
-                    $scope.person.defaultPhone.value = validateObject.inputValue;
-                    $scope.showPhoneError = validateObject.showPhoneError;
-                } else if (inputType === 'email' && caValue) {
+                    caValue.value = validateObject.inputValue;
+                    if(isDefaultValue) {
+                        $scope['show' + $scope.capitalizeFirstLetter(caType) + 'Error'] = validateObject.showPhoneError;
+                    } else
+                        caValue['show' + $scope.capitalizeFirstLetter(caType) + 'Error'] = validateObject.showPhoneError;
+                } else if (inputType === 'email') {
                     $scope.checkExistingEmail(caValue);
+                    EmailValidationService.validateInput(caValue.value).then(function (response){
+                        caValue.value = response.inputValue;
+                        if(isDefaultValue) {
+                            $scope['show' + $scope.capitalizeFirstLetter(caType) + 'Error'] = response.showEmailError;
+                        } else
+                            caValue['show' + $scope.capitalizeFirstLetter(caType) + 'Error'] = response.showEmailError;
+                    });
                 }
             };
 

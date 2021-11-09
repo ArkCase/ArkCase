@@ -478,6 +478,7 @@
                                        ng-blur="validateContact(contactMethod.type, contactMethod, false)">
                                 <span ng-if="contactMethod.type === 'phone' && contactMethod.showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                                 <span ng-if="contactMethod.type === 'fax' && contactMethod.showFaxError == true" translate>organizations.comp.newOrganization.communicationAccounts.faxValidationMessage</span>
+                                <span ng-if="contactMethod.type === 'email' && contactMethod.showEmailError == true" translate>organizations.comp.newOrganization.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
