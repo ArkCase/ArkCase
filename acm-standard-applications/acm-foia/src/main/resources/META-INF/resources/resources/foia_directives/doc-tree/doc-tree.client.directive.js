@@ -2216,6 +2216,9 @@ angular
                                     } else if (isReadOnly) {
                                         menuResource = DocTree.Menu.getReadOnlyResource(node);
                                     } else if ("RECORD" == Util.goodValue(node.data.status)) {
+                                        if(node.data.link) {
+                                            menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
+                                        } else
                                         menuResource = DocTree.Menu.getRecordResource(node);
                                     } else if (node.data.link) {
                                         menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
