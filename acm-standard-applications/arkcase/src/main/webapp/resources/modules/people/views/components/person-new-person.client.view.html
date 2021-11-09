@@ -453,7 +453,7 @@
                                 <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
-                                        ng-blur="validateInput(caType, person['default'+capitalizeFirstLetter(caType)].value)">
+                                       ng-blur="validateInput(caType, person['default'+capitalizeFirstLetter(caType)], true)">
                                 <span ng-if="caType == 'phone' && showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
                                 <span ng-if="caType == 'email' && showEmailError == true" translate>people.comp.editPerson.communicationAccounts.emailValidationMessage</span>
                             </div>
@@ -489,7 +489,9 @@
                                 <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}"
-                                        ng-blur="validateInput(caType, contactMethod.value)">
+                                       ng-blur="validateInput(caType, contactMethod, false)">
+                                <span ng-if="caType == 'phone' && contactMethod.showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
+                                <span ng-if="caType == 'email' && contactMethod.showEmailError == true" translate>people.comp.editPerson.communicationAccounts.emailValidationMessage</span>
 
                             </div>
                             <div class="col-sm-4">
