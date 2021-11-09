@@ -8,6 +8,10 @@
         <property name="portalConfigurationService" ref="portalConfigurationService"/>
     </bean>
 
+    <bean id="portalUserAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalUserAPIController">
+        <property name="portalUserConfigurationService" ref="portalUserConfigurationService"/>
+    </bean>
+
     <bean id="portalGatewayUserAPIController" class="com.armedia.acm.portalgateway.web.api.ArkCasePortalGatewayUserAPIController">
         <property name="portalUserService" ref="portalUserService"/>
     </bean>

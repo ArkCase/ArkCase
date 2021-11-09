@@ -9,6 +9,13 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', '
         });
     };
 
+    var getPortalConfigUser = function () {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/portalgateway/config'
+        });
+    }
+
     var savePortalConfig = function (portal) {
         return $http({
             method: 'PUT',
@@ -46,6 +53,7 @@ angular.module('admin').factory('Admin.PortalConfigurationService', [ '$http', '
 
     return {
         getPortalConfig: getPortalConfig,
+        getPortalConfigUser:getPortalConfigUser,
         savePortalConfig: savePortalConfig,
         uploadLogo: uploadLogo
     };
