@@ -36,6 +36,14 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
+    <bean id="portalUserConfigurationService" class="com.armedia.acm.portalgateway.service.PortalUserConfigurationServiceImpl">
+        <property name="portalUserConfig" ref="arkcasePortalUserConfig"/>
+    </bean>
+
+    <bean id="arkcasePortalUserConfig" class="com.armedia.acm.portalgateway.model.PortalUserConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
     <bean id="arkcasePortalConfig" class="com.armedia.acm.portalgateway.model.PortalConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>

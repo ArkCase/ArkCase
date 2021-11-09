@@ -96,7 +96,7 @@ angular.module('cases').controller(
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
             var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
-            var getPortal = AdminPortalConfigurationService.getPortalConfig();
+            var getPortal = AdminPortalConfigurationService.getPortalConfigUser();
             var getCountries = ObjectLookupService.getCountries();
             var getAddressTypes = ObjectLookupService.getAddressTypes();
             var canadaProvinces = ObjectLookupService.getLookupByLookupName('canadaProvinces');
