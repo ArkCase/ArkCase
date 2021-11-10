@@ -78,7 +78,7 @@ public class ScheduledBillingQueuePurger extends AbstractScheduledQueuePurger
     @Override
     protected List<FOIARequest> getAllRequestsInQueueBefore(LocalDateTime date)
     {
-        return getRequestDao().getAllRequestsInBillingBefore(LocalDateTime.now().minusDays(getMaxDaysInQueue()));
+        return getRequestDao().getAllRequestsInBillingBefore(date);
     }
 
     @Override
