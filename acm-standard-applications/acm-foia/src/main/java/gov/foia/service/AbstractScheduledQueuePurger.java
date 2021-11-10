@@ -37,7 +37,6 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +58,6 @@ public abstract class AbstractScheduledQueuePurger
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private FoiaConfigurationService foiaConfigurationService;
-
 
     /**
      * @return the log
@@ -91,7 +89,11 @@ public abstract class AbstractScheduledQueuePurger
             }
             try
             {
-                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDateTime.now().minusDays(getMaxDaysInQueueProperty()));
+                LocalDateTime now = LocalDateTime.now();
+                now = now.minusHours(now.getHour()).minusMinutes(now.getMinute()).minusSeconds(now.getSecond()).minusNanos(now.getNano());
+
+                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(
+                        now.minusDays(getMaxDaysInQueueProperty()));
 
                 auditPropertyEntityAdapter.setUserId(getProcessUser());
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, getProcessUser());
