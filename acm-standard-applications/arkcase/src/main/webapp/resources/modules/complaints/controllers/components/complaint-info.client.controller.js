@@ -193,7 +193,7 @@ angular.module('complaints').controller(
                         }
                         else {
                             $scope.dateInfo.dueDate = null;
-                            $scope.dueDate.dueDateInfoUIPicker = $scope(new Date).format(defaultDateTimePickerFormat)
+                            $scope.dueDate.dueDateInfoUIPicker = moment(new Date).format(defaultDateTimePickerFormat)
                             $scope.dueDate.dueDateInfo = moment.utc(new Date()).local();
                         }
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
