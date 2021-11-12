@@ -165,7 +165,7 @@
                                 admin.security.emailConfiguration.emailConfigForm.userFrom.label
                             </label>
                             <span class="required-asterisk">*</span>
-                            <input id="userFrom" type="email" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            <input id="userFrom" type="email" required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
                                     placeholder="{{'admin.security.emailConfiguration.emailConfigForm.userFrom.placeholder' | translate}}"
                                     ng-model="emailSenderConfigDataModel['email.sender.userFrom']" class="form-control"
                                     ng-disabled="emailSenderConfigDataModel['email.sender.type'] !== 'smtp'" />
