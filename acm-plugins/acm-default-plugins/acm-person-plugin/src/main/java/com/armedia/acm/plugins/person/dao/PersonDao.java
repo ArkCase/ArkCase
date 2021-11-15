@@ -150,31 +150,19 @@ public class PersonDao extends AcmAbstractDao<Person>
         }
     }
 
-    public Optional<Person> findAnonymousPerson(String givenName, String familyName)
+    public Person findAnonymousPerson()
     {
         Query query = getEntityManager().createQuery(
                 "SELECT p From Person p " +
-                        "WHERE p.givenName = :givenName " +
-                        "AND p.familyName = :familyName " +
+                        "WHERE p.givenName like 'Anonymous' " +
+                        "AND p.familyName like 'Anonymous' " +
                         "AND p.anonymousFlag = true ");
-
-        query.setParameter("givenName", givenName);
-        query.setParameter("familyName", familyName);
-
-        try
-        {
-            List<Person> result = query.getResultList();
-            if(result.isEmpty()){
-                return Optional.empty();
-            }
-            else {
-                return Optional.of(result.get(0));
-            }
+        List<Person> result = query.getResultList();
+        if(result.isEmpty()){
+            return null;
         }
-        catch (NoResultException e)
-        {
-            LOG.debug("Person with givenName: [{}]  and familyName: [{}] not found.", givenName, familyName);
-            return Optional.empty();
+        else {
+            return result.get(0);
         }
     }
 

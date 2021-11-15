@@ -48,6 +48,7 @@
                 <ref bean="solrReindexCaseFileExecutor" />
                 <ref bean="solrReindexConsultationExecutor" />
                 <ref bean="createAlfrescoAndRmFoldersExecutor" />
+                <ref bean="createAnonymousPersonExecutor" />
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -182,6 +183,10 @@
 
     <bean id="solrReindexTaskExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexTaskExecutor">
         <property name="solrReindexService" ref="solrReindexService" />
+    </bean>
+
+    <bean id="createAnonymousPersonExecutor" class="com.armedia.acm.services.dataupdate.service.CreateAnonymousPersonExecutor">
+        <property name="personDao" ref="acmPersonDao"/>
     </bean>
 
     <bean id="solrReindexCaseFileExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexCaseFileExecutor">

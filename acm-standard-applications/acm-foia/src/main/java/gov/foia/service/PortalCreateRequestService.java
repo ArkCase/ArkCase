@@ -169,16 +169,22 @@ public class PortalCreateRequestService
         FOIAPerson requester;
         Optional<Person> existingPerson;
         if(in.getAnonymousFlag()) {
-
-            existingPerson = getPersonDao().findAnonymousPerson(in.getFirstName(), in.getLastName());
+            Person anonymousPerson = getPersonDao().findAnonymousPerson();
+            if(anonymousPerson != null){
+                requester = (FOIAPerson) anonymousPerson;
+            }
+            else{
+                requester = populateRequesterAndOrganizationFromRequest(in);
+            }
         }
         else
         {
             existingPerson = getPersonDao().findByEmail(in.getEmail());
+            requester = existingPerson
+                    .map(portalFOIAPerson -> updatePersonInfo(in, (FOIAPerson) portalFOIAPerson))
+                    .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
          }
-        requester = existingPerson
-                .map(portalFOIAPerson -> updatePersonInfo(in, (FOIAPerson) portalFOIAPerson))
-                .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
+
 
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
