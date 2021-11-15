@@ -388,8 +388,11 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         query.setParameter("portalRequestTrackingId", portalRequestTrackingId);
         List<T> requests = query.getResultList();
 
-        return populateRequestStatusList(requests);
+        if (requests.isEmpty()) {
+            return new ArrayList<>();
+        }
+        else {
+            return populateRequestStatusList(requests);
+        }
     }
-
-
 }

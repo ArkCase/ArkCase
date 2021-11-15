@@ -111,6 +111,8 @@ import gov.foia.model.PortalFOIARequestFile;
 import gov.foia.model.PortalFOIARequestStatus;
 import gov.foia.model.WithdrawRequest;
 
+import javax.persistence.NoResultException;
+
 /**
  * @author sasko.tanaskoski
  *
@@ -639,13 +641,12 @@ public class PortalRequestService implements ApplicationEventPublisherAware
         return responseRequests;
     }
 
-    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId) throws AcmObjectNotFoundException
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId)
     {
         List<PortalFOIARequestStatus> responseRequests = getRequestDao().getExternalAnonymousRequests(portalRequestTrackingId);
         if (responseRequests.isEmpty())
         {
-            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
-                    "FOIA Requests not found for the request tracking id  [" + portalRequestTrackingId + "]");
+            throw new NoResultException("FOIA Requests not found for the request tracking id  [" + portalRequestTrackingId + "]");
         }
         return responseRequests;
     }
