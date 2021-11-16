@@ -1,7 +1,8 @@
-package com.armedia.acm.services.dataupdate.service;
+package gov.foia.service.dataupdate;
 
 import com.armedia.acm.plugins.person.dao.PersonDao;
-import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
+import gov.foia.model.FOIAPerson;
 
 public class CreateAnonymousPersonExecutor implements AcmDataUpdateExecutor
 {
@@ -16,7 +17,7 @@ public class CreateAnonymousPersonExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute() {
         if(getPersonDao().findAnonymousPerson() == null){
-            Person anonymousPerson = new Person();
+            FOIAPerson anonymousPerson = new FOIAPerson();
             anonymousPerson.setAnonymousFlag(true);
             anonymousPerson.setFamilyName("Anonymous");
             anonymousPerson.setGivenName("Anonymous");

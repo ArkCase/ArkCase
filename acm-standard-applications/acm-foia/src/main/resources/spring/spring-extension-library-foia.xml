@@ -189,6 +189,7 @@
                     <beans:ref bean="createPersonFromExistingUsersExecutor"/>
                     <beans:ref bean="updateHoldEnterDateForRequestInHoldQueue"/>
                     <beans:ref bean="createFOIAAlfrescoAndRmFoldersExecutor"/>
+                    <beans:ref bean="createAnonymousPersonExecutor"/>
                 </beans:list>
             </beans:property>
 
@@ -501,6 +502,10 @@
             <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
             <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         </beans:bean>
+
+        <bean id="createAnonymousPersonExecutor" class="gov.foia.service.dataupdate.CreateAnonymousPersonExecutor">
+            <property name="personDao" ref="acmPersonDao"/>
+        </bean>
 
     </beans:beans>
 </beans:beans>
