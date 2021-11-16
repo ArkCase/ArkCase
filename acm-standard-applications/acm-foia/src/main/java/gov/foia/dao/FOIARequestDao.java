@@ -384,9 +384,9 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         String queryText = "SELECT request FROM " + getPersistenceClass().getSimpleName() + " request"
                 + " WHERE request.portalRequestTrackingId = :portalRequestTrackingId";
 
-        TypedQuery<T> query = getEm().createQuery(queryText, getPersistenceClass());
+        TypedQuery<FOIARequest> query = getEm().createQuery(queryText, getPersistenceClass());
         query.setParameter("portalRequestTrackingId", portalRequestTrackingId);
-        List<T> requests = query.getResultList();
+        List<FOIARequest> requests = query.getResultList();
 
         if (requests.isEmpty()) {
             return new ArrayList<>();
