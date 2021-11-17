@@ -33,9 +33,12 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.CloseComplaintPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CheckCloseComplaintRequest implements PipelineHandler<CloseComplaintRequest, CloseComplaintPipelineContext>
 {
+    private final Logger log = LogManager.getLogger(getClass());
     private ComplaintDao complaintDao;
 
     @Override
@@ -58,6 +61,17 @@ public class CheckCloseComplaintRequest implements PipelineHandler<CloseComplain
         if (("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())) && !"edit".equals(mode))
         {
             message = "The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.";
+        }
+
+        if(form.isCloseComplaintStatusFlow() && !"IN APPROVAL".equals(form.getStatus()) && !"edit".equals(mode))
+        {
+            complaint.setStatus("IN APPROVAL");
+            log.debug("If closeComplaintStatusFlow is true, the status should be IN APPROVAL");
+        }
+        else if (!form.isCloseComplaintStatusFlow() && !"CLOSED".equals(form.getStatus()) && !"edit".equals(mode))
+        {
+            complaint.setStatus("CLOSED");
+            log.debug("If closeComplaintStatusFlow is false, the status should be CLOSED");
         }
 
         if (!message.isEmpty())

@@ -58,6 +58,7 @@ public class CloseComplaintServiceImpl implements CloseComplaintService {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
         pipelineContext.addProperty("mode", mode);
+        pipelineContext.addProperty("closeComplaintStatusFlow", form.isCloseComplaintStatusFlow());
 
         pipelineManager.executeOperation(form, pipelineContext, () -> {
 
