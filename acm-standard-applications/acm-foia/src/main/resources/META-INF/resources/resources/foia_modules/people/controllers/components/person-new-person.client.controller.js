@@ -468,7 +468,7 @@ angular.module('people').controller(
             $scope.validateInput = function (caType, caValue, isDefaultValue) {
                 var inputType = caType;
                 if (inputType === 'phone') {
-                    var validateObject = PhoneValidationService.validateInput(caValue, regEx);
+                    var validateObject = PhoneValidationService.validateInput(caValue.value, regEx);
                     caValue.value = validateObject.inputValue;
                     if(isDefaultValue) {
                         $scope['show' + $scope.capitalizeFirstLetter(caType) + 'Error'] = validateObject.showPhoneError;
