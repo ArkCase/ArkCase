@@ -85,6 +85,7 @@ public class CreateAdHocTaskService
             String parentObjectType = in.getAttachedToObjectType() != null ? in.getAttachedToObjectType() : in.getParentObjectType();
             Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
 
+            Long objectId = null;
             if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
