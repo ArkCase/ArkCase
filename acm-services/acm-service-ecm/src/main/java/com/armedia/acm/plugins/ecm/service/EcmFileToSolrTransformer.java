@@ -107,7 +107,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         /**
          * indexing file contents along with file metadata to Solr.
          */
-        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().get(in.getVersions().size() - 1).isValidFile())
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().size() > 0 && in.getVersions().get(in.getVersions().size() - 1).isValidFile())
         {
             return mapContentDocumentProperties(in);
         }
@@ -121,7 +121,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         /**
          * indexing only file metadata to Solr.
          */
-        if (!(solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().get(in.getVersions().size() - 1).isValidFile()))
+
+        if (!(solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().size() > 0 && in.getVersions().get(in.getVersions().size() - 1).isValidFile()))
         {
             return mapDocumentProperties(in);
         }
