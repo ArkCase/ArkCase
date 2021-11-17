@@ -70,7 +70,14 @@ public class CloseComplaintFormAPIController
                 closeComplaintService.createPersonOrganizationAssociation(form);    
             }
             closeComplaintService.save(form, auth, mode);
-            message.put("info", "The complaint is in approval mode");
+            if (form.isCloseComplaintStatusFlow())
+            {
+                message.put("info", "The complaint is in approval mode");
+            }
+            else
+            {
+                message.put("info", "The complaint is closed");
+            }
         }
         catch (Exception e)
         {

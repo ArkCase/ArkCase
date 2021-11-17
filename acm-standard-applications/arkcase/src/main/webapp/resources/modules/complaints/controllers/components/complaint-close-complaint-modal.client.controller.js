@@ -16,6 +16,7 @@ angular.module('complaints').controller(
             $scope.showApprover= modalParams.showApprover;
             //Objects
             $scope.complaintInfo = {};
+            $scope.showComplaintCloseStatus = false;
             $scope.closeComplaintRequest = {
                 complaintId: modalParams.info.complaintId,
                 complaintNumber: modalParams.info.complaintNumber,
@@ -36,7 +37,7 @@ angular.module('complaints').controller(
                     modifier: null,
                     className: ""
                 },
-                status: "IN APPROVAL",
+                status: "",
                 objectType: "CLOSE_COMPLAINT_REQUEST",
                 participants: [],
                 created: null,
@@ -45,7 +46,8 @@ angular.module('complaints').controller(
                 modifier: null,
                 description: "",
                 referExternalPersonId: undefined,
-                referExternalOrganizationId: undefined
+                referExternalOrganizationId: undefined,
+                closeComplaintStatusFlow: $scope.showApprover == 'true'
             };
             $scope.complaintDispositions = [];
             $scope.contactTypes = [];
@@ -417,10 +419,17 @@ angular.module('complaints').controller(
             function save() {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                if($scope.closeComplaintRequest.closeComplaintStatusFlow) {
+                    $scope.closeComplaintRequest.status = 'IN APPROVAL';
+                }
+                else {
+                    $scope.closeComplaintRequest.status = 'CLOSED';
+                }
 
                 ComplaintInfoService.closeComplaint('create', $scope.closeComplaintRequest).then(function (data) {
                     MessageService.info(data.info);
-                    $modalInstance.dismiss();
+
+                    $modalInstance.close($scope.closeComplaintRequest);
                 });
             }
 

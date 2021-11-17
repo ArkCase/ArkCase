@@ -137,7 +137,8 @@ angular.module('complaints').controller(
 
                     $scope.closeComplaint = function(complaintInfo) {
                         var params = {
-                            "info": complaintInfo
+                            "info": complaintInfo,
+                            "showApprover": $scope.showApprover
                         };
                         var modalInstance = $modal.open({
                             animation: true,

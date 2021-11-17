@@ -202,6 +202,7 @@
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
+        <property name="closeComplaintRequestService" ref="closeComplaintRequestService"/>
     </bean>
 
     <bean id="checkCloseComplaintRequest"
