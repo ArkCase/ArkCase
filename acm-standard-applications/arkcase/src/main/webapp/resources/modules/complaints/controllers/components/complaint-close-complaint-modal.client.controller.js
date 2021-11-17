@@ -409,6 +409,7 @@ angular.module('complaints').controller(
                     $scope.closeComplaintRequest.disposition.existingCaseNumber = caseInfo.caseNumber;
                     $scope.closeComplaintRequest.disposition.existingCaseTitle = caseInfo.title;
                     $scope.closeComplaintRequest.disposition.existingCaseCreated = caseInfo.created;
+                    $scope.closeComplaintRequest.disposition.existingCaseCreatedFormatted = moment(caseInfo.created).format('YYYY-MM-DD h:mm A');
                     $scope.closeComplaintRequest.disposition.existingCasePriority = caseInfo.priority;
                 });
             }
