@@ -25,23 +25,17 @@ angular.module('admin').controller('Admin.FormWorkflowsLinkController', [ '$scop
             $scope.tableSettings.height += 100;
             instance.updateSettings($scope.tableSettings);
         }
+        else {
+            if(visibleRows > 0){
+                $interval.cancel(intervalId);
+            }
+        }
     }, 100);
 
     //retrieve all data
     formWorkflowsLinkService.getFormWorkflowsData().then(function(payload) {
-        //$scope.data = payload.data;
 
-        // Add 50 empty rows at the end of file
-        var data = angular.copy(payload.data)
-        var emptyRow = angular.copy(payload.data.cells[payload.data.cells.length - 1]);
-        for (var i = 0; i < emptyRow.length; i++) {
-            emptyRow.value = "";
-        }
-        for (var i = 0; i < 50; i++) {
-            data.cells.push(angular.copy(emptyRow));
-        }
-
-        $scope.data = data;
+        $scope.data = angular.copy(payload.data);
 
         var cells = [];
         for (var i = 0; i < $scope.data.cells.length; i++) {
