@@ -31,7 +31,8 @@ angular.module('tasks').factory('Task.AlertsService', function() {
         calculateOverdue: function(dueDate) {
             //for all tasks that suspense date was before today we will show overdue alert
             var today = moment();
-            if (moment(dueDate.toISOString()).isBefore(today, 'day') || today.isSame(moment(dueDate.toISOString()), 'day')) {
+            var momentDueDate = moment(new Date(dueDate).toISOString());
+            if (momentDueDate.isBefore(today, 'day') || today.isSame(momentDueDate, 'day')) {
                 return true;
             }
             return false;
@@ -51,8 +52,9 @@ angular.module('tasks').factory('Task.AlertsService', function() {
 
         deadlineCalculate: function(dueDate, days) {
             var today = moment();
-            var shouldAlertDateMoment = moment(dueDate.toISOString()).subtract(days, 'days');
-            if ((today.isSame(shouldAlertDateMoment) || today.isAfter(shouldAlertDateMoment)) && (today.isBefore(moment(dueDate.toISOString()), 'day'))){
+            var momentDueDate = moment(new Date(dueDate).toISOString());
+            var shouldAlertDateMoment = momentDueDate.subtract(days, 'days');
+            if ((today.isSame(shouldAlertDateMoment) || today.isAfter(shouldAlertDateMoment)) && (today.isBefore(momentDueDate, 'day'))){
                 return true;
             }
 
