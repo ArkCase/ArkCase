@@ -74,7 +74,6 @@ public class CreateAdHocTaskService
     {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
-        String attachedToObjectType = in.getAttachedToObjectType();
         String attachedToObjectName = in.getAttachedToObjectName();
         try
         {
@@ -85,16 +84,15 @@ public class CreateAdHocTaskService
             String parentObjectType = in.getAttachedToObjectType() != null ? in.getAttachedToObjectType() : in.getParentObjectType();
             Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
 
-            Long objectId = null;
             if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
-                String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
+                String obj = getObjectsFromSolr(parentObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
                     JSONObject result = results.getJSONObject(0);
-                    objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
+                    parentObjectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 }
                 else
@@ -105,12 +103,12 @@ public class CreateAdHocTaskService
                 }
             }
 
-            if (objectId != null)
+            if (parentObjectId != null)
             {
-                in.setAttachedToObjectId(objectId);
+                in.setAttachedToObjectId(parentObjectId);
                 in.setAttachedToObjectType(parentObjectType);
                 in.setAttachedToObjectName(attachedToObjectName);
-                in.setParentObjectId(objectId);
+                in.setParentObjectId(parentObjectId);
                 in.setParentObjectType(parentObjectType);
                 in.setParentObjectName(attachedToObjectName);
             }
