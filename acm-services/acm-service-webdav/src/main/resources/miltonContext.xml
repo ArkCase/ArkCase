@@ -5,17 +5,8 @@
     <bean id="lock.manager" class="com.armedia.acm.webdav.AcmFileSystemLockManager">
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
-    <!-- <bean id="lock.manager" class="io.milton.http.fs.SimpleLockManager">
-        <constructor-arg>
-            <bean class="io.milton.cache.LocalCacheManager"/>
-        </constructor-arg>
-    </bean> -->
     <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter">
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-    </bean>
-
-    <bean id="extensionPattern" class="java.util.regex.Pattern" factory-method="compile">
-        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls)$"/>
     </bean>
 
     <bean id="realDocumentURLPattern" class="java.util.regex.Pattern" factory-method="compile">
@@ -32,8 +23,6 @@
         <property name="lockManager" ref="lock.manager"/>
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="28800"/>
-        <property name="filterMapping" value="webdav"/>
-        <property name="fileExtensionPattern" ref="extensionPattern"/>
         <property name="realDocumentUrlPattern" ref="realDocumentURLPattern"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="webDAVContainerIdCacheManager" ref="webDAVCacheManager"/>

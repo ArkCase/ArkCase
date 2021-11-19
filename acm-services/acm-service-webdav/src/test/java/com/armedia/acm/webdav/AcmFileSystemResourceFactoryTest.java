@@ -124,8 +124,6 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
 
         assertTrue("path should be a good file path", Pattern.compile(documentUrlPattern).matcher(path).matches());
 
-        unit.setFilterMapping("webdav");
-
         Resource resource = unit.getResource(host, path);
 
         System.out.println("Resource class: " + resource.getClass().getName());
