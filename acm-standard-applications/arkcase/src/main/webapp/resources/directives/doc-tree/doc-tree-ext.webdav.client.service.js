@@ -67,7 +67,7 @@ angular.module('services').factory(
                                                 var baseHref = $browser.baseHref();
                                                 var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
                                                 var path = Service.generateWebDAVPath(node, userInfo.userId);
-                                                ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + path[0], appUrl + path[1], protocolInstallMessage);
+                                                ITHit.WebDAV.Client.DocManager.DavProtocolEditDocument(appUrl + path[0], appUrl + path[1], protocolInstallMessage, null, 'Current', 'arkcase-login', appUrl + path[0], 'Open');
 
                                                 function protocolInstallMessage(message) {
                                                     var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
@@ -133,8 +133,9 @@ angular.module('services').factory(
                 generateWebDAVPath : function (node, userId) {
                     var parentNode = Service.findParentContainerNode(node);
                     var parent = parentNode.data.containerObjectType + "/" + parentNode.data.containerObjectId + ("/" + (node.parent.title === '/' ? "Root" : node.parent.title)) + ("/" + parentNode.data.objectId) + "/" + node.data.objectId;
-                    var path =  "webdav/" + userId+ "/" + parent
-                    return [path  +"/" + node.data.name + node.data.ext, path]
+                    var webdavRoot = "webdav/";
+                    var path =  webdavRoot + userId+ "/" + parent
+                    return [path  +"/" + node.data.name + node.data.ext, webdavRoot]
                 },
 
                 findParentContainerNode : function (node) {

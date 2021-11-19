@@ -27,6 +27,7 @@ package com.armedia.acm.auth;
  * #L%
  */
 
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.model.LoginConfig;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +39,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,6 +75,14 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
                 }
             }
         }
+
+        Cookie cookie = new Cookie("arkcase-login", authentication.getPrincipal().toString());
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 3650); // 10 years
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
         super.onAuthenticationSuccess(request, response, authentication);
         sessionRegistry.registerNewSession(request.getSession().getId(), authentication.getPrincipal());
         sessionAuthenticationStrategy.onAuthentication(authentication, request, response);
@@ -102,4 +112,5 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     {
         this.loginConfig = loginConfig;
     }
+
 }

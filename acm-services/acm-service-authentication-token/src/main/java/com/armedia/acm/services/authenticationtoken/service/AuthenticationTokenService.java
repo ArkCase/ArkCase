@@ -118,9 +118,11 @@ public class AuthenticationTokenService
         return getAuthenticationForToken(getAuthenticationTokenCache(), key);
     }
 
-    public Authentication getWebDAVAuthentication(String key) throws IllegalArgumentException
+    // called with a user id
+    public Authentication getWebDAVAuthentication(String userId)
+            throws IllegalArgumentException
     {
-        return getAuthenticationForToken(getWebDavAuthenticationTokenCache(), key);
+        return getAuthenticationForToken(getWebDavAuthenticationTokenCache(), userId);
     }
 
     public Authentication getAuthenticationForToken(Cache cache, String key) throws IllegalArgumentException
@@ -263,10 +265,12 @@ public class AuthenticationTokenService
         authenticationTokenDao.save(token);
     }
 
+    // key: user id; value: Authentication
     public Cache getWebDavAuthenticationTokenCache()
     {
         return getWebDavAuthenticationTokenCacheManager().getCache("webdav_auth_token_cache");
     }
+
 
     public Cache getAuthenticationTokenCache()
     {
@@ -297,4 +301,5 @@ public class AuthenticationTokenService
     {
         this.webDavAuthenticationTokenCacheManager = webDavAuthenticationTokenCacheManager;
     }
+
 }
