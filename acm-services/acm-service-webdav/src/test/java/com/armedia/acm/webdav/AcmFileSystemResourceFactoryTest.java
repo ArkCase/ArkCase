@@ -28,6 +28,9 @@ package com.armedia.acm.webdav;
  */
 
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -40,6 +43,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,13 +124,27 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
     public void getResource_returnsTempResourceForTmpFileRequest() throws Exception
     {
         String host = "www.dead.net";
-        String path = "/arkcase/webdav/arkcase-admin@arkcase.org/DOC_REPO/109/Root/108/119/abcd.efg.acrolock.tmp";
+        String randomUuid = UUID.randomUUID().toString();
+        String path = "/arkcase/webdav/arkcase-admin@arkcase.org/DOC_REPO/109/Root/108/119/" + randomUuid + ".tmp";
 
         assertTrue("path should be a good file path", Pattern.compile(documentUrlPattern).matcher(path).matches());
 
+        // we expect null the first time, since we didn't ask about this temp file yet; and we expect a resource
+        // the second time, since the first request should have created it.
+
         Resource resource = unit.getResource(host, path);
+        assertNull(resource);
+
+        resource = unit.getResource(host, path);
+        assertNotNull(resource);
 
         System.out.println("Resource class: " + resource.getClass().getName());
         assertTrue(resource instanceof AcmTempFileResource);
+        AcmTempFileResource tempFileResource = (AcmTempFileResource) resource;
+        assertEquals(Long.valueOf(119), tempFileResource.getTargetFileId());
+        assertEquals("arkcase-admin@arkcase.org", tempFileResource.getUserId());
+        assertEquals("109", tempFileResource.getContainerObjectId());
+        assertEquals("DOC_REPO", tempFileResource.getContainerObjectType());
+
     }
 }

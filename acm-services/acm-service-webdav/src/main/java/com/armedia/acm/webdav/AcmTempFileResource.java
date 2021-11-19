@@ -341,4 +341,11 @@ public class AcmTempFileResource extends AcmFileSystemResource
         File tempFile = new File(System.getProperty("java.io.tmpdir"), tempFilename);
         FileUtils.deleteQuietly(tempFile);
     }
+
+    public Long getTargetFileId()
+    {
+        return targetFileId;
+    }
+
+
 }
