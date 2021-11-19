@@ -28,11 +28,8 @@ package com.armedia.acm.webdav;
  */
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +47,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.lock.FileLockType;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
 import io.milton.http.LockManager;
 import io.milton.http.ResourceFactory;
@@ -64,7 +60,7 @@ import io.milton.resource.Resource;
 public class AcmFileSystemResourceFactory implements ResourceFactory
 {
 
-    private transient final Logger log = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
     private EcmFileTransaction ecmFileTransaction;
@@ -73,7 +69,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private LockManager lockManager;
     private AcmWebDAVSecurityManager securityManager;
     private Long maxAgeSeconds;
-    private String filterMapping;
     private EhCacheCacheManager webDAVContainerIdCacheManager;
 
     /**
@@ -83,8 +78,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
      * dummy) resource. We can't send the real file resource, since Office did not send us the whole URL.
      */
     private Pattern realDocumentUrlPattern;
-    private Pattern fileExtensionPattern;
-    private AuthenticationTokenService authenticationTokenService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private AcmRootResource acmRootResource;
@@ -92,7 +85,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
     {
-        log.trace("host: {}, path: {}", host, path);
+        log.debug("host: {}, path: {}", host, path);
 
         // if the path does not end in some-number.some-extension let's suppose it is an OPTIONS request.
 
@@ -105,7 +98,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             }
             log.trace("Path : {}", path);
 
-            ResourceHandler handler = getResourceHandler(path);
+            ResourceHandler handler = getResourceHandler();
+            log.debug("handler class: [{}]", handler.getClass().getName());
             return handler.getResource(host, path);
         }
         else
@@ -116,7 +110,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
                 acmRootResource = new AcmRootResource(this);
             }
             String userId = extractUserId(path);
-            String cachedValue = path != null && getCache().get(path) != null ? (String) getCache().get(path).get() : null;
+            String cachedValue = getCache().get(path) != null ? (String) getCache().get(path).get() : null;
             // FIXME return always root folder, we should fix this to return correct folder, but since url consists of
             // "/" it will be hard to implement
             if (cachedValue != null)
@@ -124,10 +118,9 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
                 acmRootResource.setChildren(new ArrayList<>());
                 String[] splittedCachedValue = cachedValue.split("-");
                 Long rootFolderId = Long.valueOf(splittedCachedValue[2]);
-                getFolderDao().find(rootFolderId).getChildrenFolders().forEach(acmFolder -> {
+                getFolderDao().find(rootFolderId).getChildrenFolders().forEach(acmFolder ->
                     acmRootResource.updateChildren(new AcmFolderResource(host, this, userId, splittedCachedValue[0],
-                            splittedCachedValue[1], acmFolder));
-                });
+                            splittedCachedValue[1], acmFolder)));
                 new ArrayList<>(getFileDao().findByFolderId(rootFolderId)).forEach(ecmFile -> {
                     acmRootResource.updateChildren(new AcmFileResource(host, ecmFile, ecmFile.getFileType(),
                             FileLockType.READ.name(), userId, splittedCachedValue[0], splittedCachedValue[1], this));
@@ -137,27 +130,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         }
     }
 
-    private Resource createWithChildren(Resource resource)
-    {
-        if (resource instanceof AcmFolderResource)
-        {
-            AcmFolderResource acmFolderResource = (AcmFolderResource) resource;
-            // Add Subfolders
-            acmFolderResource.getAcmFolder().getChildrenFolders().forEach(acmFolder -> {
-                acmFolderResource.updateChildren(
-                        createWithChildren(new AcmFolderResource(acmFolderResource.getHost(), this, acmFolderResource.getUserId(),
-                                acmFolderResource.getContainerObjectType(), acmFolderResource.getContainerObjectId(), acmFolder)));
-            });
-            // Add children files
-            getFileDao().findByFolderId(acmFolderResource.getAcmFolder().getId()).forEach(ecmFile -> {
-                acmFolderResource.updateChildren(new AcmFileResource(acmFolderResource.getHost(), ecmFile, ecmFile.getFileType(),
-                        FileLockType.READ.name(), acmFolderResource.getUserId(), acmFolderResource.getContainerObjectType(),
-                        acmFolderResource.getContainerObjectId(), this));
-            });
-        }
-        return resource;
-    }
-
     private String extractUserId(String path)
     {
         int webdavIdx = path.indexOf("webdav");
@@ -165,10 +137,10 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         return userIdIndex > 0 ? path.substring(webdavIdx + 7, userIdIndex) : null;
     }
 
-    private ResourceHandler getResourceHandler(String path) throws BadRequestException
+    private ResourceHandler getResourceHandler()
     {
         // in ArkCase, Milton only handles files.
-        return new AcmFileResourceHandler();
+        return new AcmFileResourceHandler(realDocumentUrlPattern);
     }
 
     public String getCmisFileId(EcmFile ecmFile)
@@ -189,23 +161,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
-    }
-
-    public void setFilterMapping(String filterMapping)
-    {
-        if (filterMapping.endsWith("/"))
-        {
-            this.filterMapping = filterMapping;
-        }
-        else
-        {
-            this.filterMapping = filterMapping + "/";
-        }
-    }
-
-    public void setFileExtensionPattern(Pattern fileExtensionPattern)
-    {
-        this.fileExtensionPattern = fileExtensionPattern;
     }
 
     public void setRealDocumentUrlPattern(Pattern realDocumentUrlPattern)
@@ -263,16 +218,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.folderDao = folderDao;
     }
 
-    public AuthenticationTokenService getAuthenticationTokenService()
-    {
-        return authenticationTokenService;
-    }
-
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
-    {
-        this.authenticationTokenService = authenticationTokenService;
-    }
-
     public CamelContextManager getCamelContextManager()
     {
         return camelContextManager;
@@ -310,14 +255,20 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private class AcmFileResourceHandler implements ResourceHandler
     {
+        private final Pattern documentPattern;
+        public AcmFileResourceHandler(Pattern realDocumentUrlPattern)
+        {
+            documentPattern = realDocumentUrlPattern;
+        }
+
         @Override
         public AcmFileSystemResource getResource(String host, String path) throws BadRequestException
         {
-            log.trace("host: {}, path: {}", host, path);
-            Matcher m = realDocumentUrlPattern.matcher(path);
+            log.debug("host: [{}], path: [{}], doc pattern: [{}]", host, path, documentPattern);
+            Matcher m = documentPattern.matcher(path);
             if (m.matches())
             {
-
+                log.debug("Path [{}] is a document path", path);
                 // it must be either a .tmp file, or not a .tmp file.
                 if (path.endsWith(".tmp"))
                 {
@@ -371,7 +322,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
                     // we got a regular file request, so we create the normal resource instance.
                     log.info("return ArkCase file resource for path [{}]", path);
                     Long fileId = Long.valueOf(m.group(5));
-                    Long containerRootFolderId = Long.valueOf(m.group(4));
+                    long containerRootFolderId = Long.parseLong(m.group(4));
                     String userId = m.group(1);
                     String containerType = m.group(2);
                     String containerId = m.group(3);
