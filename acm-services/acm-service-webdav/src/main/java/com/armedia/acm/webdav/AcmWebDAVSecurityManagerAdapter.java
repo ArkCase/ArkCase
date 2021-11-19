@@ -83,18 +83,15 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
             String url = URLDecoder.decode(request.getAbsoluteUrl(), "UTF-8");
             if (url.contains("webdav"))
             {
-                int webdavIdx = url.indexOf("webdav");
-                int userIdIndex = url.indexOf("/", webdavIdx + 8);
-                if (userIdIndex < 0)
+                String cookieValue = request.getCookie("arkcase-login").getValue();
+                Authentication arkcaseAuth = getAuthenticationTokenService().getWebDAVAuthentication(cookieValue);
+                if (arkcaseAuth != null)
                 {
-                    LOG.error("WebDAV Path is not a file URL: {}", url);
-                    return true;
+                    LOG.debug("Authentication {} is retrieved from cache with cookie name arkcase-login and value {}",
+                            arkcaseAuth.getName(), cookieValue);
                 }
-                String userId = url.substring(webdavIdx + 7, userIdIndex);
-                LOG.debug("UserId: {}", userId);
                 try
                 {
-                    Authentication arkcaseAuth = getAuthenticationForTicket(userId);
                     MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, arkcaseAuth.getName());
                     MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
                     if (arkcaseAuth.getDetails() != null && arkcaseAuth.getDetails() instanceof AcmAuthenticationDetails)
@@ -109,7 +106,7 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
                 }
                 catch (IllegalArgumentException e)
                 {
-                    LOG.debug("no auth for ticket {}", userId);
+                    LOG.debug("no auth for ticket {}", arkcaseAuth.getPrincipal());
                     return false;
                 }
             }

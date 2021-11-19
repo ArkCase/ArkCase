@@ -60,8 +60,10 @@ import io.milton.http.exceptions.ConflictException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.http.exceptions.NotFoundException;
 import io.milton.http.http11.auth.DigestResponse;
+import io.milton.resource.CollectionResource;
 import io.milton.resource.DigestResource;
 import io.milton.resource.GetableResource;
+import io.milton.resource.MoveableResource;
 import io.milton.resource.PropFindableResource;
 import io.milton.resource.ReplaceableResource;
 
@@ -69,7 +71,7 @@ import io.milton.resource.ReplaceableResource;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
  */
 public class AcmFileResource extends AcmFileSystemResource
-        implements PropFindableResource, ReplaceableResource, DigestResource, GetableResource
+        implements PropFindableResource, ReplaceableResource, DigestResource, GetableResource, MoveableResource
 {
     private static final Logger LOGGER = LogManager.getLogger(AcmFileResource.class);
 
@@ -250,5 +252,30 @@ public class AcmFileResource extends AcmFileSystemResource
     public boolean isDigestAllowed()
     {
         return getResourceFactory().getSecurityManager().isDigestAllowed();
+    }
+
+    /**
+     * No-op method implemented to prevent Milton from complaining that this resource is incompatible
+     * with move requests.
+     *
+     * Milton calls this method since the client application is trying to backup the original resource
+     * by moving it to a temp file.  After this, the client application would move a temp file (with the
+     * new file contents) onto the original filename.
+     *
+     * For ArkCase files, we don't follow the pattern.  We will take no action here, leaving the original
+     * resource unchanged.  When Milton moves the temp file onto the original filename, then we version the
+     * ArkCase file (this is implemented in AcmTempFileResource).
+     *
+     * @param collectionResource
+     * @param s
+     * @throws ConflictException
+     * @throws NotAuthorizedException
+     * @throws BadRequestException
+     * @see AcmTempFileResource
+     */
+    @Override public void moveTo(CollectionResource collectionResource, String s)
+            throws ConflictException, NotAuthorizedException, BadRequestException
+    {
+        LOGGER.info("Got a request to move [{}] to collection [{}], String [{}]", acmFile.getFileName(), collectionResource.getName(), s);
     }
 }

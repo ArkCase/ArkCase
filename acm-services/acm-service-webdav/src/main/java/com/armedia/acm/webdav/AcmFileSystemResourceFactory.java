@@ -28,9 +28,15 @@ package com.armedia.acm.webdav;
  */
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.Cache;
@@ -311,22 +317,76 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             Matcher m = realDocumentUrlPattern.matcher(path);
             if (m.matches())
             {
-                Long fileId = Long.valueOf(m.group(5));
-                Long containerRootFolderId = Long.valueOf(m.group(4));
-                String userId = m.group(1);
-                String containerType = m.group(2);
-                String containerId = m.group(3);
-                String fileType = "FILE";
-                String lockType = FileLockType.WRITE.name();
-                String cachePath = path.substring(0, path.lastIndexOf("/"));
-                log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
 
-                EcmFile ecmFile = getFileDao().find(fileId);
+                // it must be either a .tmp file, or not a .tmp file.
+                if (path.endsWith(".tmp"))
+                {
+                    // if it's a .tmp file, either we've already created it, or we haven't.  If we didn't create it,
+                    // we must return null, so the WebDAV client knows there is no such .tmp file yet, so it can use
+                    // this filename for .tmp file storage without messing up any existing process.  But we also have
+                    // to create the file, so it's there when the WebDAV client asks to use it (next request it will
+                    // send).  This is the behavior observed from Adobe Acrobat Pro DC.
+                    log.info("return temp file resource for path [{}]", path);
+                    String tempFilename = m.group(6);
+                    File tempFile = new File(System.getProperty("java.io.tmpdir"), tempFilename);
+                    if (!tempFile.exists())
+                    {
+                        log.info("temp file [{}] doesn't exist yet; touching it, and returning null", tempFilename);
+                        try
+                        {
+                            FileUtils.touch(tempFile);
+                        }
+                        catch (IOException e)
+                        {
+                            log.warn("Could not touch temp file [{}]", tempFilename);
+                        }
+                        return null;
+                    }
+                    else
+                    {
+                        log.info("Temp file exists already, returning a temp file resource for [{}]", tempFilename);
+                        Long fileId = Long.valueOf(m.group(5));
+                        // note, we need the ArkCase file ID in the .tmp file resource, so when it's time to
+                        // version the ArkCase file with the .tmp file contents, we know what ArkCase file should be
+                        // versioned.
+                        String userId = m.group(1);
+                        String containerType = m.group(2);
+                        String containerId = m.group(3);
+                        String fileType = "FILE";
+                        String lockType = FileLockType.WRITE.name();
+                        return new AcmTempFileResource(
+                                tempFilename,
+                                host,
+                                fileId,
+                                fileType,
+                                lockType,
+                                userId,
+                                containerType,
+                                containerId,
+                                AcmFileSystemResourceFactory.this);
+                    }
+                }
+                else
+                {
+                    // we got a regular file request, so we create the normal resource instance.
+                    log.info("return ArkCase file resource for path [{}]", path);
+                    Long fileId = Long.valueOf(m.group(5));
+                    Long containerRootFolderId = Long.valueOf(m.group(4));
+                    String userId = m.group(1);
+                    String containerType = m.group(2);
+                    String containerId = m.group(3);
+                    String fileType = "FILE";
+                    String lockType = FileLockType.WRITE.name();
+                    String cachePath = path.substring(0, path.lastIndexOf("/"));
+                    log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
 
-                log.trace("ecmFile exists? {}", ecmFile != null);
-                getCache().put(cachePath, containerType + "-" + containerId + "-" + containerRootFolderId + "-" + fileId);
-                return new AcmFileResource(host, ecmFile, fileType, lockType, userId, containerType, containerId,
-                        AcmFileSystemResourceFactory.this);
+                    EcmFile ecmFile = getFileDao().find(fileId);
+
+                    log.trace("ecmFile exists? {}", ecmFile != null);
+                    getCache().put(cachePath, containerType + "-" + containerId + "-" + containerRootFolderId + "-" + fileId);
+                    return new AcmFileResource(host, ecmFile, fileType, lockType, userId, containerType, containerId,
+                            AcmFileSystemResourceFactory.this);
+                }
             }
             return null;
         }
