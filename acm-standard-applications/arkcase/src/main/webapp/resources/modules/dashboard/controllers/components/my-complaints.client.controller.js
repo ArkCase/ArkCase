@@ -91,11 +91,11 @@ angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsCont
 
                 if (Util.goodValue(value.dueDate_tdt)) {
                     value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
-                }
 
-                //calculate to show alert icons if complaints is in overdue or deadline is approaching
-                value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
-                value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+                    //calculate to show alert icons if complaints is in overdue or deadline is approaching
+                    value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
+                    value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+                }
 
                 vm.gridOptions.data.push(value);
             });
