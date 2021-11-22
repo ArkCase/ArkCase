@@ -31,20 +31,13 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -54,6 +47,9 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_identification")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Identification.class)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.Identification")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Identification implements Serializable, AcmEntity, AcmObject
 {
@@ -93,6 +89,9 @@ public class Identification implements Serializable, AcmEntity, AcmObject
 
     @Column(name = "cm_modifier")
     private String modifier;
+
+    @Column(name = "cm_class_name")
+    private String className = getClass().getName();
 
     @Override
     public Date getCreated()
@@ -214,5 +213,15 @@ public class Identification implements Serializable, AcmEntity, AcmObject
     public Long getId()
     {
         return getIdentificationID();
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 }
