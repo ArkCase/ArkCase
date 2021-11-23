@@ -3,6 +3,7 @@
     "title": "Organizations",
     "configurable": true,
     "initialLinksShown": true,
+    "identificationClassName": "com.armedia.acm.plugins.person.model.Identification",
     "menus": [
         {
             "menuId": "leftnav",
