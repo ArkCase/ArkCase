@@ -180,7 +180,5 @@ public interface PersonService
     @Transactional
     EcmFile insertImageForPortalPerson(Person person, MultipartFile image, String imageContentType, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException, AcmFileTypesException;
     
-    void deletePersonById(Long id);
-
     String getPeopleByIds(Authentication auth, String personIds, int start, int n, String s) throws SolrException, AcmObjectNotFoundException;
 }
