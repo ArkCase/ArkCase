@@ -208,95 +208,34 @@ angular.module('queues').controller(
                                 var holidaySchedule = data[2];
 
                                 var requests = queueRequest.response.docs;
+                                var personIds = "";
 
-                                $scope.timeToComplete = queuesConfig.data;
-
-                                var requestsChanged = _.map(requests, function(request) {
-                                    var name = request.queue_name_s.toLowerCase();
-                                    var numDays;
-                                    var queuesTotal;
-                                    var dueDateTotal;
-                                    if (request.request_type_lcs === "Appeal") {
-                                        queuesTotal = $scope.timeToComplete.appeal.totalTimeToComplete;
-                                        if (request.queue_name_s === 'General Counsel') {
-                                            numDays = $scope.timeToComplete.appeal.generalCounsel;
-
-                                        } else {
-                                            numDays = $scope.timeToComplete.appeal[name];
-                                        }
-
-                                    } else {
-                                        queuesTotal = $scope.timeToComplete.request.totalTimeToComplete;
-                                        if (request.queue_name_s === 'General Counsel') {
-                                            numDays = $scope.timeToComplete.request.generalCounsel;
-                                        } else {
-                                            numDays = $scope.timeToComplete.request[name];
-                                        }
+                                for (var i = 0; i < requests.length; i++){
+                                    if(requests[i].initiator_person_id_i != undefined){
+                                        personIds += (requests[i].initiator_person_id_i) + ",";
                                     }
+                                }
+                                var personIds = personIds.slice(0,-1);
+                                var personArrayUniq = _.uniq(personIds.split(","));
+                                var personIds = personArrayUniq.join(",")
 
-                                    if (holidaySchedule.data.includeWeekends) {
-                                        dueDateTotal = DueDateService.dueDateWithWeekends(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
-
-                                        request.queueDueDate = DueDateService.dueDateWithWeekends(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
-                                        //calculate to show the due date on the entered queue with working days and weekends without holidays
-                                        request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
-
-                                        request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
-                                        //calculate how many days the request is in the queue
-
-                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
-                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal) :
-                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
-                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
-                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate) :
-                                            DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
-                                        request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
-                                        //calculate to show how many days until time to complete per queue / per request
-                                    } else {
-                                        dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
-                                        request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
-                                        //calculate to show the due date on the entered queue with working days without holidays and weekends
-                                        request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
-
-                                        request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
-                                        //calculate how many days the request is in the queue
-
-                                        var totalDaysLeft = request.queue_name_s !== "Hold" ?
-                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal) :
-                                            DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
-                                        var queueDaysLeft = request.queue_name_s !== "Hold" ?
-                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate) :
-                                            DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
-                                        request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
-                                        //calculate to show how many days until time to complete per queue / per request
-                                    }
-
-                                    if (request.queue_name_s !== "Release") {
-                                        if (isFireFox) {
-                                            request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate.replace(/-/g,'/')));
-                                            request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate.replace(/-/g,'/')), $scope.timeToComplete.request.deadlineIndicator);
-                                        } else {
-                                            request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
-                                            request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
-                                            //calculate to show alert icons if task is in overdue or deadline is approaching
-                                        }
-                                    }
-                                    else {
-                                        request.isOverdue = false;
-                                        request.isDeadline = false;
-                                    }
-
-                                    return request;
-
+                                QueuesService.getRequesterIds(personIds).then(function(request){
+                                    _.forEach(requests, function (requested){
+                                        _.forEach(request, function (req){
+                                            _.forEach(req.docs, function(received){
+                                                if(requested.initiator_person_id_i === received.object_id_i){
+                                                    requested.requester_name_s = received.full_name_lcs;
+                                                }
+                                            })
+                                        })
+                                    })
+                                    refreshRequestsTable(requests,holidaySchedule,queueRequest.response.numFound);
                                 });
-
-                                $scope.gridOptions = $scope.gridOptions || {};
-                                $scope.gridOptions.data = requestsChanged;
-                                $scope.gridOptions.totalItems = queueRequest.response.numFound;
+                                $scope.timeToComplete = queuesConfig.data;
                             });
-
-                        }
+                         }
                     }
+
                     function getDocumentQuery(requestId) {
                         return GenericRequestsService.queryDocument({
                             requestId: requestId
@@ -308,6 +247,92 @@ angular.module('queues').controller(
                             containerId: repositoryInfo,
                             fileType: 'Request Form'
                         });
+                    }
+
+                    function refreshRequestsTable(requests, holidaySchedule, numFound){
+                        var requestsChanged = _.map(requests, function(request) {
+                            var name = request.queue_name_s.toLowerCase();
+                            var numDays;
+                            var queuesTotal;
+                            var dueDateTotal;
+                            if (request.request_type_lcs === "Appeal") {
+                                queuesTotal = $scope.timeToComplete.appeal.totalTimeToComplete;
+                                if (request.queue_name_s === 'General Counsel') {
+                                    numDays = $scope.timeToComplete.appeal.generalCounsel;
+
+                                } else {
+                                    numDays = $scope.timeToComplete.appeal[name];
+                                }
+
+                                if (request.queue_name_s !== "Release") {
+                                    if (isFireFox) {
+                                        request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate.replace(/-/g,'/')));
+                                        request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate.replace(/-/g,'/')), $scope.timeToComplete.request.deadlineIndicator);
+                                    } else {
+                                        request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
+                                        request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
+                                        //calculate to show alert icons if task is in overdue or deadline is approaching
+                                    }
+                                }
+                                else {
+                                    request.isOverdue = false;
+                                    request.isDeadline = false;
+                                }
+                            }
+
+                            if (holidaySchedule.data.includeWeekends) {
+                                dueDateTotal = DueDateService.dueDateWithWeekends(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
+
+                                request.queueDueDate = DueDateService.dueDateWithWeekends(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
+                                //calculate to show the due date on the entered queue with working days and weekends without holidays
+                                request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
+
+                                request.daysInQueue = DueDateService.workingDaysWithWeekends(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
+                                //calculate how many days the request is in the queue
+
+                                var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                    DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal) :
+                                    DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                    DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate) :
+                                    DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
+                                request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
+                                //calculate to show how many days until time to complete per queue / per request
+                            } else {
+                                dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
+                                request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt.toUTCString(), numDays, holidaySchedule.data.holidays);
+                                //calculate to show the due date on the entered queue with working days without holidays and weekends
+                                request.queueDueDate = moment(request.queueDueDate).format('YYYY-MM-DD h:mm A');
+
+                                request.daysInQueue = DueDateService.workingDays(request.queue_enter_date_tdt.toUTCString(), holidaySchedule.data.holidays);
+                                //calculate how many days the request is in the queue
+
+                                var totalDaysLeft = request.queue_name_s !== "Hold" ?
+                                    DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal) :
+                                    DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal, request.hold_enter_date_tdt);
+                                var queueDaysLeft = request.queue_name_s !== "Hold" ?
+                                    DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate) :
+                                    DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate, request.hold_enter_date_tdt);
+                                request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
+                                //calculate to show how many days until time to complete per queue / per request
+                            }
+
+                            if (request.queue_name_s !== "Release") {
+                                request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
+                                request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
+                                //calculate to show alert icons if task is in overdue or deadline is approaching
+                            } else {
+                                request.isOverdue = false;
+                                request.isDeadline = false;
+                            }
+
+                            return request;
+
+                        });
+
+                        $scope.gridOptions = $scope.gridOptions || {};
+                        $scope.gridOptions.data = requestsChanged;
+                        $scope.gridOptions.totalItems = numFound;
                     }
 
                     function openRequestInfoPage(requestId) {
@@ -325,7 +350,7 @@ angular.module('queues').controller(
                                 }, {
                                     absolute: true
                                 });
-                                
+
                                 newTabWindow.location.href = url;
                                 $scope.$emit("report-object-updated", request);
                             }, function() {

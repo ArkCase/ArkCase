@@ -115,6 +115,17 @@ public class PeopleAPIController
         }
     }
 
+    @RequestMapping(value = "/queryByIds", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+        public String findPeopleByIds(Authentication auth,
+              @RequestParam(value = "queryIds", required = false, defaultValue = "0") String personIds,
+              @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+              @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+              @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws SolrException, AcmObjectNotFoundException {
+
+            return personService.getPeopleByIds(auth,personIds,start,n,s);
+        };
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getPeople(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
@@ -286,6 +297,10 @@ public class PeopleAPIController
             throw new AcmObjectNotFoundException("Person", null,
                     String.format("Could not retrieve %s for person id[%s]", objectType, personId), e);
         }
+    }
+
+    public PersonService getPersonService(){
+        return personService;
     }
 
     public void setPersonService(PersonService personService)
