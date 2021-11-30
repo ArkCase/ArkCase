@@ -120,6 +120,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         if (requestIn.getOriginator() != null && requestIn.getOriginator().getPerson() != null)
         {
             Person person = requestIn.getOriginator().getPerson();
+
             if (person.getFullName() != null)
             {
                 additionalProperties.put("requester_name_s", person.getFullName());

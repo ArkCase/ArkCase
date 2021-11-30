@@ -48,6 +48,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
@@ -149,6 +150,12 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         // This property is used for showing the owning group for the object
         additionalProperties.put("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
         additionalProperties.put("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+
+        if (in.getOriginator() != null && in.getOriginator().getPerson() != null)
+        {
+            Person person = in.getOriginator().getPerson();
+            additionalProperties.put("initiator_person_id_i", person.getId());
+        }
     }
 
     @Override

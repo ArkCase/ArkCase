@@ -442,6 +442,20 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                 url: url,
                 data: ''
             });
-        }
-    };
+        },
+
+        getRequesterIds: function(personIds){
+            return $http({
+                method:'GET',
+                url: 'api/v1/plugin/people/queryByIds',
+                data: personIds,
+                params: {
+                    queryIds: personIds
+                }
+            }).then(function(response) {
+                return response.data
+            })
+        },
+    }
+
 } ]);
