@@ -1,5 +1,6 @@
 package com.armedia.acm.services.billing.web.api;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
@@ -74,6 +75,7 @@ public class TouchNetAPIController
     private BillingInvoiceDao billingInvoiceDao;
     private UserInfoHelper userInfoHelper;
     private CorrespondenceTemplateManager templateManager;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -97,8 +99,6 @@ public class TouchNetAPIController
                                  @RequestParam(value = "acct_number", required = true) String cardNumber,
                                  @RequestParam(value = "pmt_method", required = true) String paymentMethod) throws ServiceException, RemoteException
     {
-
-
         AuthorizeAccountResponse authorizeAccountResponse = touchNetService.authorizeAccount(sessionId);
         String objectType = "";
         String objectId = "";
@@ -129,8 +129,10 @@ public class TouchNetAPIController
                 objectNumber = param.getValue().replace("_", "-");
             }
         }
-        generateAndSaveBilling(objectId,objectType,paymentAmount, sessionId, invoiceId, acmTicket);
-        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId),billName,paymentAmount,cardNumber,paymentMethod, sessionId, objectNumber);
+        getAuditPropertyEntityAdapter().setUserId("TOUCHNET-PAYMENT");
+        generateAndSaveBilling(objectId, objectType, paymentAmount, sessionId, invoiceId, acmTicket);
+        sendPaymentConfirmationEmail(objectType, Long.valueOf(objectId), billName, paymentAmount, cardNumber, paymentMethod, sessionId,
+                objectNumber);
 
         return getTouchNetService().redirectToConfirmationPage();
 
@@ -320,6 +322,16 @@ public class TouchNetAPIController
     public void setTemplateManager(CorrespondenceTemplateManager templateManager)
     {
         this.templateManager = templateManager;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
 
