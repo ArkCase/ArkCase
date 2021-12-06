@@ -113,6 +113,10 @@ angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFi
             _.forEach(data.response.docs, function(value) {
                 value.status_lcs = value.status_lcs.toUpperCase();
 
+                if ((userGroupList.includes(value.owning_group_id_lcs)) == true) {
+                    data.response.docs.getElementById(value.id).style.display = "none";
+                }
+
                 if (Util.goodValue(value.dueDate_tdt)) {
                     value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
 
