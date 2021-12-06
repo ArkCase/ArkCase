@@ -24,8 +24,10 @@ angular.module('dashboard.cases-by-queue').controller('Dashboard.CasesByQueueCon
 
                     angular.forEach(cases, function(value, key) {
                         if (key.length > 0 && key[0] != '$') {
-                            data.push(value);
-                            labels.push(key);
+                            if (key != "Delete" && key != "Release") {
+                                data.push(value);
+                                labels.push(key);
+                            }
                         }
                     });
 
