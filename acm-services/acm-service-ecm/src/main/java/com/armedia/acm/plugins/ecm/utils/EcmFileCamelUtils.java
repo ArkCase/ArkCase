@@ -134,7 +134,7 @@ public class EcmFileCamelUtils
         messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProps.put(ArkCaseCMISConstants.VERSIONING_STATE,
                 getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
-        messageProps.put(PropertyIds.NAME, newEcmFile.getFileName());
+        messageProps.put(PropertyIds.NAME, replaceSurrogateCharacters(newEcmFile.getFileName(), 'X'));
         messageProps.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, newEcmFile.getFileActiveVersionMimeType());
 
         String cmisUser = getCmisUser();
@@ -209,6 +209,25 @@ public class EcmFileCamelUtils
             log.error("Failed to get document: {}", e.getMessage(), e);
         }
         return fileContentStream;
+    }
+
+    public static String replaceSurrogateCharacters(String s, Character newChar)
+    {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < s.length(); i++)
+        {
+            char c = s.charAt(i);
+            if (Character.isHighSurrogate(c))
+            {
+                sb.append(newChar);
+            }
+            else if (!Character.isLowSurrogate(c))
+            {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+
     }
 
     public CamelContextManager getCamelContextManager()

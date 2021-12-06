@@ -155,7 +155,7 @@ public class AddFileFlowIT
 
         messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProperties.put("versioningState", "MAJOR");
-        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.NAME, EcmFileCamelUtils.replaceSurrogateCharacters(ecmFile.getFileName(), 'X'));
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
@@ -218,7 +218,7 @@ public class AddFileFlowIT
 
         messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, "opencmis");
         messageProperties.put("versioningState", "NONE");
-        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.NAME, EcmFileCamelUtils.replaceSurrogateCharacters(ecmFile.getFileName(), 'X'));
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 

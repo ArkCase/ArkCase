@@ -93,7 +93,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(PropertyIds.NAME, internalFileName);
+        props.put(PropertyIds.NAME, EcmFileCamelUtils.replaceSurrogateCharacters(internalFileName, 'X'));
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)

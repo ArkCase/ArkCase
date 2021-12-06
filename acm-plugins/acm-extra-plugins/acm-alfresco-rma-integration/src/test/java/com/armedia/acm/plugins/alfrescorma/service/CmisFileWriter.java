@@ -87,7 +87,7 @@ public class CmisFileWriter
         messageProperties.put(ArkCaseCMISConstants.VERSIONING_STATE,
                 cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.NAME, EcmFileCamelUtils.replaceSurrogateCharacters(ecmFile.getFileName(), 'X'));
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
 
         Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
