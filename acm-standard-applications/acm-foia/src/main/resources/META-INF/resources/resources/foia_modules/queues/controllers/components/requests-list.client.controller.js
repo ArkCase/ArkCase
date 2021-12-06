@@ -264,20 +264,6 @@ angular.module('queues').controller(
                                     numDays = $scope.timeToComplete.appeal[name];
                                 }
 
-                                if (request.queue_name_s !== "Release") {
-                                    if (isFireFox) {
-                                        request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate.replace(/-/g,'/')));
-                                        request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate.replace(/-/g,'/')), $scope.timeToComplete.request.deadlineIndicator);
-                                    } else {
-                                        request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
-                                        request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
-                                        //calculate to show alert icons if task is in overdue or deadline is approaching
-                                    }
-                                }
-                                else {
-                                    request.isOverdue = false;
-                                    request.isDeadline = false;
-                                }
                             }
 
                             if (holidaySchedule.data.includeWeekends) {
@@ -318,10 +304,16 @@ angular.module('queues').controller(
                             }
 
                             if (request.queue_name_s !== "Release") {
-                                request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
-                                request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
-                                //calculate to show alert icons if task is in overdue or deadline is approaching
-                            } else {
+                                if (isFireFox) {
+                                    request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate.replace(/-/g,'/')));
+                                    request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate.replace(/-/g,'/')), $scope.timeToComplete.request.deadlineIndicator);
+                                } else {
+                                    request.isOverdue = TaskAlertsService.calculateOverdue(new Date(request.queueDueDate));
+                                    request.isDeadline = TaskAlertsService.deadlineCalculate(new Date(request.queueDueDate), $scope.timeToComplete.request.deadlineIndicator);
+                                    //calculate to show alert icons if task is in overdue or deadline is approaching
+                                }
+                            }
+                            else {
                                 request.isOverdue = false;
                                 request.isDeadline = false;
                             }
