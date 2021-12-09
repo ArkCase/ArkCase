@@ -801,5 +801,11 @@
         <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_created" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_modified" newDataType="DATETIME"/>
     </changeSet>
+
+    <changeSet id="83-change-character-set-to-filename" author="ivan.tasevski" dbms="mysql">
+        <sql>
+            ALTER TABLE acm_file MODIFY COLUMN cm_file_name VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
 

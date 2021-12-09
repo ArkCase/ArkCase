@@ -30,6 +30,7 @@ package com.armedia.acm.camelcontext.flow.route;
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.component.cmis.CamelCMISActions;
@@ -67,7 +68,7 @@ public class GetOrCreateFolderRoute extends ArkCaseAbstractRoute
                     String name = path.substring(path.lastIndexOf("/") + 1);
                     path = path.substring(0, path.lastIndexOf("/"));
                     exchange.getIn().getHeaders().put(PropertyIds.PATH, path);
-                    exchange.getIn().getHeaders().put(PropertyIds.NAME, name);
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(name, 'X'));
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CREATE_FOLDER_BY_PATH);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
@@ -86,4 +87,5 @@ public class GetOrCreateFolderRoute extends ArkCaseAbstractRoute
                 .recipientList().method(this, "createUrl");
 
     }
+
 }
