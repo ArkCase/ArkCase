@@ -32,6 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -87,7 +88,7 @@ public class CmisFileWriter
         messageProperties.put(ArkCaseCMISConstants.VERSIONING_STATE,
                 cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID));
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(ecmFile.getFileName(), 'X'));
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
 
         Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);

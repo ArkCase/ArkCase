@@ -126,6 +126,10 @@
         </addColumn>
     </changeSet>
 
-
+    <changeSet id="09-change-character-set-to-filename" author="ivan.tasevski" dbms="mysql">
+        <sql>
+            ALTER TABLE acm_zylab_file_metadata MODIFY COLUMN cm_doc_name VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
