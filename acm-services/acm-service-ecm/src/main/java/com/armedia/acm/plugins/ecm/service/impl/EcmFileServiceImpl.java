@@ -31,6 +31,7 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -121,6 +122,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -1224,7 +1226,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(PropertyIds.NAME, internalFileName);
+        props.put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(internalFileName, 'X'));
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
@@ -2103,7 +2105,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
-        props.put(ArkCaseCMISConstants.NEW_FILE_NAME, uniqueIdentificator);
+        props.put(ArkCaseCMISConstants.NEW_FILE_NAME, FileCamelUtils.replaceSurrogateCharacters(uniqueIdentificator, 'X'));
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -2684,7 +2686,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
         }
 
-        String fileName = filePayload.getFileName();
+        String fileName = ecmFile.getFileName();
         // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
         // extension... so the extension can be null. So we have to guard against it.
         if (ecmFileVersion != null)
@@ -2711,7 +2713,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileIs = filePayload.getStream();
             if (!isInline)
             {
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileName,"UTF-8") + "\"");
                 // add file metadata so it can be displayed in Snowbound
                 JSONObject fileMetadata = new JSONObject();
                 fileMetadata.put("fileName", ecmFile.getFileName());
