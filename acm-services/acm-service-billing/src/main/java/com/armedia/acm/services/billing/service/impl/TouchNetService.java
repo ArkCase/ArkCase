@@ -112,7 +112,6 @@ public class TouchNetService
         {
             log.debug("Secure link end point: " + secureLinkEndPoint);
             log.debug("Touchnet username:  " + touchNetUsername);
-            log.debug("Touchnet pass:  " + touchNetPassword);
             GenerateSecureLinkTicketResponse secureLinkTicketResponse = binding.generateSecureLinkTicket(req);
             ticketId = secureLinkTicketResponse.getTicket();
         }

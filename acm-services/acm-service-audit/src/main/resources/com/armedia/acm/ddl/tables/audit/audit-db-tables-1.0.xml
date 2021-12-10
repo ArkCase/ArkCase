@@ -154,6 +154,12 @@
             ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_audit_description VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
         </sql>
     </changeSet>
+    
+    <changeSet id="17-change-character-set-to-filename" author="bojan.milenkoski" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_audit_description VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
     
 
