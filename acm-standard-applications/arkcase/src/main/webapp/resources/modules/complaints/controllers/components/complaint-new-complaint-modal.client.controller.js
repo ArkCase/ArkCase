@@ -23,14 +23,20 @@ angular.module('complaints').controller(
                 'Object.ModelService',
                 'Object.ParticipantService',
                 'Mentions.Service',
+                'Admin.ObjectTitleConfigurationService',
                 function($scope, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, PersonInfoService, UserInfoService, ObjectModelService,
-                        ObjectParticipantService, MentionsService) {
+                        ObjectParticipantService, MentionsService, AdminObjectTitleConfigurationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.selectedFiles = [];
                     $scope.userSearchConfig = null;
+                    $scope.enableTitle = false
+
+                    AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function(data){
+                        $scope.enableTitle = data.data.COMPLAINT.enableTitleField;
+                    });
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.config = moduleConfig;

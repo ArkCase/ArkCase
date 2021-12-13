@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -61,6 +62,10 @@ public class SaveComplaintTransaction
         pipelineContext.setNewComplaint(complaint.getId() == null);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
+
+        if(complaint.getComplaintTitle() == null || complaint.getComplaintTitle().length() == 0) {
+            complaint.setComplaintTitle(ComplaintConstants.OBJECT_TYPE);
+        }
 
         return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
 
