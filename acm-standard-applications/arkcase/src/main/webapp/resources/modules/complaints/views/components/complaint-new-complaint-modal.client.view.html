@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 form-group">
+                    <div class="col-sm-12 form-group" ng-if="enableTitle">
                         <label translate>complaints.comp.newComplaint.complaintTitle</label>
                         <span class="required-asterisk">*</span>
                         <mention-input ng-model="complaint.complaintTitle" params="params"
