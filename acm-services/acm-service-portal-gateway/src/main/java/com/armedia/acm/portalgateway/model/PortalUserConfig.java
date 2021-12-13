@@ -21,6 +21,10 @@ public class PortalUserConfig implements DynamicApplicationConfig
     @Value("${portal.responseInstallment.maxDownloadAttempts}")
     private Integer maxDownloadAttempts;
 
+    @JsonProperty("portal.id")
+    @Value("${portal.id}")
+    private String portalId;
+
 
     public Boolean getAuthenticatedMode()
     {
@@ -52,4 +56,11 @@ public class PortalUserConfig implements DynamicApplicationConfig
         this.maxDownloadAttempts = maxDownloadAttempts;
     }
 
+    public String getPortalId() {
+        return portalId;
+    }
+
+    public void setPortalId(String portalId) {
+        this.portalId = portalId;
+    }
 }
