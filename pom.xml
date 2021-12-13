@@ -83,7 +83,7 @@
         <junit.version>4.12</junit.version>
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
-        <log4j.version>2.11.0</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
