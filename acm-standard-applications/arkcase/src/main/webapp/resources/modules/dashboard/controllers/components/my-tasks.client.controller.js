@@ -2,8 +2,8 @@
 
 angular.module('dashboard.my-tasks').controller(
         'Dashboard.MyTasksController',
-        [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService', 'params',
-                function($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService, params) {
+        [ '$scope', '$translate', 'config', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService', 'params',
+                function($scope, $translate, config, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService, params) {
                     var vm = this;
                     vm.config = null;
                     var userInfo = null;
@@ -16,6 +16,14 @@ angular.module('dashboard.my-tasks').controller(
                         sortBy: 'dueDate_tdt',
                         sortDir: 'asc'
                     };
+
+                    //Get the user's defined options from the Config.
+                    if (config.paginationPageSize) {
+                        paginationOptions.pageSize = parseInt(config.paginationPageSize);
+                    } else {
+                        //defaults the dropdown value on edit UI to the default pagination options
+                        config.paginationPageSize = "" + paginationOptions.pageSize + "";
+                    }
 
                     var rowTmpl = '<div ng-class="{\'overdue\':row.entity.isOverdue, \'deadline\':row.entity.isDeadline}"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
 
@@ -61,8 +69,7 @@ angular.module('dashboard.my-tasks').controller(
                         vm.gridOptions.columnDefs = config.columnDefs;
                         vm.gridOptions.enableFiltering = config.enableFiltering;
                         vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                        vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                        paginationOptions.pageSize = config.paginationPageSize;
+                        vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
 
                         Authentication.queryUserInfo().then(function(responseUserInfo) {
                             userInfo = responseUserInfo;
