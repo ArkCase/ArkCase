@@ -309,7 +309,7 @@
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
                             <span ng-if="checkLocationRules(person.defaultAddress)"
-                                  class="required-asterisk">*</span>
+                                  class="required-asterisk-state-label">*</span>
                             <select class="form-control" ng-model="person.defaultAddress.state" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
