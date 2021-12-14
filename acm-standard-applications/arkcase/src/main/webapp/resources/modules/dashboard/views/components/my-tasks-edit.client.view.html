@@ -4,6 +4,15 @@
             <span translate>dashboard.widgets.myTasks.configDescription</span>
         </label>
         <input type="text" class="form-control" id="description" ng-model="config.description"
-                placeholder="{{'dashboard.widgets.myTasks.configDescriptionPlaceholder' | translate}}">
+               placeholder="{{'dashboard.widgets.myTasks.configDescriptionPlaceholder' | translate}}">
+        <br/>
+        <label>
+            <span translate>dashboard.widgets.pagination.default.label</span>
+        </label>
+        <select class="form-control input-md" ng-model="config.paginationPageSize">
+            <option value=5 translate>dashboard.widgets.pagination.default.fiveRows</option>
+            <option value=10 translate>dashboard.widgets.pagination.default.tenRows</option>
+            <option value=25 translate>dashboard.widgets.pagination.default.twentyFiveRows</option>
+        </select>
     </div>
 </form>

@@ -9,7 +9,7 @@
  *
  * Loads cases in the "My Cases" widget.
  */
-angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
+angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [ '$scope', '$translate', 'config','Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, config, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
     var vm = this;
     vm.config = null;
     var userInfo = null;
@@ -27,8 +27,7 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
         vm.gridOptions.columnDefs = config.columnDefs;
         vm.gridOptions.enableFiltering = config.enableFiltering;
         vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-        vm.gridOptions.paginationPageSize = config.paginationPageSize;
-        paginationOptions.pageSize = config.paginationPageSize;
+        vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
 
         Authentication.queryUserInfo().then(function(responseUserInfo) {
             userInfo = responseUserInfo;
@@ -50,6 +49,15 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
         sortBy: 'id',
         sortDir: 'desc'
     };
+
+    //Get the user's defined options from the Config.
+    if (config.paginationPageSize) {
+        paginationOptions.pageSize = parseInt(config.paginationPageSize);
+    } else {
+        //defaults the dropdown value on edit UI to the default pagination options
+        config.paginationPageSize = "" + paginationOptions.pageSize + "";
+    }
+
     /**
      * @ngdoc method
      * @name openViewer

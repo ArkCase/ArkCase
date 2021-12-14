@@ -2,8 +2,8 @@
 
 angular.module('dashboard.workflow-report').controller(
         'Dashboard.WorkflowReportController',
-        [ '$scope', '$translate', '$state', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'ConfigService', 'UtilService', 'Util.DateService', 'params',
-                function($scope, $translate, $state, Authentication, DashboardService, ObjectService, ConfigService, Util, UtilDateService, params) {
+        [ '$scope', '$translate', 'config', '$state', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'ConfigService', 'UtilService', 'Util.DateService', 'params',
+                function($scope, $translate, config, $state, Authentication, DashboardService, ObjectService, ConfigService, Util, UtilDateService, params) {
 
                     var vm = this;
                     vm.config = null;
@@ -19,8 +19,7 @@ angular.module('dashboard.workflow-report').controller(
                         vm.gridOptions.columnDefs = config.columnDefs;
                         vm.gridOptions.enableFiltering = config.enableFiltering;
                         vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                        vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                        paginationOptions.pageSize = config.paginationPageSize;
+                        vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
                         getPage();
                     });
 
@@ -30,6 +29,14 @@ angular.module('dashboard.workflow-report').controller(
                         sortBy: 'create_date_tdt',
                         sortDir: 'desc'
                     };
+
+                    //Get the user's defined options from the Config.
+                    if (config.paginationPageSize) {
+                        paginationOptions.pageSize = parseInt(config.paginationPageSize);
+                    } else {
+                        //defaults the dropdown value on edit UI to the default pagination options
+                        config.paginationPageSize = "" + paginationOptions.pageSize + "";
+                    }
 
                     vm.gridOptions = {
                         enableColumnResizing: true,
