@@ -1,12 +1,18 @@
 'use strict';
 
 angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueRequestsController',
-        [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', '$state', 'ConfigService', 'DueDate.Service', 'Admin.HolidayService', function($scope, $translate, Authentication, DashboardService, $state, ConfigService, DueDateService, AdminHolidayService) {
+        [ '$scope', '$translate', 'config', 'Authentication', 'Dashboard.DashboardService', '$state', 'ConfigService', 'DueDate.Service', 'Admin.HolidayService', 'params', 'UtilService', function($scope, $translate, config, Authentication, DashboardService, $state, ConfigService, DueDateService, AdminHolidayService, params, Util) {
 
             var vm = this;
             vm.config = null;
             var userInfo = null;
             var requestQueue = "Release OR Hold";
+
+            if(!Util.isEmpty(params.description)){
+                $scope.$parent.model.description = " - " + params.description;
+            }else{
+                $scope.$parent.model.description = "";
+            }
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -14,6 +20,14 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
                 sortBy: 'id',
                 sortDir: 'desc'
             };
+
+            //Get the user's defined options from the Config.
+            if (config.paginationPageSize) {
+                paginationOptions.pageSize = parseInt(config.paginationPageSize);
+            } else {
+                //defaults the dropdown value on edit UI to the default pagination options
+                config.paginationPageSize = "" + paginationOptions.pageSize + "";
+            }
 
             var rowTmpl = '<div class="overdue"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
 
@@ -54,8 +68,7 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
                 vm.gridOptions.columnDefs = config.columnDefs;
                 vm.gridOptions.enableFiltering = config.enableFiltering;
                 vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                paginationOptions.pageSize = config.paginationPageSize;
+                vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
                 
                 Authentication.queryUserInfo().then(function (responseUserInfo) { 
                     userInfo = responseUserInfo;

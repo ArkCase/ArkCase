@@ -1,5 +1,5 @@
 'use strict';
-angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsController', [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
+angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsController', [ '$scope', '$translate', 'config', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, config, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
     var vm = this;
     vm.config = null;
     var userInfo = null;
@@ -12,6 +12,14 @@ angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsCont
         sortBy: 'id',
         sortDir: 'desc'
     };
+
+    //Get the user's defined options from the Config.
+    if (config.paginationPageSize) {
+        paginationOptions.pageSize = parseInt(config.paginationPageSize);
+    } else {
+        //defaults the dropdown value on edit UI to the default pagination options
+        config.paginationPageSize = "" + paginationOptions.pageSize + "";
+    }
 
     var rowTmpl = '<div ng-class="{\'overdue\':row.entity.isOverdue, \'deadline\':row.entity.isDeadline}"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
 
@@ -57,8 +65,7 @@ angular.module('dashboard.my-complaints').controller('Dashboard.MyComplaintsCont
         vm.gridOptions.columnDefs = vm.config.columnDefs;
         vm.gridOptions.enableFiltering = vm.config.enableFiltering;
         vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
-        vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
-        paginationOptions.pageSize = vm.config.paginationPageSize;
+        vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
 
         Authentication.queryUserInfo().then(function(responseUserInfo) {
             userInfo = responseUserInfo;

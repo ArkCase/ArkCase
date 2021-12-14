@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard.my-overdue-requests', [ 'adf.provider' ]).config(function(ArkCaseDashboardProvider) {
+angular.module('dashboard.my-tasks', [ 'adf.provider' ]).config(function(ArkCaseDashboardProvider) {
     ArkCaseDashboardProvider.widget('myOverdueRequests', {
         title: 'dashboard.widgets.myOverdueRequests.title',
         description: 'dashboard.widgets.myOverdueRequests.description',
@@ -14,8 +14,7 @@ angular.module('dashboard.my-overdue-requests', [ 'adf.provider' ]).config(funct
         },
         templateUrl: 'modules/dashboard/views/components/my-overdue-request.client.view.html',
         edit: {
-            templateUrl: 'modules/dashboard/views/components/my-tasks-edit.client.view.html'
+            templateUrl: 'modules/dashboard/views/components/my-overdue-request-edit.client.view.html'
         }
-
     });
 });
