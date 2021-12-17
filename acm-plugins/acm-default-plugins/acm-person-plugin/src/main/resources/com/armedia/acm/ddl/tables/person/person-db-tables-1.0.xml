@@ -814,5 +814,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="57-create-index-on-person-assoc-parent-id" author="bojan.milenkoski">
+        <createIndex tableName="acm_person_assoc" indexName="idx_person_assoc_person_assoc_parent_id">
+            <column name="cm_person_assoc_parent_id"/>
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>

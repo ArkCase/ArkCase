@@ -948,5 +948,11 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="62-create-index-on-request-type" author="bojan.milenkoski">
+        <createIndex tableName="acm_case_file" indexName="idx_acm_case_file_request_type">
+            <column name="fo_request_type"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>
 
