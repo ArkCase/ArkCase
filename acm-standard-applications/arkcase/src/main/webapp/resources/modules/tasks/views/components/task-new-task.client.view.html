@@ -68,6 +68,11 @@
                     <div style="margin-top: 10px;">
                         <date-time-picker data="config.data.taskStartDate" show-time="true" min-date="minStartDate" on-date-select="startDateChanged"></date-time-picker>
                     </div>
+                    <span ng-if="config.data.taskStartDate == null"
+                          class="text-danger" translate>
+                          tasks.newTask.dateFieldEmpty
+                        </span>
+
                 </div>
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.dueDate.label </label>
@@ -75,6 +80,11 @@
                     <div style="margin-top: 10px;">
                         <date-time-picker data="config.data.dueDate" show-time="true" min-date="minDueDate"></date-time-picker>
                     </div>
+                    <span ng-if="config.data.dueDate == null"
+                          class="text-danger" translate>
+                          tasks.newTask.dateFieldEmpty
+                        </span>
+
                 </div>
                 <div class="form-group col-sm-4">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
@@ -148,7 +158,7 @@
             <span translate> tasks.newTask.cancelButton </span>
         </button>
         <button type="submit"
-                ng-disabled="task.$invalid || saved || ((!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow') "
+                ng-disabled="task.$invalid || saved || config.data.taskStartDate == null || config.data.dueDate == null ||((!documentsToReviewIds || documentsToReviewIds.length === 0) && filesToUpload.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow') "
                 class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
             <i class="fa fa-circle-o-notch fa-spin" ng-if="loading"></i>

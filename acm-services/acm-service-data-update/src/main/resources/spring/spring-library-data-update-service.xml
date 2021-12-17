@@ -41,6 +41,7 @@
                 <ref bean="acmGroupSolrReindexExecutor"/>
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
+                <ref bean="updateDueDateOnTasksExecutor"/>
                 <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
                 <ref bean="solrReindexOrganizationExecutor"/>
                 <ref bean="createPersonFromExistingUsersExecutor"/>
@@ -158,6 +159,13 @@
         <property name="acmTaskService" ref="acmTaskService"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="taskDao" ref="acmTaskDao"/>
+    </bean>
+
+    <bean id="updateDueDateOnTasksExecutor"
+          class="com.armedia.acm.services.dataupdate.service.UpdateDueDateOnTasksExecutor">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
     <bean id="solrReindexCaseComplaintDocumentRepositoryExecutor"
