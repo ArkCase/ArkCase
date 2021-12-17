@@ -60,7 +60,17 @@ angular.module('cases').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        PersonInfoService.getPersons().then(function(persons) {
+                        var personIds = " ";
+
+                        _.forEach(objectInfo.personAssociations, function(findPersonsIds){
+                            personIds += (findPersonsIds.person.id) + ",";
+                        })
+
+                        var personIds = personIds.slice(0,-1);
+                        var personArrayUniq = _.uniq(personIds.split(","));
+                        var personIds = personArrayUniq.join(",")
+
+                        PersonInfoService.getPersons(personIds).then(function(persons) {
                             $scope.gridOptions.data = HelperUiGridService.filterRestricted(persons.data.response.docs, $scope.objectInfo.personAssociations);
                         });
                     };
