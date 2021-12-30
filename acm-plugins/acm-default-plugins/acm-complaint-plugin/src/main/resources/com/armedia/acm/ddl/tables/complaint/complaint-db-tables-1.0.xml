@@ -405,5 +405,15 @@
         <modifyDataType tableName="acm_close_complaint_request" columnName="cm_close_complaint_created" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_close_complaint_request" columnName="cm_close_complaint_modified" newDataType="DATETIME"/>
     </changeSet>
+    <changeSet id="30-change-character-set-to-complaint-description" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_complaint MODIFY COLUMN cm_complaint_details LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
+    <changeSet id="31-change-character-set-to-complaint-title" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_complaint MODIFY COLUMN cm_complaint_title VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
 

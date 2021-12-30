@@ -187,4 +187,16 @@
         <modifyDataType tableName="acm_assignment" columnName="cm_assignment_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="10-change-character-set-to-object-history-string" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_object_history MODIFY COLUMN cm_object_string LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="11-change-character-set-to--history-string" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_assignment MODIFY COLUMN cm_assignment_object_title VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
