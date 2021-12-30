@@ -160,6 +160,12 @@
             ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_audit_description VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
         </sql>
     </changeSet>
+
+    <changeSet id="18-change-character-set-to-diff-details" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_diff_details_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
     
 

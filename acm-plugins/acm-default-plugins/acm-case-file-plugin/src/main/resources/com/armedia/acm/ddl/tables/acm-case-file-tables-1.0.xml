@@ -580,5 +580,11 @@
             <column name="cm_case_creator"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="42-change-character-set-to-case-description" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_case_file MODIFY COLUMN cm_case_details LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
     
 </databaseChangeLog>
