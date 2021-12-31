@@ -18,6 +18,9 @@ angular.module('cases').controller(
                 }
             });
 
+            var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
+            var defaultDateTimePickerFormat = $translate.instant("common.defaultDateTimePickerFormat");
+
             AdminPrivacyConfigService.getPrivacyConfig().then(function (response) {
                 $scope.isNotificationGroupEnabled = response.data.notificationGroupsEnabled;
             },function(err){
@@ -75,41 +78,60 @@ angular.module('cases').controller(
             });
             $scope.privacyConfig = {};
 
-            $scope.updateDueDate = function (data) {
+            $scope.updateDueDate = function (data, oldDate) {
                 if (!Util.isEmpty(data)) {
-                    var correctedDueDate = new Date(data);
-                    var startDate = new Date($scope.objectInfo.created);
-                    if (correctedDueDate < startDate) {
-                        $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
-                        DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
-                    } else {
-                        $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format("YYYY-MM-DDTHH:mm:ss.sss");
-                        $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
-                        $scope.dateInfo.dueDate = $scope.dueDateInfo;
-                        $scope.saveCase();
+                    if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.dueDate)) {
+                        var correctedDueDate = new Date(data);
+                        var startDate = new Date($scope.objectInfo.receivedDate);
+                        if (correctedDueDate < startDate) {
+                            $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                            DialogService.alert($translate.instant("cases.comp.info.alertMessage ") + $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                        } else {
+                            $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format(defaultDateTimeUTCFormat);
+                            $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                            $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                            $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
+                            // unbind due date watcher before case save so that when user switch to different case
+                            // watcher won't be fired before landing on that different case
+                            dueDateWatch();
+                            $scope.saveCase();
+                        }
                     }
                 } else {
-                    $scope.objectInfo.dueDate = moment.utc($scope.dueDateBeforeChange).format("YYYY-MM-DDTHH:mm:ss.sss");
-                    ;
-                    $scope.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
-                    $scope.dateInfo.dueDate = $scope.dueDateInfo;
-                    $scope.saveCase();
+                    if (!oldDate) {
+                        $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                        $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                        $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
+                        // unbind due date watcher before case save so that when user switch to different case
+                        // watcher won't be fired before landing on that different case
+                        dueDateWatch();
+                        $scope.saveCase();
+                    }
                 }
             };
 
+            $scope.dueDate = {
+                dueDateInfo: null
+            };
+
             var onObjectInfoRetrieved = function (data) {
+                // unbind watcher when user switch between tasks. When we call $watch() method,
+                // angularJS returns an unbind function that will kill the $watch() listener when its called.
+                dueDateWatch();
                 AdminHolidayService.getHolidays().then(function (response) {
                     $scope.holidays = response.data.holidays;
                     $scope.includeWeekends = response.data.includeWeekends;
 
                     $scope.dateInfo = $scope.dateInfo || {};
                     if (!Util.isEmpty($scope.objectInfo.dueDate)) {
-                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format('MM/DD/YYYY');
-                        $scope.dueDateInfo = $scope.dateInfo.dueDate;
+                        $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
+                        $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                        $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
                     } else {
                         $scope.dateInfo.dueDate = null;
-                        $scope.dueDateInfo = new Date();
-                        $scope.dueDateInfo = moment($scope.dueDateInfo).format('MM/DD/YYYY');
+                        $scope.dueDate.dueDateInfoUIPicker = moment(new Date).format(defaultDateTimePickerFormat);
+                        $scope.dueDate.dueDateInfo = moment.utc(new Date()).local();
                     }
                     $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
@@ -129,9 +151,8 @@ angular.module('cases').controller(
                         return approvers;
                     });
 
-                    var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
-                    $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
-                    $scope.minYear = new Date(data.created).getFullYear();
+
+                    $scope.minDate = moment.utc(new Date(data.receivedDate)).local();
                 });
 
                 $scope.notificationGroup = null;
@@ -326,5 +347,19 @@ angular.module('cases').controller(
                 }
             }
 
+            // store function reference returned by $watch statement in variable
+            var dueDateWatch = $scope.$watch('dueDate.dueDateInfo', dueDateChangeFn, true);
+
+            // update due date and save task
+            var dueDateChangeFn = function (newValue, oldValue) {
+                if (newValue && !moment(newValue).isSame(moment(oldValue)) && $scope.dueDate.isOpen) {
+                    $scope.updateDueDate(newValue);
+                }
+            }
+
+            // register watcher when user open date picker
+            $scope.registerWatcher = function () {
+                dueDateWatch = $scope.$watch('dueDate.dueDateInfo', dueDateChangeFn, true);
+            }
 
         } ]);

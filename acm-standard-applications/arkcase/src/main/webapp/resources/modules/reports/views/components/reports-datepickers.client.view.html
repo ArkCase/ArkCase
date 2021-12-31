@@ -1,12 +1,10 @@
 <div ng-controller="Reports.DatepickersController" ng-cloak>
     <div ng-show="data.dateSearchType=='DATE_RANGE'">
         <label for="dateFromReports" translate>reports.startDate.label</label> <span class="required-asterisk">*</span>
-        <date-time-picker data="data.startDate" property="data.startDate" date-picker-id="data.startDate"
-                time-format-disabled="true"></date-time-picker>
+        <date-time-picker data="data.startDate" max-date="maxDate" on-date-select="startDateChanged"></date-time-picker>
 
         <label for="dateToReports" translate>reports.endDate.label</label> <span class="required-asterisk">*</span>
-        <date-time-picker data="data.endDate" property="data.endDate" date-picker-id="data.endDate"
-                time-format-disabled="true"></date-time-picker>
+        <date-time-picker data="data.endDate" min-date="minDate"></date-time-picker>
 
     </div>
     <div ng-show="data.dateSearchType=='FISCAL_YEAR'">

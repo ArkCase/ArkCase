@@ -1,6 +1,6 @@
 <definitions targetNamespace="http://activiti.org/bpmn20" xmlns:activiti="http://activiti.org/bpmn"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
-                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+                    https://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
 
     <process id="cmComplaintWorkflow" name="Complaint review and approval process">
 

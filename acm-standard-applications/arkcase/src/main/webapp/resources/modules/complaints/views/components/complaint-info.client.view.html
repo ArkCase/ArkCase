@@ -67,10 +67,18 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold popup-move-on-left">
-                    <a href="#" editable-combodate="dateInfo.dueDate" e-template="MM/DD/YYYY h:mmA"
-                       e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1" onaftersave="updateDueDate($data, dateInfo.dueDate)"
+                    <a href="javascript:;"
+                       ng-click="registerWatcher()"
+                       moment-picker="dueDate.dueDateInfoUIPicker"
+                       ng-model="dueDate.dueDateInfo"
+                       format="MM/DD/YYYY h:mmA"
+                       min-date="minDate"
+                       start-view="month"
+                       auto-close="true"
+                       is-open="dueDate.isOpen"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate) ) || ('common.value.unknown' | translate) }}</a>
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateTimeUIFormat' | translate) ) || ('common.value.unknown' | translate) }}
+                    </a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>
             </div>

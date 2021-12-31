@@ -27,17 +27,33 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACTION_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DATA_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.OWNER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NAME_T;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -45,7 +61,6 @@ import java.util.Map;
 
 public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransformer<Notification>
 {
-
     private final Logger LOG = LogManager.getLogger(getClass());
 
     private NotificationDao notificationDao;
@@ -63,82 +78,14 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
         LOG.debug("Creating Solr advanced search document for Notification.");
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-" + NotificationConstants.OBJECT_TYPE);
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(NotificationConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getTitle());
-        solr.setTitle_parseable_lcs(in.getTitle());
-        solr.setParent_id_s(Long.toString(in.getParentId()));
-        solr.setParent_type_s(in.getParentType());
-        solr.setParent_number_lcs(in.getParentName());
-        solr.setParent_name_t(in.getParentTitle());
-        solr.setOwner_lcs(in.getUser());
-        solr.setDescription_parseable(in.getNote());
-        solr.setState_lcs(in.getState());
-        solr.setAction_lcs(in.getAction());
-        solr.setData_lcs(in.getData());
-        solr.setNotification_type_lcs(in.getType());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                NotificationConstants.OBJECT_TYPE, null);
 
-        solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-
-        solr.setStatus_lcs(in.getStatus());
-
-        solr.setType_lcs(in.getType());
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
-        if (creator != null)
-        {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
-        if (modifier != null)
-        {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
-
-        mapAdditionalProperties(in, solr.getAdditionalProperties());
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(Notification in)
-    {
-        LOG.info("Creating Solr quick search document for Notification.");
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + NotificationConstants.OBJECT_TYPE);
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_type_s(NotificationConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getTitle());
-
-        solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setNotification_type_s(in.getType());
-        solr.setData_s(in.getData());
-
-        solr.setStatus_s(in.getStatus());
-
-        solr.setType_s(in.getType());
-
-        mapAdditionalProperties(in, solr.getAdditionalProperties());
-
-        return solr;
+        return solrDoc;
     }
 
     /*
@@ -152,8 +99,38 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return Notification.class.equals(acmObjectType);
     }
 
-    private void mapAdditionalProperties(Notification in, Map<String, Object> additionalProperties)
+    @Override
+    public void mapAdditionalProperties(Notification in, Map<String, Object> additionalProperties)
     {
+        additionalProperties.put(ACTION_LCS, in.getAction());
+        additionalProperties.put(DATA_LCS, in.getData());
+
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getTitle());
+        additionalProperties.put(PARENT_ID_S, (in.getParentId() + ""));
+        additionalProperties.put(PARENT_TYPE_S, in.getParentType());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getParentName());
+        additionalProperties.put(PARENT_NAME_T, in.getParentTitle());
+        additionalProperties.put(OWNER_LCS, in.getUser());
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getNote());
+        additionalProperties.put(STATE_LCS, in.getState());
+        additionalProperties.put(PARENT_REF_S, in.getParentId() + "-" + in.getParentType());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
+        additionalProperties.put(TYPE_LCS, in.getType());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         Long relatedObjectId = in.getRelatedObjectId();
         String relatedObjectType = in.getRelatedObjectType();
         String relatedObjectNumber = in.getRelatedObjectNumber();
@@ -165,6 +142,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         additionalProperties.put("related_object_number_s", relatedObjectNumber);
         additionalProperties.put("action_date_tdt", actionDate);
         additionalProperties.put("notification_link_s", notificationLink);
+        additionalProperties.put("notification_type_lcs", in.getType());
     }
 
     public NotificationDao getNotificationDao()

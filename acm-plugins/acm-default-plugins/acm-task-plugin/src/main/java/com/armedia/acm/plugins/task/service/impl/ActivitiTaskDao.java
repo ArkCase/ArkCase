@@ -6,73 +6,26 @@ package com.armedia.acm.plugins.task.service.impl;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.TypedQuery;
-
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.FormProperty;
-import org.activiti.bpmn.model.FormValue;
-import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.UserTask;
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricIdentityLink;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricTaskInstanceQuery;
-import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
-import org.activiti.engine.task.IdentityLink;
-import org.activiti.engine.task.Task;
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
@@ -110,6 +63,53 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.FormValue;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.Task;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.TypedQuery;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao, AcmNameDao
 {
@@ -271,6 +271,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         activitiTask.setDueDate(in.getDueDate());
         activitiTask.setName(in.getTitle());
 
+        List<AcmParticipant> originalTaskParticipants = getParticipantDao()
+                .findParticipantsForObject("TASK", in.getTaskId());
+
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
@@ -402,11 +405,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             {
                 container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
-                if (container.getAttachmentFolder().getParticipants().isEmpty())
-                {
-                    container.getAttachmentFolder()
-                            .setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
-                }
+
+                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(),
+                        originalTaskParticipants, container, in.getRestricted());
             }
             catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
@@ -477,6 +478,29 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             assignee.setReplaceChildrenParticipant(true);
 
             in.getParticipants().add(assignee);
+        }
+
+        List<String> candidateGroups = in.getCandidateGroups();
+
+        // Add candidate group as collaborators
+        for (String group : candidateGroups)
+        {
+            Boolean found = false;
+            for (AcmParticipant participant : in.getParticipants())
+            {
+                if (participant.getParticipantLdapId().equals(group))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                AcmParticipant participant = new AcmParticipant();
+                participant.setParticipantType("collaborator group");
+                participant.setParticipantLdapId(group);
+                in.getParticipants().add(participant);
+            }
         }
     }
 
@@ -736,7 +760,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     @Override
     @Transactional
     public void deleteProcessInstance(String parentId, String processId, String deleteReason, Authentication authentication,
-            String ipAddress) throws AcmTaskException
+                                      String ipAddress) throws AcmTaskException
     {
         if (processId != null)
         {
@@ -937,7 +961,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         return retval;
     }
 
-    private String findTaskStatus(HistoricTaskInstance historicTaskInstance)
+    protected String findTaskStatus(HistoricTaskInstance historicTaskInstance)
     {
         if (isTaskTerminated(historicTaskInstance))
         {
@@ -1000,7 +1024,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         return false;
     }
 
-    private String findTaskStatus(HistoricTaskInstance historicTaskInstance, Boolean deleted)
+    protected String findTaskStatus(HistoricTaskInstance historicTaskInstance, Boolean deleted)
     {
         if (isTaskTerminated(historicTaskInstance))
         {
@@ -1016,7 +1040,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         }
     }
 
-    private String findTaskStatus(Task task)
+    protected String findTaskStatus(Task task)
     {
         // tasks in ACT_RU_TASK table (where Task objects come from) are active by definition
         // tasks have status unclaimed if assignee is null
@@ -1063,7 +1087,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
-            acmTask.setTaskStartDate(hti.getStartTime());
+            // If start date is not provided, set start date as creation date
+            if (acmTask.getTaskStartDate() == null)
+            {
+                acmTask.setTaskStartDate(hti.getStartTime());
+            }
             acmTask.setCreateDate(hti.getStartTime());
             acmTask.setTaskFinishedDate(hti.getEndTime());
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
@@ -1088,7 +1116,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
-            acmTask.setTaskStartDate(hti.getStartTime());
+            // If start date is not provided, set start date as creation date
+            if (acmTask.getTaskStartDate() == null)
+            {
+                acmTask.setTaskStartDate(hti.getStartTime());
+            }
             acmTask.setTaskFinishedDate(hti.getEndTime());
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
             acmTask.setCompleted(true);
@@ -1114,7 +1146,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         // represent an active task
         AcmTask retval;
         retval = new AcmTask();
-        retval.setTaskStartDate(hti.getStartTime());
+        // If start date is not provided, set start date as creation date
+        if (retval.getTaskStartDate() == null)
+        {
+            retval.setTaskStartDate(hti.getStartTime());
+        }
         retval.setCreateDate(hti.getStartTime());
         retval.setTaskFinishedDate(hti.getEndTime());
         retval.setTaskDurationInMillis(hti.getDurationInMillis());
@@ -1276,10 +1312,10 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     public void updateVariableForTask(Task activitiTask, String variableName, String variableValue)
     {
-        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName,variableValue);
+        getActivitiTaskService().setVariableLocal(activitiTask.getId(), variableName, variableValue);
     }
 
-    private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
+    protected void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
     {
         // check for selected task outcome
         String outcomeId = (String) hti.getTaskLocalVariables().get("outcome");
@@ -1296,8 +1332,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         }
     }
 
-    private void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId,
-            String taskDefinitionKey)
+    protected void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId,
+                                                  String taskDefinitionKey)
     {
         ProcessDefinition pd = getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId)
                 .singleResult();
@@ -1429,20 +1465,20 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     }
 
-    private String acmPriorityFromActivitiPriority(int priority)
+    protected String acmPriorityFromActivitiPriority(int priority)
     {
         return getPriorityLevelToNumberMap().entrySet().stream().filter(acmToActiviti -> acmToActiviti.getValue().equals(priority))
                 .map(acmToActiviti -> acmToActiviti.getKey()).findFirst().orElse(TaskConstants.DEFAULT_PRIORITY_WORD);
     }
 
-    private Integer activitiPriorityFromAcmPriority(String acmPriority)
+    protected Integer activitiPriorityFromAcmPriority(String acmPriority)
     {
         return getPriorityLevelToNumberMap().entrySet().stream().filter(acmToActiviti -> acmToActiviti.getKey().equals(acmPriority))
                 .mapToInt(acmToActiviti -> acmToActiviti.getValue()).findFirst().orElse(TaskConstants.DEFAULT_PRIORITY);
     }
 
-    private AcmTask createAcmTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
-            String taskEventName)
+    protected AcmTask createAcmTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
+                                    String taskEventName)
     {
         if (activitiTask == null)
         {
@@ -1491,7 +1527,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         // If start date is not provided, set start date as creation date
         if (acmTask.getTaskStartDate() == null)
         {
-            acmTask.setTaskStartDate(activitiTask.getCreateTime());
+            if (processVariables.get("taskStartDate") == null) {
+                acmTask.setTaskStartDate(activitiTask.getCreateTime());
+            } else {
+                acmTask.setTaskStartDate((Date) processVariables.get("taskStartDate"));
+            }
         }
 
         String status = findTaskStatus(activitiTask);
@@ -1545,7 +1585,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
     @Override
     public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
-            String taskEventName)
+                                           String taskEventName)
     {
         return createAcmTask(activitiTask, processVariables, localVariables, taskEventName);
     }
@@ -1640,7 +1680,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
     }
 
     @Override
-    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException {
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName)
+            throws AcmTaskException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         ProcessInstance pi = getAcmBpmnService().startBusinessProcess(businessProcessName, pVars);
         Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
@@ -1651,13 +1693,14 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         AcmContainer container = getEcmFileService().getOrCreateContainer(createdAcmTask.getObjectType(),
                 createdAcmTask.getTaskId());
         createdAcmTask.setContainer(container);
-        getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(), container.getFolder().getParticipants(),
+        getFileParticipantService().inheritParticipantsFromAssignedObject(createdAcmTask.getParticipants(),
+                container.getFolder().getParticipants(),
                 container, createdAcmTask.getRestricted());
 
         return createdAcmTask;
     }
 
-    private List<String> findCandidateGroups(String taskId)
+    protected List<String> findCandidateGroups(String taskId)
     {
         List<IdentityLink> candidates = getActivitiTaskService().getIdentityLinksForTask(taskId);
 
@@ -1671,7 +1714,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         return null;
     }
 
-    private List<String> findHistoricCandidateGroups(String taskId)
+    protected List<String> findHistoricCandidateGroups(String taskId)
     {
         List<HistoricIdentityLink> candidates = getActivitiHistoryService().getHistoricIdentityLinksForTask(taskId);
         if (candidates != null)
@@ -1797,7 +1840,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
     }
 
-    private String getReviewDocumentPdfRenditionIdFromVariables(HistoricTaskInstance hti)
+    protected String getReviewDocumentPdfRenditionIdFromVariables(HistoricTaskInstance hti)
     {
         Object renditionId = hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID);
         if (renditionId instanceof Long)
@@ -1980,11 +2023,13 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         this.acmBpmnService = acmBpmnService;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 

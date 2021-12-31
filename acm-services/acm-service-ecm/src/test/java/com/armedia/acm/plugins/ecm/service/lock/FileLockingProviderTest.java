@@ -41,6 +41,8 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockServiceImpl;
 
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.joda.time.DateTime;
@@ -49,8 +51,10 @@ import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by bojan.milenkoski on 08/05/2018.
@@ -61,20 +65,28 @@ public class FileLockingProviderTest extends EasyMockSupport
     private AcmObjectLockServiceImpl objectLockService;
     private AcmObjectLockDao objectLockDaoMock;
     private ApplicationEventPublisher applicationEventPublisherMock;
+    private UserDao mockUserDao;
+    private AcmUser acmUser;
+    List<AcmUser> acmUsers = new ArrayList<>();
 
     @Before
     public void setup()
     {
         objectLockDaoMock = createMock(AcmObjectLockDao.class);
         applicationEventPublisherMock = createMock(ApplicationEventPublisher.class);
+        mockUserDao = createMock(UserDao.class);
 
         objectLockService = new AcmObjectLockServiceImpl();
         objectLockService.setAcmObjectLockDao(objectLockDaoMock);
         objectLockService.setApplicationEventPublisher(applicationEventPublisherMock);
 
+        acmUser = new AcmUser();
+        acmUser.setUserId("userId");
+
         fileObjectLockingProvider = new FileLockingProvider();
         fileObjectLockingProvider.setObjectLockService(objectLockService);
         fileObjectLockingProvider.setExpiryTimeInMilliseconds(10_000L);
+        fileObjectLockingProvider.setUserDao(mockUserDao);
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
@@ -105,11 +117,11 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         for (String lockType : lockTypes)
         {
-            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
+            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock, mockUserDao);
             expect(objectLockDaoMock.findLock(objectId, objectType)).andReturn(null).anyTimes();
             expect(objectLockDaoMock.save(anyObject(AcmObjectLock.class)))
                     .andAnswer(() -> (AcmObjectLock) EasyMock.getCurrentArguments()[0]);
-
+            expect(mockUserDao.findByUserId(userId)).andReturn(acmUser).anyTimes();
             applicationEventPublisherMock.publishEvent(anyObject(AcmObjectLockEvent.class));
             expectLastCall();
 
@@ -172,7 +184,7 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         for (Object[] data : testData)
         {
-            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
+            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock, mockUserDao);
 
             AcmObjectLock existingObjectLock = new AcmObjectLock();
             existingObjectLock.setObjectId((Long) data[0]);
@@ -182,7 +194,10 @@ public class FileLockingProviderTest extends EasyMockSupport
             Date existingLockCreated = new DateTime(new Date()).minusMinutes(5).toDate();
             existingObjectLock.setCreated(existingLockCreated);
 
+            acmUsers.add(acmUser);
+
             expect(objectLockDaoMock.findLock((Long) data[0], (String) data[1])).andReturn(existingObjectLock).anyTimes();
+            expect(mockUserDao.findByPrefix(existingObjectLock.getCreator())).andReturn(acmUsers).anyTimes();
 
             if ((Boolean) data[8])
             {
@@ -270,8 +285,9 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         for (String lockType : lockTypes)
         {
-            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
+            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock, mockUserDao);
             expect(objectLockDaoMock.findLock(objectId, objectType)).andReturn(null).anyTimes();
+            expect(mockUserDao.findByUserId(userId)).andReturn(acmUser).anyTimes();
 
             // when
             replayAll();
@@ -326,7 +342,7 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         for (Object[] data : testData)
         {
-            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock);
+            EasyMock.reset(objectLockDaoMock, applicationEventPublisherMock, mockUserDao);
 
             AcmObjectLock existingObjectLock = new AcmObjectLock();
             existingObjectLock.setId((Long) data[6]);
@@ -337,7 +353,10 @@ public class FileLockingProviderTest extends EasyMockSupport
             Date existingLockCreated = new DateTime(new Date()).minusMinutes(5).toDate();
             existingObjectLock.setCreated(existingLockCreated);
 
+            acmUsers.add(acmUser);
+
             expect(objectLockDaoMock.findLock((Long) data[0], (String) data[1])).andReturn(existingObjectLock).anyTimes();
+            expect(mockUserDao.findByPrefix(existingObjectLock.getCreator())).andReturn(acmUsers).anyTimes();
             if ((Boolean) data[7])
             {
                 objectLockDaoMock.remove(anyObject(AcmObjectLock.class));

@@ -28,7 +28,7 @@ package gov.foia.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
-
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import gov.foia.model.FOIAFile;
 
 /**
@@ -46,6 +46,12 @@ public class FOIAFileDao extends AcmAbstractDao<FOIAFile>
     protected Class<FOIAFile> getPersistenceClass()
     {
         return FOIAFile.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return EcmFileConstants.OBJECT_FILE_TYPE;
     }
 
 }

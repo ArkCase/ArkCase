@@ -801,5 +801,20 @@
         <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_created" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_recycle_bin_item" columnName="cm_rb_item_modified" newDataType="DATETIME"/>
     </changeSet>
+    
+    <changeSet id="81_add_column_cm_file_version_valid_file" author="kella.vivek">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_file_version_valid_file" type="VARCHAR(5)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="82_add_default_value_true_to_cm_file_version_valid_file_column" author="kella.vivek">
+        <addDefaultValue columnName="cm_file_version_valid_file" tableName="acm_file_version" defaultValue="true"/>
+    </changeSet>
+
+    <changeSet id="83-change-character-set-to-filename" author="ivan.tasevski" dbms="mysql">
+        <sql>
+            ALTER TABLE acm_file MODIFY COLUMN cm_file_name VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
 

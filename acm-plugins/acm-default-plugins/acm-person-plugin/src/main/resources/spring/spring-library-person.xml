@@ -50,6 +50,8 @@
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="personConfig" ref="personConfig"/>
         <property name="phoneRegexConfig" ref="phoneRegexConfig"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -177,5 +179,6 @@
         <property name="personService" ref="personService"/>
         <property name="personDao" ref="acmPersonDao"/>
     </bean>
+
 
 </beans>

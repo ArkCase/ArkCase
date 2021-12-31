@@ -111,7 +111,7 @@ public class GetCasesByStatusAPIControllerTest extends EasyMockSupport
         String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, facetQuery, 0, 1, ""))
                 .andReturn(facetSolrResponse);
 
         replayAll();

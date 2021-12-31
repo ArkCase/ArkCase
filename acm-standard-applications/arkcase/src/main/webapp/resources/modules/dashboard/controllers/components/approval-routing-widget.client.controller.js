@@ -42,7 +42,7 @@ angular.module('dashboard.approvalRouting', [ 'adf.provider' ]).config(function(
                         ObjectTaskService.queryChildTasks(module.name, currentObjectId, 0, 100, '', '').then(function(queryChildResult) {
                             var tasks = queryChildResult.response.docs;
                             var objectId = _.result(_.find(tasks, function(task) {
-                                return task.status_s === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
+                                return task.status_lcs === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
                             }), 'object_id_s');
 
                             if (!Util.isEmpty(objectId)) {

@@ -33,13 +33,12 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.json.JSONArray;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -73,8 +72,6 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
 
         List<SolrAdvancedSearchDocument> addOrUpdateSolrAdvancedSearch = new ArrayList<>();
         List<SolrAdvancedSearchDocument> deleteFromSolrAdvancedSearch = new ArrayList<>();
-        List<SolrDocument> addOrUpdateSolrQuickSearch = new ArrayList<>();
-        List<SolrDocument> deleteFromSolrQuickSearch = new ArrayList<>();
         List<SolrContentDocument> addOrUpdateSolrContentFile = new ArrayList<>();
         List<SolrContentDocument> deleteFromSolrContentFile = new ArrayList<>();
 
@@ -84,21 +81,16 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         Map<Class<?>, List<AcmObjectToSolrDocTransformer>> typeTransformerMap = transformers.stream()
                 .collect(Collectors.groupingBy(AcmObjectToSolrDocTransformer::getAcmObjectTypeSupported));
 
-        toSolrDocuments(typeTransformerMap, changes.getAddedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch,
+        toSolrDocuments(typeTransformerMap, changes.getAddedObjects(), addOrUpdateSolrAdvancedSearch,
                 addOrUpdateSolrContentFile);
-        toSolrDocuments(typeTransformerMap, changes.getUpdatedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch,
+        toSolrDocuments(typeTransformerMap, changes.getUpdatedObjects(), addOrUpdateSolrAdvancedSearch,
                 addOrUpdateSolrContentFile);
-        toSolrDocuments(typeTransformerMap, changes.getDeletedObjects(), deleteFromSolrAdvancedSearch, deleteFromSolrQuickSearch,
+        toSolrDocuments(typeTransformerMap, changes.getDeletedObjects(), deleteFromSolrAdvancedSearch,
                 deleteFromSolrContentFile);
 
         if (!addOrUpdateSolrAdvancedSearch.isEmpty())
         {
             getSendToSolr().sendSolrAdvancedSearchDocuments(addOrUpdateSolrAdvancedSearch);
-        }
-
-        if (!addOrUpdateSolrQuickSearch.isEmpty())
-        {
-            getSendToSolr().sendSolrQuickSearchDocuments(addOrUpdateSolrQuickSearch);
         }
 
         if (!addOrUpdateSolrContentFile.isEmpty())
@@ -113,14 +105,6 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
             // list into a delete request list.
             List<SolrDeleteDocumentByIdRequest> deletes = copyDeleteDocsToDeleteRequests(deleteFromSolrAdvancedSearch);
             getSendToSolr().sendSolrAdvancedSearchDeletes(deletes);
-        }
-
-        if (!deleteFromSolrQuickSearch.isEmpty())
-        {
-            // for delete, we need to send a special request format including only the document ID. So we copy this
-            // list into a delete request list.
-            List<SolrDeleteDocumentByIdRequest> deletes = copyDeleteDocsToDeleteRequests(deleteFromSolrQuickSearch);
-            getSendToSolr().sendSolrQuickSearchDeletes(deletes);
         }
 
         if (!deleteFromSolrContentFile.isEmpty())
@@ -145,8 +129,7 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
     }
 
     private void toSolrDocuments(Map<Class<?>, List<AcmObjectToSolrDocTransformer>> typeTransformerMap, List<Object> jpaObjects,
-            List<SolrAdvancedSearchDocument> solrAdvancedSearchDocs, List<SolrDocument> solrQuickSearchDocs,
-            List<SolrContentDocument> solrContentFileDocs)
+            List<SolrAdvancedSearchDocument> solrAdvancedSearchDocs, List<SolrContentDocument> solrContentFileDocs)
     {
 
         Map<Class<?>, List<Object>> objects = jpaObjects.stream().collect(Collectors.groupingBy(Object::getClass));
@@ -159,8 +142,7 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                 {
                     for (AcmObjectToSolrDocTransformer transformer : transformers)
                     {
-                        // transformers can return null if they don't want to add to the advanced or quick search
-                        // repo...
+                        // transformers can return null if they don't want to add to the advanced repo...
 
                         try
                         {
@@ -178,24 +160,9 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
 
                         try
                         {
-                            SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
-                            if (quickSearchDocument != null)
-                            {
-                                solrQuickSearchDocs.add(quickSearchDocument);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            log.error("[{}]: unable to generate Quick search document for [{}]. Reason: [{}]", transformer.getClass(),
-                                    jpaObject.toString(), e.getMessage());
-                        }
-
-                        try
-                        {
                             JSONArray docUpdates = transformer.childrenUpdatesToSolr(jpaObject);
                             if (docUpdates != null && docUpdates.length() != 0)
                             {
-                                getSendToSolr().sendSolrDocuments("solrQuickSearch.in", docUpdates.toString());
                                 getSendToSolr().sendSolrDocuments("solrAdvancedSearch.in", docUpdates.toString());
                             }
                         }

@@ -787,4 +787,37 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="54-change-cm-person-alias-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_created" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_modified" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="55-add-person-default-fax" author="aleksandar.acevski">
+        <addColumn tableName="acm_person">
+            <column name="cm_default_fax" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-person-anonymous-flag" author="adrijana.maneva">
+        <addColumn tableName="acm_person">
+            <column name="cm_anonymous_flag" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="56-identification-add-class-name-column" author="riste.tutureski">
+        <addColumn tableName="acm_identification">
+            <column name="cm_class_name" type="varchar(400)" defaultValue="com.armedia.acm.plugins.person.model.Identification">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="57-create-index-on-person-assoc-parent-id" author="bojan.milenkoski">
+        <createIndex tableName="acm_person_assoc" indexName="idx_person_assoc_person_assoc_parent_id">
+            <column name="cm_person_assoc_parent_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

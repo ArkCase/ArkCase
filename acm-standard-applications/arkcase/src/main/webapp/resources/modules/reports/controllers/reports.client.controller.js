@@ -11,7 +11,7 @@ angular.module('reports').controller('ReportsController',
 
             $scope.showXmlReport = false;
 
-            $scope.data = Data.getData();
+            $scope.data = angular.copy(Data.getData());
 
             $scope.data.fiscalYears = [];
             

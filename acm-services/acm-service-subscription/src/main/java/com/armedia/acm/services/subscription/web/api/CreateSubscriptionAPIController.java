@@ -155,13 +155,13 @@ public class CreateSubscriptionAPIController
         String solrResponseJsonString;
         try
         {
-            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
+            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
                     query, FIRST_ROW, MAX_ROWS, SORT);
         }
         catch (SolrException e)
         {
-            log.error("Solr exception occurred while performing quick search for object: [{}]. {}", id, e.getMessage());
-            throw new AcmObjectNotFoundException(objectType, objectId, "Exception occurred while performing quick search for object:" + id,
+            log.error("Solr exception occurred while performing advanced search for object: [{}]. {}", id, e.getMessage());
+            throw new AcmObjectNotFoundException(objectType, objectId, "Exception occurred while performing advanced search for object:" + id,
                     e);
         }
         return new JSONObject(solrResponseJsonString);

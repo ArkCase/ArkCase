@@ -37,7 +37,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
 
         }
-        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
+        return momentObject.toISOString();
     }
 
     function dueDateWithWeekends(startDate, days, holidays) {
@@ -54,7 +54,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
 
         }
-        return momentObject.format($translate.instant("common.frevvo.defaultDateFormat"));
+        return momentObject.toISOString();
     }
 
     function workingDays(startDate, holidays) {
@@ -91,12 +91,12 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         return days;
     }
 
-    function daysLeft(holidays, dueDate) {
+    function daysLeft(holidays, dueDate, anotherStartDate) {
         if(typeof(dueDate) == "object") {
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = findNextWorkingDay(holidays, moment());
+        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var days = 0;
         if (momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {
@@ -124,12 +124,12 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
 
-    function daysLeftWithWeekends(holidays, dueDate) {
+    function daysLeftWithWeekends(holidays, dueDate, anotherStartDate) {
         if(typeof(dueDate) == "object") {
             dueDate = dueDate.toISOString();
         }
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
-        var momentDate = moment();
+        var momentDate = !anotherStartDate ? findNextWorkingDay(holidays, moment()) : moment(anotherStartDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var days = 0;
         if(momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < momentDueDate) {

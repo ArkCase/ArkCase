@@ -2,14 +2,16 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-    ['$scope', '$stateParams', '$translate', '$q', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService',
-        function ($scope, $stateParams, $translate, $q, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService) {
+    ['$scope', '$stateParams', '$translate', '$q', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService', 'SimilarOrganizationService','EmailValidationService',
+        function ($scope, $stateParams, $translate, $q, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService, SimilarOrganizationService, EmailValidationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.showPhoneError = false;
                     $scope.showFaxError = false;
+
+                    var assocTypeLabel = $translate.instant("organizations.comp.people.type.label");
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
@@ -139,7 +141,8 @@ angular.module('organizations').controller(
                             showSetPrimary: true,
                             isDefault: false,
                             types: $scope.personAssociationTypes,
-                            isFirstPerson: Util.isEmpty(associationFound) ? true : false
+                            isFirstPerson: Util.isEmpty(associationFound) ? true : false,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         //set this params for editing
@@ -278,6 +281,10 @@ angular.module('organizations').controller(
                 }
             };
 
+            $scope.checkLocationRules = function (address) {
+                return !_.values(address).every(_.isEmpty)
+            };
+
             // ---------------------   mention   ---------------------------------
                     $scope.paramsSummernote = {
                         emailAddresses: [],
@@ -409,7 +416,14 @@ angular.module('organizations').controller(
 
                         //identifications
                         if (organization.defaultIdentification) {
-                            organization.identifications.push(organization.defaultIdentification);
+                            // this is rare scenario in identifications when user choose only issuer date for example and then remove this date
+                            // we need to delete all properties that are null cause otherwise backend will throw error
+                            organization.defaultIdentification = _.pick(organization.defaultIdentification, _.identity);
+                            if (_.isEmpty(organization.defaultIdentification)) {
+                                organization = _.omit(organization, ['defaultIdentification']);
+                            } else {
+                                organization.identifications.push(organization.defaultIdentification);
+                            }
                         }
 
                         //addresses
@@ -454,15 +468,25 @@ angular.module('organizations').controller(
                 regEx = regExp;
             });
 
-            $scope.validatePhone = function (type, data, isDefaultPhone) {
+
+            $scope.validateContact = function (type, data, isDefaultValue) {
                 if (type === 'phone' || type === 'fax') {
                     var validateObject = PhoneValidationService.validateInput(data.value, regEx);
                     data.value = validateObject.inputValue;
-                    if (isDefaultPhone) {
+                    if (isDefaultValue) {
                         $scope['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = validateObject.showPhoneError;
                     } else {
                         data['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = validateObject.showPhoneError;
                     }
+                }
+                if(type === 'email') {
+                    EmailValidationService.validateInput(data.value).then(function (response) {
+                        data.value = response.inputValue;
+                        if(isDefaultValue) {
+                            $scope['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = response.showEmailError;
+                        }
+                        data['show' + $scope.capitalizeFirstLetter(type) + 'Error'] = response.showEmailError;
+                    });
                 }
             }
 

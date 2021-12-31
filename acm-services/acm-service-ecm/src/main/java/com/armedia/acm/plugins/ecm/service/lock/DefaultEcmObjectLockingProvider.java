@@ -31,6 +31,8 @@ import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +44,7 @@ public class DefaultEcmObjectLockingProvider implements ObjectLockingProvider
     private final Logger log = LogManager.getLogger(getClass());
     private AcmObjectLockService objectLockService;
     private Long expiryTimeInMilliseconds;
+    private UserDao userDao;
 
     private void throwErrorOnExistingLockExceptForReadLock(Long objectId, String objectType, String lockType, String userId,
             AcmObjectLock existingLock, boolean errorOnSameExistingLockType, boolean acquireLock)
@@ -49,13 +52,17 @@ public class DefaultEcmObjectLockingProvider implements ObjectLockingProvider
         if (!existingLock.getLockType().equals(FileLockType.READ.name())
                 && (errorOnSameExistingLockType || !existingLock.getLockType().equals(lockType)))
         {
+            String acmUserFullName = userDao.findByPrefix(existingLock.getCreator())
+                    .stream()
+                    .findFirst()
+                    .map(AcmUser::getFullName)
+                    .orElse(existingLock.getCreator());
+
             log.error(
                     " {} not able to {} object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
                     userId, acquireLock ? "acquire" : "release", objectId, objectType, lockType, existingLock.getLockType(),
                     existingLock.getCreator());
-            throw new AcmObjectLockException(String.format(
-                    "%s not able to %s object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: %s",
-                    userId, acquireLock ? "acquire" : "release", objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
+            throw new AcmObjectLockException("This document is locked by " + acmUserFullName);
         }
     }
 
@@ -250,5 +257,10 @@ public class DefaultEcmObjectLockingProvider implements ObjectLockingProvider
     public void setExpiryTimeInMilliseconds(Long expiryTimeInMilliseconds)
     {
         this.expiryTimeInMilliseconds = expiryTimeInMilliseconds;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

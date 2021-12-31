@@ -95,6 +95,7 @@ public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
             {
                 EcmTikaFile etf = pipelineContext.getDetectedFileMetadata();
                 etf.stampVersionInfo(version);
+                version.setValidFile(etf.isValidFile());
             }
 
             entity.getVersions().add(version);

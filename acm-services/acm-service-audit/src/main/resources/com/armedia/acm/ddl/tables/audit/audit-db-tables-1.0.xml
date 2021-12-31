@@ -148,6 +148,24 @@
     <changeSet id="15-change_cm_audit_log_datetime" author="mario.gjurcheski" dbms="mysql">
         <modifyDataType tableName="acm_audit_log" columnName="cm_audit_datetime" newDataType="DATETIME"/>
     </changeSet>
+
+    <changeSet id="16-change-character-set-to-filename" author="ivan.tasevski" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_audit_description VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
+    
+    <changeSet id="17-change-character-set-to-filename" author="bojan.milenkoski" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_audit_description VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="18-change-character-set-to-diff-details" author="konstantin.cepas" dbms="mysql">
+        <sql>
+            ALTER IGNORE TABLE acm_audit_log MODIFY COLUMN cm_diff_details_json LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
     
 

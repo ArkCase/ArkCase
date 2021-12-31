@@ -18,6 +18,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat"),
         defaultDateLongTimeFormat: $translate.instant("common.defaultDateLongTimeFormat"),
         defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat"),
+        defaultDateTimePickerFormat: $translate.instant("common.defaultDateTimePickerFormat"),
         defaultDateTimeLongUIFormatWithYearAsNumber: $translate.instant("common.defaultDateTimeLongUIFormatWithYearAsNumber")
 
         /**
@@ -37,7 +38,9 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         dateToIso: function(date, replacement) {
             var replacedWith = (undefined === replacement) ? "" : replacement;
 
-            if (date && date instanceof Date) {
+            // if we use both moment-picker and ng-model properties (this is case when we have calendar button and
+            // input text together date is saved as string otherwise it is as Date object
+            if (date && (typeof date === 'string' || date instanceof Date)) {
                 return moment(date).format("YYYY-MM-DDTHH:mm:ssZZ");
             } else {
                 return replacedWith;
@@ -61,7 +64,9 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         localDateToIso: function(date, replacement) {
             var replacedWith = (undefined === replacement) ? "" : replacement;
 
-            if (date && date instanceof Date) {
+            // if we use both moment-picker and ng-model properties (this is case when we have calendar button and
+            // input text together date is saved as string otherwise it is as Date object
+            if (date && (typeof date === 'string' || date instanceof Date)) {
                 return moment(date).format("YYYY-MM-DD");
             } else {
                 return replacedWith;
@@ -84,7 +89,9 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         dateTimeToIso: function(date, replacement) {
             var replacedWith = (undefined === replacement) ? "" : replacement;
 
-            if (date && date instanceof Date) {
+            // if we use both moment-picker and ng-model properties (this is case when we have calendar button and
+            // input text together date is saved as string otherwise it is as Date object
+            if (date && (typeof date === 'string' || date instanceof Date)) {
                 return moment(date).format("YYYY-MM-DDTHH:mm:ss");
             } else {
                 return replacedWith;
@@ -488,6 +495,22 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
             newDate.setHours(hours - offset);
 
             return newDate;
+        },
+
+        /**
+         * @ngdoc method
+         * @name compareDatesForUpdate
+         * @methodOf services:Util.DateService
+         *
+         *
+         * @Returns {Object} {endDate: endDate}
+         */
+        compareDatesForUpdate: function(pickerDate, originalDate) {
+            // when switching between object type nodes (cases,complaints..) we are using same controller, just changing objectInfo data which means change detection for
+            // datepicker will be invoked. That is why we need to check if current data in datepicker is not same as change detection date
+            // so we won't make unnecessary backend call when switching and also we need another condition to check if chosen date is not same
+            // with received date in which case we want to make backend call (user entered new value from datepicker)
+            return !moment(moment(pickerDate).format(Service.defaultDateTimePickerFormat)).isSame(moment(originalDate).format(Service.defaultDateTimePickerFormat));
         }
     };
 

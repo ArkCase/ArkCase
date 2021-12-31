@@ -8,6 +8,10 @@ angular.module('common').controller(
                         return moduleConfig;
                     });
 
+                    if (params.assocTypeLabel) {
+                        $scope.assocTypeLabel = params.assocTypeLabel;
+                    }
+
                     $scope.hasSubCompany = false;
                     $scope.newOrganizationPicked = null;
                     $scope.selectExisting = 0;
@@ -90,7 +94,7 @@ angular.module('common').controller(
                         };
                         if ($scope.types && $scope.type) {
                             retValue.type = $scope.type.key;
-                            retValue.inverseType = $scope.type.inverseKey;
+                            retValue.inverseType = $scope.type.value;
                         }
                         if ($scope.showSetPrimary) {
                             retValue.isDefault = $scope.isDefault;

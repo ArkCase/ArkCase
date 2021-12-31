@@ -85,9 +85,6 @@ import com.armedia.acm.correspondence.model.FormattedRun;
  */
 public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
 {
-    public static final String DATE_TYPE = "Date";
-    public static final String DATE_TIME_TYPE = "LocalDateTime";
-    public static final String CURRENT_DATE = "currentDate";
     public static final String BASE_URL = "baseUrl";
     public static final String FILES = "files";
     public static final String ORGANIZATION_NAME = "OrganizationName";
@@ -661,8 +658,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     {
         Object generatedExpression = "";
         boolean isExistingMergeField = false;
-        SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
-        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
 
         // Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the
         // expressions in the context of this object.
@@ -672,11 +667,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         {
             stContext.registerFunction("toClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimeTimezone", LocalDateTime.class));
             stContext.registerFunction("toClientDateTimezone", DateTimeService.class.getDeclaredMethod("toClientDateTimezone", LocalDateTime.class));
-            stContext.registerFunction("toUTCDateTimeTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimeTimezone", LocalDateTime.class));
-            stContext.registerFunction("toUTCDateTimezone", DateTimeService.class.getDeclaredMethod("toUTCDateTimezone", LocalDateTime.class));
-            stContext.registerFunction("toClientDateDateTimezone",
-                    DateTimeService.class.getDeclaredMethod("toClientDateDateTimezone", Date.class));
-
+            stContext.registerFunction("dateToClientDateTimezone", DateTimeService.class.getDeclaredMethod("dateToClientDateTimezone", Date.class));
+            stContext.registerFunction("dateToClientDateTimeTimezone", DateTimeService.class.getDeclaredMethod("dateToClientDateTimeTimezone", Date.class));
+            stContext.registerFunction("currentDateToClientDate", DateTimeService.class.getDeclaredMethod("currentDateToClientDate"));
+            stContext.registerFunction("currentDateToClientDateTime", DateTimeService.class.getDeclaredMethod("currentDateToClientDateTime"));
         }
         catch (NoSuchMethodException e)
         {
@@ -721,12 +715,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         else
         {
 
-            // check if the expression is currentDate, files, baseURL, organizationName, etc.
-            if (CURRENT_DATE.equalsIgnoreCase(spelExpression))
-            {
-                generatedExpression = formatter.format(new Date());
-            }
-            else if (BASE_URL.equalsIgnoreCase(spelExpression))
+            // check if the expression is files, baseURL, organizationName, etc.
+            if (BASE_URL.equalsIgnoreCase(spelExpression))
             {
                 generatedExpression = appConfig.getBaseUrl();
             }

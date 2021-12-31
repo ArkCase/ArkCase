@@ -33,7 +33,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseIdentification" translate>
+                        <a data-toggle="collapse" href="#collapseIdentification" translate>
                             organizations.comp.newOrganization.identification.title</a>
                     </h4>
                 </div>
@@ -70,10 +70,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued"
-                                                  property="organization.defaultIdentification.identificationYearIssued"
-                                                  date-picker-id="organization.defaultIdentification.identificationYearIssued"
-                                                  time-format-disabled="true"></date-time-picker>
+                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued" is-readonly="!organization.defaultIdentification.identificationNumber"
+                                                  no-default-date="true" disable="!organization.defaultIdentification.identificationNumber"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -120,10 +118,8 @@
                                     <div>
                                         <label translate>
                                             organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"
-                                                          property="identification.identificationYearIssued"
-                                                          date-picker-id="identification.identificationYearIssued"
-                                                          time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker data="identification.identificationYearIssued" is-readonly="!identification.identificationNumber"
+                                                          disable="!identification.identificationNumber" no-default-date="true"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
@@ -152,7 +148,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOrganizations" translate>organizations.comp.newOrganization.people.title</a>
+                    <a data-toggle="collapse"  href="#collapseOrganizations" translate>organizations.comp.newOrganization.people.title</a>
                 </h4>
             </div>
             <div id="collapseOrganizations" class="panel-collapse collapse">
@@ -166,7 +162,7 @@
                                        placeholder="{{ 'organizations.comp.newOrganization.people.searchExisting.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label translate>organizations.comp.newOrganization.people.personType</label>
+                                <label translate>organizations.comp.people.type.label</label>
                                 <select class="input-md form-control"
                                         ng-model="personAssociation.personToOrganizationAssociationType"
                                         ng-options="item.key as item.value | translate for item in personAssociationTypes"
@@ -201,7 +197,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseLocations" translate>organizations.comp.newOrganization.locations.title</a>
+                    <a data-toggle="collapse" href="#collapseLocations" translate>organizations.comp.newOrganization.locations.title</a>
                 </h4>
             </div>
             <div id="collapseLocations" class="panel-collapse collapse">
@@ -210,30 +206,51 @@
                         <div class="col-sm-6 form-group">
                             <label for="country" translate>
                                 organizations.comp.newOrganization.locations.country</label>
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <select id="country" class="form-control" ng-model="organization.defaultAddress.country"
-                                    ng-change="changeStates(organization.defaultAddress.country)">
+                                    ng-change="changeStates(organization.defaultAddress.country)"
+                                    ng-required="checkLocationRules(organization.defaultAddress)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!organization.defaultAddress.country &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.country.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="loctype" translate>
                                 organizations.comp.newOrganization.locations.type</label>
-                            <select id="loctype" class="form-control" ng-model="organization.defaultAddress.type">
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <select id="loctype" class="form-control" ng-model="organization.defaultAddress.type"
+                                    ng-required="checkLocationRules(organization.defaultAddress)">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!organization.defaultAddress.type &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.type.validation.error</span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label for="" translate>
                                 organizations.comp.newOrganization.locations.streetAddress</label>
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input id="streetDefaultAddress" type="text" ng-model="organization.defaultAddress.streetAddress"
                                    class="input-md form-control"
+                                   ng-required="checkLocationRules(organization.defaultAddress)"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!organization.defaultAddress.streetAddress &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.streetAddress.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="streetAddress2" translate>
@@ -247,32 +264,60 @@
                         <div class="col-sm-6 form-group">
                             <label for="city" translate>
                                 organizations.comp.newOrganization.locations.city</label>
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input id="city" for="" type="text" ng-model="organization.defaultAddress.city" class="input-md form-control"
+                                   ng-required="checkLocationRules(organization.defaultAddress)"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.city.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!organization.defaultAddress.city &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.city.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                              ng-if="organization.defaultAddress.country == 'US' || organization.defaultAddress.country == 'CA' || organization.defaultAddress.country == 'JP'">
                             <label for="state" translate>
                                 organizations.comp.newOrganization.locations.state</label>
-                            <select id="state" class="form-control" ng-model="organization.defaultAddress.state">
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk-state-label">*</span>
+                            <select id="state" class="form-control" ng-model="organization.defaultAddress.state"
+                                    ng-required="checkLocationRules(organization.defaultAddress)">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!organization.defaultAddress.state &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                              ng-if="organization.defaultAddress.country != 'US' && organization.defaultAddress.country != 'CA' && organization.defaultAddress.country != 'JP'">
                             <label for="txtState" translate>
                                 organizations.comp.newOrganization.locations.state
                             </label>
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="organization.defaultAddress.state" class="input-md form-control"
+                                   ng-required="checkLocationRules(organization.defaultAddress)"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!organization.defaultAddress.state &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group">
                             <label for="zip" translate>
                                 organizations.comp.newOrganization.locations.zip</label>
+                            <span ng-if="checkLocationRules(organization.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input id="zip" type="text" ng-model="organization.defaultAddress.zip" class="input-md form-control"
+                                   ng-required="checkLocationRules(organization.defaultAddress)"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
+                            <span class="text-danger" ng-if="!organization.defaultAddress.zip &&
+                                    checkLocationRules(organization.defaultAddress)"
+                                  translate>
+                            organizations.comp.newOrganization.locations.zip.validation.error</span>
                         </div>
 
                         <div class="col-sm-2 form-group">
@@ -379,7 +424,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts" translate>organizations.comp.newOrganization.communicationAccounts.title</a>
+                    <a data-toggle="collapse" href="#collapseCommunicationAccounts" translate>organizations.comp.newOrganization.communicationAccounts.title</a>
                 </h4>
             </div>
             <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
@@ -393,9 +438,10 @@
                                 <input type="{{caType}}" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}"
-                                       ng-blur="validatePhone(caType, organization['default'+capitalizeFirstLetter(caType)], true)">
+                                       ng-blur="validateContact(caType, organization['default'+capitalizeFirstLetter(caType)], true)">
                                 <span ng-if="caType == 'phone' && showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                                 <span ng-if="caType == 'fax' && showFaxError == true" translate>organizations.comp.newOrganization.communicationAccounts.faxValidationMessage</span>
+                                <span ng-if="caType == 'email' && showEmailError == true" translate>organizations.comp.newOrganization.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
@@ -429,9 +475,10 @@
                                 <input id="caType" type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}"
-                                       ng-blur="validatePhone(contactMethod.type, contactMethod, false)">
+                                       ng-blur="validateContact(contactMethod.type, contactMethod, false)">
                                 <span ng-if="contactMethod.type === 'phone' && contactMethod.showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                                 <span ng-if="contactMethod.type === 'fax' && contactMethod.showFaxError == true" translate>organizations.comp.newOrganization.communicationAccounts.faxValidationMessage</span>
+                                <span ng-if="contactMethod.type === 'email' && contactMethod.showEmailError == true" translate>organizations.comp.newOrganization.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
@@ -468,7 +515,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseDetails"
+                    <a data-toggle="collapse" href="#collapseDetails"
                        translate>organizations.comp.details.title</a>
                 </h4>
             </div>
@@ -483,7 +530,7 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate> organizations.comp.newOrganization.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="organizationForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+        <button type="submit" ng-disabled="checkLocationRules(organization.defaultAddress) && organizationForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
             <span translate>organizations.comp.newOrganization.saveButton</span>

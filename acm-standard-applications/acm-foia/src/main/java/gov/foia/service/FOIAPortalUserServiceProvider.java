@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -75,7 +76,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.AuthenticationException;
-import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
@@ -101,6 +101,7 @@ import gov.foia.model.UserRegistrationRequestRecord;
 import gov.foia.model.UserResetRequestRecord;
 
 import javax.persistence.NonUniqueResultException;
+import javax.naming.directory.InvalidAttributeValueException;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
@@ -380,7 +381,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    public UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException
     {
         FOIAPerson person = (FOIAPerson) personDao.find(personId);
@@ -422,7 +423,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             createPortalUser(portalUser, portalPerson, null);
 
             UserResetRequest resetRequest = createUserResetRequest(portalUser, portalId);
-            requestPasswordResetForRequester(portalId, resetRequest);
+            requestPasswordResetForRequester(portalId, resetRequest, requestId);
 
             return UserRegistrationResponse.accepted();
         }
@@ -438,12 +439,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest)
+    public UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest, Long requestId)
             throws PortalUserServiceException
     {
         String templateName = "portalUserCreatedFromArkcasePasswordResetLink";
         String emailTitle = translationService.translate(NotificationConstants.NEW_PORTAL_USER_PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, requestId);
     }
 
     public UserResetRequest createUserResetRequest(PortalUser user, String portalId)
@@ -630,7 +631,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     {
         String templateName = "portalPasswordResetRequestLink";
         String emailTitle = translationService.translate(NotificationConstants.PASSWORD_RESET_REQUEST);
-        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle);
+        return requestPasswordReset(portalId, resetRequest, templateName, emailTitle, null);
     }
 
     /*
@@ -654,7 +655,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+    public UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle, Long requestId)
             throws PortalUserServiceException
     {
         AcmUser acmPortalUser = checkForExistingUser(resetRequest.getEmailAddress());
@@ -697,7 +698,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 notification.setEmailAddresses(resetRequest.getEmailAddress());
                 notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
                 notification.setSubject(emailSubject);
-                notification.setParentType("USER");
+                notification.setParentType(CaseFileConstants.OBJECT_TYPE);
+                notification.setParentId(requestId);
 
                 getNotificationDao().save(notification);
 
@@ -791,8 +793,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Override
     public UserResetResponse changePassword(String portalUserEmail, String portalUserId, String acmSystemUserId,
             PortalUserCredentials portalUserCredentials)
-            throws PortalUserServiceException
-    {
+            throws PortalUserServiceException, InvalidAttributeValueException {
 
         FOIALdapAuthenticationService foiaLdapAuthenticationService = getFOIALdapAuthenticationService(directoryName);
         if (foiaLdapAuthenticationService == null)
@@ -805,7 +806,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             foiaLdapAuthenticationService.getLdapAuthenticateService().changeUserPassword(portalUserId, portalUserCredentials.getPassword(),
                     portalUserCredentials.getNewPassword());
         }
-
+        catch (InvalidAttributeValueException e)
+        {
+            log.debug(String.format("Password policy error for LDAP user %s. Using configured system user %s.", portalUserId,
+                    acmSystemUserId));
+            throw new PortalUserServiceException(String.format("Your password is too young to change"), e);
+        }
         catch (AcmUserActionFailedException e)
         {
             log.debug(String.format("Couldn't update password for LDAP user %s. Using configured system user %s.", portalUserId,
@@ -817,12 +823,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             log.debug(String.format("Failed to authenticate! Wrong password for LDAP user %s. Using configured system user %s.",
                     portalUserId, acmSystemUserId));
             return UserResetResponse.invalidCredentials();
-        }
-        catch (InvalidAttributeValueException e)
-        {
-            log.debug(String.format("Password policy error for LDAP user %s. Using configured system user %s.", portalUserId,
-                    acmSystemUserId));
-            throw new PortalUserServiceException(String.format("Password fails quality checking policy for user %s.", portalUserEmail), e);
         }
         catch (Exception e)
         {
@@ -846,26 +846,32 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
 
-        PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setCountry(user.getCountry());
-        postalAddress.setType(user.getAddressType());
-        postalAddress.setCity(user.getCity());
-        postalAddress.setState(user.getState());
-        postalAddress.setStreetAddress(user.getAddress1());
-        postalAddress.setStreetAddress2(user.getAddress2());
-        postalAddress.setZip(user.getZipCode());
-        person.setDefaultAddress(postalAddress);
+        if (!isAddressesTheSame(user, person))
+        {
+            PostalAddress postalAddress = new PostalAddress();
+            postalAddress.setCountry(user.getCountry());
+            postalAddress.setType(user.getAddressType());
+            postalAddress.setCity(user.getCity());
+            postalAddress.setState(user.getState());
+            postalAddress.setStreetAddress(user.getAddress1());
+            postalAddress.setStreetAddress2(user.getAddress2());
+            postalAddress.setZip(user.getZipCode());
+            person.setDefaultAddress(postalAddress);
 
-        person.getAddresses().add(postalAddress);
+            person.getAddresses().add(postalAddress);
+        }
 
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
         {
-            ContactMethod contactMethodPhone;
-            contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
-            contactMethodPhone.setValue(user.getPhoneNumber());
+            if (!user.getPhoneNumber().equals(person.getDefaultPhone().getValue()))
+            {
+                ContactMethod contactMethodPhone;
+                contactMethodPhone = buildContactMethod("phone", user.getPhoneNumber());
+                contactMethodPhone.setValue(user.getPhoneNumber());
 
-            person.setDefaultPhone(contactMethodPhone);
-            person.getContactMethods().add(contactMethodPhone);
+                person.setDefaultPhone(contactMethodPhone);
+                person.getContactMethods().add(contactMethodPhone);
+            }
 
         }
 
@@ -903,6 +909,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     }
 
+    private boolean isAddressesTheSame(PortalUser user, Person person)
+    {
+        return person.getDefaultAddress().getCity().equals(user.getCity()) &&
+                person.getDefaultAddress().getCountry().equals(user.getCountry()) &&
+                person.getDefaultAddress().getType().equals(user.getAddressType()) &&
+                person.getDefaultAddress().getStreetAddress().equals(user.getAddress1()) &&
+                (person.getDefaultAddress().getStreetAddress2() != null && person.getDefaultAddress().getStreetAddress2().equals(user.getAddress2())) &&
+                person.getDefaultAddress().getZip().equals(user.getZipCode()) &&
+                person.getDefaultAddress().getState().equals(user.getState());
+    }
+
     @Override
     public PortalUser retrieveUser(String portalUserId, String portalId)
     {
@@ -934,11 +951,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 else
                 {
-                    Map<String, Organization> organizationByName = organizationsByGivenName.stream()
-                            .collect(Collectors.toMap(Organization::getOrganizationValue, Function.identity()));
+                    Map<Long, Organization> organizationById = organizationsByGivenName.stream()
+                            .collect(Collectors.toMap(Organization::getOrganizationId, Function.identity()));
 
                     PersonOrganizationAssociation personOrganizationAssociation = personOrganizationAssociations.stream()
-                            .filter(poa -> organizationByName.containsKey(poa.getOrganization().getOrganizationValue()))
+                            .filter(poa -> organizationById.containsKey(poa.getOrganization().getOrganizationId()))
                             .findFirst()
                             .orElse(null);
 
@@ -1076,7 +1093,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         user.setEmail(person.getDefaultEmail().getValue());
 
-        user.setRole(person.getRole());
+        if (StringUtils.isBlank(person.getRole()))
+        {
+            user.setRole(PortalUser.PENDING_USER);
+        }
+        else
+        {
+            user.setRole(person.getRole());
+        }
 
         if (person.getDefaultPicture() != null)
         {
@@ -1143,7 +1167,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             person.setDefaultEmail(email);
         }
 
-        person.setRole(user.getRole());
+        if (StringUtils.isBlank(user.getRole()))
+        {
+            person.setRole(PortalUser.PENDING_USER);
+        }
+        else
+        {
+            person.setRole(user.getRole());
+        }
 
         return person;
     }

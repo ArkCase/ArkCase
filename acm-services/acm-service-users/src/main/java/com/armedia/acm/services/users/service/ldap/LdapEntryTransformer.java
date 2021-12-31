@@ -30,6 +30,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -58,6 +59,8 @@ public class LdapEntryTransformer
 
         AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class)
                 .get(String.format("%s_userSync", directoryName));
+        AcmLdapSyncConfig syncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
@@ -99,7 +102,6 @@ public class LdapEntryTransformer
                 else if (key.equals(AcmLdapConstants.LDAP_PASSWORD_ATTR))
                 {
                     context.setAttributeValue(attr, userPassword);
-
                 }
                 else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
                 {
@@ -116,6 +118,11 @@ public class LdapEntryTransformer
                 else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
                 {
                     context.setAttributeValue(attr, String.format("/home/%s", userId));
+                }
+                else if (key.equals(AcmLdapConstants.LDAP_USER_PRINCIPAL_NAME_ATTR))
+                {
+                    String upnExpectedBySAML = syncConfig.getUserPrefix() + user.getMail();
+                    context.setAttributeValue(attr, upnExpectedBySAML);
                 }
                 else
                 {

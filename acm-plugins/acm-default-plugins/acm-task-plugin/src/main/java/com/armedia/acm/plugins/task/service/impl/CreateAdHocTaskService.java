@@ -27,16 +27,6 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -57,6 +47,16 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
 public class CreateAdHocTaskService
 {
     private TaskDao taskDao;
@@ -74,7 +74,6 @@ public class CreateAdHocTaskService
     {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
-        String attachedToObjectType = in.getAttachedToObjectType();
         String attachedToObjectName = in.getAttachedToObjectName();
         try
         {
@@ -82,17 +81,18 @@ public class CreateAdHocTaskService
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
 
-            String parentObjectType = in.getParentObjectType();
-            Long objectId = in.getAttachedToObjectId();
-            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) && objectId == null)
+            String parentObjectType = in.getAttachedToObjectType() != null ? in.getAttachedToObjectType() : in.getParentObjectType();
+            Long parentObjectId = in.getAttachedToObjectId() != null ? in.getAttachedToObjectId() : in.getParentObjectId();
+
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(parentObjectType) && parentObjectId == null)
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
-                String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
+                String obj = getObjectsFromSolr(parentObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
                     JSONObject result = results.getJSONObject(0);
-                    objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
+                    parentObjectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 }
                 else
@@ -103,12 +103,12 @@ public class CreateAdHocTaskService
                 }
             }
 
-            if (objectId != null)
+            if (parentObjectId != null)
             {
-                in.setAttachedToObjectId(objectId);
-                in.setAttachedToObjectType(parentObjectType);
+                in.setAttachedToObjectId(parentObjectId);
                 in.setAttachedToObjectName(attachedToObjectName);
-                in.setParentObjectId(objectId);
+                in.setAttachedToObjectType(parentObjectType);
+                in.setParentObjectId(parentObjectId);
                 in.setParentObjectType(parentObjectType);
                 in.setParentObjectName(attachedToObjectName);
             }
@@ -172,14 +172,14 @@ public class CreateAdHocTaskService
         String authorQuery = "";
         if (userId != null)
         {
-            authorQuery = " AND author_s:" + userId;
+            authorQuery = " AND creator_lcs:" + userId;
         }
 
-        String query = "object_type_s:" + objectType + " AND name:" + objectName + authorQuery + " AND -status_s:DELETE";
+        String query = "object_type_s:" + objectType + " AND name:" + objectName + authorQuery + " AND -status_lcs:DELETE";
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                     sortParams);
 
             log.debug("Objects was retrieved.");

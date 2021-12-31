@@ -110,7 +110,8 @@
 
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
-                    {{ dueDate || 'common.value.unknown' | translate }}
+                    {{ (objectInfo.dueDate | date: ('common.defaultDateTimeUIFormat' |
+                        translate)) || 'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>
             </div>

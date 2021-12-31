@@ -27,16 +27,28 @@ package com.armedia.acm.plugins.category.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.plugins.category.dao.CategoryDao;
 import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Feb 13, 2017
@@ -44,6 +56,7 @@ import java.util.List;
  */
 public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<Category>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private UserDao userDao;
 
@@ -68,76 +81,47 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Category in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for CATEGORY.");
 
-        solr.setId(in.getId() + "-CATEGORY");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("CATEGORY");
-        solr.setTitle_parseable(in.getName());
-        solr.setTitle_parseable_lcs(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDescription());
-        solr.setName(in.getName());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getName());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+       return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(Category in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getName());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDescription());
 
         if (in.getStatus() != null)
         {
-            solr.setStatus_lcs(in.getStatus().name());
+            additionalProperties.put(STATUS_LCS, in.getStatus().name());
         }
 
         if (in.getParent() != null)
         {
-            solr.setParent_id_s(in.getParent().getId().toString());
-            solr.setParent_type_s("CATEGORY");
+            additionalProperties.put(PARENT_ID_S, in.getParent().getId().toString());
+            additionalProperties.put(PARENT_TYPE_S, "CATEGORY");
         }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = userDao.quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", String.format("%s %s", creator.getFirstName(), creator.getLastName()));
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, String.format("%s %s", creator.getFirstName(), creator.getLastName()));
         }
 
         AcmUser modifier = userDao.quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", String.format("%s %s", modifier.getFirstName(), modifier.getLastName()));
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, String.format("%s %s", modifier.getFirstName(), modifier.getLastName()));
         }
-
-        return solr;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#toSolrQuickSearch(java.lang.Object)
-     */
-    @Override
-    public SolrDocument toSolrQuickSearch(Category in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-CATEGORY");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("CATEGORY");
-        solr.setTitle_parseable(in.getName());
-        solr.setTitle_parseable_lcs(in.getName());
-        solr.setDescription_no_html_tags_parseable(in.getDescription());
-        solr.setName(in.getName());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        if (in.getStatus() != null)
-        {
-            solr.setStatus_s(in.getStatus().name());
-        }
-
-        return solr;
     }
 
     /*

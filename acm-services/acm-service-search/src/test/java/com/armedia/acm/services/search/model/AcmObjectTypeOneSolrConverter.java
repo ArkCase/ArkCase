@@ -29,11 +29,11 @@ package com.armedia.acm.services.search.model;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/23/14.
@@ -41,8 +41,6 @@ import java.util.List;
 public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransformer<AcmObjectTypeOne>
 {
     private int handledObjectsCount = 0;
-
-    private int handledQuickSearchCount = 0;
 
     @Override
     public List<AcmObjectTypeOne> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -55,13 +53,6 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     {
         ++handledObjectsCount;
         return new SolrAdvancedSearchDocument();
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmObjectTypeOne in)
-    {
-        ++handledQuickSearchCount;
-        return new SolrDocument();
     }
 
     @Override
@@ -82,14 +73,15 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
         return handledObjectsCount;
     }
 
-    public int getHandledQuickSearchCount()
-    {
-        return handledQuickSearchCount;
-    }
-
     @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmObjectTypeOne.class;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmObjectTypeOne in, Map<String, Object> additionalProperties)
+    {
+
     }
 }

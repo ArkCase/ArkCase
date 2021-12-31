@@ -108,5 +108,33 @@
         <dropColumn tableName="acm_zylab_file_metadata" columnName="cm_end_bates_number"/>
     </changeSet>
 
+    <changeSet id="07-change-cm-zylab-file-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_zylab_file_metadata" columnName="cm_doc_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_zylab_file_metadata" columnName="cm_production_create_date" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="08-add_name_field_to_zylab-file-metadata" author="aleksandar.acevski" dbms="mysql">
+        <addColumn tableName="acm_zylab_file_metadata">
+            <column name="cm_name" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="08-add_name_field_to_zylab-file-metadata" author="aleksandar.acevski"
+               dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_zylab_file_metadata">
+            <column name="cm_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="09-change-character-set-to-filename" author="ivan.tasevski" dbms="mysql">
+        <sql>
+            ALTER TABLE acm_zylab_file_metadata MODIFY COLUMN cm_doc_name VARCHAR(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+        </sql>
+    </changeSet>
+    <changeSet id="10-change-character-set-to-filename" author="bojan.milenkoski" dbms="mysql">
+        <sql>
+            ALTER TABLE acm_zylab_file_metadata MODIFY COLUMN cm_name TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

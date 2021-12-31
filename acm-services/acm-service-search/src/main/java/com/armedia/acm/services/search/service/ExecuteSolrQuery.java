@@ -92,7 +92,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -116,7 +116,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -143,7 +143,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -169,7 +169,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -195,7 +195,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -223,7 +223,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -251,7 +251,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -282,7 +282,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -311,7 +311,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -352,7 +352,7 @@ public class ExecuteSolrQuery
      * @param auth
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -395,7 +395,7 @@ public class ExecuteSolrQuery
      * @param authentication
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow
@@ -435,7 +435,7 @@ public class ExecuteSolrQuery
      * @param authentication
      *            Authenticated user
      * @param core
-     *            SolrCore could be quick or advanced search
+     *            SolrCore could be advanced search, or case file search
      * @param solrQuery
      *            actual query
      * @param firstRow

@@ -44,6 +44,8 @@ angular.module('organizations').controller(
                         return relationshipTypes;
                     });
 
+                    var assocTypeLabel = $translate.instant("organizations.comp.related.type.label");
+
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -117,7 +119,8 @@ angular.module('organizations').controller(
                             types: $scope.relationshipTypes,
                             showDescription: true,
                             externalSearchServiceName: "Organization.SearchService",
-                            externalSearchParams: externalSearchParams
+                            externalSearchParams: externalSearchParams,
+                            assocTypeLabel: assocTypeLabel
                         };
                         if (rowEntity) {
                             angular.extend(params, {

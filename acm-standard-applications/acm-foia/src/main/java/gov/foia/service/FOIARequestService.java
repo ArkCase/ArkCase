@@ -39,11 +39,10 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
@@ -87,6 +86,7 @@ public class FOIARequestService
     private FOIARequestDao foiaRequestDao;
     private CaseFileDao caseFileDao;
     private EcmFileDao ecmFileDao;
+    private AcmFolderService acmFolderService;
     private EcmFileService ecmFileService;
     private NotificationSender notificationSender;
     private String originalRequestFolderNameFormat;
@@ -96,7 +96,6 @@ public class FOIARequestService
     private ExecuteSolrQuery executeSolrQuery;
     private FoiaConfig foiaConfig;
     private ObjectAssociationService objectAssociationService;
-
 
     @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
@@ -172,7 +171,7 @@ public class FOIARequestService
                         in = populateAppealFromOriginalRequest(in, originalRequest);
                         in = createReference(in, originalRequest);
                         saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
-                        copyOriginalRequestFiles(saved, originalRequest, auth);
+                        copyOriginalRequestFiles(saved, originalRequest);
                         createLoopReference(saved, originalRequest);
                     }
                 }
@@ -186,7 +185,7 @@ public class FOIARequestService
             return saved;
         }
         catch (PipelineProcessException | AcmUserActionFailedException | AcmObjectNotFoundException
-                | AcmUpdateObjectFailedException | IOException | AcmListObjectsFailedException e)
+                | AcmUpdateObjectFailedException | IOException | AcmFolderException e)
         {
             throw new AcmCreateObjectFailedException("FOIARequest", e.getMessage(), e);
         }
@@ -308,34 +307,21 @@ public class FOIARequestService
         objectAssociationService.saveObjectAssociation(oa);
     }
 
-    private void copyOriginalRequestFiles(CaseFile saved, CaseFile originalRequest, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmListObjectsFailedException
-    {
+    private void copyOriginalRequestFiles(CaseFile saved, CaseFile originalRequest)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
 
-        AcmContainer container = getEcmFileService().getOrCreateContainer(originalRequest.getObjectType(), originalRequest.getId());
-        AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
+        AcmContainer originalRequestContainer = originalRequest.getContainer();
+        AcmFolder originalRequestRootFolder = originalRequestContainer.getFolder();
 
-        AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(saved.getObjectType(),
-                saved.getId());
+        AcmContainer newRequestContainer = saved.getContainer();
+        AcmFolder newRequestRootFolder = newRequestContainer.getFolder();
 
-        String originalrequestFolderName = String.format(getOriginalRequestFolderNameFormat(),
+        String originalRequestFolderName = String.format(getOriginalRequestFolderNameFormat(),
                 originalRequest.getCaseNumber());
 
-        AcmFolder originalRootFolder = container.getFolder();
-        originalRootFolder.setParentFolder(containerCaseFile.getFolder());
-        originalRootFolder.setName(originalrequestFolderName);
-
-        if (files != null && files.getChildren() != null)
-        {
-            for (AcmCmisObject file : files.getChildren())
-            {
-                EcmFile ecmFile = getEcmFileService().findById(file.getObjectId());
-                ecmFile.setContainer(containerCaseFile);
-
-                getEcmFileDao().save(ecmFile);
-            }
-        }
-
+        acmFolderService.copyFolderAsLink(originalRequestRootFolder, newRequestRootFolder,
+                newRequestContainer.getContainerObjectId(), newRequestContainer.getContainerObjectType(),
+                originalRequestFolderName);
     }
 
     /**
@@ -548,11 +534,23 @@ public class FOIARequestService
         this.foiaConfig = foiaConfig;
     }
 
-    public ObjectAssociationService getObjectAssociationService() {
+    public ObjectAssociationService getObjectAssociationService()
+    {
         return objectAssociationService;
     }
 
-    public void setObjectAssociationService(ObjectAssociationService objectAssociationService) {
+    public void setObjectAssociationService(ObjectAssociationService objectAssociationService)
+    {
         this.objectAssociationService = objectAssociationService;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
     }
 }

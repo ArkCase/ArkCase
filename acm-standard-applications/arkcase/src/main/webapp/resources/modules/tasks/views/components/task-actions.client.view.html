@@ -39,7 +39,7 @@
                 <i class="fa fa-hand-stop-o"></i>
                 <span translate>tasks.comp.actions.reject.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)"
+            <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)" ng-disabled="isClicked"
                     ng-repeat="outcome in objectInfo.availableOutcomes" ng-show="showBtnOutcomes">
                 {{outcome.description | translateData: 'core.lookups.taskOutcomes' : lang}}
             </button>

@@ -88,6 +88,32 @@ angular.module('services').factory(
                         }
                     };
 
+                    /**
+                     * @ngdoc method
+                     * @name filterRestricted
+                     * @methodOf services:Helper.UiGridService
+                     *
+                     * @param {Object} solrObjects Fetched objects from SOLR
+                     * @param {Object} objectAssociations Persons, Organizations from the associated object (CASE_FILE, CONSULTATION ect.)
+                     *
+                     * @description
+                     * Filter the restricted persons and organizations
+                     */
+                    Service.filterRestricted = function (solrObjects, objectAssociations) {
+                        var gridObjects = [];
+                        _.filter(objectAssociations, function(objectAssoc) {
+                            _.forEach(solrObjects, function(solrObject) {
+                                if (objectAssoc.person && objectAssoc.person.id == solrObject.object_id_s) {
+                                    gridObjects.push(objectAssoc);
+                                }
+                                if (objectAssoc.organization && objectAssoc.organization.organizationId == solrObject.object_id_s) {
+                                    gridObjects.push(objectAssoc);
+                                }
+                            });
+                        });
+                        return gridObjects;
+                    };
+
                     Service.Grid.prototype = {
 
                         /**

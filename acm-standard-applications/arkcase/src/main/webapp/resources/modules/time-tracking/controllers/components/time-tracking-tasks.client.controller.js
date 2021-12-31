@@ -42,7 +42,7 @@ angular.module('time-tracking').controller(
 
                         //default (init) sorting of tasks grid
                         $scope.sort = {
-                            by: "create_tdt",
+                            by: "create_date_tdt",
                             dir: "desc"
                         };
                         
@@ -62,8 +62,8 @@ angular.module('time-tracking').controller(
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
                                     //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
-                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
-                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.dueDate_tdt)) && !(task.status_lcs === "CLOSED");
+                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.dueDate_tdt)) && !(task.status_lcs === "CLOSED");
                                 });
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;
@@ -102,7 +102,7 @@ angular.module('time-tracking').controller(
                     });
 
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
+                        return ((Util.isEmpty(rowEntity.assignee_id_lcs) || (rowEntity.assignee_id_lcs !== $scope.userId)) || (rowEntity.status_lcs === "CLOSED") || (!rowEntity.adhocTask_b));
                     };
                     $scope.deleteRow = function(rowEntity) {
                         var timesheetInfo = Util.omitNg($scope.objectInfo);

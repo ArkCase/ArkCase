@@ -97,6 +97,7 @@ public class FOIAEcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile
             {
                 EcmTikaFile etf = pipelineContext.getDetectedFileMetadata();
                 etf.stampVersionInfo(version);
+                version.setValidFile(etf.isValidFile());
             }
 
             entity.getVersions().add(version);

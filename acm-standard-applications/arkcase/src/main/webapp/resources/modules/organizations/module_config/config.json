@@ -3,6 +3,7 @@
     "title": "Organizations",
     "configurable": true,
     "initialLinksShown": true,
+    "identificationClassName": "com.armedia.acm.plugins.person.model.Identification",
     "menus": [
         {
             "menuId": "leftnav",
@@ -32,23 +33,23 @@
             {
                 "desc": "organizations.tree.filters.iHaveCreated",
                 "name": "my-created",
-                "value": "fq=author_s:${user}"
+                "value": "fq=creator_lcs:${user}"
             },
             {
                 "desc": "organizations.tree.filters.iHaveCreatedActive",
                 "name": "my-created-active",
-                "value": "fq=author_s:${user} AND status_s:ACTIVE"
+                "value": "fq=creator_lcs:${user} AND status_lcs:ACTIVE"
             },
             {
                 "desc": "organizations.tree.filters.active",
                 "name": "active",
-                "value": "status_s:ACTIVE",
+                "value": "status_lcs:ACTIVE",
                 "default": true
             },
             {
                 "desc": "organizations.tree.filters.inActive",
                 "name": "in-active",
-                "value": "status_s:INACTIVE"
+                "value": "status_lcs:INACTIVE"
             },
             {
                 "desc": "organizations.tree.filters.noFilter",
@@ -412,13 +413,13 @@
                             "name": "subType",
                             "displayName": "organizations.comp.urls.table.columns.type",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
                         },
                         {
                             "name": "value",
                             "displayName": "organizations.comp.urls.table.columns.value",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
                         },
                         {
                             "name": "modifier",
@@ -430,7 +431,7 @@
                         {
                             "name": "modified",
                             "displayName": "organizations.comp.urls.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "width": 150
                         }
@@ -993,7 +994,7 @@
                     "name": "value",
                     "displayName": "organizations.comp.urls.table.columns.value",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
                 },
                 {
                     "name": "description",
@@ -1176,32 +1177,32 @@
                     "name": "person.givenName",
                     "displayName": "organizations.comp.people.table.columns.firstName",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a class='primary' data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary </span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a class='primary' data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary </span></div>"
                 },
                 {
                     "name": "person.familyName",
                     "displayName": "organizations.comp.people.table.columns.lastName",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a></div>"
                 },
                 {
                     "name": "person.personToOrganizationAssociationType",
                     "field": "person.personToOrganizationAssociationType",
                     "displayName": "organizations.comp.related.table.columns.associationType",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{ grid.appScope.utils.getLookupValue(grid.appScope.personAssociationTypes, row.entity.personToOrganizationAssociationType) | translate}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personAssociationTypes, row.entity.personToOrganizationAssociationType) | translate}}</div>"
                 },
                 {
                     "name": "phone",
                     "displayName": "organizations.comp.people.table.columns.phone",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.type + ']' : ''}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.type + ']' : ''}}</div>"
                 },
                 {
                     "name": "location",
                     "displayName": "organizations.comp.people.table.columns.location",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{row.entity.person.defaultAddress ? (row.entity.person.defaultAddress.city + ', ' + row.entity.person.defaultAddress.state) : ''}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? (row.entity.person.defaultAddress.city + ', ' + row.entity.person.defaultAddress.state) : ''}}</div>"
                 }
             ]
         },

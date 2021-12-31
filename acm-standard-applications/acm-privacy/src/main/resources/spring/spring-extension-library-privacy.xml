@@ -301,17 +301,17 @@
             <beans:property name="sortParameterNameToCmisFieldName">
                 <map>
                     <entry key="name" value="name_lcs"/>
-                    <entry key="type" value="type_s"/>
-                    <entry key="created" value="create_tdt"/>
+                    <entry key="type" value="type_lcs"/>
+                    <entry key="created" value="create_date_tdt"/>
                     <entry key="author" value="author"/>
                     <entry key="version" value="version_s"/>
-                    <entry key="modified" value="last_modified_tdt"/>
-                    <entry key="creator" value="author"/>
-                    <entry key="modifier" value="modifier_s"/>
+                    <entry key="modified" value="modified_date_tdt"/>
+                    <entry key="creator" value="creator_lcs"/>
+                    <entry key="modifier" value="modifier_lcs"/>
                     <entry key="category" value="category_s"/>
                     <entry key="redactionStatus" value="redaction_status_s"/>
                     <entry key="reviewStatus" value="review_status_s"/>
-                    <entry key="status" value="status_s"/>
+                    <entry key="status" value="status_lcs"/>
                     <entry key="public" value="public_flag_b"/>
                 </map>
             </beans:property>
@@ -347,6 +347,22 @@
         <beans:bean id="assignmentNotifier" class="gov.privacy.listener.SARAssignmentNotifier">
             <beans:property name="notificationService" ref="notificationService"/>
             <beans:property name="templateManager" ref="correspondenceTemplateManager"/>
+        </beans:bean>
+
+        <beans:bean id="foiaExtensionDataUpdateExecutor"
+                    class="gov.privacy.service.dataupdate.PrivacyExtensionDataUpdateExecutor">
+            <beans:property name="privacyDataUpdateExecutors">
+                <beans:list>
+                    <beans:ref bean="createPrivacyAlfrescoAndRmFoldersExecutor"/>
+                </beans:list>
+            </beans:property>
+
+        </beans:bean>
+
+        <beans:bean id="createPrivacyAlfrescoAndRmFoldersExecutor" class="gov.privacy.service.dataupdate.CreatePrivacyAlfrescoAndRmFoldersExecutor">
+            <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
+            <beans:property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         </beans:bean>
 
 

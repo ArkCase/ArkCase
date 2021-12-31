@@ -1,0 +1,35 @@
+<div class="modal-container">
+    <div class="modal-header text-center">
+        <h3 translate>progress-bar.modal.versioning</h3>
+        <h3 ng-show="timeout" translate>progress-bar.modal.timeout</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row" style="padding-top: 20px" ng-repeat="versionedFile in versionedFiles">
+            <div class="col-sm-12">
+                <div class="progress">
+                    <div ng-class="{'progress-bar' : versionedFile.success, 'progress-bar-danger' : !versionedFile.success}"
+                         role="progressbar"
+                         aria-valuenow="{{ versionedFile.currentProgress }}" aria-valuemin="0" aria-valuemax="100"
+                         ng-style="{width: versionedFile.currentProgress + '%'}">
+                        {{versionedFile.currentProgress + ' %'}}
+                    </div>
+                </div>
+                <span translate>progress-bar.modal.processing</span>
+                <span>{{versionedFile.fileName}}</span>
+                <div style="float: right">
+                    <span ng-show="versionedFile.currentProgress >= 100" translate>progress-bar.modal.complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="openNewVersionOfFile()"
+                ng-show="allFilesCompleted >= versionedFiles.length"
+        ><span translate>progress-bar.modal.openNewVersion</span>
+        </button>
+        <button class="btn btn-primary" ng-click="onClickHideModal()">
+            <span translate><progress-bar></progress-bar>progress-bar.modal.hide</span>
+        </button>
+
+    </div>
+</div>

@@ -35,6 +35,8 @@ import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +60,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
@@ -79,6 +82,7 @@ public class PortalRequestAPIController
     private PortalRequestService portalRequestService;
     private PersonService personService;
     private ResponseInstallmentDao responseInstallmentDao;
+    private TranslationService translationService;
 
     @RequestMapping(value = "/external/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -179,9 +183,22 @@ public class PortalRequestAPIController
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        throw new Exception("You cannot download the installment because of 15 days expiry or limited download attempts. Please contact your administrator.");
+        throw new Exception(translationService.translate(NotificationConstants.PORTAL_RESPONSE_EXPIRY));
     }
 
+
+    @RequestMapping(value = "/external/anonymous/status/{portalRequestTrackingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity getExternalAnonymousRequests(@PathVariable("portalRequestTrackingId") String portalRequestTrackingId)
+    {
+        try {
+            return ResponseEntity.ok(getPortalRequestService().getExternalAnonymousRequests(portalRequestTrackingId));
+        } catch (NoResultException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "FOIA Requests not found for the request tracking id  [" + portalRequestTrackingId + "]"
+            );
+        }
+    }
     /**
      * @return the portalRequestService
      */
@@ -217,5 +234,15 @@ public class PortalRequestAPIController
     public void setResponseInstallmentDao(ResponseInstallmentDao responseInstallmentDao)
     {
         this.responseInstallmentDao = responseInstallmentDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

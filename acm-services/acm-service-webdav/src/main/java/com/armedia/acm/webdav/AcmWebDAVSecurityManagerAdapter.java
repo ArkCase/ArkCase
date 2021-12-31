@@ -27,9 +27,19 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
+import org.springframework.security.core.Authentication;
+
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.api.MDCConstants;
+
 import io.milton.http.Auth;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
@@ -37,12 +47,6 @@ import io.milton.http.SecurityManager;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.slf4j.MDC;
-import org.springframework.security.core.Authentication;
-
-import java.util.UUID;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -74,45 +78,46 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     public boolean authorise(Request request, Method method, Auth auth, Resource resource)
     {
         LOG.debug("authorize called for request {}", request.getAbsoluteUrl());
-        String url = request.getAbsoluteUrl();
-        if (url.contains("webdav") && url.contains("FILE"))
+        try
         {
-            int webdavIdx = url.indexOf("webdav");
-            int fileIdx = url.indexOf("FILE");
-            String ticket = url.substring(webdavIdx + 7, fileIdx - 1);
-            LOG.debug("ticket: {}", ticket);
-            try
+            String url = URLDecoder.decode(request.getAbsoluteUrl(), "UTF-8");
+            if (url.contains("webdav"))
             {
-                Authentication arkcaseAuth = getAuthenticationForTicket(ticket);
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, arkcaseAuth.getName());
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-                if (arkcaseAuth.getDetails() != null && arkcaseAuth.getDetails() instanceof AcmAuthenticationDetails)
+                String cookieValue = request.getCookie("arkcase-login").getValue();
+                Authentication arkcaseAuth = getAuthenticationTokenService().getWebDAVAuthentication(cookieValue);
+                if (arkcaseAuth != null)
                 {
-                    AcmAuthenticationDetails acmAuthenticationDetails = (AcmAuthenticationDetails) arkcaseAuth.getDetails();
-                    String cmisUserId = acmAuthenticationDetails.getCmisUserId();
-                    LOG.debug("got CMIS user id from auth: {}", cmisUserId);
-                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUserId);
-
-                } else {
-                    // TODO temporary logging solution for future investigation
-                    if (arkcaseAuth.getDetails() == null) {
-                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails() = null");
-                    } else {
-                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails() class = {}", arkcaseAuth.getDetails().getClass().getName());
-                        LOG.warn("Failed to authorize, arkcaseAuth.getDetails(): {}", arkcaseAuth.getDetails().toString());
-                    }
+                    LOG.debug("Authentication {} is retrieved from cache with cookie name arkcase-login and value {}",
+                            arkcaseAuth.getName(), cookieValue);
                 }
-                return true;
-            }
-            catch (IllegalArgumentException e)
-            {
-                LOG.debug("no auth for ticket {}", ticket);
-                return false;
-            }
-        }
+                try
+                {
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, arkcaseAuth.getName());
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+                    if (arkcaseAuth.getDetails() != null && arkcaseAuth.getDetails() instanceof AcmAuthenticationDetails)
+                    {
+                        AcmAuthenticationDetails acmAuthenticationDetails = (AcmAuthenticationDetails) arkcaseAuth.getDetails();
+                        String cmisUserId = acmAuthenticationDetails.getCmisUserId();
+                        LOG.debug("got CMIS user id from auth: {}", cmisUserId);
+                        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUserId);
 
-        LOG.debug("not a file URL: {}", url);
-        return true;
+                    }
+                    return true;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    LOG.debug("no auth for ticket {}", arkcaseAuth.getPrincipal());
+                    return false;
+                }
+            }
+            LOG.debug("not a file URL: {}", url);
+            return true;
+        }
+        catch (UnsupportedEncodingException exception)
+        {
+            LOG.error("Unsupported Encoding Supported. Reason {}", exception);
+            return true;
+        }
     }
 
     @Override
@@ -130,13 +135,17 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     @Override
     public Authentication getAuthenticationForTicket(String acmTicket)
     {
-        return getAuthenticationTokenService().getAuthenticationForToken(acmTicket);
+        LOG.debug("Retrieving WEBDAV Authentication for ticket [{}]", acmTicket);
+        Authentication auth = getAuthenticationTokenService().getWebDAVAuthentication(acmTicket);
+        LOG.debug("Cache returned [{}]", auth);
+        return auth;
     }
 
     @Override
     public void removeAuthenticationForTicket(String acmTicket)
     {
         LOG.debug("We are called for ticket {}", acmTicket);
+        // getAuthenticationTokenService().removeAuthenticationToken(acmTicket);
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()

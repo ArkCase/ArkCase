@@ -28,15 +28,11 @@ package com.armedia.acm.auth;
  */
 
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -55,12 +51,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
@@ -104,11 +97,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         case AUTH_REQUEST_TYPE_TOKEN:
             tokenAuthentication(request, response);
             break;
-        case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
-            emailTokenAuthentication(request);
-            break;
-        case AUTH_REQUEST_TYPE_TOUCHNET_TOKEN:
-            touchnetTokenAuthentication(request);
+        case AUTH_REQUEST_TYPE_WOPI_TOKEN:
+            wopiTokenAuthentication(request);
             break;
         case AUTH_REQUEST_TYPE_CLIENT_CERT:
             certificateAuthentication(request);
@@ -179,63 +169,34 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      * @throws ServletException
      *             on error
      */
-    private void emailTokenAuthentication(HttpServletRequest request) throws ServletException
+    private void wopiTokenAuthentication(HttpServletRequest request) throws ServletException
     {
-        String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
-        if (emailToken != null)
+        String wopiToken = ServletRequestUtils.getStringParameter(request, "acm_wopi_ticket");
+        if (wopiToken != null)
         {
-            authenticate(request,emailToken);
+            authenticate(request, wopiToken);
         }
     }
-
-    private void touchnetTokenAuthentication(HttpServletRequest request) throws ServletException
-    {
-        String touchnetToken = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
-        if (touchnetToken != null)
-        {
-            authenticate(request, touchnetToken);
-        }
-    }
-
 
     private void authenticate(HttpServletRequest request, String token) throws ServletRequestBindingException
     {
+
         AuthenticationToken authenticationToken = authenticationTokenService.findByKey(token);
-        if (authenticationToken != null)
+
+        if (authenticationTokenService.validateToken(request, token))
         {
-            if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
+            try
             {
-                String requestUrl = request.getRequestURL() + "?" + request.getQueryString();
-                if (token.equals(authenticationToken.getKey())
-                        && Arrays.asList(authenticationToken.getRelativePath().split("__comma__")).contains(requestUrl))
-                {
-                    log.trace("Starting token authentication for email links using acm_email_ticket [{}]", token);
-                    // token expires after 3 days, configured in arkcase.yaml (tokenExpiration)
-                    if (authenticationToken.getCreated().getTime() + authenticationToken.getTokenExpiry() < new Date().getTime())
-                    {
-                        authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
-                        authenticationToken.setModifier(authenticationToken.getCreator());
-                        authenticationToken.setModified(new Date());
-                        authenticationTokenService.saveAuthenticationToken(authenticationToken);
-                        log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", token,
-                                authenticationToken.getCreator());
-                        return;
-                    }
-                    try
-                    {
-                        authenticateUser(request, authenticationToken.getCreator());
-                        log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
-                                authenticationToken.getCreator(), token);
-                    }
-                    catch (AuthenticationServiceException e)
-                    {
-                        log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
-                                token);
-                    }
-                }
+                authenticateUser(request, authenticationToken.getCreator());
+                log.trace("User [{}] successfully authenticated using acm_wopi_ticket [{}]",
+                        authenticationToken.getCreator(), token);
+            }
+            catch (AuthenticationServiceException e)
+            {
+                log.warn("User [{}] failed authenticating using acm_wopi_ticket [{}]", authenticationToken.getCreator(),
+                        token);
             }
         }
-
     }
 
     /**
@@ -351,15 +312,10 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             log.trace("Token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
         }
-        else if (request.getParameter("acm_email_ticket") != null)
+        else if (request.getParameter("acm_wopi_ticket") != null)
         {
-            log.trace("Email token authentication requested");
-            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_EMAIL_TOKEN;
-        }
-        else if (request.getParameter("EXT_TRANS_ID") != null)
-        {
-            log.trace("Touchnet token authentication requested");
-            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOUCHNET_TOKEN;
+            log.trace("Wopi token authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_WOPI_TOKEN;
         }
         else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
         {
@@ -422,8 +378,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private enum AuthRequestType
     {
         AUTH_REQUEST_TYPE_TOKEN,
-        AUTH_REQUEST_TYPE_EMAIL_TOKEN,
-        AUTH_REQUEST_TYPE_TOUCHNET_TOKEN,
+        AUTH_REQUEST_TYPE_WOPI_TOKEN,
         AUTH_REQUEST_TYPE_CLIENT_CERT,
         AUTH_REQUEST_TYPE_BASIC,
         AUTH_REQUEST_TYPE_OTHER

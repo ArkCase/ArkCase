@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.complaint.model.ComplaintConfig;
 import com.armedia.acm.plugins.complaint.model.closeModal.CloseComplaintEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
@@ -36,6 +37,7 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
@@ -51,7 +53,9 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private String closeComplaintTaskName;
     private TaskDao taskDao;
+    private CloseComplaintRequestService closeComplaintRequestService;
     private PDFCloseComplaintDocumentGenerator pdfCloseComplaintDocumentGenerator;
+
 
     @Override
     public void onApplicationEvent(CloseComplaintEvent closeComplaintEvent)
@@ -82,10 +86,25 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         }
         log.debug("start process? [{}]", configuration.isStartProcess());
 
-        if (configuration.isStartProcess())
-        {
-            startBusinessProcess(closeComplaintEvent, configuration);
+        if("IN APPROVAL".equals(closeComplaintEvent.getRequest().getStatus()) && configuration.isStartProcess()) {
+
+                startBusinessProcess(closeComplaintEvent, configuration);
+
         }
+        else if ("CLOSED".equals(closeComplaintEvent.getRequest().getStatus())) {
+            try
+            {
+                getCloseComplaintRequestService().handleCloseComplaintRequestApproved(closeComplaintEvent.getComplaintId(),
+                        closeComplaintEvent.getObjectId(), closeComplaintEvent.getUserId(),
+                        closeComplaintEvent.getEventDate(), closeComplaintEvent.getIpAddress());
+            }
+            catch (PipelineProcessException e) {
+
+                throw new RuntimeException("Error caused while closing complaint", e);
+            }
+        }
+
+
     }
 
     private void startBusinessProcess(CloseComplaintEvent closeComplaintEvent, EcmFileWorkflowConfiguration configuration)
@@ -203,4 +222,13 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     {
         this.pdfCloseComplaintDocumentGenerator = pdfCloseComplaintDocumentGenerator;
     }
+
+    public CloseComplaintRequestService getCloseComplaintRequestService() {
+        return closeComplaintRequestService;
+    }
+
+    public void setCloseComplaintRequestService(CloseComplaintRequestService closeComplaintRequestService) {
+        this.closeComplaintRequestService = closeComplaintRequestService;
+    }
+
 }

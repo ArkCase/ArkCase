@@ -50,6 +50,8 @@ angular.module('people').controller(
                         }
                     });
 
+                    var assocTypeLabel = $translate.instant("people.comp.organizations.type.label");
+
                     var validateOrganizationAssociation = function(data, rowEntity) {
                         var validationResult = {
                             valid: true
@@ -59,7 +61,7 @@ angular.module('people').controller(
                             return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
                         }).forEach(function(association) {
                             if (association.organization.organizationId == data.organizationId) {
-                                if (data.type === association.personToOrganizationAssociationType) {
+                                if (data.inverseType === association.personToOrganizationAssociationType) {
                                     validationResult.valid = false;
                                     validationResult.duplicateOrganizationRoleError = true;
                                 }
@@ -170,7 +172,8 @@ angular.module('people').controller(
                             isDefault: false,
                             types: $scope.organizationTypes,
                             returnValueValidationFunction: validateOrganizationAssociation,
-                            isFirstOrganization: $scope.isFirstOrganization
+                            isFirstOrganization: $scope.isFirstOrganization,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         var modalInstance = $modal.open({

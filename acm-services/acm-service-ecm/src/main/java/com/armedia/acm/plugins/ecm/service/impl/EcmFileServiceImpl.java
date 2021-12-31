@@ -31,6 +31,7 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -53,6 +54,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -81,11 +83,12 @@ import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileUtils;
@@ -95,6 +98,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.owasp.encoder.Encode;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -109,15 +113,16 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -412,10 +417,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         log.info("The user '{}' is updating file: '{}'", authentication.getName(), ecmFile.getFileName());
 
         EcmFileUpdatedEvent event = null;
-
+        File tempFile = null;
         try
         {
-            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, inputStream);
+            tempFile = File.createTempFile("arkcase-update-file-transaction", null);
+            FileUtils.copyInputStreamToFile(inputStream, tempFile);
+
+            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, tempFile, null);
 
             event = new EcmFileUpdatedEvent(updated, authentication);
 
@@ -424,11 +432,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return updated;
         }
-        catch (IOException e)
+        catch (IOException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not update file: {} ", e.getMessage(), e);
             throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);
         }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFile);
+        }
+
     }
 
     @Override
@@ -677,7 +690,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // This method is to search for all files that belong to a container, no matter where they are in the
         // folder hierarchy.
         String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:"
-                + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
+                + container.getContainerObjectId() + " AND parent_type_s:" + container.getContainerObjectType();
 
         String filterQuery = "fq=object_type_s:FILE";
 
@@ -840,7 +853,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         // only files and folders will have a "folder_id_i" attribute with a value that matches a container
         // folder id
         String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:"
-                + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
+                + container.getContainerObjectId() + " AND parent_type_s:" + container.getContainerObjectType();
 
         String filterQuery = category == null ? "fq=hidden_b:false"
                 : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
@@ -857,7 +870,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
 
-        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
+        String query = String.format("(object_type_s:FILE AND parent_type_s:%s AND parent_id_s:%s) OR "
                 + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
                 container.getContainerObjectType(), container.getContainerObjectId(), container.getContainerObjectType(),
                 container.getContainerObjectId());
@@ -872,7 +885,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = String.format("object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s",
+        String query = String.format("object_type_s:FILE AND parent_type_s:%s AND parent_id_s:%s",
                 container.getContainerObjectType(), container.getContainerObjectId());
         String fq = searchFilter.equals("") ? "hidden_b:false" : String.format("fq=(%s) AND hidden_b:false", searchFilter);
 
@@ -885,7 +898,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
             int startRow, int maxRows, String category) throws AcmListObjectsFailedException
     {
-        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
+        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_type_s:"
                 + container.getContainerObjectType();
 
         String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:"
@@ -967,7 +980,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
 
-            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParam,
+            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sortParam,
                     filterQuery);
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
@@ -1200,6 +1213,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
         }
 
+        if (file.getStatus().equals(EcmFileConstants.RECORD)){
+            return copyRecord(file.getId(), targetFolder.getId(), targetContainer.getContainerObjectType(),
+                    targetContainer.getContainerObjectId(), SecurityContextHolder.getContext().getAuthentication());
+        }
+
         if (targetFolder.isLink())
         {
             targetFolder = getFolderLinkTarget(targetFolder);
@@ -1208,7 +1226,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(PropertyIds.NAME, internalFileName);
+        props.put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(internalFileName, 'X'));
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
@@ -1478,7 +1496,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             do
             {
-                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                         SearchConstants.PROPERTY_OBJECT_ID_S + " DESC");
                 docs = getSearchResults().getDocuments(results);
 
@@ -2087,7 +2105,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
-        props.put(ArkCaseCMISConstants.NEW_FILE_NAME, uniqueIdentificator);
+        props.put(ArkCaseCMISConstants.NEW_FILE_NAME, FileCamelUtils.replaceSurrogateCharacters(uniqueIdentificator, 'X'));
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
@@ -2617,6 +2635,140 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         List<EcmFile> files = getEcmFileDao().findByFolderId(folderId);
 
         return files;
+    }
+
+    @Override
+    public void download(HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
+            throws IOException, ArkCaseFileRepositoryException, AcmObjectNotFoundException
+    {
+
+        String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(ecmFile, version);
+
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisFileId);
+
+        Object result = getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+        if (result instanceof ContentStream)
+        {
+            handleFilePayload((ContentStream) result, response, isInline, ecmFile, version);
+        }
+        else
+        {
+            fileNotFound(ecmFile.getId());
+        }
+
+    }
+
+    // called for normal processing - file was found
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile,
+                                   String version) throws IOException
+    {
+        String mimeType = filePayload.getMimeType();
+
+        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, version);
+        // OpenCMIS thinks this is an application/octet-stream since the file has no extension
+        // we will use what Tika detected in such cases
+        if (ecmFileVersion != null)
+        {
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFileVersion.getVersionMimeType())))
+            {
+                mimeType = ecmFileVersion.getVersionMimeType();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFile.getFileActiveVersionMimeType())))
+            {
+                mimeType = ecmFile.getFileActiveVersionMimeType();
+            }
+        }
+
+        String fileName = ecmFile.getFileName();
+        // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
+        // extension... so the extension can be null. So we have to guard against it.
+        if (ecmFileVersion != null)
+        {
+            if (ecmFile != null && ecmFileVersion.getVersionFileNameExtension() != null
+                    && !fileName.endsWith(ecmFileVersion.getVersionFileNameExtension()))
+            {
+                fileName = fileName + ecmFileVersion.getVersionFileNameExtension();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
+                    && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+            {
+                fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+            }
+        }
+
+        InputStream fileIs = null;
+
+        try
+        {
+            fileIs = filePayload.getStream();
+            if (!isInline)
+            {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileName,"UTF-8") + "\"");
+                // add file metadata so it can be displayed in Snowbound
+                JSONObject fileMetadata = new JSONObject();
+                fileMetadata.put("fileName", ecmFile.getFileName());
+                fileMetadata.put("fileType", ecmFile.getFileType());
+                String versionTag = (version == null || version.equals("")) ? ecmFile.getActiveVersionTag() : version;
+                fileMetadata.put("fileNameWithVersion", String.format("%s:%s", ecmFile.getFileName(), versionTag));
+                fileMetadata.put("fileTypeCapitalized",
+                        ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));
+                response.setHeader("X-ArkCase-File-Metadata", fileMetadata.toString());
+            }
+            response.setContentType(Encode.forJava(mimeType));
+            byte[] buffer = new byte[1024];
+            int read;
+            do
+            {
+                read = fileIs.read(buffer, 0, buffer.length);
+                if (read > 0)
+                {
+                    response.getOutputStream().write(buffer, 0, read);
+                }
+            } while (read > 0);
+            response.getOutputStream().flush();
+        }
+        finally
+        {
+            if (fileIs != null)
+            {
+                try
+                {
+                    fileIs.close();
+                }
+                catch (IOException e)
+                {
+                    log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void fileNotFound(Long fileId) throws AcmObjectNotFoundException
+    {
+        throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, String.format("File %d not found", fileId), null);
+    }
+
+    @Override
+    public void publishEcmFileDownloadedEvent(String ipAddress, EcmFile ecmFile, Authentication auth)
+    {
+        EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(ecmFile);
+
+        String userId = auth != null ? auth.getName() : "EMAIL_USER";
+        event.setUserId(userId);
+        event.setSucceeded(true);
+
+        getApplicationEventPublisher().publishEvent(event);
     }
 
     private AcmFolder getFolderLinkTarget(AcmFolder folderLink)

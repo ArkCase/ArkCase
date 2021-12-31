@@ -58,6 +58,9 @@ angular.module('tasks').controller(
                             $scope.treeConfig.fileTypes = data[1];
                             $scope.treeConfig.fileLanguages = data[2];
                             $scope.treeConfig.correspondenceForms = data[3];
+                            if (!Util.isEmpty($scope.treeControl)) {
+                                $scope.treeControl.refreshTree();
+                            }
                         });
                     };
 

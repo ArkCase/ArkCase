@@ -27,16 +27,24 @@ package com.armedia.acm.services.tag.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bojan.mickoski on 19.02.2016.
@@ -44,6 +52,7 @@ import java.util.List;
 
 public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTag>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private TagDao tagDao;
     private UserDao userDao;
@@ -57,60 +66,36 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTag in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for TAG.");
 
-        solr.setId(in.getId() + "-" + in.getObjectType());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getTagName());
 
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setTitle_parseable(in.getTagText());
-        solr.setDescription_parseable(in.getTagDescription());
-        solr.setName(in.getTagName());
+        return solrDoc;
+    }
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-
-        solr.setAdditionalProperty("tags_s", in.getTagName());
+    @Override
+    public void mapAdditionalProperties(AcmTag in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getTagText());
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getTagDescription());
+        additionalProperties.put("tags_s", in.getTagName());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmTag in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setModifier_s(in.getModifier());
-        solr.setTitle_parseable(in.getTagText());
-        solr.setDescription_parseable(in.getTagDescription());
-
-        solr.setAdditionalProperty("tags_s", in.getTagName());
-
-        return solr;
     }
 
     @Override

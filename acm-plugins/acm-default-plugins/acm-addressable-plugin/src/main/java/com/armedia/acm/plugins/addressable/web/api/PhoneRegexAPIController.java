@@ -35,7 +35,7 @@ import com.armedia.acm.plugins.addressable.service.PhoneRegexConfig;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/api/latest/plugin")
+@RequestMapping({ "/api/v1/plugin", "/api/latest/plugin" })
 public class PhoneRegexAPIController
 {
 

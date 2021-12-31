@@ -71,7 +71,7 @@ public class DueDateReminder
         List<SubjectAccessRequest> subjectAccessRequests = SARDao.findAllNotReleasedRequests();
         for (SubjectAccessRequest request : subjectAccessRequests)
         {
-            if (request.getDueDate() != null)
+            if (!request.getQueue().toString().equals("Hold") && request.getDueDate() != null)
             {
                 int daysDiffOneDay = Days.daysBetween(new DateTime(oneDayFromNow.getTime()), new DateTime(request.getDueDate().getTime()))
                         .getDays();

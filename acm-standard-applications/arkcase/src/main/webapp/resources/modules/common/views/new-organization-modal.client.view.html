@@ -69,10 +69,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newOrganization.identification.identificationYearIssued</label>
-                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued"
-                                        property="organization.defaultIdentification.identificationYearIssued"
-                                        date-picker-id="organization.defaultIdentification.identificationYearIssued"
-                                        time-format-disabled="true"></date-time-picker>
+                                <date-time-picker data="organization.defaultIdentification.identificationYearIssued" no-default-date="true"
+                                                  is-readonly="!organization.defaultIdentification.identificationNumber" disable="!organization.defaultIdentification.identificationNumber"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -118,10 +116,8 @@
                                     <div>
                                         <label translate>
                                             common.newOrganization.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"
-                                                property="identification.identificationYearIssued"
-                                                date-picker-id="identification.identificationYearIssued"
-                                                time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker data="identification.identificationYearIssued" is-readonly="!identification.identificationNumber"
+                                                          disable="!identification.identificationNumber" no-default-date="true"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
@@ -243,8 +239,11 @@
                                 ng-if="organization.defaultAddress.country == 'US' || organization.defaultAddress.country == 'CA' || organization.defaultAddress.country == 'JP'">
                             <label translate>
                                 common.newOrganization.locations.state</label>
-                            <input type="text" ng-model="organization.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'common.newOrganization.locations.state.placeholder' | translate }}">
+                            <select id="txtState" class="form-control" ng-model="organization.defaultAddress.state">
+                                <option ng-repeat="option in states" value="{{option.key}}">
+                                    {{option.value | translate}}
+                                </option>
+                            </select>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="organization.defaultAddress.country != 'US' && organization.defaultAddress.country != 'CA' && organization.defaultAddress.country != 'JP'">
@@ -371,7 +370,7 @@
                                     {{'common.newOrganization.communicationAccounts.' + caType |
                                     translate}} </label>
                                 <span ng-show="organization['default'+capitalizeFirstLetter(caType)].value" class="required-asterisk">*</span>
-                                <input type="text" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
+                                <input type="{{caType}}" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'common.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}"
                                         ng-blur="validateInput(caType)">

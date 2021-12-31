@@ -27,11 +27,13 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CMIS_VERSION_SERIES_ID_S;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
@@ -165,7 +167,7 @@ public class ContentFileToSolrFlowIT
         messageProperties.put(ArkCaseCMISConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         messageProperties.put("versioningState", "MAJOR");
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
-        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(ecmFile.getFileName(), 'X'));
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
 
         Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
@@ -179,7 +181,7 @@ public class ContentFileToSolrFlowIT
         log.debug("doc id: {}", newDocument.getVersionSeriesId());
 
         SolrContentDocument solrContentDocument = new SolrContentDocument();
-        solrContentDocument.setCmis_version_series_id_s(newDocument.getVersionSeriesId());
+        solrContentDocument.setAdditionalProperty(CMIS_VERSION_SERIES_ID_S, newDocument.getVersionSeriesId());
         solrContentDocument.setAdditionalProperty("cmis_repository_id_s", ArkCaseCMISConstants.DEFAULT_CMIS_REPOSITORY_ID);
         solrContentDocument.setName("/spring/spring-library-add-file-camel" + System.currentTimeMillis() + ".xml");
 

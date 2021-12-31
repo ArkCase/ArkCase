@@ -162,6 +162,7 @@ public interface NotificationConstants
     String CALENDAR_EVENT_ADDED = "notifications.calendar.event.added";
     String NOTE_ADDED = "notifications.note.added";
     String STATUS_COMPREHEND_MEDICAL = "notifications.status.comprehendMedical";
+    String PORTAL_RESPONSE_EXPIRY = "notifications.response.expiry";
 
     /**
      * Notification type AUTOMATED

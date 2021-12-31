@@ -27,12 +27,17 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -45,12 +50,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
-
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -84,7 +89,7 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
     /**
      * Formatter for formatting dates.
      */
-    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("MM-dd-yy hh:mm a");
 
     private static final String OBJECT_TYPE_CASE_FILE = "CASE_FILE";
 
@@ -177,22 +182,25 @@ public class SearchResultsPDFReportGenerator extends ReportGenerator
                 addElement(document, resultElement, "name", nameValue, true);
             }
 
-            if(data.has("title_parseable")){
-                String titleValue = data.getString("title_parseable");
+            if (data.has(TITLE_PARSEABLE))
+            {
+                String titleValue = data.getString(TITLE_PARSEABLE);
 
                 addElement(document, resultElement, "title", titleValue, true);
             }
 
-            if(data.has("parent_number_lcs")){
-                String parentValue = data.getString("parent_number_lcs");
+            if (data.has(PARENT_NUMBER_LCS))
+            {
+                String parentValue = data.getString(PARENT_NUMBER_LCS);
                 if(data.has("related_object_number_s")){
                     parentValue = data.getString("related_object_number_s");
                 }
                 addElement(document, resultElement, "parent", parentValue, true);
             }
 
-            if(data.has("assignee_full_name_lcs")){
-                String assigneeValue = data.getString("assignee_full_name_lcs");
+            if (data.has(ASSIGNEE_FULL_NAME_LCS))
+            {
+                String assigneeValue = data.getString(ASSIGNEE_FULL_NAME_LCS);
                 addElement(document, resultElement, "assignee", assigneeValue.toString(), true);
             }
 

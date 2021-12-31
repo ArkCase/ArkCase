@@ -128,8 +128,8 @@ public class AcmSequenceGeneratorIT {
             acmSequencePart1.setSequenceDateFormat("yyyyMMdd");
 
             AcmSequencePart acmSequencePart2 = new AcmSequencePart();
-            acmSequencePart2.setSequencePartType("Text1");
-            acmSequencePart2.setSequencePartName("ARBITRARY_TEXT");
+            acmSequencePart2.setSequencePartType("ARBITRARY_TEXT");
+            acmSequencePart2.setSequencePartName("Text1");
             acmSequencePart2.setSequenceArbitraryText("_");
 
             AcmSequencePart acmSequencePart3 = new AcmSequencePart();
@@ -146,6 +146,7 @@ public class AcmSequenceGeneratorIT {
 
             acmSequenceConfigurations.add(acmSequenceConfiguration);
         }
+        acmSequenceConfigurationService.saveSequenceConfiguration(acmSequenceConfigurations);
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         transactionTemplate.execute(status -> {
             String queryTextDelete = "DELETE " +
@@ -263,6 +264,7 @@ public class AcmSequenceGeneratorIT {
             catch (Exception e)
             {
                 exception = e;
+                log.error("Test failed", e);
             }
 
         };

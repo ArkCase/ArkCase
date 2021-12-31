@@ -3,6 +3,7 @@
     "title": "People",
     "configurable": true,
     "initialLinksShown": true,
+    "identificationClassName": "com.armedia.acm.plugins.person.model.Identification",
     "menus": [
         {
             "menuId": "leftnav",
@@ -32,23 +33,23 @@
             {
                 "desc": "people.tree.filters.iHaveCreated",
                 "name": "my-created",
-                "value": "fq=author_s:${user}"
+                "value": "fq=creator_lcs:${user}"
             },
             {
                 "desc": "people.tree.filters.iHaveCreatedActive",
                 "name": "my-created-active",
-                "value": "fq=author_s:${user} AND status_s:ACTIVE"
+                "value": "fq=creator_lcs:${user} AND status_lcs:ACTIVE"
             },
             {
                 "desc": "people.tree.filters.active",
                 "name": "active",
-                "value": "status_s:ACTIVE",
+                "value": "status_lcs:ACTIVE",
                 "default": true
             },
             {
                 "desc": "people.tree.filters.inActive",
                 "name": "in-active",
-                "value": "status_s:INACTIVE"
+                "value": "status_lcs:INACTIVE"
             },
             {
                 "desc": "people.tree.filters.noFilter",
@@ -285,7 +286,7 @@
                             "displayName": "people.comp.pictures.table.columns.thumbnail",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
-                            "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                            "cellTemplate": "<center><img class='img-thumbnail' ng-src='{{row.entity.object_id_s | personPictureSrc}}'></img></center>",
                             "width": 100
                         },
                         {
@@ -413,7 +414,7 @@
                             "name": "value",
                             "displayName": "people.comp.urls.table.columns.value",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
                         },
                         {
                             "name": "modifier",
@@ -424,7 +425,7 @@
                         {
                             "name": "modified",
                             "displayName": "people.comp.urls.table.columns.modified",
-                            "cellTemplate": "<div>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "width": 150
@@ -472,37 +473,37 @@
                             "name": "organization.organizationValue",
                             "displayName": "people.comp.organizations.table.columns.value",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></div>"
                         },
                         {
                             "name": "organization.defaultIdentification.identificationNumber",
                             "displayName": "people.comp.organizations.table.columns.identification",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
                         },
                         {
                             "name": "organization.organizationToPersonAssociationType",
                             "displayName": "people.comp.related.table.columns.type",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span ng-bind=\"grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate\"></span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents' ng-bind=\"grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate\"></div>"
                         },
                         {
                             "name": "organizationType",
                             "displayName": "people.comp.organizations.table.columns.contact",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getPrimaryContact(row.entity)}}</div>"
                         },
                         {
                             "name": "phone",
                             "displayName": "people.comp.organizations.table.columns.phone",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</div>"
                         },
                         {
                             "name": "location",
                             "displayName": "people.comp.organizations.table.columns.location",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
+                            "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</div>"
                         }
                     ]
                 },
@@ -771,7 +772,7 @@
                     "displayName": "people.comp.pictures.table.columns.thumbnail",
                     "headerCellFilter": "translate",
                     "enableCellEdit": false,
-                    "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
+                    "cellTemplate": "<center><img class='img-thumbnail' ng-src='{{row.entity.object_id_s | personPictureSrc}}'></img></center>",
                     "width": 100
                 },
                 {
@@ -1000,7 +1001,7 @@
                     "name": "value",
                     "displayName": "people.comp.urls.table.columns.value",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
                 },
                 {
                     "name": "description",
@@ -1184,37 +1185,37 @@
                     "name": "organization.organizationValue",
                     "displayName": "people.comp.organizations.table.columns.value",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></div>"
                 },
                 {
                     "name": "organization.defaultIdentification.identificationNumber",
                     "displayName": "people.comp.organizations.table.columns.identification",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
                 },
                 {
                     "name": "organization.organizationToPersonAssociationType",
                     "displayName": "people.comp.related.table.columns.type",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate}}</div>"
                 },
                 {
                     "name": "organizationType",
                     "displayName": "people.comp.organizations.table.columns.contact",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getPrimaryContact(row.entity)}}</div>"
                 },
                 {
                     "name": "phone",
                     "displayName": "people.comp.organizations.table.columns.phone",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</div>"
                 },
                 {
                     "name": "location",
                     "displayName": "people.comp.organizations.table.columns.location",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</div>"
                 }
             ]
         },

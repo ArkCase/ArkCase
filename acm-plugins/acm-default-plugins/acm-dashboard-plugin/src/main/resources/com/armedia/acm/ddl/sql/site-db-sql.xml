@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-add-static-urls-websites-widget-by-default" author="stefan.sanevski">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="acm_site" columnName="cm_site_user"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_cm_site_user"/>
+            </and>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_site" constraintName="fk_cm_site_user"/>
+        <insert tableName="acm_site">
+            <column name="cm_site_id" value="147483647"/>
+            <column name="cm_site_json" value='{"sites":[{"name":"ArkCase Get Started Guide","url":"https://www.arkcase.com/get-started","key":"ArkCase Get Started Guide_0.6294452883201689"},{"name":"ArkCase Support Site","url":"https://www.arkcase.com/support-library/","key":"ArkCase Support Site_0.7008517427052172"},{"name":"ArkCase Blogs","url":"https://www.arkcase.com/arkcase-blog/","key":"ArkCase Blogs_0.6278617023269031"},{"name":"ArkCase Events","url":"https://www.arkcase.com/events-arkcase/","key":"ArkCase Events_0.5631745476215619"},{"name":"ArkCase Videos","url":"https://www.arkcase.com/arkcase-videos/","key":"ArkCase Videos_0.9945262437957152"}]}'/>
+            <column name="cm_site_user" value="ALL"/>
+            <column name="cm_site_creator" value="arkcase-admin@arkcase.org"/>
+            <column name="cm_site_created" value="2021-06-14 19:00:55"/>
+            <column name="cm_site_modifier" value="arkcase-admin@arkcase.org"/>
+            <column name="cm_site_modified" value="2021-06-14 19:02:34"/>
+            <column name="cm_class_name" value="com.armedia.acm.plugins.dashboard.site.model.Site"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+

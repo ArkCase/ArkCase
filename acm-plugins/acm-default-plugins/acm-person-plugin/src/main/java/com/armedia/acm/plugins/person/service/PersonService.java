@@ -37,7 +37,7 @@ import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import com.armedia.acm.services.search.exception.SolrException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -179,4 +179,6 @@ public interface PersonService
 
     @Transactional
     EcmFile insertImageForPortalPerson(Person person, MultipartFile image, String imageContentType, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException, AcmFileTypesException;
+    
+    String getPeopleByIds(Authentication auth, String personIds, int start, int n, String s) throws SolrException, AcmObjectNotFoundException;
 }

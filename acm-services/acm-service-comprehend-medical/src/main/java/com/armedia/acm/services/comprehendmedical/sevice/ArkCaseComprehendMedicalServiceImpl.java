@@ -122,7 +122,8 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     public EcmFileVersion getExistingMediaVersionId(MediaEngine mediaEngine) throws CreateMediaEngineException
     {
         throw new CreateMediaEngineException(
-                String.format("Creating ComprehendMedical job is aborted. There is already ComprehendMedical object for MEDIA_FILE_VERSION_ID=[%d]",
+                String.format(
+                        "Creating ComprehendMedical job is aborted. There is already ComprehendMedical object for MEDIA_FILE_VERSION_ID=[%d]",
                         mediaEngine.getMediaEcmFileVersion().getId()));
     }
 
@@ -385,7 +386,7 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
     @Override
     public boolean allow(EcmFileVersion ecmFileVersion)
     {
-        return isServiceEnabled() &&
+        return ecmFileVersion.isValidFile() && isServiceEnabled() &&
                 !isExcludedFileTypes(ecmFileVersion.getFile().getFileType()) &&
                 isProcessable(ecmFileVersion);
     }
@@ -507,18 +508,21 @@ public class ArkCaseComprehendMedicalServiceImpl extends ArkCaseMediaEngineServi
                 String objectTitle = comprehendMedical.getMediaEcmFileVersion().getFile().getFileName();
                 addTagToFile(text, objectType, objectId, objectTitle);
 
-                // So far attributes we don't need in tags, just entities. But once we need them, uncomment the code below
-                /*if (comprehendMedical.getEntities().get(i).getAttributes() != null)
-                {
-                    for (int j = 0; j < comprehendMedical.getEntities().get(i).getAttributes().size(); j++)
-                    {
-                        text = comprehendMedical.getEntities().get(i).getAttributes().get(j).getText();
-                        objectType = comprehendMedical.getMediaEcmFileVersion().getFile().getObjectType();
-                        objectId = comprehendMedical.getMediaEcmFileVersion().getFile().getId();
-                        objectTitle = comprehendMedical.getMediaEcmFileVersion().getFile().getFileName();
-                        addTagToFile(text, objectType, objectId, objectTitle);
-                    }
-                }*/
+                // So far attributes we don't need in tags, just entities. But once we need them, uncomment the code
+                // below
+                /*
+                 * if (comprehendMedical.getEntities().get(i).getAttributes() != null)
+                 * {
+                 * for (int j = 0; j < comprehendMedical.getEntities().get(i).getAttributes().size(); j++)
+                 * {
+                 * text = comprehendMedical.getEntities().get(i).getAttributes().get(j).getText();
+                 * objectType = comprehendMedical.getMediaEcmFileVersion().getFile().getObjectType();
+                 * objectId = comprehendMedical.getMediaEcmFileVersion().getFile().getId();
+                 * objectTitle = comprehendMedical.getMediaEcmFileVersion().getFile().getFileName();
+                 * addTagToFile(text, objectType, objectId, objectTitle);
+                 * }
+                 * }
+                 */
             }
         }
     }

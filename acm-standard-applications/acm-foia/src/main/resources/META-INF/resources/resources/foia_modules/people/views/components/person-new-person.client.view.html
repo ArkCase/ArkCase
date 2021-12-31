@@ -72,10 +72,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.identification.identificationYearIssued</label>
-                                <date-time-picker data="person.defaultIdentification.identificationYearIssued"
-                                        property="person.defaultIdentification.identificationYearIssued"
-                                        date-picker-id="person.defaultIdentification.identificationYearIssued"
-                                        time-format-disabled="true"></date-time-picker>
+                                <date-time-picker data="person.defaultIdentification.identificationYearIssued" no-default-date="true"
+                                                  is-readonly="!person.defaultIdentification.identificationNumber" disable="!person.defaultIdentification.identificationNumber"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -121,10 +119,8 @@
                                     <div>
                                         <label translate>
                                             people.comp.editPerson.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"
-                                                property="identification.identificationYearIssued"
-                                                date-picker-id="identification.identificationYearIssued"
-                                                time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker data="identification.identificationYearIssued" is-readonly="!identification.identificationNumber"
+                                                          no-default-date="true" disable="!identification.identificationNumber"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
@@ -204,9 +200,13 @@
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>
-                                    people.comp.editPerson.organizations.position</label>
-                                <input class="form-control" ng-disabled="true"
-                                        ng-model="organizationAssociation.personToOrganizationAssociationType">
+                                    people.comp.organizations.type.label</label>
+                                <select class="input-md form-control"
+                                        ng-model="organizationAssociation.organizationToPersonAssociationType"
+                                        ng-options="item.key as item.value | translate for item in organizationTypes"
+                                        id="organizationToPersonAssociationType" name="organizationToPersonAssociationType"
+                                        ng-disabled="true">
+                                </select>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -241,28 +241,47 @@
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.country</label>
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <select class="form-control" ng-model="person.defaultAddress.country"
-                                    ng-change="changeStates(person.defaultAddress.country)">
+                                    ng-change="changeStates(person.defaultAddress.country)" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.country &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.country.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
-                            <select class="form-control" ng-model="person.defaultAddress.type">
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk">*</span>
+                            <select class="form-control" ng-model="person.defaultAddress.type" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.type &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.type.validation.error</span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress</label>
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.streetAddress &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.streetAddress.validation.error</span>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label translate>
@@ -275,32 +294,58 @@
                         <div class="col-sm-6 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.city</label>
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.city &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.city.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country == 'US' || person.defaultAddress.country == 'CA' || person.defaultAddress.country == 'JP'">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
-                            <select class="form-control" ng-model="person.defaultAddress.state">
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk-state-label">*</span>
+                            <select class="form-control" ng-model="person.defaultAddress.state" ng-required="checkLocationRules(person.defaultAddress)">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
                             </select>
+                            <span class="text-danger" ng-if="!person.defaultAddress.state &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group"
                                 ng-if="person.defaultAddress.country != 'US' && person.defaultAddress.country != 'CA' && person.defaultAddress.country != 'JP'">
                             <label for="txtState" translate>
                                 people.comp.addresses.modal.state.label
                             </label>
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk-state-label">*</span>
                             <input id="txtState" type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}" ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.state &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.state.validation.error</span>
                         </div>
                         <div class="col-sm-2 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
+                            <span ng-if="checkLocationRules(person.defaultAddress)"
+                                  class="required-asterisk">*</span>
                             <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
-                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}"
+                                   ng-required="checkLocationRules(person.defaultAddress)">
+                            <span class="text-danger" ng-if="!person.defaultAddress.zip &&
+                                    checkLocationRules(person.defaultAddress)"
+                                  translate>
+                            people.comp.newPerson.locations.zip.validation.error</span>
                         </div>
 
                         <div class="col-sm-2 form-group">
@@ -315,11 +360,11 @@
 
                     </div>
 
-                    <div ng-repeat="address in person.addresses">
+                    <div ng-repeat="address in person.addresses track by $index">
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.country</label>
-                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)">
+                                <select class="form-control" ng-model="address.country" ng-change="changeStates(address.country)" ng-required="checkLocationRules(address)>
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -327,7 +372,7 @@
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate> people.comp.editPerson.locations.type</label>
-                                <select class="form-control" ng-model="address.type">
+                                <select class="form-control" ng-model="address.type" ng-required="checkLocationRules(address)">
                                     <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -339,7 +384,8 @@
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress</label>
                                 <input type="text" ng-model="address.streetAddress" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)>
                             </div>
                             <div class="col-sm-6 form-group">
                                 <label translate>
@@ -353,13 +399,14 @@
                                 <label translate>
                                     people.comp.editPerson.locations.city</label>
                                 <input type="text" ng-model="address.city" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group"
                                     ng-if="address.country == 'US' || address.country == 'CA' || address.country == 'JP'">
                                 <label translate>
                                     people.comp.editPerson.locations.state</label>
-                                <select class="form-control" ng-model="address.state">
+                                <select class="form-control" ng-model="address.state" ng-required="checkLocationRules(address)">
                                     <option ng-repeat="option in states" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -371,13 +418,15 @@
                                     people.comp.addresses.modal.state.label
                                 </label>
                                 <input type="text" ng-model="address.state" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.zip</label>
                                 <input type="text" ng-model="address.zip" class="input-md form-control"
-                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}"
+                                       ng-required="checkLocationRules(address)">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <div class="pull-left">
@@ -417,8 +466,9 @@
                                 <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
-                                        ng-blur="validateInput(caType, person['default'+capitalizeFirstLetter(caType)].value)">
+                                        ng-blur="validateInput(caType, person['default'+capitalizeFirstLetter(caType)], true)">
                                 <span ng-if="caType == 'phone' && showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
+                                <span ng-if="caType == 'email' && showEmailError == true" translate>people.comp.editPerson.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
@@ -452,7 +502,9 @@
                                 <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}"
-                                        ng-blur="validateInput(caType, contactMethod.value)">
+                                        ng-blur="validateInput(caType, contactMethod, false)">
+                                <span ng-if="caType == 'phone' && contactMethod.showPhoneError == true" translate>people.comp.editPerson.communicationAccounts.validationMessage</span>
+                                <span ng-if="caType == 'email' && contactMethod.showEmailError == true" translate>people.comp.editPerson.communicationAccounts.emailValidationMessage</span>
                             </div>
                             <div class=" col-sm-4">
                                 <label class="control-label">{{'people.comp.editPerson.communicationAccounts.' +

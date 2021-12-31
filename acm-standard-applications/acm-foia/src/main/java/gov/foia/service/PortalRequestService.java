@@ -27,6 +27,13 @@ package gov.foia.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EMAIL_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EXT_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
@@ -50,17 +57,8 @@ import com.armedia.acm.services.templateconfiguration.service.CorrespondenceTemp
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.dao.PortalFOIAPersonDao;
-import gov.foia.model.FOIAPerson;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequesterAssociation;
-import gov.foia.model.PortalFOIAPerson;
-import gov.foia.model.PortalFOIAReadingRoom;
-import gov.foia.model.PortalFOIARequest;
-import gov.foia.model.PortalFOIARequestFile;
-import gov.foia.model.PortalFOIARequestStatus;
-import gov.foia.model.WithdrawRequest;
+
+import gov.foia.model.event.RequestReleasedDcoumentsDownloadedEvent;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -70,6 +68,8 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
@@ -99,11 +99,25 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.dao.PortalFOIAPersonDao;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIAPerson;
+import gov.foia.model.PortalFOIAReadingRoom;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
+import gov.foia.model.PortalFOIARequestStatus;
+import gov.foia.model.WithdrawRequest;
+
+import javax.persistence.NoResultException;
+
 /**
  * @author sasko.tanaskoski
  *
  */
-public class PortalRequestService
+public class PortalRequestService implements ApplicationEventPublisherAware
 {
     private static final int MAX_READING_ROOM_RESULTS = 500;
 
@@ -140,6 +154,7 @@ public class PortalRequestService
     private final String WITHDRAW_REQUEST_TITLE = "Withdraw Request";
 
     private CorrespondenceTemplateManager templateManager;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus portalRequestStatus) throws AcmObjectNotFoundException
     {
@@ -260,10 +275,10 @@ public class PortalRequestService
                 PortalFOIAReadingRoom room = new PortalFOIAReadingRoom();
                 PortalFOIAReadingRoom.File file = new PortalFOIAReadingRoom.File();
                 file.setFileId(docFile.getString("object_id_s"));
-                file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+                file.setFileName(docFile.getString(TITLE_PARSEABLE) + docFile.getString(EXT_S));
                 room.setFile(file);
                 room.setPublishedDate(formatter.parse(docFile.getString("modified_date_tdt")));
-                setParentData(room, docFile.getString("parent_ref_s"), auth);
+                setParentData(room, docFile.getString(PARENT_REF_S), auth);
                 readingRoomList.add(room);
             }
             catch (JSONException | ParseException e)
@@ -286,20 +301,20 @@ public class PortalRequestService
             return;
         }
 
+        RequestReleasedDcoumentsDownloadedEvent event = new RequestReleasedDcoumentsDownloadedEvent(request);
+        applicationEventPublisher.publishEvent(event);
+
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
-        String members = "";
+        List<String> members = new ArrayList<>();
         try
         {
             List<StandardLookupEntry> downloadResponseNotificationGroup = (List<StandardLookupEntry>) getLookupDao()
                     .getLookupByName("downloadResponseNotificationGroup").getEntries();
-            StandardLookupEntry groupNameLookupEntry = downloadResponseNotificationGroup.stream()
-                    .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("groupName")).findFirst().orElse(null);
-
-            if (Objects.nonNull(groupNameLookupEntry))
+            for (StandardLookupEntry lookupEntry : downloadResponseNotificationGroup)
             {
-                members = getGroupService().getUserMembersForGroup(groupNameLookupEntry.getValue(), Optional.empty(),
-                        SecurityContextHolder.getContext().getAuthentication());
+                members.add(getGroupService().getUserMembersForGroup(lookupEntry.getValue(), Optional.empty(),
+                        SecurityContextHolder.getContext().getAuthentication()));
             }
 
         }
@@ -308,18 +323,21 @@ public class PortalRequestService
             log.warn("Could not read members of request download notification group");
         }
 
-        if (StringUtils.isNotBlank(members))
+        if (!members.isEmpty())
         {
-            JSONArray membersArray = getSearchResults().getDocuments(members);
-
-            for (int i = 0; i < membersArray.length(); i++)
+            for (String groupMembers : members)
             {
-                JSONObject memberObject = membersArray.getJSONObject(i);
-                String memberState = getSearchResults().extractString(memberObject, "status_lcs");
-                if (memberState.equals(AcmUserState.VALID.name()))
+                JSONArray membersArray = getSearchResults().getDocuments(groupMembers);
+
+                for (int i = 0; i < membersArray.length(); i++)
                 {
-                    String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
-                    officersGroupMemberEmailAddresses.add(emailAddress);
+                    JSONObject memberObject = membersArray.getJSONObject(i);
+                    String memberState = getSearchResults().extractString(memberObject, STATUS_LCS);
+                    if (memberState.equals(AcmUserState.VALID.name()))
+                    {
+                        String emailAddress = getSearchResults().extractString(memberObject, EMAIL_LCS);
+                        officersGroupMemberEmailAddresses.add(emailAddress);
+                    }
                 }
             }
         }
@@ -372,10 +390,10 @@ public class PortalRequestService
         JSONArray docRequests = searchResults.getDocuments(results);
         JSONObject docRequest = docRequests.getJSONObject(0);
         portalReadingRoom.setRequestId(docRequest.getString("name"));
-        portalReadingRoom.setRequestTitle(docRequest.getString("title_parseable"));
-        if (!docRequest.isNull("description_no_html_tags_parseable"))
+        portalReadingRoom.setRequestTitle(docRequest.getString(TITLE_PARSEABLE));
+        if (!docRequest.isNull(DESCRIPTION_NO_HTML_TAGS_PARSEABLE))
         {
-            portalReadingRoom.setDescription(docRequest.getString("description_no_html_tags_parseable"));
+            portalReadingRoom.setDescription(docRequest.getString(DESCRIPTION_NO_HTML_TAGS_PARSEABLE));
         }
         else
         {
@@ -623,6 +641,16 @@ public class PortalRequestService
         return responseRequests;
     }
 
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId)
+    {
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getExternalAnonymousRequests(portalRequestTrackingId);
+        if (responseRequests.isEmpty())
+        {
+            throw new NoResultException("FOIA Requests not found for the request tracking id  [" + portalRequestTrackingId + "]");
+        }
+        return responseRequests;
+    }
+
     public TranslationService getTranslationService()
     {
         return translationService;
@@ -681,4 +709,9 @@ public class PortalRequestService
         this.templateManager = templateManager;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }

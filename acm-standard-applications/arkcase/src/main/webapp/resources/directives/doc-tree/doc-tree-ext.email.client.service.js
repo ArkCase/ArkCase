@@ -36,9 +36,13 @@ angular.module('services').factory('DocTreeExt.Email',
                     ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function (data) {
                         getOriginatorEmail(data);
                     });
+                } else if (objectType === "COSTSHEET" || objectType === "TIMESHEET"){
+                    ObjectInfoService.getCostOrTimeSheetObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                        getOriginatorEmail(data);
+                    });
                 } else {
-                   ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
-                       getOriginatorEmail(data);
+                    ObjectInfoService.getObjectInfo(objectTypeInEndpoint, objectId).then(function(data) {
+                        getOriginatorEmail(data);
                     });
                 }
                 function getOriginatorEmail(data) {
@@ -176,6 +180,10 @@ angular.module('services').factory('DocTreeExt.Email',
                                 return DocTree.scope.objectInfo.acmObjectNumber;
                             case ObjectService.ObjectTypes.CONSULTATION:
                                 return DocTree.scope.objectInfo.acmObjectNumber;
+                            case ObjectService.ObjectTypes.COSTSHEET:
+                                return DocTree.scope.objectInfo.taskId || DocTree.scope.objectInfo.id;
+                            case ObjectService.ObjectTypes.TIMESHEET:
+                                return DocTree.scope.objectInfo.taskId;;
                             case ObjectService.ObjectTypes.TASK:
                                 return DocTree.scope.objectInfo.taskId;
                             case ObjectService.ObjectTypes.DOC_REPO:
@@ -336,6 +344,13 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 $scope.emailDataModel.subject = response.data.templateEmailSubject;
             } else {
                 $scope.emailDataModel.subject = $scope.subject;
+            }
+            if($scope.template === "documentLinked.html") {
+                $scope.emailSendConfiguration.allowDocuments = false;
+                $scope.emailDataModel.selectedFilesToEmail = [];
+            } else {
+                $scope.emailSendConfiguration.allowDocuments = true;
+                $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
             }
             if ($scope.template === "plainEmail.html") {
                 $('#plain').summernote('code', "");

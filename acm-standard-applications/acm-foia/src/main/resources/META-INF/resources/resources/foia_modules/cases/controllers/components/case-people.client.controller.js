@@ -36,6 +36,8 @@ angular.module('cases').controller(
                         }
                     });
 
+                    var assocTypeLabel = $translate.instant("cases.comp.people.type.label");
+
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
@@ -58,8 +60,19 @@ angular.module('cases').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.objectInfo = objectInfo;
-                        $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                        var personIds = " ";
+
+                        _.forEach(objectInfo.personAssociations, function(findPersonsIds){
+                            personIds += (findPersonsIds.person.id) + ",";
+                        })
+
+                        var personIds = personIds.slice(0,-1);
+                        var personArrayUniq = _.uniq(personIds.split(","));
+                        var personIds = personArrayUniq.join(",")
+
+                        PersonInfoService.getPersons(personIds).then(function(persons) {
+                            $scope.gridOptions.data = HelperUiGridService.filterRestricted(persons.data.response.docs, $scope.objectInfo.personAssociations);
+                        });
                     };
 
                     var newPersonAssociation = function() {
@@ -84,6 +97,7 @@ angular.module('cases').controller(
 
                         var params = {};
                         params.types = $scope.personTypes;
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (association) {
 

@@ -9,6 +9,7 @@
             <label class="control-label" translate> cases.comp.main.dispositionType.label</label>
             <select ng-model="requestDispositionCategory" class="form-control input-md"
                     ng-options="requestDispositionCategory.key as requestDispositionCategory.value | translate for requestDispositionCategory in requestDispositionCategories">
+                <option value='' selected ng-value="null" translate>core.lookups.requestDispositionType.selectDispositionCategory</option>
             </select>
         </div>
     </div>

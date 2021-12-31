@@ -179,6 +179,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("pdfRenditionId", 500l);
         pVars.put("formXmlId", null);
         pVars.put("dueDate", reviewTask.getDueDate());
+        pVars.put("taskStartDate", reviewTask.getTaskStartDate());
         pVars.put("candidateGroups", "Test Group");
         pVars.put("OBJECT_TYPE", "FILE");
         pVars.put("OBJECT_ID", 500l);
@@ -187,6 +188,8 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("PARENT_OBJECT_ID", attachedToObjectId);
         pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
         pVars.put("DETAILS", "Details");
+        pVars.put("PARENT_OBJECT_NAME", null);
+        pVars.put("PARENT_OBJECT_TITLE", null);
 
 
         String documentsUnderReviewFolderName = "Documents Under Review";

@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
@@ -83,11 +84,17 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
         }
+
+        if (file.getStatus().equals(EcmFileConstants.RECORD)){
+            return copyRecord(file.getId(), targetFolder.getId(), targetContainer.getContainerObjectType(),
+                    targetContainer.getContainerObjectId(), SecurityContextHolder.getContext().getAuthentication());
+        }
+
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
         props.put(ArkCaseCMISConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(ArkCaseCMISConstants.DESTINATION_FOLDER_ID, targetFolder.getCmisFolderId());
-        props.put(PropertyIds.NAME, internalFileName);
+        props.put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(internalFileName, 'X'));
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
@@ -123,6 +130,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setDuplicate(file.isDuplicate());
 
             fileCopy.setPublicFlag(file.getPublicFlag());
+            fileCopy.setMadePublicDate(file.getMadePublicDate());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
             fileCopyVersion.setCmisObjectId(
@@ -231,6 +239,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         fileCopy.setSecurityField(originalFile.getSecurityField());
 
         fileCopy.setPublicFlag(originalFile.getPublicFlag());
+        fileCopy.setMadePublicDate(originalFile.getMadePublicDate());
 
         ObjectAssociation personCopy = copyObjectAssociation(originalFile.getPersonAssociation());
         fileCopy.setPersonAssociation(personCopy);

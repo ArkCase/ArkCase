@@ -18,6 +18,7 @@ angular.module('cases').controller(
             $scope.isPickExistingOriginator = false;
             $scope.isPickExistingSubject = false;
             $scope.subjectSameAsRequester = false;
+            $scope.maxDate = moment.utc(new Date());
 
             $scope.receivedDate = new Date();
 
@@ -32,6 +33,7 @@ angular.module('cases').controller(
             $scope.config = null;
 
             $scope.objectSearchConfig = null;
+            $scope.minDate = moment(new Date());
 
             var fileArrayContainsFile = function (fileArray, file) {
                 var fileFound = false;
@@ -195,6 +197,8 @@ angular.module('cases').controller(
                 if ($scope.config.data.originator.person.addresses[0] && !Util.isEmpty($scope.config.data.originator.person.addresses[0].country)) {
                     $scope.changeStates($scope.config.data.originator.person.addresses[0].country);
                 }
+
+                $scope.minDate = moment(new Date());
             });
 
             $scope.isEmailDaliveryMethod = false;
@@ -264,22 +268,6 @@ angular.module('cases').controller(
                         $location.hash('topSection1');
                         $anchorScroll();
                     }
-                }
-            };
-
-            $scope.receivedDateChanged = function () {
-                var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
-                if (Util.isEmpty($scope.config.data.receivedDate) || moment($scope.config.data.receivedDate).isAfter(todayDate)) {
-                    $scope.config.data.receivedDate = todayDate;
-                }
-            };
-
-            $scope.dateOfBirthChanged = function (dateOfBirthChanged) {
-                var todayDate = moment.utc().format("YYYY-MM-DD");
-                if (Util.isEmpty($scope.config.data.subject.person.dateOfBirth) || moment($scope.config.data.subject.person.dateOfBirth).isAfter(todayDate)) {
-                    $scope.config.data.subject.person.dateOfBirth = todayDate;
-                } else {
-                    $scope.config.data.subject.person.dateOfBirth = dateOfBirthChanged;
                 }
             };
 

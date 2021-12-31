@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.objectassociaton.web.api;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.AcmObjectAssociationException;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -81,10 +83,10 @@ public class ObjectAssociationAPIController
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ObjectAssociation saveAssociation(@RequestBody ObjectAssociation objectAssociation, Authentication auth)
-            throws AcmUserActionFailedException, AcmObjectAssociationException
+            throws AcmObjectAssociationException
     {
         log.debug("save Object Association [{}]", objectAssociation);
-        Objects.requireNonNull(objectAssociation, "objectAssociatoin must not be null!");
+        Objects.requireNonNull(objectAssociation, "objectAssociation must not be null!");
         Objects.requireNonNull(objectAssociation.getParentId(), "objectAssociation parentId must not be null!");
         Objects.requireNonNull(objectAssociation.getParentType(), "objectAssociation parentType must not be null!");
 
@@ -94,6 +96,27 @@ public class ObjectAssociationAPIController
         Objects.requireNonNull(objectAssociation.getAssociationType(), "objectAssociation associationType must not be null!");
 
         return objectAssociationService.saveAssociation(objectAssociation, auth);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/batch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ObjectAssociation> saveAssociations(@RequestBody List<ObjectAssociation> objectAssociations, Authentication auth)
+            throws AcmObjectAssociationException
+    {
+        log.debug("save [{}] Object Association", objectAssociations.size());
+        Objects.requireNonNull(objectAssociations, "objectAssociations must not be null!");
+        List<ObjectAssociation> retval = new ArrayList<>();
+        for (ObjectAssociation objectAssociation : objectAssociations)
+        {
+            Objects.requireNonNull(objectAssociation.getParentId(), "objectAssociation parentId must not be null!");
+            Objects.requireNonNull(objectAssociation.getParentType(), "objectAssociation parentType must not be null!");
+
+            Objects.requireNonNull(objectAssociation.getTargetId(), "objectAssociation targetId must not be null!");
+            Objects.requireNonNull(objectAssociation.getTargetType(), "objectAssociation targetType must not be null!");
+
+            Objects.requireNonNull(objectAssociation.getAssociationType(), "objectAssociation associationType must not be null!");
+            retval.add(objectAssociationService.saveAssociation(objectAssociation, auth));
+        }
+        return retval;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

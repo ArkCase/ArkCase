@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="lock.manager" class="com.armedia.acm.webdav.AcmFileSystemLockManager">
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
-    <!-- <bean id="lock.manager" class="io.milton.http.fs.SimpleLockManager">
-        <constructor-arg>
-            <bean class="io.milton.cache.LocalCacheManager"/>
-        </constructor-arg>
-    </bean> -->
     <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter">
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
-    <bean id="extensionPattern" class="java.util.regex.Pattern" factory-method="compile">
-        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls)$"/>
+    <bean id="realDocumentURLPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg
+                value="^.*\/(.*)\/(.*)\/([\d]*)\/.*\/([\d]*)\/([\d]*)\/(.*\.[doc|docx|xlsx|xls|ppt|pptx|pdf|tmp]*)$"/>
     </bean>
 
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
         <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="camelContextManager" ref="camelContextManager"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="lockManager" ref="lock.manager"/>
         <property name="securityManager" ref="security.manager"/>
-        <property name="maxAgeSeconds" value="300"/>
-        <property name="filterMapping" value="webdav"/>
-        <property name="fileExtensionPattern" ref="extensionPattern"/>
+        <property name="maxAgeSeconds" value="28800"/>
+        <property name="realDocumentUrlPattern" ref="realDocumentURLPattern"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="webDAVContainerIdCacheManager" ref="webDAVCacheManager"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">

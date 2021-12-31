@@ -1,6 +1,6 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
     <div class="pull-right well">
-        <select ng-model="directoryName"
+        <select ng-model="directoryName" class="custom-select"
                 ng-options="directory for directory in directories" ng-change="selectDirectory(directoryName)"></select>
         </select>
         <div class="btn-group" ng-show="ldapEditingEnabledPerDirectoryServer[directoryName]">

@@ -1,5 +1,41 @@
 package com.armedia.acm.plugins.ecm.service;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2021 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ECM_FILE_ID;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EXT_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MIME_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -7,33 +43,6 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
-/*-
- * #%L
- * ACM Service: Enterprise Content Management
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software.
- *
- * If the software was purchased under a paid ArkCase license, the terms of
- * the paid license agreement will prevail.  Otherwise, the software is
- * provided under the following open source license terms:
- *
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -47,7 +56,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -268,80 +276,50 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertNull("Content index will index file metadata as well", result);
     }
 
-    @Test
-    public void toSolrQuickSearch()
-    {
-        solrConfig.setEnableContentFileIndexing(false);
-
-        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
-        expectLastCall();
-
-        replayAll();
-        SolrDocument result = unit.toSolrQuickSearch(in);
-        verifyAll();
-
-        validateResult(result);
-
-    }
-
     private void validateResult(SolrAdvancedSearchDocument result)
     {
         assertNotNull(result);
-        assertEquals(result.getEcmFileId(), String.valueOf(in.getVersionSeriesId()));
+        assertEquals(result.getAdditionalProperties().get(ECM_FILE_ID), String.valueOf(in.getVersionSeriesId()));
         assertEquals("101-FILE", result.getId());
         assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
         assertEquals(in.getObjectType(), result.getObject_type_s());
         assertEquals(in.getFileName(), result.getName());
-        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
-        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
+        assertEquals(in.getFileActiveVersionNameExtension(), result.getAdditionalProperties().get(EXT_S));
+        assertEquals(in.getFileActiveVersionMimeType(), result.getAdditionalProperties().get(MIME_TYPE_S));
         assertEquals(in.getCreated(), result.getCreate_date_tdt());
         assertEquals(in.getCreator(), result.getCreator_lcs());
         assertEquals(in.getModified(), result.getModified_date_tdt());
         assertEquals(in.getModifier(), result.getModifier_lcs());
-        assertEquals(in.getFileName(), result.getTitle_parseable());
-        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-        assertEquals(in.getStatus(), result.getStatus_lcs());
-        assertEquals(in.getFileType(), result.getType_lcs());
-        assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
-        assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(13, result.getAdditionalProperties().size());
-    }
-
-    private void validateResult(SolrDocument result)
-    {
-        assertNotNull(result);
-        assertEquals("101-FILE", result.getId());
-        assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
-        assertEquals(in.getObjectType(), result.getObject_type_s());
-        assertEquals(in.getFileName(), result.getName());
-        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
-        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
-        assertEquals(in.getFileName(), result.getTitle_parseable());
-        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-        assertEquals(9, result.getAdditionalProperties().size());
+        assertEquals(in.getFileName(), result.getAdditionalProperties().get(TITLE_PARSEABLE));
+        assertEquals(in.getFileName(), result.getAdditionalProperties().get(TITLE_PARSEABLE_LCS));
+        assertEquals(in.getStatus(), result.getAdditionalProperties().get(STATUS_LCS));
+        assertEquals(in.getFileType(), result.getAdditionalProperties().get(TYPE_LCS));
+        assertEquals(String.valueOf(in.getParentObjectId()), result.getAdditionalProperties().get(PARENT_ID_S));
+        assertEquals(in.getParentObjectType(), result.getAdditionalProperties().get(PARENT_TYPE_S));
+        assertEquals(34, result.getAdditionalProperties().size());
     }
 
     private void validateResult(SolrContentDocument result)
     {
         assertNotNull(result);
-        assertEquals(result.getEcmFileId(), String.valueOf(in.getVersionSeriesId()));
+        assertEquals(result.getAdditionalProperties().get(ECM_FILE_ID), String.valueOf(in.getVersionSeriesId()));
         assertEquals("101-FILE", result.getId());
         assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
         assertEquals(in.getObjectType(), result.getObject_type_s());
         assertEquals(in.getFileName(), result.getName());
-        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
-        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
+        assertEquals(in.getFileActiveVersionNameExtension(), result.getAdditionalProperties().get(EXT_S));
+        assertEquals(in.getFileActiveVersionMimeType(), result.getAdditionalProperties().get(MIME_TYPE_S));
         assertEquals(in.getCreated(), result.getCreate_date_tdt());
         assertEquals(in.getCreator(), result.getCreator_lcs());
         assertEquals(in.getModified(), result.getModified_date_tdt());
         assertEquals(in.getModifier(), result.getModifier_lcs());
-        assertEquals(in.getFileName(), result.getTitle_parseable());
-        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-        assertEquals(in.getStatus(), result.getStatus_lcs());
-        assertEquals(in.getFileType(), result.getType_lcs());
-        assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
-        assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(13, result.getAdditionalProperties().size());
+        assertEquals(in.getFileName(), result.getAdditionalProperties().get(TITLE_PARSEABLE));
+        assertEquals(in.getFileName(), result.getAdditionalProperties().get(TITLE_PARSEABLE_LCS));
+        assertEquals(in.getStatus(), result.getAdditionalProperties().get(STATUS_LCS));
+        assertEquals(in.getFileType(), result.getAdditionalProperties().get(TYPE_LCS));
+        assertEquals(String.valueOf(in.getParentObjectId()), result.getAdditionalProperties().get(PARENT_ID_S));
+        assertEquals(in.getParentObjectType(), result.getAdditionalProperties().get(PARENT_TYPE_S));
+        assertEquals(34, result.getAdditionalProperties().size());
     }
 
 }

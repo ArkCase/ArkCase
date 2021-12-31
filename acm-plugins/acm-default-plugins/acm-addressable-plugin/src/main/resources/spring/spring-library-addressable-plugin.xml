@@ -19,4 +19,7 @@
     <bean id="phoneRegexConfig" class="com.armedia.acm.plugins.addressable.service.PhoneRegexConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+    <bean id="emailRegexConfig" class="com.armedia.acm.plugins.addressable.service.EmailRegexConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

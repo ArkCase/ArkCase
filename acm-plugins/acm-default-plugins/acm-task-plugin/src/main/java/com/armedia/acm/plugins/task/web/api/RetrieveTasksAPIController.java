@@ -132,21 +132,21 @@ public class RetrieveTasksAPIController
      */
     private String getSolrResponse(Authentication authentication, String dueDate)
     {
-        String solrQuery = "object_type_s:TASK+AND+status_s:ACTIVE";
+        String solrQuery = "object_type_s:TASK+AND+status_lcs:ACTIVE";
         String solrResponse = "";
         switch (AcmTasksForAPeriod.getTasksForPeriodByText(dueDate))
         {
         case PAST_DUE:
-            solrQuery += "+AND+due_tdt:[* TO NOW]";
+            solrQuery += "+AND+dueDate_tdt:[* TO NOW]";
             break;
         case DUE_TOMORROW:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW%2B1DAY]";
+            solrQuery += "+AND+dueDate_tdt:[NOW TO NOW%2B1DAY]";
             break;
         case DUE_IN_7_DAYS:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW%2B7DAYS]";
+            solrQuery += "+AND+dueDate_tdt:[NOW TO NOW%2B7DAYS]";
             break;
         case DUE_IN_30_DAYS:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW%2B30DAYS]";
+            solrQuery += "+AND+dueDate_tdt:[NOW TO NOW%2B30DAYS]";
             break;
         case ALL:
         default:
@@ -156,7 +156,7 @@ public class RetrieveTasksAPIController
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, "");
         }
         catch (SolrException e)
         {

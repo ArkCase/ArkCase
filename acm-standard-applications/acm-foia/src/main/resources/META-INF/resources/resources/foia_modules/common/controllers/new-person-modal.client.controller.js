@@ -118,7 +118,9 @@ angular.module('common').controller(
             $scope.addIdentification = function () {
                 $timeout(function () {
                     //add empty identification
-                    $scope.person.identifications.push({});
+                    $scope.person.identifications.push({
+                        className: $scope.config.identificationClassName
+                    });
                 }, 0);
             };
 

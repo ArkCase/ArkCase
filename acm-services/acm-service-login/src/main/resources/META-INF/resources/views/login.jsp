@@ -189,7 +189,7 @@ Time: 12:44
     </div>
 
     <div id="forgot-generic-error" style="display:none" class="alert alert-danger">
-      Server error.
+        Server error.
     </div>
 
 
@@ -225,7 +225,7 @@ Time: 12:44
         </div>
 
         <button id="submit" type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
-        <c:if test="${!isSsoEnv}">
+        <c:if test="${showForgotUsernameAndPasswordLink}">
             <p></p>
             <div class="pull-left">
                 <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>

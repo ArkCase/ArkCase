@@ -9,7 +9,7 @@
  *
  * Loads cases in the "Active Case Files" widget.
  */
-angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFilesController', [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
+angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFilesController', [ '$scope', '$translate', 'config', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, config, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
     var vm = this;
     vm.config = null;
     var userInfo = null;
@@ -27,8 +27,7 @@ angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFi
         vm.gridOptions.columnDefs = config.columnDefs;
         vm.gridOptions.enableFiltering = config.enableFiltering;
         vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-        vm.gridOptions.paginationPageSize = config.paginationPageSize;
-        paginationOptions.pageSize = config.paginationPageSize;
+        vm.gridOptions.paginationPageSize = paginationOptions.pageSize;
 
         Authentication.queryUserInfo().then(function(responseUserInfo) {
             userInfo = responseUserInfo;
@@ -50,6 +49,15 @@ angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFi
         sortBy: 'id',
         sortDir: 'desc'
     };
+
+    //Get the user's defined options from the Config.
+    if (config.paginationPageSize) {
+        paginationOptions.pageSize = parseInt(config.paginationPageSize);
+    } else {
+        //defaults the dropdown value on edit UI to the default pagination options
+        config.paginationPageSize = "" + paginationOptions.pageSize + "";
+    }
+
     /**
      * @ngdoc method
      * @name openViewer
@@ -113,13 +121,17 @@ angular.module('dashboard.active-case-files').controller('Dashboard.ActiveCaseFi
             _.forEach(data.response.docs, function(value) {
                 value.status_lcs = value.status_lcs.toUpperCase();
 
-                if (Util.goodValue(value.dueDate_tdt)) {
-                    value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
+                if ((userGroupList.includes(value.owning_group_id_lcs)) == true) {
+                    data.response.docs.getElementById(value.id).style.display = "none";
                 }
 
-                //calculate to show alert icons if cases is in overdue or deadline is approaching
-                value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
-                value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+                if (Util.goodValue(value.dueDate_tdt)) {
+                    value.dueDate_tdt = UtilDateService.isoToLocalDateTime(value.dueDate_tdt);
+
+                    //calculate to show alert icons if cases is in overdue or deadline is approaching
+                    value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
+                    value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+                }
 
                 vm.gridOptions.data.push(value);
             });

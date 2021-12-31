@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.wopi.web;
  * #L%
  */
 
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.plugins.wopi.model.WopiConfig;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -44,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/plugin/office")
@@ -53,6 +55,7 @@ public class WopiHostUIController
 
     private WopiConfig wopiConfig;
     private AuthenticationTokenService tokenService;
+    private ApplicationConfig applicationConfig;
 
     @Value("${tokenExpiration.wopiLinks}")
     private Long tokenExpiry;
@@ -62,11 +65,11 @@ public class WopiHostUIController
     public ModelAndView getWopiHostPage(Authentication authentication, @PathVariable Long fileId, HttpSession session)
     {
         log.info("Opening file with id [{}] per user [{}]", fileId, authentication.getName());
-
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
-        String requestUrl = wopiConfig.getWopiHostUrl(fileId, accessToken);
-        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
+
+        tokenService.addTokenToRelativeAndGenericPaths(generateWopiRelativePaths(accessToken, fileId),
+                generateWopiGenericPaths(fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
@@ -82,13 +85,29 @@ public class WopiHostUIController
 
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         String accessToken = tokenService.getUncachedTokenForAuthentication(authentication);
-        String requestUrl = wopiConfig.getWopiHostValidationUrl(fileId, accessToken);
-        tokenService.generateAndSaveAuthenticationToken(Arrays.asList(requestUrl), tokenExpiry, user.getMail(), authentication);
+        tokenService.addTokenToRelativeAndGenericPaths(generateWopiRelativePaths(accessToken, fileId),
+                generateWopiGenericPaths(fileId), accessToken, tokenExpiry, user.getMail());
 
         ModelAndView model = new ModelAndView();
         model.setViewName("wopi-host");
         model.addObject("url", wopiConfig.getWopiHostValidationUrl(fileId, accessToken));
         return model;
+    }
+
+    private List<String> generateWopiGenericPaths(Long fileId)
+    {
+        String wopiFileGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "?";
+        String wopiFileContentsGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/contents";
+        String wopiFileLockGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/lock";
+        String wopiFileRenameGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/files/" + fileId+ "/rename";
+        String wopiUsersGenericPath = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users/resource/" + fileId + "?";
+        return Arrays.asList(wopiFileGenericPath, wopiUsersGenericPath, wopiFileContentsGenericPath, wopiFileLockGenericPath, wopiFileRenameGenericPath);
+    }
+
+    private List<String> generateWopiRelativePaths(String accessToken, Long fileId)
+    {
+        String relativePathUsers = applicationConfig.getBaseUrl() + "/api/latest/plugin/wopi/users?ecmFileId=" + fileId + "&acm_wopi_ticket=" + accessToken;
+        return Arrays.asList(relativePathUsers);
     }
 
     public void setWopiConfig(WopiConfig wopiConfig)
@@ -99,5 +118,10 @@ public class WopiHostUIController
     public void setTokenService(AuthenticationTokenService tokenService)
     {
         this.tokenService = tokenService;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

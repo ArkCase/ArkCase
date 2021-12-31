@@ -46,8 +46,6 @@ public class SolrPostQueueListener
 
     private final String advancedSearchDestinationQueue = "solrAdvancedSearch.in";
 
-    private final String quickSearchDestinationQueue = "solrQuickSearch.in";
-
     @JmsListener(destination = advancedSearchDestinationQueue, containerFactory = "jmsListenerContainerFactory")
     public void onAdvancedSearchPost(String jsonDocument)
     {
@@ -55,27 +53,6 @@ public class SolrPostQueueListener
         {
             logger.debug("Sending to advanced search");
             getSolrPostClient().sendToSolr(advancedSearchDestinationQueue, SolrCore.ADVANCED_SEARCH, jsonDocument);
-        }
-        catch (SolrPostException e)
-        {
-            logger.error("Could not post to Solr: {}", e.getMessage(), e);
-            // If solr is down, ConnectException is thrown and because of jms listener is set to
-            // sessionTransacted=true, undelivered messages are staying in solrContentFile.in queue
-            // until successful delivery
-            if (e.getCause() != null && e.getCause().getCause() instanceof ConnectException)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @JmsListener(destination = quickSearchDestinationQueue, containerFactory = "jmsListenerContainerFactory")
-    public void onQuickSearchPost(String jsonDocument)
-    {
-        try
-        {
-            logger.debug("Sending to quick search");
-            getSolrPostClient().sendToSolr(quickSearchDestinationQueue, SolrCore.QUICK_SEARCH, jsonDocument);
         }
         catch (SolrPostException e)
         {

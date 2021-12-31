@@ -14,10 +14,7 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.close.date</label>
-                            <date-time-picker data="closeComplaintRequest.disposition.closeDate"
-                                    property="closeComplaintRequest.disposition.closeDate"
-                                    date-picker-id="closeComplaintRequest.disposition.closeDate"
-                                    time-format-disabled="true"></date-time-picker>
+                            <date-time-picker data="closeComplaintRequest.disposition.closeDate"></date-time-picker>
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.number</label>
@@ -73,10 +70,10 @@
                             <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseTitle"
                                     disabled />
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.date</label>
                             <p class="input-group">
-                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseCreated"
+                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCaseCreatedFormatted"
                                         disabled />
                                 <span class="input-group-btn">
                                      <button type="button" class="btn btn-default" disabled>
@@ -85,7 +82,7 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <label translate>complaints.comp.closeComplaint.add.existing.case.case.priority</label>
                             <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.existingCasePriority"
                                     disabled />
@@ -112,10 +109,7 @@
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.date</label>
-                            <date-time-picker data="closeComplaintRequest.disposition.referExternalDate"
-                                    property="closeComplaintRequest.disposition.referExternalDate"
-                                    date-picker-id="closeComplaintRequest.disposition.referExternalDate"
-                                    time-format-disabled="true"></date-time-picker>
+                            <date-time-picker data="closeComplaintRequest.disposition.referExternalDate"></date-time-picker>
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.contact.name </label>
@@ -137,10 +131,8 @@
                                     <div class="col-sm-6">
                                         <label translate>complaints.comp.closeComplaint.refer.external.contact.type </label>
                                         <span class="required-asterisk">*</span>
-                                        <select ng-model="closeComplaintRequest.disposition.referExternalContactMethod"
-                                                class="form-control input-md"
-                                                ng-options="contact as contact.type for contact in contactTypes track by contact.id"
-                                                required>
+                                        <select ng-model="closeComplaintRequest.contactType" class="form-control input-md" ng-change="updateReferExternalContactMethod(closeComplaintRequest.contactType)"
+                                                ng-options="contact.value | translate for contact in contactTypes" required>
                                         </select>
                                     </div>
                                     <div class="col-sm-6">
@@ -156,7 +148,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-if="showApprover == 'true'">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>complaints.comp.closeComplaint.approver.label</a>

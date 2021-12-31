@@ -31,6 +31,7 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
+import com.armedia.acm.camelcontext.utils.FileCamelUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.component.cmis.CamelCMISActions;
@@ -66,7 +67,7 @@ public class RenameDocumentRoute extends ArkCaseAbstractRoute
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
                             routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
-                    exchange.getIn().getHeaders().put(PropertyIds.NAME, routeProperties.get(ArkCaseCMISConstants.NEW_FILE_NAME));
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, FileCamelUtils.replaceSurrogateCharacters(String.valueOf(routeProperties.get(ArkCaseCMISConstants.NEW_FILE_NAME)), 'X'));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.RENAME);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));

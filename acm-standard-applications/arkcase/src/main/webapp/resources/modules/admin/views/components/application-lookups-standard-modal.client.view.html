@@ -7,10 +7,11 @@
     </h3>
 </div>
 <div class="modal-body">
+    <form name="lookupEntryForm">
     <div class="row">
         <div class="col-sm-4 form-group">
             <label for="Key" translate>admin.application.lookups.config.data.key</label><span class="required-asterisk">*</span>
-            <input id="key" type="text" ng-model="entry.key" class="input-md form-control"
+            <input id="key" type="text" ng-model="entry.key" class="input-md form-control" required="required"
                    placeholder="{{ 'admin.application.lookups.config.modal.key.placeholder' | translate }}" ng-readonly="isEdit">
         </div>
         <div class="col-sm-4 form-group">
@@ -38,6 +39,7 @@
             </label>
         </div>
     </div>
+    </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">

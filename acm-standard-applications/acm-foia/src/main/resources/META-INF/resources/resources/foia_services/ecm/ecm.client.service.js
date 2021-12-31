@@ -115,6 +115,11 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'GET',
             url: 'api/latest/service/ecm/file/:fileId'
         },
+        getFiles: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/files',
+            isArray: true
+        },
         getFileEvents: {
             method: 'GET',
             url: 'api/latest/plugin/audit/FILE/:fileId'
@@ -189,6 +194,19 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
         return Util.serviceCall({
             service: Service.getLinkTargetFile,
             param: fileId,
+            onSuccess: function (data) {
+                return data;
+            },
+            onError: function (error) {
+                return error;
+            }
+        })
+    };
+
+    Service.getEcmFiles = function (fileIds) {
+        return Util.serviceCall({
+            service: Service.getFiles,
+            param: fileIds,
             onSuccess: function (data) {
                 return data;
             },

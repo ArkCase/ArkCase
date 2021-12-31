@@ -62,6 +62,8 @@ public class PortalFOIARequest implements Serializable
 
     private String requestCategory;
 
+    private String componentAgency;
+
     private String deliveryMethodOfResponse;
 
     private String address1;
@@ -108,6 +110,9 @@ public class PortalFOIARequest implements Serializable
     
     private String addressType;
 
+    private String portalRequestTrackingId;
+
+    private Boolean anonymousFlag;
     /**
      * @return the prefix
      */
@@ -628,6 +633,36 @@ public class PortalFOIARequest implements Serializable
         this.addressType = addressType;
     }
 
+    public String getPortalRequestTrackingId()
+    {
+        return portalRequestTrackingId;
+    }
+
+    public void setPortalRequestTrackingId(String portalRequestTrackingId)
+    {
+        this.portalRequestTrackingId = portalRequestTrackingId;
+    }
+
+    public String getComponentAgency()
+    {
+        return componentAgency;
+    }
+
+    public void setComponentAgency(String componentAgency)
+    {
+        this.componentAgency = componentAgency;
+    }
+
+    public Boolean getAnonymousFlag()
+    {
+        return anonymousFlag;
+    }
+
+    public void setAnonymousFlag(Boolean anonymousFlag)
+    {
+        this.anonymousFlag = anonymousFlag;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -638,12 +673,12 @@ public class PortalFOIARequest implements Serializable
         return "PortalFOIARequest [originalRequestNumber=" + originalRequestNumber + ", prefix=" + prefix + ", firstName=" + firstName
                 + ", middleName=" + middleName + ", lastName=" + lastName + ", position=" + position + ", title=" + title + ", email="
                 + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
-                + requestType + ", requestCategory=" + requestCategory + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
+                + requestType + ", requestCategory=" + requestCategory + ", componentAgency=" + componentAgency +", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", country=" + country
                 + ", zip=" + zip + ", addressType=" + addressType + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="
                 + recordSearchDateTo + ", processingFeeWaive=" + processingFeeWaive + ", requestFeeWaive=" + requestFeeWaive
                 + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee + ", requestExpedite=" + requestExpedite
-                + ", files=" + files + ", ipAddress=" + ipAddress + ", userId=" + userId + "]";
+                + ", files=" + files + ", ipAddress=" + ipAddress + ", userId=" + userId + ", anonymousFlag=" + anonymousFlag + "]";
     }
 
 }

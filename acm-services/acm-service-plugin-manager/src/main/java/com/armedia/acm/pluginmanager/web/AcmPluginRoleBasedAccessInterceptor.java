@@ -31,18 +31,21 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig;
-
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Ensure the user has the required privilege to execute a plugin URL. Only URLs in the /plugin namespace are handled by
@@ -52,15 +55,25 @@ public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerIntercep
 {
     private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
 
+    private AuthenticationTokenService authenticationTokenService;
+
     private final Logger log = LogManager.getLogger(getClass());
+
+    private Pattern OPEN_URL_REGEX = Pattern.compile(".*acm_email_ticket=.*$|.*EXT_TRANS_ID=.*$");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException
     {
-        String method = request.getMethod();
-        String url = request.getServletPath();
+        String queryString = request.getQueryString();
 
-        log.debug("Checking user privilege for url: {} {}", method, url);
+        if (StringUtils.isNotBlank(queryString) && OPEN_URL_REGEX.matcher(queryString).matches())
+        {
+            return validateToken(request);
+        }
+
+        String method = request.getMethod();
+
+        log.debug("Checking user privilege for url: {} {}", method, request.getServletPath());
 
         HttpSession session = request.getSession(false);
 
@@ -81,7 +94,7 @@ public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerIntercep
         else
         {
             Map<String, Map<String, List<String>>> urlPrivileges = pluginPrivilegesConfig.getPluginPrivilegeToUrls();
-            boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);
+            boolean hasPrivilege = determinePrivilege(method, request.getServletPath(), userPrivileges, urlPrivileges);
 
             if (!hasPrivilege)
             {
@@ -90,6 +103,22 @@ public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerIntercep
         }
 
         return true;
+    }
+
+    private boolean validateToken(HttpServletRequest request)
+    {
+        try
+        {
+            String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
+            String touchnetToken = ServletRequestUtils.getStringParameter(request, "EXT_TRANS_ID");
+            return StringUtils.isBlank(touchnetToken) ? getAuthenticationTokenService().validateToken(request, emailToken) :
+                    getAuthenticationTokenService().validateToken(request, touchnetToken);
+        }
+        catch (ServletRequestBindingException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     protected boolean determinePrivilege(String method, String urlToCheck, Map<String, Boolean> userPrivileges,
@@ -142,5 +171,15 @@ public class AcmPluginRoleBasedAccessInterceptor implements AsyncHandlerIntercep
     public void setPluginPrivilegesConfig(ApplicationPluginPrivilegesConfig pluginPrivilegesConfig)
     {
         this.pluginPrivilegesConfig = pluginPrivilegesConfig;
+    }
+
+    public AuthenticationTokenService getAuthenticationTokenService()
+    {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
     }
 }

@@ -34,7 +34,6 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
 import org.apache.logging.log4j.Logger;
@@ -80,10 +79,8 @@ public class AcmApplicationTaskEventHandler implements ApplicationListener<AcmAp
             }
 
             SolrAdvancedSearchDocument advancedDocument = getTaskToSolrTransformer().toSolrAdvancedSearch(acmTask);
-            SolrDocument quickDocument = getTaskToSolrTransformer().toSolrQuickSearch(acmTask);
 
             getSendDocumentsToSolr().sendSolrAdvancedSearchDocuments(Arrays.asList(advancedDocument));
-            getSendDocumentsToSolr().sendSolrQuickSearchDocuments(Arrays.asList(quickDocument));
         }
 
     }

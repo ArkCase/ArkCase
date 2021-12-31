@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -63,9 +63,7 @@ public class ComplaintHistoryListener implements ApplicationListener<ComplaintPe
                 Complaint complaint = (Complaint) event.getSource();
 
                 getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), complaint, complaint.getComplaintId(),
-                        OBJECT_TYPE, event.getEventDate(), event.getIpAddress());
-
-                LOG.debug("Complaint History added to database.");
+                        OBJECT_TYPE, event.getEventDate(), event.getIpAddress(), event.isSucceeded());
             }
         }
     }

@@ -351,7 +351,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                 bgColor = DEFAULT_BG_COLOR;
             }
 
-            isLocked = cellStyle.getLocked();
+            isLocked = false;
         }
         int fontSize = cellFont.getFontHeightInPoints();
 
@@ -400,24 +400,22 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                                 XSSFCell cell = sheet.getRow(rowNum).getCell(colNum);
                                 if (cell != null && cell.getCellStyle() != null)
                                 {
-                                    if (!cell.getCellStyle().getLocked())
-                                    {
-                                        if (cell.getCTCell().getT() == STCellType.INLINE_STR)
-                                        { // cell has inline string in it
-                                            if (cell.getCTCell().isSetIs())
-                                            { // inline string has is element
-                                                cell.getCTCell().getIs().setT(value); // set t element in is element
-                                            }
-                                            else
-                                            {
-                                                cell.getCTCell().setV(value); // set v element of inline string
-                                            }
+                                    if (cell.getCTCell().getT() == STCellType.INLINE_STR)
+                                    { // cell has inline string in it
+                                        if (cell.getCTCell().isSetIs())
+                                        { // inline string has is element
+                                            cell.getCTCell().getIs().setT(value); // set t element in is element
                                         }
                                         else
                                         {
-                                            cell.setCellValue(value); // set shared string cell value
+                                            cell.getCTCell().setV(value); // set v element of inline string
                                         }
                                     }
+                                    else
+                                    {
+                                        cell.setCellValue(value); // set shared string cell value
+                                    }
+
                                 }
                             }
                         }

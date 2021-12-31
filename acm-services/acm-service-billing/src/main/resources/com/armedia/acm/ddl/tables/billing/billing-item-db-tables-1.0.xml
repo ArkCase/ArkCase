@@ -134,4 +134,10 @@
         <modifyDataType tableName="acm_billing_item" columnName="cm_billing_item_modified" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="08-create-index-on-creator" author="bojan.milenkoski">
+        <createIndex tableName="acm_billing_item" indexName="idx_acm_billing_item_billing_item_creator">
+            <column name="cm_billing_item_creator"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>

@@ -114,6 +114,9 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Transient
     private Long referExternalOrganizationId;
 
+    @Transient
+    private boolean closeComplaintStatusFlow;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -278,5 +281,13 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     public void setReferExternalOrganizationId(Long referExternalOrganizationId) {
         this.referExternalOrganizationId = referExternalOrganizationId;
+    }
+
+    public boolean isCloseComplaintStatusFlow() {
+        return closeComplaintStatusFlow;
+    }
+
+    public void setCloseComplaintStatusFlow(boolean closeComplaintStatusFlow) {
+        this.closeComplaintStatusFlow = closeComplaintStatusFlow;
     }
 }

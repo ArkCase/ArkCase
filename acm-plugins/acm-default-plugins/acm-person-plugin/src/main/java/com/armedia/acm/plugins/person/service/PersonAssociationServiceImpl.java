@@ -27,6 +27,11 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CHILD_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CHILD_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.objectonverter.AcmMarshaller;
@@ -93,9 +98,9 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     public String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth)
             throws AcmObjectNotFoundException
     {
-        return solrJoinDocumentsService.getJoinedDocuments(auth, personId, "child_id_s", PersonOrganizationConstants.PERSON_OBJECT_TYPE,
-                "child_type_s", PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE, parentType, "parent_type_s", "parent_object",
-                "parent_ref_s", "id", start, limit, sort);
+        return solrJoinDocumentsService.getJoinedDocuments(auth, personId, CHILD_ID_S, PersonOrganizationConstants.PERSON_OBJECT_TYPE,
+                CHILD_TYPE_S, PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE, parentType, PARENT_TYPE_S, "parent_object",
+                PARENT_REF_S, "id", start, limit, sort);
     }
 
     @Override

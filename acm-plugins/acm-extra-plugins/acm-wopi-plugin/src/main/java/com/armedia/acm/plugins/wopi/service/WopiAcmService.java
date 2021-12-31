@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.wopi.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -49,11 +49,13 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Period;
@@ -83,10 +85,10 @@ public class WopiAcmService implements AcmConfigurablePlugin
         AuthenticationToken authToken = tokenService.findByKey(token);
 
         Long tokenTtl = 0L;
-        if (authToken.isActive())
+        if (authToken != null && authToken.isActive())
         {
             tokenTtl = tokenService.calculateTokenTimeToLive(authToken,
-                    Period.ofDays(AuthenticationTokenService.EMAIL_TICKET_EXPIRATION_DAYS));
+                    Period.ofDays(AuthenticationTokenService.WOPI_TICKET_EXPIRATION_DAYS));
         }
         return new WopiUserInfo(user.getFullName(), user.getUserId(), user.getLang(), tokenTtl);
     }
@@ -123,7 +125,17 @@ public class WopiAcmService implements AcmConfigurablePlugin
         {
             throw new AcmObjectNotFoundException("FILE", id, "File not found");
         }
-        fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, resource.getInputStream());
+
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("arkcase-update-file-transaction", null);
+            FileUtils.copyInputStreamToFile(resource.getInputStream(), tempFile);
+            fileTransaction.updateFileTransactionEventAware(authentication, fileToBeReplaced, tempFile);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFile);
+        }
     }
 
     public WopiLockInfo getSharedLock(Long fileId)

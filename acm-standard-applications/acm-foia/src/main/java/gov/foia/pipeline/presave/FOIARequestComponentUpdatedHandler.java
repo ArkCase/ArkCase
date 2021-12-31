@@ -43,7 +43,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -140,10 +139,10 @@ public class FOIARequestComponentUpdatedHandler
 
         if (!originalRequest.getDueDate().equals(entity.getDueDate()))
         {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM-dd-yyyy");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM-dd-yyyy");
             String updatedDueDate = String.format("which updates the Due Date from %s to %s",
-                    dateFormatter.format(getDateTimeService().fromDateToClientLocalDateTime(originalRequest.getDueDate())),
-                    dateFormatter.format(getDateTimeService().fromDateToClientLocalDateTime(entity.getDueDate())));
+                    getDateTimeService().fromDateToClientLocalDateTime(originalRequest.getDueDate()).format(dateFormatter),
+                    getDateTimeService().fromDateToClientLocalDateTime(entity.getDueDate()).format(dateFormatter));
             event = new RequestComponentAgencyChangedEvent(entity, originalRequest, updatedDueDate);
             applicationEventPublisher.publishEvent(event);
         }

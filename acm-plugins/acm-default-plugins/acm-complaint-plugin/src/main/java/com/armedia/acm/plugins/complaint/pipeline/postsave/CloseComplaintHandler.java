@@ -47,21 +47,20 @@ public class CloseComplaintHandler
     @Override
     public void execute(CloseComplaintRequest entity, CloseComplaintPipelineContext ctx)
     {
-        String mode = (String) ctx.getPropertyValue("mode");
         Complaint complaint = complaintDao.find(entity.getComplaintId());
-        if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
-        {
-            complaint.setStatus("IN APPROVAL");
-            Complaint updatedComplaint = getComplaintDao().save(complaint);
 
-            ctx.setComplaint(updatedComplaint);
+        complaint.setStatus(entity.getStatus());
 
-            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint,
-                    AuthenticationUtils.getUserIpAddress());
-            complaintUpdatedEvent.setSucceeded(true);
-            ctx.addProperty("complaintUpdated", complaintUpdatedEvent);
-            getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
-        }
+        Complaint updatedComplaint = getComplaintDao().save(complaint);
+
+        ctx.setComplaint(updatedComplaint);
+
+        ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint,
+               AuthenticationUtils.getUserIpAddress());
+        complaintUpdatedEvent.setSucceeded(true);
+        ctx.addProperty("complaintUpdated", complaintUpdatedEvent);
+        getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
+
     }
 
     @Override

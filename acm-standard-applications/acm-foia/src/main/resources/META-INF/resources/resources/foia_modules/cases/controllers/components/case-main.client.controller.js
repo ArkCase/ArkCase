@@ -22,6 +22,7 @@ angular.module('cases').controller(
                 $scope.requestAlreadyExtended = objectInfo.extensionFlag;
                 $scope.originalRequestTrack = objectInfo.requestTrack;
                 $scope.wrongDate = false;
+                $scope.minDispositionClosedDate = moment.utc($scope.objectInfo.receivedDate).local();
 
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
@@ -181,8 +182,8 @@ angular.module('cases').controller(
 
             $scope.requestTrackChanged = function (requestTrack) {
                 // Automatically sets the extension flag if the 'complex' request track is selected.
-                if ($scope.complexRequestTrackOptionEnabled) {
-                    $scope.objectInfo.extensionFlag = (requestTrack === 'complex');
+                if ($scope.complexRequestTrackOptionEnabled && requestTrack === 'complex') {
+                    $scope.objectInfo.extensionFlag = true;
                 }
 
                 if (requestTrack === 'expedite') {
@@ -354,9 +355,11 @@ angular.module('cases').controller(
                 }
             }
             $scope.onComboAfterSave = function () {
-                if (moment($scope.objectInfo.dispositionClosedDate).isBefore($scope.objectInfo.receivedDate)) {
-                    $scope.objectInfo.dispositionClosedDate = null;
-                    DialogService.alert($translate.instant('cases.comp.main.dispositionClosedDate.wrongDateMessage ') + " " + moment($scope.objectInfo.receivedDate).format('MM/DD/YYYY h:mm A'));
+                if ($scope.objectInfo) {
+                    if (moment(moment.utc($scope.objectInfo.dispositionClosedDate)).isBefore(moment.utc($scope.objectInfo.receivedDate))) {
+                        $scope.objectInfo.dispositionClosedDate = null;
+                        DialogService.alert($translate.instant('cases.comp.main.dispositionClosedDate.wrongDateMessage ') + " " + moment($scope.objectInfo.receivedDate).format('MM/DD/YYYY h:mm A'));
+                    }
                 }
             };
 

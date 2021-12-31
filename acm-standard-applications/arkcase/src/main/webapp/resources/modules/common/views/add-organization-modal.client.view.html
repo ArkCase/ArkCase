@@ -44,7 +44,7 @@
                 <small ng-if="hasSubCompany" translate>common.addOrganization.notifyParentOrgWillBeChanged</small>
             </div>
             <div class="col-sm-6 form-group" ng-if="!hideAssociationTypes">
-                <label translate>common.addOrganization.type.label</label><span class="required-asterisk">*</span>
+                <label>{{assocTypeLabel}}</label><span class="required-asterisk">*</span>
                 <select ng-show="!isSelectedParent" ng-change="notifyOrganizationParent($parent.type)" class="input-md form-control"
                         ng-model="$parent.type" ng-options="o.value | translate for o in $parent.types" required></select>
 

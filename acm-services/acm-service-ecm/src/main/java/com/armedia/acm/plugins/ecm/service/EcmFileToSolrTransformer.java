@@ -27,11 +27,33 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CMIS_VERSION_SERIES_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CONTENT_TYPE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ECM_FILE_ID;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.EXT_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.HIDDEN_B;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MIME_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_FOLDER_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -44,7 +66,6 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -83,8 +104,10 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
-        // whether to index file contents or just store document-related metadata
-        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
+        /**
+         * indexing file contents along with file metadata to Solr.
+         */
+        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().size() > 0 && in.getVersions().get(in.getVersions().size() - 1).isValidFile())
         {
             return mapContentDocumentProperties(in);
         }
@@ -95,75 +118,16 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
     {
-        if (solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit())
-        {
-            return null;
-        }
-        else
+        /**
+         * indexing only file metadata to Solr.
+         */
+
+        if (!(solrConfig.getEnableContentFileIndexing() && getFileSizeBytes(in) < fileConfig.getDocumentSizeBytesLimit() && in.getVersions().size() > 0 && in.getVersions().get(in.getVersions().size() - 1).isValidFile()))
         {
             return mapDocumentProperties(in);
         }
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in)
-    {
-        SolrDocument doc = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(doc, in);
-
-        mapParentAclProperties(doc, in);
-
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
-        doc.setName(in.getFileName());
-        doc.setExt_s(in.getFileActiveVersionNameExtension());
-        doc.setModifier_s(in.getModifier());
-
-        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
-        doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
-        doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
-
-        doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-
-        doc.setTitle_parseable(in.getFileName());
-        doc.setTitle_parseable_lcs(in.getFileName());
-        doc.setTitle_t(in.getFileName());
-
-        doc.setParent_folder_id_i(in.getFolder().getId());
-
-        doc.setVersion_s(in.getActiveVersionTag());
-        doc.setType_s(in.getFileType());
-        doc.setCategory_s(in.getCategory());
-
-        // need an _lcs field for sorting
-        doc.setName_lcs(in.getFileName());
-
-        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
-
-        doc.setMime_type_s(in.getFileActiveVersionMimeType());
-
-        doc.setStatus_s(in.getStatus());
-
-        doc.setHidden_b(isHidden(in));
-
-        mapAdditionalProperties(in, doc.getAdditionalProperties());
-
-        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-        doc.setAdditionalProperty("duplicate_b", in.isDuplicate());
-        doc.setAdditionalProperty("custodian_s", in.getCustodian());
-
-        if (in.getZylabFileMetadata() != null)
-        {
-            doc.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
-        }
-        return doc;
+     
+         return null;
     }
 
     private Long getFileSizeBytes(EcmFile in)
@@ -191,6 +155,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrContentDocument mapContentDocumentProperties(EcmFile in)
     {
         SolrContentDocument solr = new SolrContentDocument();
+        log.debug("Creating Solr Content Document for file_id [{}] and fine_name [{}]", in.getVersionSeriesId(), in.getFileName());
         SolrAdvancedSearchDocument solrAdvancedSearchDocument = mapDocumentProperties(in);
 
         try
@@ -208,7 +173,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
-        skipAdditionalPropertiesInURL.add("name_partial");
         skipAdditionalPropertiesInURL.add("url");
 
         solr.setSkipAdditionalPropertiesInURL(skipAdditionalPropertiesInURL);
@@ -218,96 +182,98 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private SolrAdvancedSearchDocument mapDocumentProperties(EcmFile in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        log.debug("Creating Solr advanced search document for file_id [{}] and fine_name [{}]", in.getVersionSeriesId(), in.getFileName());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                in.getObjectType(), in.getFileName());
 
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        mapParentAclProperties(solr, in);
+        mapParentAclProperties(solrDoc, in);
 
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        return solrDoc;
+    }
 
-        solr.setName(in.getFileName());
-        solr.setExt_s(in.getFileActiveVersionNameExtension());
-        solr.setMime_type_s(in.getFileActiveVersionMimeType());
-        solr.setContent_type(in.getFileActiveVersionMimeType());
-        solr.setStatus_lcs(in.getStatus());
-        solr.setTitle_parseable(in.getFileName());
-        solr.setTitle_parseable_lcs(in.getFileName());
+    @Override
+    public void mapAdditionalProperties(EcmFile in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(EXT_S, in.getFileActiveVersionNameExtension());
+        additionalProperties.put(MIME_TYPE_S, in.getFileActiveVersionMimeType());
+        additionalProperties.put(CONTENT_TYPE, in.getFileActiveVersionMimeType());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
+        additionalProperties.put(TITLE_PARSEABLE, in.getFileName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getFileName());
+        additionalProperties.put("title_t", in.getFileName());
 
-        solr.setParent_id_s(Long.toString(in.getContainer().getId()));
-        solr.setParent_type_s(in.getContainer().getObjectType());
-        solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
+        additionalProperties.put(PARENT_ID_S, Long.toString(in.getContainer().getId()));
+        additionalProperties.put(PARENT_TYPE_S, in.getContainer().getObjectType());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getContainer().getContainerObjectTitle());
+        additionalProperties.put(PARENT_REF_S, in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
+        additionalProperties.put(PARENT_FOLDER_ID_I, in.getFolder().getId());
 
-        solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-        solr.setParent_folder_id_i(in.getFolder().getId());
+        additionalProperties.put(ECM_FILE_ID, in.getVersionSeriesId());
+        additionalProperties.put(CMIS_VERSION_SERIES_ID_S, in.getVersionSeriesId());
 
-        solr.setEcmFileId(in.getVersionSeriesId());
-        solr.setCmis_version_series_id_s(in.getVersionSeriesId());
+        additionalProperties.put(TYPE_LCS, in.getFileType());
+        additionalProperties.put(HIDDEN_B, isHidden(in));
 
-        solr.setType_lcs(in.getFileType());
-
-        solr.setHidden_b(isHidden(in));
-
-        mapAdditionalProperties(in, solr.getAdditionalProperties());
+        if (in.getContainer() != null)
+        {
+            additionalProperties.put(PARENT_OBJECT_ID_I, in.getContainer().getContainerObjectId());
+            additionalProperties.put(PARENT_ID_S, Long.toString(in.getContainer().getContainerObjectId()));
+            additionalProperties.put(PARENT_TYPE_S, in.getContainer().getContainerObjectType());
+        }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFullName());
         }
         else
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", in.getCreator());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, in.getCreator());
         }
 
         AcmUser assignee = getUserDao().quietFindByUserId(ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants()));
         if (assignee != null)
         {
-            solr.setAssignee_full_name_lcs(assignee.getFullName());
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, assignee.getFullName());
         }
         else
         {
-            solr.setAssignee_full_name_lcs("");
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, in.getCreator());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFullName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFullName());
         }
         else
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", in.getModifier());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, in.getModifier());
         }
 
-        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
+        additionalProperties.put("security_field_lcs", in.getSecurityField());
 
-        solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
-        solr.setAdditionalProperty("custodian_s", in.getCustodian());
+        additionalProperties.put("cmis_repository_id_s", in.getCmisRepositoryId());
+        additionalProperties.put("custodian_s", in.getCustodian());
 
         if (in.getZylabFileMetadata() != null)
         {
-            solr.setAdditionalProperty("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
+            additionalProperties.put("zylab_review_analysis_lcs", in.getZylabFileMetadata().getReviewedAnalysis());
         }
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
+        additionalProperties.put("duplicate_b", in.isDuplicate());
 
-        solr.setAdditionalProperty("duplicate_b", in.isDuplicate());
+        additionalProperties.put("category_s", in.getCategory());
+        additionalProperties.put("version_s", in.getActiveVersionTag());
 
-        return solr;
-    }
-
-    private void mapAdditionalProperties(EcmFile in, Map<String, Object> additionalProperties)
-    {
         if (in.getFileSource() != null)
         {
             additionalProperties.put("file_source_s", in.getFileSource());
@@ -430,4 +396,5 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     {
         this.fileConfig = fileConfig;
     }
+    
 }

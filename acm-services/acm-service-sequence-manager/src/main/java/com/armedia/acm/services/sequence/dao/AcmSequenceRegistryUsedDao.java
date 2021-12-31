@@ -29,7 +29,10 @@ package com.armedia.acm.services.sequence.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistryUsed;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegistryUsed>
@@ -41,6 +44,7 @@ public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegist
         return AcmSequenceRegistryUsed.class;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer removeUsedSequenceRegistry(String sequenceValue)
     {
         String queryText = "DELETE FROM " +
@@ -53,6 +57,7 @@ public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegist
         return query.executeUpdate();
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer removeUsedSequenceRegistry(String sequenceName, String sequencePartName)
     {
         String queryText = "DELETE FROM " +
@@ -67,9 +72,10 @@ public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegist
         return query.executeUpdate();
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public AcmSequenceRegistryUsed getUsedSequenceRegistry(String sequenceValue)
     {
-        AcmSequenceRegistryUsed acmSequenceRegistryUsed;
+        AcmSequenceRegistryUsed acmSequenceRegistryUsed = null;
         String queryText = "SELECT sequenceRegistry " +
                 "FROM AcmSequenceRegistryUsed sequenceRegistry "+
                 "WHERE sequenceRegistry.sequenceValue = :sequenceValue";
@@ -77,8 +83,12 @@ public class AcmSequenceRegistryUsedDao extends AcmAbstractDao<AcmSequenceRegist
         Query query = getEm().createQuery(queryText);
         query.setParameter("sequenceValue", sequenceValue);
 
-        acmSequenceRegistryUsed = (AcmSequenceRegistryUsed) query.getSingleResult();
-
+        try{
+            acmSequenceRegistryUsed = (AcmSequenceRegistryUsed) query.getSingleResult();
+        }
+        catch (NoResultException e){
+            return acmSequenceRegistryUsed;
+        }
         return acmSequenceRegistryUsed;
     }
 }

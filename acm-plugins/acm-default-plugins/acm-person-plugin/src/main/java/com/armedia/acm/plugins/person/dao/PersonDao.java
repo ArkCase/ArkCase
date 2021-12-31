@@ -150,6 +150,22 @@ public class PersonDao extends AcmAbstractDao<Person>
         }
     }
 
+    public Person findAnonymousPerson()
+    {
+        Query query = getEntityManager().createQuery(
+                "SELECT p From Person p " +
+                        "WHERE p.givenName like 'Anonymous' " +
+                        "AND p.familyName like 'Anonymous' " +
+                        "AND p.anonymousFlag = true ");
+        List<Person> result = query.getResultList();
+        if(result.isEmpty()){
+            return null;
+        }
+        else {
+            return result.get(0);
+        }
+    }
+
     public Person findByLdapUserId(String ldapUserId)
     {
         Query query = getEntityManager().createQuery(

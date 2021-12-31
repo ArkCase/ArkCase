@@ -23,14 +23,20 @@ angular.module('complaints').controller(
                 'Object.ModelService',
                 'Object.ParticipantService',
                 'Mentions.Service',
+                'Admin.ObjectTitleConfigurationService',
                 function($scope, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, PersonInfoService, UserInfoService, ObjectModelService,
-                        ObjectParticipantService, MentionsService) {
+                        ObjectParticipantService, MentionsService, AdminObjectTitleConfigurationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.selectedFiles = [];
                     $scope.userSearchConfig = null;
+                    $scope.enableTitle = false
+
+                    AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function(data){
+                        $scope.enableTitle = data.data.COMPLAINT.enableTitleField;
+                    });
 
                     ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -71,6 +77,7 @@ angular.module('complaints').controller(
                         else
                             $scope.isAddressTypeSelected = false;
                     };
+                    var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
 
                     ObjectLookupService.getComplaintTypes().then(function(complaintTypes) {
                         $scope.incidentCategory = complaintTypes;
@@ -179,6 +186,7 @@ angular.module('complaints').controller(
                         params.type = $scope.initiatorType;
                         params.typeEnabled = false;
                         association = new newPersonAssociation();
+                        params.assocTypeLabel = assocTypeLabel;
 
                         var modalInstance = $modal.open({
                             scope: $scope,
@@ -244,7 +252,8 @@ angular.module('complaints').controller(
                             showSetPrimary: true,
                             isDefault: false,
                             types: $scope.personTypes,
-                            isFirstPerson: Util.isEmpty(associationFound) ? true : false
+                            isFirstPerson: Util.isEmpty(associationFound) ? true : false,
+                            assocTypeLabel: assocTypeLabel
                         };
 
                         //set this params for editing
@@ -537,6 +546,10 @@ angular.module('complaints').controller(
 
                     $scope.cancelModal = function() {
                         $modalInstance.dismiss();
+                    };
+
+                    $scope.checkLocationRules = function (address) {
+                        return !_.values(address).every(_.isEmpty)
                     };
 
                 } ]);

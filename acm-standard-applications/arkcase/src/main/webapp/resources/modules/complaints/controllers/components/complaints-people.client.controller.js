@@ -20,6 +20,8 @@ angular.module('complaints').controller(
                         return personTypes;
                     });
 
+                    var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
+
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
                         stateParams: $stateParams,
@@ -57,8 +59,9 @@ angular.module('complaints').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.objectInfo = objectInfo;
-                        $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                        PersonInfoService.getPersons().then(function(persons) {
+                            $scope.gridOptions.data = HelperUiGridService.filterRestricted(persons.data.response.docs, $scope.objectInfo.personAssociations);
+                        });
                     };
 
                     var newPersonAssociation = function() {
@@ -83,6 +86,7 @@ angular.module('complaints').controller(
 
                         var params = {};
                         params.types = $scope.personTypes;
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (association) {
                             if (association.personType == $scope.initiatorType) {

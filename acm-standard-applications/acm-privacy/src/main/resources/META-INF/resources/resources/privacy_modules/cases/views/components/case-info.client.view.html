@@ -58,12 +58,19 @@
         <div class="row">
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
-                    <a href="#" editable-combodate="dueDateInfo" e-template="MM/DD/YYYY"
-                       e-min-year="{{minYear}}" e-max-year="{{maxYear}}" e-minute-step="1"
-                       onaftersave="updateDueDate($data, dateInfo.dueDate)"
+                    <a href="javascript:;"
+                       ng-click="registerWatcher()"
+                       moment-picker="dueDate.dueDateInfoUIPicker"
+                       ng-model="dueDate.dueDateInfo"
+                       format="MM/DD/YYYY"
+                       min-date="minDate"
+                       start-view="month"
+                       auto-close="true"
+                       is-open="dueDate.isOpen"
                        permission="editCase" permission-object-type="CASE_FILE"
                        permission-properties="objectInfo" permission-action="disable">
-                        {{dateInfo.dueDate || ('common.value.unknown' | translate) }}</a>
+                        {{dateInfo.dueDate || ('common.value.unknown' | translate) }}
+                    </a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>
             </div>

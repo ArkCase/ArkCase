@@ -56,7 +56,7 @@ public class DocumentLinkedTemplateModelProvider implements TemplateModelProvide
         if (fileVersions != null)
         {
             String token = authenticationTokenService.getUncachedTokenForAuthentication(null);
-            String requestUrl = applicationConfig.getBaseUrl() + "/api/latest/plugin/ecm/download?";
+            String requestUrl = applicationConfig.getBaseUrl() + "/api/latest/plugin/open/downloadFromEmail?";
             String relativePath = "";
             for (int i = 0; i < fileVersions.size(); i++)
             {

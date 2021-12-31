@@ -361,7 +361,7 @@ angular.module('directives').directive(
                                             return false;
                                         }
                                         if ("RECORD" === Util.goodValue(node.data.status)) {
-                                            return false;
+                                            return true;
                                         }
                                         if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                             return false;
@@ -1990,6 +1990,9 @@ angular.module('directives').directive(
                                         } else if (isReadOnly) {
                                             menuResource = DocTree.Menu.getReadOnlyResource(node);
                                         } else if ("RECORD" == Util.goodValue(node.data.status)) {
+                                            if(node.data.link) {
+                                                menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
+                                            } else
                                             menuResource = DocTree.Menu.getRecordResource(node);
                                         } else if (node.data.link) {
                                             menuResource = node.data.objectType === "folder" ? "menu.link.folder" : "menu.link.file";
@@ -2787,11 +2790,10 @@ angular.module('directives').directive(
                                         newNode.renderTitle();
                                         dfd.resolve(copyFolderInfo);
                                     }, function(errorData) {
-                                        if (errorData.data && errorData.data.message)
-                                        {
-                                            MessageService.error(errorData.data.message);
-                                        } else if (errorData.data) {
-                                            MessageService.error(errorData.data)
+                                        if (copyService == Ecm.copyFolderAsLink) {
+                                            MessageService.error($translate.instant("common.directive.docTree.copyFolderAsLinkError"));
+                                        } else {
+                                            MessageService.error($translate.instant("common.directive.docTree.copyFolderError"));
                                         }
                                         DocTree.markNodeError(newNode);
                                         dfd.reject();
@@ -3250,6 +3252,7 @@ angular.module('directives').directive(
                                                     Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmFileDeletion"), function(result) {
                                                         if (result) {
                                                             DocTree.Op.fileRemove(dfd, node, parent, true);
+                                                            setTimeout(DocTree.refreshTree, 1500);
                                                         }
                                                     });
                                                 } else {

@@ -33,13 +33,16 @@ import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.component.cmis.CamelCMISActions;
 import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -73,9 +76,9 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                 .delayer(1000)
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
+                    ObjectId checkedOutId = (ObjectId) exchange.getMessage().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID,
-                            routeProperties.get(ArkCaseCMISConstants.CMIS_DOCUMENT_ID));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, checkedOutId.getId());
                     exchange.getIn().getHeaders().put("cmis:checkinComment",
                             routeProperties.get(ArkCaseCMISConstants.CHECKIN_COMMENT));
                     exchange.getIn().getHeaders().put("cmis:contentStreamMimeType",

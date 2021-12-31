@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
     <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
 
@@ -8,9 +9,16 @@
         <constructor-arg value="authentication-cache"/>
     </bean>
 
-    <bean id="authenticationTokenService" class="com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService">
+    <bean id="authenticationTokenService"
+          class="com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService">
         <property name="authenticationTokenCache" ref="acmAuthenticationCache"/>
+        <property name="webDavAuthenticationTokenCacheManager" ref="webDAVCacheManager"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
+    <bean id="webDAVCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+          p:configLocation="classpath:ehcache/webDAVCache.xml" p:shared="true"/>
+
+    <bean id="webDAVCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+          p:cacheManager-ref="webDAVCache"/>
 
 </beans>

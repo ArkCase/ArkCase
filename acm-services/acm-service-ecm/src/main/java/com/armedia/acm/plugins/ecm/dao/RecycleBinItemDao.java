@@ -35,6 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * @author darko.dimitrievski
@@ -61,12 +66,21 @@ public class RecycleBinItemDao extends AcmAbstractDao<RecycleBinItem>
     {
         try
         {
-            String jpql = "SELECT e FROM AcmContainer e WHERE e.containerObjectType =:objectType AND e.cmisRepositoryId =:cmisRepositoryId";
+            String jpql = "SELECT e FROM AcmContainer e WHERE e.containerObjectType =:objectType " +
+                    "AND e.cmisRepositoryId =:cmisRepositoryId " +
+                    "AND e.created BETWEEN :startDate and :endDate ";
 
             TypedQuery<AcmContainer> query = getEm().createQuery(jpql, AcmContainer.class);
 
+            Date startDate = Date.from(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT)
+                    .atZone(ZoneId.systemDefault()).toInstant());
+            Date endDate = Date.from(LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
+                    .atZone(ZoneId.systemDefault()).toInstant());
+
             query.setParameter("objectType", objectType);
             query.setParameter("cmisRepositoryId", cmisRepositoryId);
+            query.setParameter("startDate", startDate);
+            query.setParameter("endDate", endDate);
             return query.getSingleResult();
         }
         catch(NoResultException e)

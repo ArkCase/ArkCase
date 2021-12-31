@@ -34,6 +34,8 @@ import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 11, 2018
  *
@@ -81,10 +83,10 @@ public interface PortalUserServiceProvider
      */
     PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException;
 
-    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId)
+    UserRegistrationResponse registerUserFromPerson(String portalId, Long personId, Long requestId)
             throws PortalUserServiceException;
 
-    UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
+    UserResetResponse requestPasswordResetForRequester(String portalId, UserResetRequest resetRequest, Long requestId) throws PortalUserServiceException;
 
     /**
      * @param portalId
@@ -108,7 +110,7 @@ public interface PortalUserServiceProvider
      */
     UserResetResponse regeneratePasswordReset(String portalId, UserResetRequest resetRequest) throws PortalUserServiceException;
 
-    UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle)
+    UserResetResponse requestPasswordReset(String portalId, UserResetRequest resetRequest, String templateName, String emailTitle, Long requestId)
             throws PortalUserServiceException;
 
     /**
@@ -128,7 +130,7 @@ public interface PortalUserServiceProvider
     UserResetResponse resetPassword(String portalId, String resetId, String password) throws PortalUserServiceException;
 
     UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
-            throws PortalUserServiceException;
+            throws PortalUserServiceException, InvalidAttributeValueException;
 
     PortalUser retrieveUser(String portalUserId, String portalId);
 

@@ -27,8 +27,17 @@ package com.armedia.acm.services.users.service.group;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CHILD_ID_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.HIDDEN_B;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MEMBER_ID_SS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.SUPERVISOR_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
@@ -37,11 +46,12 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -67,100 +77,75 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     {
 
         acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
-        LOG.info("Creating Solr advanced search document for Group.");
+        LOG.debug("Creating Solr advanced search document for Group.");
 
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-        solr.setId(in.getName() + "-GROUP");
-        solr.setObject_id_s(in.getName());
-        solr.setObject_display_name_s(in.getDisplayName());
-        solr.setObject_type_s("GROUP");
-        solr.setTitle_parseable(in.getName());
-        solr.setName(in.getName());
-        solr.setDescription_parseable(in.getDescription());
-        solr.setObject_sub_type_s(in.getType().name());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        solrDoc.setId(in.getName() + "-GROUP");
+        solrDoc.setObject_id_s(in.getName());
+        solrDoc.setObject_type_s("GROUP");
+        solrDoc.setName(in.getName());
+        solrDoc.setName_lcs(in.getName());
+        solrDoc.setCreate_date_tdt(in.getCreated());
+        solrDoc.setAuthor(in.getCreator());
+        solrDoc.setCreator_lcs(in.getCreator());
+        solrDoc.setModified_date_tdt(in.getModified());
+        solrDoc.setModifier_lcs(in.getModifier());
 
-        solr.setStatus_lcs(in.getStatus().name());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+        return solrDoc;
+    }
 
-        solr.getAdditionalProperties().put("ascendants_id_ss", in.getAscendantsStream().collect(Collectors.toList()));
-        solr.getAdditionalProperties().put("groups_member_of_id_ss",
+    @Override
+    public void mapAdditionalProperties(AcmGroup in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getName());
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getDescription());
+        additionalProperties.put(STATUS_LCS, in.getStatus().name());
+
+        additionalProperties.put("object_sub_type_s", in.getType().name());
+        additionalProperties.put("ascendants_id_ss", in.getAscendantsStream().collect(Collectors.toList()));
+
+        additionalProperties.put("groups_member_of_id_ss",
                 in.getMemberOfGroups().stream().map(AcmGroup::getName).collect(Collectors.toList()));
 
         if (in.getSupervisor() != null)
         {
-            solr.setSupervisor_id_s(in.getSupervisor().getUserId());
+            additionalProperties.put(SUPERVISOR_ID_S, in.getSupervisor().getUserId());
             if (in.getSupervisor().getFullName() != null)
             {
-                solr.getAdditionalProperties().put("supervisor_name_s", in.getSupervisor().getFullName());
+                additionalProperties.put("supervisor_name_s", in.getSupervisor().getFullName());
             }
         }
 
-        solr.setMember_id_ss(in.getUserMemberIds().collect(Collectors.toList()));
-        solr.setChild_id_ss(in.getGroupMemberNames().collect(Collectors.toList()));
+        additionalProperties.put(MEMBER_ID_SS, in.getUserMemberIds().collect(Collectors.toList()));
+        additionalProperties.put(CHILD_ID_SS, in.getGroupMemberNames().collect(Collectors.toList()));
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solr.setAdditionalProperty("directory_name_s", in.getDirectoryName());
-        solr.setAdditionalProperty("name_partial", in.getName());
-        solr.setAdditionalProperty("name_lcs", in.getName());
+        additionalProperties.put("directory_name_s", in.getDirectoryName());
+        additionalProperties.put("name_partial", in.getName());
 
         // set hidden_b to true if group is group/user control group
-        if (acmLdapSyncConfig != null) {
+        if (acmLdapSyncConfig != null)
+        {
             if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
                     || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
             {
-                solr.setHidden_b(true);
+                additionalProperties.put(HIDDEN_B, true);
             }
         }
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmGroup in)
-    {
-        acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
-        LOG.info("Creating Solr quick search document for Group.");
-
-        SolrDocument solr = new SolrDocument();
-        solr.setId(in.getName() + "-GROUP");
-        solr.setObject_id_s(in.getName());
-        solr.setObject_display_name_s(in.getDisplayName());
-        solr.setObject_type_s("GROUP");
-        solr.setName(in.getName());
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setTitle_parseable(in.getName());
-        solr.setStatus_s(in.getStatus().name());
-        solr.setAdditionalProperty("name_partial", in.getName());
-        solr.setAdditionalProperty("name_lcs", in.getName());
-
-        // set hidden_b to true if group is group/user control group
-        if (acmLdapSyncConfig != null) {
-            if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
-                    || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
-            {
-                solr.setHidden_b(true);
-            }
-        }
-        return solr;
     }
 
     @Override

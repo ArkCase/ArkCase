@@ -2477,13 +2477,13 @@ securitySchemes:
             example: 50
             type: integer
           assignee:
-            description: User ID of the assignee whose rows you want to see.  If supplied, only rows with assignee_s field equal to this value will be returned.
+            description: User ID of the assignee whose rows you want to see.  If supplied, only rows with assignee_id_lcs field equal to this value will be returned.
             required: false
             example: ann-acm
             default: ""
             type: string
           activeOnly:
-            description: If true, rows with status_s field equal to COMPLETE or DELETE will not be included in the results.  Used to display only active rows. 
+            description: If true, rows with status_lcs field equal to COMPLETE or DELETE will not be included in the results.  Used to display only active rows.
             required: false
             default: true
             example: true
@@ -2501,107 +2501,100 @@ securitySchemes:
                         "sort":"name desc",
                         "indent":"true",
                         "start":"0",
-                        "q":"object_type_s:CASE_FILE AND -status_s:COMPLETE AND -status_s:DELETE",
+                        "q":"object_type_s:CASE_FILE AND -status_lcs:COMPLETE AND -status_lcs:DELETE",
                         "wt":"json",
                         "rows":"50"}},
                     "response":{"numFound":7,"start":0,"docs":[
                         {
                           "id":"4893-CASE_FILE",
-                          "status_s":"ACTIVE",
+                          "status_lcs":"ACTIVE",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
-                          "modifier_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "last_modified":"2014-11-18T08:09:29Z",
                           "create_dt":"2014-11-18T08:09:29Z",
-                          "title_t":"August 1914",
                           "name":"20141118_4893",
                           "object_id_s":"4893",
                           "object_type_s":"CASE_FILE",
                           "_version_":1485115144778285056},
                         {
                           "id":"4822-CASE_FILE",
-                          "status_s":"ACTIVE",
+                          "status_lcs":"ACTIVE",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
-                          "modifier_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "last_modified":"2014-11-17T16:16:09Z",
                           "create_dt":"2014-11-17T16:16:09Z",
-                          "title_t":"complaint title",
                           "name":"20141117_4822",
                           "object_id_s":"4822",
                           "object_type_s":"CASE_FILE",
                           "_version_":1485055166024515584},
                         {
                           "id":"4491-CASE_FILE",
-                          "status_s":"ACTIVE",
+                          "status_lcs":"ACTIVE",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
-                          "modifier_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "last_modified":"2014-11-14T14:39:19Z",
                           "create_dt":"2014-11-14T14:39:19Z",
-                          "title_t":"complaint title",
                           "name":"20141114_4491",
                           "object_id_s":"4491",
                           "object_type_s":"CASE_FILE",
                           "_version_":1484777281865908224},
                         {
                           "id":"4473-CASE_FILE",
-                          "status_s":"ACTIVE",
+                          "status_lcs":"ACTIVE",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
-                          "modifier_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "last_modified":"2014-11-14T16:06:11Z",
                           "create_dt":"2014-11-14T14:04:00Z",
-                          "title_t":"complaint title",
                           "name":"20141114_4473",
                           "object_id_s":"4473",
                           "object_type_s":"CASE_FILE",
                           "_version_":1484782747253735424},
                         {
-                          "status_s":"DRAFT",
+                          "status_lcs":"DRAFT",
                           "create_dt":"2014-10-06T16:28:42Z",
-                          "title_t":"Dupree's Diamond Blues",
                           "object_id_s":"508",
-                          "owner_s":"ebmillar",
+                          "owner_lcs":"ebmillar",
                           "deny_acl_ss":["TEST-DENY-ACL"],
                           "object_type_s":"CASE_FILE",
                           "allow_acl_ss":["TEST-ALLOW-ACL"],
                           "id":"508-CASE_FILE",
-                          "modifier_s":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
                           "last_modified":"2014-10-06T16:28:42Z",
                           "name":"20141006_508",
                           "_version_":1481249565804855296},
                         {
-                          "status_s":"DRAFT",
+                          "status_lcs":"DRAFT",
                           "create_dt":"2014-10-06T16:23:23Z",
-                          "title_t":"Fire on the Mountain",
                           "object_id_s":"507",
-                          "owner_s":"ebmillar",
+                          "owner_lcs":"ebmillar",
                           "deny_acl_ss":["TEST-DENY-ACL"],
                           "object_type_s":"CASE_FILE",
                           "allow_acl_ss":["TEST-ALLOW-ACL"],
                           "id":"507-CASE_FILE",
-                          "modifier_s":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
                           "last_modified":"2014-10-06T16:23:23Z",
                           "name":"20141006_507",
                           "_version_":1481249565802758144},
                         {
-                          "status_s":"CLOSED",
+                          "status_lcs":"CLOSED",
                           "create_dt":"2014-10-06T16:01:41Z",
-                          "title_t":"ISIS Event at the local Caribou Coffee",
                           "object_id_s":"506",
-                          "owner_s":"ebmillar",
+                          "owner_lcs":"ebmillar",
                           "deny_acl_ss":["TEST-DENY-ACL"],
                           "object_type_s":"CASE_FILE",
                           "allow_acl_ss":["TEST-ALLOW-ACL"],
                           "id":"506-CASE_FILE",
-                          "modifier_s":"ebmillar",
+                          "modifier_lcs":"ebmillar",
                           "author":"ebmillar",
-                          "author_s":"ebmillar",
+                          "creator_lcs":"ebmillar",
                           "last_modified":"2014-10-06T17:50:08Z",
                           "name":"20141006_506",
                           "_version_":1481252322875015168}]
@@ -2658,10 +2651,10 @@ securitySchemes:
                       "docs": [
                         {
                           "id": "12-Complaint",
-                          "status_s": "DRAFT",
+                          "status_lcs": "DRAFT",
                           "author": "ann-acm",
-                          "author_s": "ann-acm",
-                          "modifier_s": "ann-acm",
+                          "creator_lcs": "ann-acm",
+                          "modifier_lcs": "ann-acm",
                           "title": [
                             "Test 20140502_12"
                           ],
@@ -2674,10 +2667,10 @@ securitySchemes:
                         },
                         {
                           "id": "14-Complaint",
-                          "status_s": "DRAFT",
+                          "status_lcs": "DRAFT",
                           "author": "ann-acm",
-                          "author_s": "ann-acm",
-                          "modifier_s": "ann-acm",
+                          "creator_lcs": "ann-acm",
+                          "modifier_lcs": "ann-acm",
                           "title": [
                             "Test 20140502_14"
                           ],

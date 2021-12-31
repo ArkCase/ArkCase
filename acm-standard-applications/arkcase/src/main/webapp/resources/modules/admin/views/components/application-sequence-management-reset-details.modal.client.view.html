@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <fieldset ng-disabled="isEdit">
                     <label translate>admin.application.sequenceManagementReset.detailsModal.resetStartDate</label>
-                    <date-time-picker data="sequenceReset.resetStartDate" date-picker-id="resetStartDate" ng-click="dateSelected()" on-after-save="dateSelected()"></date-time-picker>
+                    <date-time-picker data="sequenceReset.resetStartDate" show-time="true" on-date-select="dateSelected"></date-time-picker>
                     </fieldset>
                 </div>
                 <div class="form-group">

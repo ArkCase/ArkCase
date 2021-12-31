@@ -1,0 +1,24 @@
+<div ng-controller="ProgressBarManagerController">
+    <div class="arkcase-snackbar" ng-show="!hideSnackbar">
+        <ul class="nav nav-main">
+            <li>
+                <i class="navigation-icon fa fa-refresh fa-spin fa-fw" ng-show="!hideSnackbarIcon"></i>
+                <span class="uploadingSnackbarStatus" ng-show="!hideSnackbarIcon" translate>progress-bar.modal.versioning</span>
+                <span class="uploadingSnackbarStatus" ng-show="hideSnackbarIcon" translate>progress-bar.modal.newVersionComplete</span>
+                <button class="btn btn-secondary" ng-click="onClickViewDetailsModal()">
+                    <span style="color: black" translate>progress-bar.modal.viewDetails</span>
+                </button>
+                <div ng-repeat="versionedFile in versionedFiles">
+                    <div class="progress" style="height: 10px !important;">
+                        <div class="progress-bar"
+                             role="progressbar"
+                             aria-valuenow="{{versionedFile.currentProgress}}" aria-valuemin="0" aria-valuemax="100"
+                             ng-style="{width: versionedFile.currentProgress + '%'}">
+                            <span class="sr-only">{{versionedFile.currentProgress + ' %'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

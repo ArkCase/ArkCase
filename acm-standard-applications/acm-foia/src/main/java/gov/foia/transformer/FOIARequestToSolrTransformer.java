@@ -31,14 +31,11 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
-
+import gov.foia.model.FOIARequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-
-import gov.foia.model.FOIARequest;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 23, 2016
@@ -64,36 +61,13 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
             if (solr != null)
             {
                 mapRequestProperties(requestIn, solr.getAdditionalProperties());
-                solr.setObject_sub_type_s("FOIA_REQUEST");
+                solr.setAdditionalProperty("object_sub_type_s", "FOIA_REQUEST");
             }
             return solr;
         }
         else
         {
             log.error("Could not send to advanced search class name {}!.", in.getClass().getName());
-        }
-        throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(CaseFile in)
-    {
-        SolrDocument solr = null;
-
-        if (in instanceof FOIARequest)
-        {
-            FOIARequest requestIn = (FOIARequest) in;
-            solr = super.toSolrQuickSearch(requestIn);
-            if (solr != null)
-            {
-                mapRequestProperties(requestIn, solr.getAdditionalProperties());
-                solr.getAdditionalProperties().put("object_sub_type_s", "FOIA_REQUEST");
-            }
-            return solr;
-        }
-        else
-        {
-            log.error("Could not send to quick search class name {}!.", in.getClass().getName());
         }
         throw new RuntimeException("Could not send to advanced search class name " + in.getClass().getName() + "!.");
     }
@@ -146,6 +120,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         if (requestIn.getOriginator() != null && requestIn.getOriginator().getPerson() != null)
         {
             Person person = requestIn.getOriginator().getPerson();
+
             if (person.getFullName() != null)
             {
                 additionalProperties.put("requester_name_s", person.getFullName());
@@ -165,6 +140,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         }
 
         additionalProperties.put("queue_enter_date_tdt", requestIn.getQueueEnterDate());
+        additionalProperties.put("hold_enter_date_tdt", requestIn.getHoldEnterDate());
 
         additionalProperties.put("record_search_date_from_tdt", requestIn.getRecordSearchDateFrom());
         additionalProperties.put("record_search_date_to_tdt", requestIn.getRecordSearchDateTo());

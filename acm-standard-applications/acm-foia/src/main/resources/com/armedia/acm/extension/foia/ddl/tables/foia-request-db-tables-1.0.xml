@@ -936,5 +936,23 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
+    <changeSet id="60-add-portal_request_tracking_id" author="samuel.klutse">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_portal_request_tracking_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="61-add_made_public_date_column" author="martin.jovanovski" dbms="oracle,mssql,postgres,mysql">
+        <addColumn tableName="acm_file">
+            <column name="fo_made_public_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="62-create-index-on-request-type" author="bojan.milenkoski">
+        <createIndex tableName="acm_case_file" indexName="idx_acm_case_file_request_type">
+            <column name="fo_request_type"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>
 

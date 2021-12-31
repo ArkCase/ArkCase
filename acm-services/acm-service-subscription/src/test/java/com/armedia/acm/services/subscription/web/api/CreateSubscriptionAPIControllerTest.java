@@ -117,7 +117,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
         Long objectId = 100L;
         String objectType = "NEW_OBJ_TYPE";
         String ipAddress = "ipAddress";
-        String solrQuery = "q=id:100-NEW_OBJ_TYPE&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED";
+        String solrQuery = "q=id:100-NEW_OBJ_TYPE&fq=-status_lcs:COMPLETE&fq=-status_lcs:DELETE&fq=-status_lcs:CLOSED";
 
         AcmSubscription subscription = new AcmSubscription();
         subscription.setSubscriptionId(500L);
@@ -125,14 +125,14 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
 
-        subscriptionConfig.setGetObjectByIdQuery("q=id:?&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED");
+        subscriptionConfig.setGetObjectByIdQuery("q=id:?&fq=-status_lcs:COMPLETE&fq=-status_lcs:DELETE&fq=-status_lcs:CLOSED");
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         String jsonString = "{response:{docs:[{name:a,title_parseable:aa},{name:d,title_parseable:bb}]}}";
 
         Capture<AcmSubscription> subscriptionToSave = EasyMock.newCapture();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, ""))
                 .andReturn(jsonString).once();
         expect(mockSubscriptionService.saveSubscription(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
 

@@ -27,9 +27,13 @@ package gov.foia.model;
  * #L%
  */
 
+import com.armedia.acm.correspondence.model.FormattedMergeTerm;
+
 public class FOIARequestModel
 {
     private FOIARequest request;
+    private FormattedMergeTerm exemptionCodesAndDescription;
+    private String exemptionCodeSummary;
 
     public FOIARequest getRequest()
     {
@@ -39,5 +43,25 @@ public class FOIARequestModel
     public void setRequest(FOIARequest request)
     {
         this.request = request;
+    }
+
+    public FormattedMergeTerm getExemptionCodesAndDescription()
+    {
+        return exemptionCodesAndDescription;
+    }
+
+    public void setExemptionCodesAndDescription(FormattedMergeTerm exemptionCodesAndDescription)
+    {
+        this.exemptionCodesAndDescription = exemptionCodesAndDescription;
+    }
+
+    public String getExemptionCodeSummary()
+    {
+        return exemptionCodeSummary;
+    }
+
+    public void setExemptionCodeSummary(String exemptionCodeSummary)
+    {
+        this.exemptionCodeSummary = exemptionCodeSummary;
     }
 }

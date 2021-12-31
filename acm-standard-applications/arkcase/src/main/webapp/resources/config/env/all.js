@@ -33,8 +33,9 @@ module.exports = {
                     'node_modules/@bower_components/ng-tags-input/ng-tags-input.css', 'node_modules/@bower_components/fullcalendar/dist/fullcalendar.css',
                     'node_modules/@bower_components/angular-chart.js/dist/angular-chart.css',
                     'node_modules/@bower_components/pdf.js-viewer/viewer.css',
-                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree.css'],
-            customJs : [ 'https://project.armedia.com/jira/s/272b7e5d0b48558abb6f76f2cc38fb4c-T/en_US-f0xdna/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=2b76dcde' ],
+                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree.css',
+                    'node_modules/angular-moment-picker/dist/angular-moment-picker.min.css'],
+            customJs : [ 'https://project.armedia.com/jira/s/bcc668048eb1a31f8f63c11740708fe0-T/-wpypks/814001/6411e0087192541a09d88223fb51a6a0/4.0.3/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=16f3c361' ],
             js : [ 'node_modules/@bower_components/jquery/dist/jquery.min.js', 'node_modules/@bower_components/jquery-ui/jquery-ui.min.js', 'node_modules/@bower_components/bootstrap/dist/js/bootstrap.min.js',
                     'node_modules/@bower_components/lodash/lodash.min.js', 'node_modules/@bower_components/moment/min/moment.min.js', 'node_modules/@bower_components/multi-download/browser.js',
                     'node_modules/@bower_components/angular/angular.min.js', 'node_modules/@bower_components/angular-moment/angular-moment.min.js',
@@ -71,7 +72,8 @@ module.exports = {
                     'node_modules/@bower_components/combodate/src/combodate.js',
                     'node_modules/@bower_components/ment.io/dist/mentio.js',
                     'node_modules/angular-bootstrap-contextmenu/contextMenu.js',
-                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js']
+                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js',
+                    'node_modules/angular-moment-picker/dist/angular-moment-picker.min.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
         scss : [ 'modules/**/scss/*.scss'],

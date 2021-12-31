@@ -7,7 +7,15 @@ angular.module('dashboard.my-overdue-requests', [ 'adf.provider' ]).config(funct
         controller: 'Dashboard.MyOverdueRequestsController',
         controllerAs: 'myOverdueRequests',
         reload: true,
-        templateUrl: 'modules/dashboard/views/components/my-overdue-request.client.view.html'
+        resolve: {
+            params: function(config) {
+                return config;
+            }
+        },
+        templateUrl: 'modules/dashboard/views/components/my-overdue-request.client.view.html',
+        edit: {
+            templateUrl: 'modules/dashboard/views/components/my-tasks-edit.client.view.html'
+        }
 
     });
 });

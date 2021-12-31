@@ -99,9 +99,9 @@ public class FolderDocumentCountAPIController
             // need the actual documents.
             String topLevelFilesAndFolders = getExecuteSolrQuery().getResultsByPredefinedQuery(
                     auth,
-                    SolrCore.QUICK_SEARCH,
+                    SolrCore.ADVANCED_SEARCH,
                     "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + objectId
-                            + " AND parent_object_type_s:" + objectType,
+                            + " AND parent_type_s:" + objectType,
                     0,
                     1,
                     "object_id_s ASC",
@@ -126,9 +126,9 @@ public class FolderDocumentCountAPIController
                 // facets in this query.
                 String topLevelFolders = getExecuteSolrQuery().getResultsByPredefinedQuery(
                         auth,
-                        SolrCore.QUICK_SEARCH,
+                        SolrCore.ADVANCED_SEARCH,
                         "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:CONTAINER AND parent_object_id_i:" + objectId
-                                + " AND parent_object_type_s:" + objectType,
+                                + " AND parent_type_s:" + objectType,
                         0,
                         baseFolders,
                         "object_id_s ASC",
@@ -179,7 +179,7 @@ public class FolderDocumentCountAPIController
         // actual documents (we only care about the facets), so we only as for one document.
         String folderFacetResults = getExecuteSolrQuery().getResultsByPredefinedQuery(
                 auth,
-                SolrCore.QUICK_SEARCH,
+                SolrCore.ADVANCED_SEARCH,
                 "parent_folder_id_i:" + folderId,
                 0,
                 1,
@@ -202,8 +202,8 @@ public class FolderDocumentCountAPIController
             // Find the subfolders under this folder, and for each such subfolder, recursively call this same method.
             String subFolderResults = getExecuteSolrQuery().getResultsByPredefinedQuery(
                     auth,
-                    SolrCore.QUICK_SEARCH,
-                    "parent_object_id_s:" + folderId + " AND parent_object_type_s:FOLDER",
+                    SolrCore.ADVANCED_SEARCH,
+                    "parent_id_s:" + folderId + " AND parent_type_s:FOLDER",
                     0,
                     subFolderCount,
                     "object_id_s ASC",

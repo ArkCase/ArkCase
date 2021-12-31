@@ -54,6 +54,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.ldap.core.LdapTemplate;
 
+import javax.naming.directory.InvalidAttributeValueException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -120,8 +121,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void changeUserPasswordSuccessfully() throws AcmLdapActionFailedException, AcmUserActionFailedException
-    {
+    public void changeUserPasswordSuccessfully() throws AcmLdapActionFailedException, AcmUserActionFailedException, InvalidAttributeValueException {
         String currentPassword = "password";
         String newPassword = "newPassword";
 
@@ -155,8 +155,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
     }
 
     @Test(expected = AcmUserActionFailedException.class)
-    public void changeUserPasswordFailed() throws AcmLdapActionFailedException, AcmUserActionFailedException
-    {
+    public void changeUserPasswordFailed() throws AcmLdapActionFailedException, AcmUserActionFailedException, InvalidAttributeValueException {
         String currentPassword = "password";
         String newPassword = "newPassword";
 

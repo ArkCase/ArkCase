@@ -27,22 +27,35 @@ package com.armedia.acm.plugins.addressable.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LOCATION_CITY_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LOCATION_POSTAL_CODE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LOCATION_STATE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.LOCATION_STREET_ADDRESS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.plugins.addressable.dao.PostalAddressDao;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/27/14.
  */
 public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransformer<PostalAddress>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private PostalAddressDao postalAddressDao;
     private UserDao userDao;
 
@@ -53,21 +66,44 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PostalAddress address)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PostalAddress in)
     {
-        SolrAdvancedSearchDocument addrDoc = new SolrAdvancedSearchDocument();
-        addrDoc.setId(address.getId() + "-LOCATION");
-        addrDoc.setObject_type_s("LOCATION");
-        addrDoc.setObject_id_s(address.getId() + "");
-        addrDoc.setLocation_city_lcs(address.getCity());
-        addrDoc.setLocation_postal_code_sdo(address.getZip());
-        addrDoc.setLocation_state_lcs(address.getState());
-        addrDoc.setLocation_street_address_lcs(address.getStreetAddress());
-        addrDoc.setCreate_date_tdt(address.getCreated());
-        addrDoc.setCreator_lcs(address.getCreator());
-        addrDoc.setModified_date_tdt(address.getModified());
-        addrDoc.setModifier_lcs(address.getModifier());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for LOCATION.");
 
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(),
+                in.getModified(), "LOCATION", buildName(in));
+
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(PostalAddress in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(LOCATION_CITY_LCS, in.getCity());
+        additionalProperties.put(LOCATION_POSTAL_CODE_LCS, in.getZip());
+        additionalProperties.put(LOCATION_STATE_LCS, in.getState());
+        additionalProperties.put(LOCATION_STREET_ADDRESS_LCS, in.getStreetAddress());
+        additionalProperties.put(TITLE_PARSEABLE, buildName(in));
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
+    }
+
+    private String buildName(PostalAddress address)
+    {
         StringBuilder name = new StringBuilder();
         boolean hasAddress1 = address.getStreetAddress() != null;
         boolean hasAddress2 = address.getStreetAddress2() != null;
@@ -85,32 +121,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         name.append(hasZip ? "  " : "");
         name.append(hasZip ? address.getZip() : "");
 
-        addrDoc.setName(name.toString());
-
-        addrDoc.setTitle_parseable(name.toString());
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(address.getCreator());
-        if (creator != null)
-        {
-            addrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(address.getModifier());
-        if (modifier != null)
-        {
-            addrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
-
-        return addrDoc;
-
-    }
-
-    // No implementation needed because we don't want PostalAddress indexed in the SolrQuickSearch
-    @Override
-    public SolrDocument toSolrQuickSearch(PostalAddress in)
-    {
-        return null;
+        return name.toString();
     }
 
     @Override

@@ -27,19 +27,31 @@ package com.armedia.acm.plugins.person.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CHILD_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CHILD_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_NUMBER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/23/14.
@@ -57,58 +69,52 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAssociation personAssociation)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAssociation in)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-        solrDoc.setId(personAssociation.getId() + "-PERSON-ASSOCIATION");
-        solrDoc.setObject_id_s(personAssociation.getId() + "");
-        solrDoc.setObject_type_s("PERSON-ASSOCIATION");
-        solrDoc.setCreate_date_tdt(personAssociation.getCreated());
-        solrDoc.setCreator_lcs(personAssociation.getCreator());
-        solrDoc.setModified_date_tdt(personAssociation.getModified());
-        solrDoc.setModifier_lcs(personAssociation.getModifier());
+        log.debug("Creating Solr advanced search document for PERSON-ASSOCIATION.");
 
-        solrDoc.setChild_id_s(personAssociation.getPerson().getId() + "");
-        solrDoc.setChild_type_s("PERSON");
-        solrDoc.setParent_id_s(personAssociation.getParentId() + "");
-        solrDoc.setParent_type_s(personAssociation.getParentType());
-        solrDoc.setParent_number_lcs(personAssociation.getParentTitle());
+        String name = in.getPerson().getGivenName() + " " + in.getPerson().getFamilyName() + " (" + in.getPersonType() + ")";
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                "PERSON-ASSOCIATION", name);
 
-        solrDoc.setType_lcs(personAssociation.getPersonType());
-
-        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " ("
-                + personAssociation.getPersonType() + ")");
-
-        solrDoc.setTitle_parseable(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " ("
-                + personAssociation.getPersonType() + ")");
-
-        solrDoc.setParent_ref_s(personAssociation.getParentId() + "-" + personAssociation.getParentType());
-
-        solrDoc.setDescription_parseable(personAssociation.getPersonDescription());
-
-        solrDoc.setNotes_no_html_tags_parseable(personAssociation.getNotes());
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(personAssociation.getCreator());
-        if (creator != null)
-        {
-            solrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(personAssociation.getModifier());
-        if (modifier != null)
-        {
-            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
         return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(PersonAssociation in)
+    public void mapAdditionalProperties(PersonAssociation in, Map<String, Object> additionalProperties)
     {
-        // we don't want person associations in quick search, so just return null
-        return null;
+        additionalProperties.put("notes_no_html_tags_parseable", in.getNotes());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        additionalProperties.put(CHILD_ID_S, in.getPerson().getId() + "");
+        additionalProperties.put(CHILD_TYPE_S, "PERSON");
+        additionalProperties.put(PARENT_ID_S, in.getParentId() + "");
+        additionalProperties.put(PARENT_TYPE_S, in.getParentType());
+        additionalProperties.put(PARENT_NUMBER_LCS, in.getParentTitle());
+
+        additionalProperties.put(TYPE_LCS, in.getPersonType());
+
+        additionalProperties.put(TITLE_PARSEABLE, in.getPerson().getGivenName() + " " + in.getPerson().getFamilyName() + " ("
+                + in.getPersonType() + ")");
+
+        additionalProperties.put(PARENT_REF_S, in.getParentId() + "-" + in.getParentType());
+
+        additionalProperties.put(DESCRIPTION_PARSEABLE, in.getPersonDescription());
     }
 
     @Override

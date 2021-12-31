@@ -3,8 +3,8 @@
 angular.module('complaints').controller(
         'Complaints.ActionsController',
         [ '$scope', '$state', '$stateParams', '$q', '$modal', 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService',
-                'Profile.UserInfoService', 'FormsType.Service', 'Ecm.EmailService',
-                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService, EcmEmailService) {
+                'Profile.UserInfoService', 'FormsType.Service', 'Ecm.EmailService', 'Admin.FormWorkflowsLinkService',
+                function($scope, $state, $stateParams, $q, $modal, Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, FormsTypeService, EcmEmailService, AdminFormWorkflowsLinkService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -15,6 +15,18 @@ angular.module('complaints').controller(
                         validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
                         onObjectInfoRetrieved: function(objectInfo) {
                             onObjectInfoRetrieved(objectInfo);
+                        }
+                    });
+
+                    AdminFormWorkflowsLinkService.getFormWorkflowsData().then(function(payload) {
+                        //$scope.data = payload.data;
+
+                        // Add 50 empty rows at the end of file
+                        var data = angular.copy(payload.data);
+                        for (var i = 0; i < data.cells.length; i++) {
+                            if(data.cells[i][2].type === "fileType" && data.cells[i][2].value === "close_complaint"){
+                                $scope.showApprover = data.cells[i][3].value;
+                            }
                         }
                     });
 
@@ -125,7 +137,8 @@ angular.module('complaints').controller(
 
                     $scope.closeComplaint = function(complaintInfo) {
                         var params = {
-                            "info": complaintInfo
+                            "info": complaintInfo,
+                            "showApprover": $scope.showApprover
                         };
                         var modalInstance = $modal.open({
                             animation: true,

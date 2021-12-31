@@ -97,13 +97,13 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_billing_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate billingEnterDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime billingEnterDate;
 
     @Column(name = "fo_hold_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate holdEnterDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime holdEnterDate;
 
     @Column(name = "fo_expedite_flag")
     @Convert(converter = BooleanToStringConverter.class)
@@ -256,6 +256,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_difficulty_rating")
     private String difficultyRating;
 
+    @Column(name="fo_portal_request_tracking_id")
+    private String portalRequestTrackingId;
+
     /**
      * @return the receivedDate
      */
@@ -327,7 +330,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the billingEnterDate
      */
-    public LocalDate getBillingEnterDate()
+    public LocalDateTime getBillingEnterDate()
     {
         return billingEnterDate;
     }
@@ -336,7 +339,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param billingEnterDate
      *            the billingEnterDate to set
      */
-    public void setBillingEnterDate(LocalDate billingEnterDate)
+    public void setBillingEnterDate(LocalDateTime billingEnterDate)
     {
         this.billingEnterDate = billingEnterDate;
     }
@@ -344,7 +347,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the holdEnterDate
      */
-    public LocalDate getHoldEnterDate()
+    public LocalDateTime getHoldEnterDate()
     {
         return holdEnterDate;
     }
@@ -353,7 +356,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param holdEnterDate
      *            the holdEnterDate to set
      */
-    public void setHoldEnterDate(LocalDate holdEnterDate)
+    public void setHoldEnterDate(LocalDateTime holdEnterDate)
     {
         this.holdEnterDate = holdEnterDate;
     }
@@ -952,6 +955,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     public void setDeclaredAsRecord(Boolean declaredAsRecord) {
         this.declaredAsRecord = declaredAsRecord;
+    }
+
+    public String getPortalRequestTrackingId()
+    {
+        return portalRequestTrackingId;
+    }
+
+    public void setPortalRequestTrackingId(String portalRequestTrackingId)
+    {
+        this.portalRequestTrackingId = portalRequestTrackingId;
     }
 
     /*

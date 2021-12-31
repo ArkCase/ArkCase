@@ -1,4 +1,4 @@
-<div ng-controller="Cases.MainController">
+<div ng-controller="Cases.MainController" ng-if="objectInfo">
     <fieldset permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
             permission-action="disabled">
         <panel-view header="Request Information" collapsible="true" collapsed="false">
@@ -26,8 +26,7 @@
                     <div>
                         <fieldset ng-disabled="true">
                             <div class="form-group">
-                                <date-time-picker data="objectInfo.recordSearchDateFrom" property="startDate"
-                                        date-picker-id="comboDate1"></date-time-picker>
+                                <date-time-picker data="objectInfo.recordSearchDateFrom" disable="true" no-default-date="true"  show-time="true"></date-time-picker>
 
                             </div>
                         </fieldset>
@@ -38,8 +37,7 @@
                     <div>
                         <fieldset ng-disabled="true">
                             <div class="form-group">
-                                <date-time-picker data="objectInfo.recordSearchDateTo" property="startDate"
-                                        date-picker-id="comboDate1"></date-time-picker>
+                                <date-time-picker data="objectInfo.recordSearchDateTo" disable="true" no-default-date="true"  show-time="true"></date-time-picker>
                             </div>
                         </fieldset>
                     </div>
@@ -130,16 +128,15 @@
                     <div>
                         <fieldset ng-disabled="!enableDispositionClosedDate">
                             <div class="form-group">
-                                <date-time-picker data="objectInfo.dispositionClosedDate" property="startDate"
-                                        on-after-save="onComboAfterSave()" date-picker-id="comboDate1"></date-time-picker>
+                                <date-time-picker data="objectInfo.dispositionClosedDate" show-time="true" min-date="minDispositionClosedDate"
+                                        on-date-select="onComboAfterSave" no-default-date="true" ></date-time-picker>
                             </div>
                         </fieldset>
                     </div>
                     <label for="releasedDate" translate> cases.comp.main.releasedDate.label</label>
                     <div>
                         <div class="form-group">
-                            <date-time-picker data="objectInfo.releasedDate" property="startDate"
-                                    date-picker-id="comboDate1"></date-time-picker>
+                            <date-time-picker data="objectInfo.releasedDate" show-time="true" no-default-date="true" ></date-time-picker>
 
                         </div>
                     </div>

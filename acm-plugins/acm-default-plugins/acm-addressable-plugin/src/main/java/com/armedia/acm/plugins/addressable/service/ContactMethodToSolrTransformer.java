@@ -27,22 +27,33 @@ package com.armedia.acm.plugins.addressable.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TYPE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.VALUE_PARSEABLE;
+
 import com.armedia.acm.plugins.addressable.dao.ContactMethodDao;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/27/14.
  */
 public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransformer<ContactMethod>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private ContactMethodDao contactMethodDao;
     private UserDao userDao;
 
@@ -53,43 +64,38 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(ContactMethod cm)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(ContactMethod in)
     {
-        SolrAdvancedSearchDocument cmDoc = new SolrAdvancedSearchDocument();
-        cmDoc.setId(cm.getId() + "-CONTACT-METHOD");
-        cmDoc.setObject_type_s("CONTACT-METHOD");
-        cmDoc.setObject_id_s(cm.getId() + "");
-        cmDoc.setType_lcs(cm.getType());
-        cmDoc.setValue_parseable(cm.getValue());
-        cmDoc.setCreate_date_tdt(cm.getCreated());
-        cmDoc.setCreator_lcs(cm.getCreator());
-        cmDoc.setModified_date_tdt(cm.getModified());
-        cmDoc.setModifier_lcs(cm.getModifier());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for CONTACT-METHOD.");
 
-        cmDoc.setName(cm.getValue());
-        cmDoc.setTitle_parseable(cm.getValue());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                "CONTACT-METHOD", in.getValue());
 
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(cm.getCreator());
-        if (creator != null)
-        {
-            cmDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-        }
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        AcmUser modifier = getUserDao().quietFindByUserId(cm.getModifier());
-        if (modifier != null)
-        {
-            cmDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
-        }
-
-        return cmDoc;
+        return solrDoc;
     }
 
-    // No implementation needed because we don't want ContactMethod indexed in the SolrQuickSearch
     @Override
-    public SolrDocument toSolrQuickSearch(ContactMethod in)
+    public void mapAdditionalProperties(ContactMethod in, Map<String, Object> additionalProperties)
     {
-        return null;
+        additionalProperties.put(TYPE_LCS, in.getType());
+        additionalProperties.put(VALUE_PARSEABLE, in.getValue());
+        additionalProperties.put(TITLE_PARSEABLE, in.getValue());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
+        }
     }
 
     @Override

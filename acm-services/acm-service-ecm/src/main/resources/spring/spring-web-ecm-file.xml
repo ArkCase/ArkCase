@@ -13,11 +13,11 @@
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
-        <property name="camelContextManager" ref="camelContextManager"/>
-        <property name="fileDao" ref="ecmFileDao"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="objectConverter" ref="objectConverter"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="fileDownloadFromEmailAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadFromEmailApiController">
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
    <!-- <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">

@@ -27,20 +27,29 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_FOLDER_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 3/23/15.
@@ -60,56 +69,50 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmFolder in)
     {
-        // no implementation needed yet
-        return null;
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        log.debug("Creating Solr advanced search document for FOLDER.");
+
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), "FOLDER",
+                in.getName());
+
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
+
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmFolder in)
+    public void mapAdditionalProperties(AcmFolder in, Map<String, Object> additionalProperties)
     {
-
         AcmFolder parentFolder = in.getParentFolder();
 
-        SolrDocument doc = new SolrDocument();
+        additionalProperties.put(TITLE_PARSEABLE, in.getName());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getName());
+        additionalProperties.put("title_t", in.getName());
 
-        getSearchAccessControlFields().setAccessControlFields(doc, in);
+        additionalProperties.put(PARENT_FOLDER_ID_I, parentFolder == null ? null : parentFolder.getId());
 
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
-        doc.setName(in.getName());
-        doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(parentFolder == null ? null : parentFolder.getId());
-        doc.setParent_object_id_s(parentFolder == null ? null : "" + parentFolder.getId());
-        doc.setParent_object_type_s(parentFolder == null ? null : in.getObjectType());
-        doc.setTitle_parseable(in.getName());
-        doc.setTitle_t(in.getName());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
+
+        additionalProperties.put(PARENT_OBJECT_ID_I, parentFolder == null ? null : parentFolder.getId());
+        additionalProperties.put(PARENT_ID_S, parentFolder == null ? null : "" + parentFolder.getId());
+        additionalProperties.put(PARENT_TYPE_S, parentFolder == null ? null : in.getObjectType());
 
         // folder id will be used to find files and folders that belong to this container
-        doc.setFolder_id_i(in.getId());
-        doc.setFolder_name_s(in.getName());
+        additionalProperties.put("folder_id_i", in.getId());
+        additionalProperties.put("folder_name_s", in.getName());
 
-        // need an _lcs field for sorting
-        doc.setName_lcs(in.getName());
-
-        doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
-
-        doc.setStatus_s(in.getStatus());
-
-        doc.setAdditionalProperty("name_partial", in.getName());
+        additionalProperties.put("name_partial", in.getName());
 
         if (parentFolder != null)
         {
             try
             {
                 AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(parentFolder.getId());
-                doc.getAdditionalProperties().put("parent_container_object_type_s", container.getContainerObjectType());
-                doc.getAdditionalProperties().put("parent_container_object_id_s", container.getContainerObjectId());
-                doc.getAdditionalProperties().put("link_b", in.isLink());
+
+                additionalProperties.put("parent_container_object_type_s", container.getContainerObjectType());
+                additionalProperties.put("parent_container_object_id_s", container.getContainerObjectId());
+                additionalProperties.put("link_b", in.isLink());
             }
             catch (AcmObjectNotFoundException e)
             {
@@ -118,9 +121,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         }
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-
-        return doc;
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
     }
 
     @Override

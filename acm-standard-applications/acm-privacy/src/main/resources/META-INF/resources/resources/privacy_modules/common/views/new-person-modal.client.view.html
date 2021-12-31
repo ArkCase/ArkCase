@@ -73,10 +73,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newPerson.identification.identificationYearIssued</label>
-                                <date-time-picker data="person.defaultIdentification.identificationYearIssued"
-                                        property="person.defaultIdentification.identificationYearIssued"
-                                        date-picker-id="person.defaultIdentification.identificationYearIssued"
-                                        time-format-disabled="true"></date-time-picker>
+                                <date-time-picker  is-readonly="!person.defaultIdentification.identificationNumber" no-default-date="true"
+                                                   disable="!person.defaultIdentification.identificationNumber" data="person.defaultIdentification.identificationYearIssued"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -120,10 +118,8 @@
                                     <div>
                                         <label translate>
                                             common.newPerson.identification.identificationYearIssued</label>
-                                        <date-time-picker data="identification.identificationYearIssued"
-                                                property="identification.identificationYearIssued"
-                                                date-picker-id="identification.identificationYearIssued"
-                                                time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker is-readonly="!identification.identificationNumber" no-default-date="true"
+                                                          disable="!identification.identificationNumber" data="identification.identificationYearIssued"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">

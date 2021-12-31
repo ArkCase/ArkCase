@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -51,6 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.File;
@@ -457,4 +459,10 @@ public interface EcmFileService
 
     List<EcmFile> getFileDuplicates(Long fileId) throws AcmObjectNotFoundException;
 
+    void download(HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
+            throws IOException, ArkCaseFileRepositoryException, AcmObjectNotFoundException;
+
+    void fileNotFound(Long fileId) throws AcmObjectNotFoundException;
+
+    void publishEcmFileDownloadedEvent(String ipAddress, EcmFile ecmFile, Authentication auth);
 }

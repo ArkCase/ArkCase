@@ -27,10 +27,7 @@ package com.armedia.acm.services.suggestion.model;
  * #L%
  */
 
-import com.armedia.acm.services.suggestion.util.JsonDateSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class SuggestedObject
 {
@@ -40,6 +37,8 @@ public class SuggestedObject
         private String fileId;
 
         private String fileName;
+
+        private LocalDateTime madePublicDate;
 
         public String getFileId()
         {
@@ -60,6 +59,17 @@ public class SuggestedObject
         {
             this.fileName = fileName;
         }
+
+        public LocalDateTime getMadePublicDate()
+        {
+            return madePublicDate;
+        }
+
+        public void setMadePublicDate(LocalDateTime madePublicDate)
+        {
+            this.madePublicDate = madePublicDate;
+        }
+
     }
 
     public Long id;

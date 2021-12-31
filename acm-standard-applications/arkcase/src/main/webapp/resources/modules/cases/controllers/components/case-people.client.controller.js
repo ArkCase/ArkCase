@@ -35,6 +35,8 @@ angular.module('cases').controller(
                         }
                     });
 
+                    var assocTypeLabel = $translate.instant("cases.comp.people.type.label");
+
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
@@ -57,8 +59,9 @@ angular.module('cases').controller(
                     };
 
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.objectInfo = objectInfo;
-                        $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                        PersonInfoService.getPersons().then(function(persons) {
+                            $scope.gridOptions.data = HelperUiGridService.filterRestricted(persons.data.response.docs, $scope.objectInfo.personAssociations);
+                        });
                     };
 
                     var newPersonAssociation = function() {
@@ -83,6 +86,7 @@ angular.module('cases').controller(
 
                         var params = {};
                         params.types = $scope.personTypes;
+                        params.assocTypeLabel = assocTypeLabel;
 
                         if (association) {
 

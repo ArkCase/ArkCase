@@ -56,7 +56,8 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,15 +70,12 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -99,6 +97,7 @@ public class PersonServiceImpl implements PersonService
     private EcmTikaFileService ecmTikaFileService;
     private PersonConfig personConfig;
     private PhoneRegexConfig phoneRegexConfig;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @Override
     public Person get(Long id)
@@ -603,6 +602,27 @@ public class PersonServiceImpl implements PersonService
         return person;
     }
 
+    @Override
+    public String getPeopleByIds(Authentication auth, String personIds, int start, int n, String s) throws AcmObjectNotFoundException {
+
+        List<String> personIdsArray = new ArrayList<>(Arrays.asList(personIds.split(",")));
+
+        String query = "object_type_s:PERSON AND object_id_s:(";
+        query += String.join(" OR ", personIdsArray);
+        query += ")";
+
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+        }
+        catch (SolrException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve persons by Ids.", e);
+        }
+    }
+
+
     public PersonDao getPersonDao()
     {
         return personDao;
@@ -703,5 +723,14 @@ public class PersonServiceImpl implements PersonService
     public void setPhoneRegexConfig(PhoneRegexConfig phoneRegexConfig)
     {
         this.phoneRegexConfig = phoneRegexConfig;
+    }
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

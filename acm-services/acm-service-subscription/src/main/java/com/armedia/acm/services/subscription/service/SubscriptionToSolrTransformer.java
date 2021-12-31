@@ -27,20 +27,28 @@ package com.armedia.acm.services.subscription.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.OWNER_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 11.03.2015.
  */
 public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscription>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private SubscriptionDao subscriptionDao;
 
@@ -54,45 +62,23 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscription in)
     {
 
-        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
-        doc.setId(String.format("%s-%s", in.getId(), in.getObjectType()));
-        doc.setObject_id_s(Long.toString(in.getId()));
-        doc.setObject_type_s(in.getObjectType());
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for SUBSCRIPTION.");
 
-        doc.setCreate_date_tdt(in.getCreated());
-        doc.setCreator_lcs(in.getCreator());
-        doc.setModified_date_tdt(in.getModified());
-        doc.setModifier_lcs(in.getModifier());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
+                null);
 
-        doc.setParent_id_s(Long.toString(in.getObjectId()));
-        doc.setParent_type_s(in.getSubscriptionObjectType());
-        doc.setOwner_lcs(in.getUserId());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        return doc;
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmSubscription in)
+    public void mapAdditionalProperties(AcmSubscription in, Map<String, Object> additionalProperties)
     {
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_tdt(in.getCreated());
-        solr.setAuthor(in.getCreator());
-        solr.setLast_modified_tdt(in.getModified());
-        solr.setModifier_s(in.getModifier());
-
-        solr.setParent_object_id_s(Long.toString(in.getObjectId()));
-
-        solr.setParent_object_type_s(in.getSubscriptionObjectType());
-
-        solr.setOwner_s(in.getUserId());
-
-        return solr;
+        additionalProperties.put(PARENT_ID_S, Long.toString(in.getObjectId()));
+        additionalProperties.put(PARENT_TYPE_S, in.getSubscriptionObjectType());
+        additionalProperties.put(OWNER_LCS, in.getUserId());
     }
 
     @Override

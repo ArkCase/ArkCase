@@ -27,14 +27,23 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_OBJECT_ID_I;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 3/23/15.
@@ -42,6 +51,7 @@ import java.util.List;
 public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmContainer>
 {
     private AcmContainerDao dao;
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public List<AcmContainer> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -52,42 +62,37 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmContainer in)
     {
-        // no implementation needed yet
-        return null;
-    }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmContainer in)
-    {
+        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
-        SolrDocument doc = new SolrDocument();
+        LOG.debug("Creating Solr advanced search document for CONTAINER.");
+
+        mapRequiredProperties(doc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(), in.getObjectType(),
+                in.getContainerObjectTitle());
 
         // no access control on folders (yet)
         doc.setPublic_doc_b(true);
 
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
-        doc.setName(in.getContainerObjectTitle());
-        doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(in.getContainerObjectId());
-        doc.setParent_object_id_s("" + in.getContainerObjectId());
-        doc.setParent_object_type_s(in.getContainerObjectType());
-        doc.setTitle_parseable(in.getContainerObjectTitle());
-        doc.setTitle_t(in.getContainerObjectTitle());
-
-        // folder id will be used to find files and folders that belong to this container
-        doc.setFolder_id_i(in.getFolder().getId());
-        doc.setFolder_name_s(in.getFolder().getName());
-
-        // need an _lcs field for sorting
-        doc.setName_lcs(in.getContainerObjectTitle());
+        mapAdditionalProperties(in, doc.getAdditionalProperties());
 
         return doc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmContainer in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getContainerObjectTitle());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, "" + in.getContainerObjectTitle());
+        additionalProperties.put(PARENT_OBJECT_ID_I, in.getContainerObjectId());
+        additionalProperties.put(PARENT_ID_S, "" + in.getContainerObjectId());
+        additionalProperties.put(PARENT_TYPE_S, in.getContainerObjectType());
+
+        // folder id will be used to find files and folders that belong to this container
+        if (in.getFolder() != null)
+        {
+            additionalProperties.put("folder_id_i", in.getFolder().getId());
+            additionalProperties.put("folder_name_s", in.getFolder().getName());
+        }
     }
 
     @Override

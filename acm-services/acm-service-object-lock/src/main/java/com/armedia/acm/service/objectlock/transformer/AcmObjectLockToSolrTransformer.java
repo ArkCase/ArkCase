@@ -27,22 +27,33 @@ package com.armedia.acm.service.objectlock.transformer;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nebojsha on 21.08.2015.
  */
 public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmObjectLock>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private AcmObjectLockDao dao;
     private UserDao userDao;
 
@@ -55,66 +66,42 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectLock in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for OBJECT_LOCK.");
 
-        solr.setId(in.getId() + "-OBJECT_LOCK");
-        solr.setObject_id_s(in.getId().toString());
-        solr.setObject_type_s("OBJECT_LOCK");
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                "OBJECT_LOCK", null);
 
-        solr.setParent_id_s(in.getObjectId().toString());
-        solr.setParent_type_s(in.getObjectType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(AcmObjectLock in, Map<String, Object> additionalProperties)
+    {
+
+        additionalProperties.put(PARENT_ID_S, in.getObjectId().toString());
+        additionalProperties.put(PARENT_TYPE_S, in.getObjectType());
+        additionalProperties.put(PARENT_REF_S, in.getObjectId() + "-" + in.getObjectType());
 
         /** Add partial creator username field **/
-        solr.setAdditionalProperty("creator_partial", in.getCreator());
-
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        additionalProperties.put("creator_partial", in.getCreator());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
-            solr.setAdditionalProperty("creator_full_name_partial", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solr.setAdditionalProperty("expiry_tdt", in.getExpiry());
-
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(AcmObjectLock in)
-    {
-
-        SolrDocument solr = new SolrDocument();
-
-        solr.setObject_id_s(in.getId().toString());
-        solr.setObject_type_s("OBJECT_LOCK");
-        solr.setId(in.getId() + "-OBJECT_LOCK");
-
-        solr.setParent_object_id_s(in.getObjectId().toString());
-        solr.setParent_object_type_s(in.getObjectType());
-        solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setAdditionalProperty("expiry", in.getExpiry());
-
-        return solr;
+        additionalProperties.put("expiry_tdt", in.getExpiry());
     }
 
     @Override

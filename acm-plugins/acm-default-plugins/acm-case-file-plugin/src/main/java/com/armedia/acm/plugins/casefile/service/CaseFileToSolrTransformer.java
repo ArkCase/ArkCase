@@ -27,30 +27,52 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ACM_PARTICIPANTS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FIRST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_ID_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.ASSIGNEE_LAST_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.CREATOR_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.INCIDENT_TYPE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.MODIFIER_FULL_NAME_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PRIORITY_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.STATUS_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE_LCS;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.SUMMARY_PARSEABLE_LCS;
+
+
 import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 08.11.2014.
  */
 public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<CaseFile>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
+
     private UserDao userDao;
     private CaseFileDao caseFileDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
@@ -66,101 +88,74 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(CaseFile in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for CASE_FILE.");
 
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                CaseFileConstants.OBJECT_TYPE, in.getCaseNumber());
 
-        solr.setId(in.getId() + "-CASE_FILE");
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s("CASE_FILE");
-        solr.setTitle_parseable(in.getTitle());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getCaseNumber());
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        solrDoc.setDueDate_tdt(in.getDueDate());
+        solrDoc.setIncident_date_tdt(in.getIncidentDate());
 
-        solr.setDueDate_tdt(in.getDueDate());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setIncident_date_tdt(in.getIncidentDate());
-        solr.setPriority_lcs(in.getPriority());
-        solr.setIncident_type_lcs(in.getCaseType());
-        solr.setStatus_lcs(in.getStatus());
+        return solrDoc;
+    }
+
+    @Override
+    public void mapAdditionalProperties(CaseFile in, Map<String, Object> additionalProperties)
+    {
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
+        additionalProperties.put(SUMMARY_PARSEABLE_LCS, in.getCaseDetailsSummary());
+        additionalProperties.put(PRIORITY_LCS, in.getPriority());
+        additionalProperties.put(INCIDENT_TYPE_LCS, in.getCaseType());
+        additionalProperties.put(STATUS_LCS, in.getStatus());
 
         String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_id_lcs(assigneeUserId);
+        additionalProperties.put(ASSIGNEE_ID_LCS, assigneeUserId);
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
         if (assignee != null)
         {
-            solr.setAssignee_first_name_lcs(assignee.getFirstName());
-            solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FIRST_NAME_LCS, assignee.getFirstName());
+            additionalProperties.put(ASSIGNEE_LAST_NAME_LCS, assignee.getLastName());
+            additionalProperties.put(ASSIGNEE_FULL_NAME_LCS, assignee.getFirstName() + " " + assignee.getLastName());
         }
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            additionalProperties.put(CREATOR_FULL_NAME_LCS, creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+            additionalProperties.put(MODIFIER_FULL_NAME_LCS, modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
-
-        solr.setTitle_parseable_lcs(in.getTitle());
+        additionalProperties.put("security_field_lcs", in.getSecurityField());
+        additionalProperties.put(TITLE_PARSEABLE_LCS, in.getTitle());
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
-        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        additionalProperties.put(ACM_PARTICIPANTS_LCS, participantsListJson);
 
         // The property "assignee_group_id_lcs" is used only for showing/hiding claim/unclaim buttons
-        solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+        additionalProperties.put("assignee_group_id_lcs", in.getAssigneeGroup());
 
-        // This property is used for showin the owning group for the object
-        solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
-        solr.setAdditionalProperty("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        // This property is used for showing the owning group for the object
+        additionalProperties.put("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
+        additionalProperties.put("owning_group_id_s", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
-        return solr;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(CaseFile in)
-    {
-        SolrDocument solr = new SolrDocument();
-
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setName(in.getCaseNumber());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s("CASE_FILE");
-        solr.setId(in.getId() + "-CASE_FILE");
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setTitle_parseable(in.getTitle());
-
-        String assigneeUserId = ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants());
-        solr.setAssignee_s(assigneeUserId);
-
-        // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(in.getTitle());
-
-        return solr;
+        if (in.getOriginator() != null && in.getOriginator().getPerson() != null)
+        {
+            Person person = in.getOriginator().getPerson();
+            additionalProperties.put("initiator_person_id_i", person.getId());
+        }
     }
 
     @Override
@@ -228,12 +223,12 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
-    public BusinessProcessDao getBusinessProcessDao() 
+    public BusinessProcessDao getBusinessProcessDao()
     {
         return businessProcessDao;
     }
 
-    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao) 
+    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao)
     {
         this.businessProcessDao = businessProcessDao;
     }

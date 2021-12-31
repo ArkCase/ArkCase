@@ -108,7 +108,20 @@ angular.module('complaints').controller(
                             addedCostsheet.acm$_costs = _.reduce(Util.goodArray(addedCostsheet.costs), function(total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);
-                            $scope.gridOptions.data.push(addedCostsheet);
+
+                            var foundCostsheetIndex = -1;
+                            for(var i=0; i< $scope.gridOptions.data.length; i++){
+                                if($scope.gridOptions.data[i].id === addedCostsheet.id && $scope.gridOptions.data[i].parentId === addedCostsheet.parentId && $scope.gridOptions.data[i].parentType === addedCostsheet.parentType) {
+                                    foundCostsheetIndex = i;
+                                    break;
+                                }
+                            }
+                            if(foundCostsheetIndex === -1){
+                                $scope.gridOptions.data.push(addedCostsheet);
+                            }
+                            else {
+                                $scope.gridOptions.data[foundCostsheetIndex] = addedCostsheet;
+                            }
                         });
                     }
 

@@ -282,7 +282,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     {
         File file = zylabFile.getFile();
         DiskFileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false,
-                zylabFile.getFileMetadata().getDocName(), (int) file.length(), file.getParentFile());
+                zylabFile.getFileMetadata().getName(), (int) file.length(), file.getParentFile());
 
         try (InputStream docStream = new FileInputStream(file);
                 OutputStream outputStream = fileItem.getOutputStream())
@@ -296,7 +296,7 @@ public class ZylabProductionFileIncomingListener implements ApplicationListener<
     private FOIAFile getEcmFile(ZylabFile zylabFile) throws IOException
     {
         FOIAFile metadata = new FOIAFile();
-        metadata.setFileName(zylabFile.getFileMetadata().getZylabId() + "." + FilenameUtils.getExtension(zylabFile.getFile().getPath()));
+        metadata.setFileName(zylabFile.getFileMetadata().getName() + "." + FilenameUtils.getExtension(zylabFile.getFile().getPath()));
         metadata.setFileType("Other");
         metadata.setFileActiveVersionMimeType(Files.probeContentType(zylabFile.getFile().toPath()));
         metadata.setCustodian(zylabFile.getFileMetadata().getCustodian());

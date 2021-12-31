@@ -27,17 +27,12 @@ package com.armedia.acm.pluginmanager.web;
  * #L%
  */
 
-import static junit.framework.TestCase.fail;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +41,15 @@ import org.springframework.http.HttpMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static junit.framework.TestCase.fail;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by armdev on 5/14/14.
@@ -61,24 +59,28 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     private HttpServletResponse mockResponse;
     private HttpServletRequest mockRequest;
     private HttpSession mockSession;
+    private AuthenticationTokenService mockTokenService;
+
 
     private AcmPluginRoleBasedAccessInterceptor unit;
     private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
-
     @Before
     public void setUp()
     {
         mockResponse = createMock(HttpServletResponse.class);
         mockRequest = createMock(HttpServletRequest.class);
         mockSession = createMock(HttpSession.class);
+        mockTokenService = createMock(AuthenticationTokenService.class);
 
         unit = new AcmPluginRoleBasedAccessInterceptor();
+        unit.setAuthenticationTokenService(mockTokenService);
         pluginPrivilegesConfig = new ApplicationPluginPrivilegesConfig();
     }
 
     @Test
     public void preHandle_noSession() throws Exception
     {
+        expect(mockRequest.getQueryString()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
 
@@ -96,6 +98,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     @Test
     public void preHandle_noPrivileges() throws Exception
     {
+        expect(mockRequest.getQueryString()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
 
@@ -123,6 +126,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         expect(mockRequest.getSession(false)).andReturn(mockSession);
         expect(mockSession.getAttribute("acm_privileges")).andReturn(Collections.emptyMap());
 
+        expect(mockRequest.getQueryString()).andReturn(null).atLeastOnce();
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
 
@@ -162,6 +166,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         expect(mockSession.getAttribute("acm_privileges")).andReturn(userPrivs);
 
+        expect(mockRequest.getQueryString()).andReturn(null).atLeastOnce();
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
 
@@ -200,6 +205,8 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         userPrivs.put("privilegeName", Boolean.TRUE);
 
         expect(mockSession.getAttribute("acm_privileges")).andReturn(userPrivs);
+
+        expect(mockRequest.getQueryString()).andReturn(null).atLeastOnce();
 
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());

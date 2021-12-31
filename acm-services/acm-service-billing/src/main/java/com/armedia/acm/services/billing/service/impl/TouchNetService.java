@@ -41,6 +41,7 @@ import com.touchnet.secureLink.types.SecureLinkException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.xml.rpc.ServiceException;
 
@@ -112,7 +113,6 @@ public class TouchNetService
         {
             log.debug("Secure link end point: " + secureLinkEndPoint);
             log.debug("Touchnet username:  " + touchNetUsername);
-            log.debug("Touchnet pass:  " + touchNetPassword);
             GenerateSecureLinkTicketResponse secureLinkTicketResponse = binding.generateSecureLinkTicket(req);
             ticketId = secureLinkTicketResponse.getTicket();
         }
@@ -170,7 +170,7 @@ public class TouchNetService
     {
         String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
 
-        return "<html>\n" +
+        return HtmlUtils.htmlEscape("<html>\n" +
                 "<header>\n" +
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
                 "<style>\n" +
@@ -198,7 +198,7 @@ public class TouchNetService
                 "<br><br><br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
-                "</html>\n";
+                "</html>\n");
     }
 
     private String redirectToPaymentForm(String amount, String objectId, String objectType, String ecmFileId, String acm_ticket,
@@ -218,13 +218,13 @@ public class TouchNetService
 
         log.debug(form);
 
-        return form;
+        return HtmlUtils.htmlEscape(form);
     }
 
     private String redirectToAlreadyPaidPage()
     {
         String imgSrc = getApplicationConfig().getBaseUrl() + "/branding/emaillogo.png";
-        return "<html>\n" +
+        return HtmlUtils.htmlEscape("<html>\n" +
                 "<header>\n" +
                 "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">\n" +
                 "<style>\n" +
@@ -246,7 +246,7 @@ public class TouchNetService
                 "<br>\n" +
                 "<img src=\"" + imgSrc + "\" width=\"186\" height=\"38.79\">\n" +
                 "</body>\n" +
-                "</html>\n";
+                "</html>\n");
     }
 
     public String getTouchNetUsername()

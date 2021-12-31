@@ -56,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 28, 2018
  *
@@ -123,12 +125,13 @@ public class ArkCasePortalGatewayUserAPIController
     @ResponseBody
     public UserRegistrationResponse registerUserFromPerson(Authentication auth,
             @PortalId @PathVariable(value = "portalId") String portalId,
+            @RequestParam (value = "requestId") Long requestId,
             @RequestBody Long personId)
             throws PortalUserServiceException
     {
         log.debug("Registering user for person with ID [{}] at portal with ID [{}] from Arkcase.",
                 personId, portalId);
-        return portalUserService.registerUserFromPerson(portalId, personId);
+        return portalUserService.registerUserFromPerson(portalId, personId, requestId);
     }
 
     @CheckPortalUserAssignement
@@ -196,8 +199,7 @@ public class ArkCasePortalGatewayUserAPIController
     @ResponseBody
     public UserResetResponse changePassword(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
             @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
-            throws PortalUserAssignementException, PortalUserServiceException
-    {
+            throws PortalUserAssignementException, PortalUserServiceException, InvalidAttributeValueException {
         log.debug("Changing password for [{}] [{}] user for portal with [{}] ID.", userId, auth.getName(), portalId);
         return portalUserService.changePassword(portalId, userId, auth.getName(), portalUserCredentials);
     }

@@ -35,6 +35,10 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.service.objecthistory.dao.AcmObjectHistoryDao;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.util.StringUtils;
+
 import java.util.Date;
 
 /**
@@ -43,6 +47,7 @@ import java.util.Date;
  */
 public class AcmObjectHistoryServiceImpl implements AcmObjectHistoryService
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmObjectHistoryDao acmObjectHistoryDao;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -61,33 +66,42 @@ public class AcmObjectHistoryServiceImpl implements AcmObjectHistoryService
     }
 
     @Override
-    public AcmObjectHistory save(String userId, String type, Object obj, Long objectId, String objectType, Date date, String ipAddress)
+    public AcmObjectHistory save(String userId, String type, Object obj, Long objectId, String objectType, Date date, String ipAddress,
+            Boolean succeeded)
     {
-        // Create object history
-        AcmObjectHistory acmObjectHistory = new AcmObjectHistory();
+        AcmObjectHistory acmObjectHistory = null;
 
-        // Set username from the user who perform the action
-        acmObjectHistory.setUserId(userId);
-        acmObjectHistory.setType(type);
+        if (succeeded && StringUtils.hasText(userId) && objectId != null)
+        {
+            // Create object history
+            acmObjectHistory = new AcmObjectHistory();
 
-        // Set object id and type
-        acmObjectHistory.setObjectId(objectId);
-        acmObjectHistory.setObjectType(objectType);
+            // Set username from the user who perform the action
+            acmObjectHistory.setUserId(userId);
+            acmObjectHistory.setType(type);
 
-        // Convert Object to JSON string
-        AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
-        String json = converter.marshal(obj);
+            // Set object id and type
+            acmObjectHistory.setObjectId(objectId);
+            acmObjectHistory.setObjectType(objectType);
 
-        // Set JSON representation of the Object
-        acmObjectHistory.setObjectString(json);
+            // Convert Object to JSON string
+            AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
+            String json = converter.marshal(obj);
 
-        // Set date
-        acmObjectHistory.setDate(date);
+            // Set JSON representation of the Object
+            acmObjectHistory.setObjectString(json);
 
-        // Save object history
-        acmObjectHistory = save(acmObjectHistory, ipAddress);
+            // Set date
+            acmObjectHistory.setDate(date);
+
+            // Save object history
+            acmObjectHistory = save(acmObjectHistory, ipAddress);
+
+            return acmObjectHistory;
+        }
 
         return acmObjectHistory;
+
     }
 
     @Override

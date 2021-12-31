@@ -43,6 +43,9 @@ angular.module('complaints').controller(
                     });
                     var promiseUsers = gridHelper.getUsers();
 
+                    var defaultDateTimeUTCFormat = $translate.instant("common.defaultDateTimeUTCFormat");
+                    var defaultDateTimePickerFormat = $translate.instant("common.defaultDateTimePickerFormat");
+
                     ConfigService.getComponentConfig("complaints", "participants").then(function(componentConfig) {
                         $scope.config = componentConfig;
                     });
@@ -173,15 +176,29 @@ angular.module('complaints').controller(
 
                     };
 
+                    $scope.dueDate = {
+                        dueDateInfo: null
+                    };
+
                     var onObjectInfoRetrieved = function(objectInfo) {
+                        // unbind watcher when user switch between tasks. When we call $watch() method,
+                        // angularJS returns an unbind function that will kill the $watch() listener when its called.
+                        dueDateWatch();
                         $scope.objectInfo = objectInfo;
                         $scope.dateInfo = $scope.dateInfo || {};
-                        $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+                        if(!Util.isEmpty($scope.objectInfo.dueDate)){
+                            $scope.dateInfo.dueDate = moment.utc($scope.objectInfo.dueDate).local().format(defaultDateTimeUTCFormat);
+                            $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                            $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                        }
+                        else {
+                            $scope.dateInfo.dueDate = null;
+                            $scope.dueDate.dueDateInfoUIPicker = moment(new Date).format(defaultDateTimePickerFormat)
+                            $scope.dueDate.dueDateInfo = moment.utc(new Date()).local();
+                        }
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
-                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(objectInfo.created))).format();
-                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
-                        $scope.minYear = new Date(objectInfo.created).getFullYear();
+                        $scope.minDate = moment.utc(new Date(objectInfo.created)).local();
 
                         $scope.assignee = ObjectModelService.getAssignee(objectInfo);
                         $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
@@ -230,21 +247,51 @@ angular.module('complaints').controller(
                     $scope.updateAssignee = function() {
                         ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
                     };
-                    $scope.updateDueDate = function(data) {
+                    $scope.updateDueDate = function(data, oldValue) {
                         if (!Util.isEmpty(data)) {
-                            var correctedDueDate = new Date(data);
-                            var startDate = new Date($scope.objectInfo.create_date_tdt);
-                            if(correctedDueDate < startDate){
-                                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
-                                DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
-                            }else {
-                                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-                                $scope.saveComplaint();
+                            if (UtilDateService.compareDatesForUpdate(data, $scope.objectInfo.dueDate)) {
+                                var correctedDueDate = new Date(data);
+                                var startDate = new Date($scope.objectInfo.created);
+                                if(correctedDueDate < startDate){
+                                    $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                                    DialogService.alert($translate.instant("complaints.comp.info.alertMessage")+ $filter("date")(startDate, $translate.instant('common.defaultDateTimeUIFormat')));
+                                }else {
+                                    $scope.objectInfo.dueDate = moment.utc(correctedDueDate).format();
+                                    $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                                    $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                                    $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
+                                    // unbind due date watcher before complaint save so that when user switch to different complaint
+                                    // watcher won't be fired before landing on that different complaint
+                                    dueDateWatch();
+                                    $scope.saveComplaint();
+                                }
                             }
                         }else {
-                            $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
-                            $scope.saveComplaint();
+                            if (!oldValue) {
+                                $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
+                                $scope.dueDate.dueDateInfo = moment.utc($scope.objectInfo.dueDate).local();
+                                $scope.dueDate.dueDateInfoUIPicker = moment($scope.objectInfo.dueDate).format(defaultDateTimePickerFormat);
+                                $scope.dateInfo.dueDate = $scope.dueDate.dueDateInfoUIPicker;
+                                // unbind due date watcher before complaint save so that when user switch to different complaint
+                                // watcher won't be fired before landing on that different complaint
+                                dueDateWatch();
+                                $scope.saveComplaint();
+                            }
                         }
                     };
 
+                    // store function reference returned by $watch statement in variable
+                    var dueDateWatch = $scope.$watch('dueDate.dueDateInfo', dueDateChangeFn, true);
+
+                    // update due date and save task
+                    var dueDateChangeFn = function (newValue, oldValue) {
+                        if (newValue && !moment(newValue).isSame(moment(oldValue)) && $scope.dueDate.isOpen) {
+                            $scope.updateDueDate(newValue);
+                        }
+                    }
+
+                    // register watcher when user open date picker
+                    $scope.registerWatcher = function () {
+                        dueDateWatch = $scope.$watch('dueDate.dueDateInfo', dueDateChangeFn, true);
+                    }
                 } ]);

@@ -38,24 +38,32 @@ import io.milton.http.exceptions.BadRequestException;
 import io.milton.http.exceptions.LockedException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.http.exceptions.PreConditionFailedException;
-import io.milton.resource.GetableResource;
 import io.milton.resource.LockableResource;
 
 /**
  *
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
  */
-public abstract class AcmFileSystemResource implements GetableResource, LockableResource
+public abstract class AcmFileSystemResource implements LockableResource
 {
 
     private final String host;
 
     private final AcmFileSystemResourceFactory resourceFactory;
 
-    public AcmFileSystemResource(String host, AcmFileSystemResourceFactory resourceFactory)
+    private String userId;
+    private String containerObjectType;
+    private String containerObjectId;
+
+    public AcmFileSystemResource(String host, AcmFileSystemResourceFactory resourceFactory, String userId, String containerObjectType,
+            String containerObjectId)
     {
         this.host = host;
         this.resourceFactory = resourceFactory;
+
+        this.userId = userId;
+        this.containerObjectType = containerObjectType;
+        this.containerObjectId = containerObjectId;
     }
 
     public String getHost()
@@ -93,20 +101,6 @@ public abstract class AcmFileSystemResource implements GetableResource, Lockable
         return null;
     }
 
-    // GetableResource interface methods implementation
-
-    @Override
-    public Long getContentLength()
-    {
-        return null;
-    }
-
-    @Override
-    public Long getMaxAgeSeconds(Auth auth)
-    {
-        return getResourceFactory().getMaxAgeSeconds();
-    }
-
     // LockableResource interface methods implementation
 
     @Override
@@ -117,9 +111,9 @@ public abstract class AcmFileSystemResource implements GetableResource, Lockable
     }
 
     @Override
-    public LockResult refreshLock(String token) throws NotAuthorizedException, PreConditionFailedException
+    public LockResult refreshLock(String token, LockTimeout lockTimeout) throws NotAuthorizedException, PreConditionFailedException
     {
-        return resourceFactory.getLockManager().refresh(token, this);
+        return resourceFactory.getLockManager().refresh(token, lockTimeout, this);
     }
 
     @Override
@@ -134,4 +128,18 @@ public abstract class AcmFileSystemResource implements GetableResource, Lockable
         return resourceFactory.getLockManager().getCurrentToken(this);
     }
 
+    public String getUserId()
+    {
+        return userId;
+    }
+
+    public String getContainerObjectType()
+    {
+        return containerObjectType;
+    }
+
+    public String getContainerObjectId()
+    {
+        return containerObjectId;
+    }
 }

@@ -33,9 +33,13 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             NOTIFICATION: "NOTIFICATION",
             CONSULTATION: "CONSULTATION",
             CORRESPONDENCE_TEMPLATE: "correspondenceTemplate"
-        }
+        },
 
-        ,
+        RegexTypes : {
+            RULE_REGEX: new RegExp(/[`~!#$%^&*|+=?;:',.<>\{\}\[\]\\\/]/),
+            LOOKUP_REGEX: new RegExp(/[`~!#$%^&*|+=?;:',<>\\\/]/)
+        },
+
         LockTypes: {
             WRITE: "WRITE",
             READ: "READ",
@@ -49,7 +53,9 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             COMPLAINT: "complaint",
             TASK: "task",
             DOC_REPO: "documentrepository",
-            CONSULTATION: "consultation"
+            CONSULTATION: "consultation",
+            COSTSHEET: "costsheet",
+            TIMESHEET: "timesheet"
         }
 
         ,

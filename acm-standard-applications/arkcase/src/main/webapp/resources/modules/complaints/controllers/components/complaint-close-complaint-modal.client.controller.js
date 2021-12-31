@@ -13,8 +13,10 @@ angular.module('complaints').controller(
             $scope.searchCase = searchCase;
             $scope.save = save;
             $scope.cancelModal = cancelModal;
+            $scope.showApprover= modalParams.showApprover;
             //Objects
             $scope.complaintInfo = {};
+            $scope.showComplaintCloseStatus = false;
             $scope.closeComplaintRequest = {
                 complaintId: modalParams.info.complaintId,
                 complaintNumber: modalParams.info.complaintNumber,
@@ -35,7 +37,7 @@ angular.module('complaints').controller(
                     modifier: null,
                     className: ""
                 },
-                status: "IN APPROVAL",
+                status: "",
                 objectType: "CLOSE_COMPLAINT_REQUEST",
                 participants: [],
                 created: null,
@@ -44,7 +46,8 @@ angular.module('complaints').controller(
                 modifier: null,
                 description: "",
                 referExternalPersonId: undefined,
-                referExternalOrganizationId: undefined
+                referExternalOrganizationId: undefined,
+                closeComplaintStatusFlow: $scope.showApprover == 'true'
             };
             $scope.complaintDispositions = [];
             $scope.contactTypes = [];
@@ -92,12 +95,16 @@ angular.module('complaints').controller(
             ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
                 var personTypes = [];
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i].key === "ExternalReferal") {
+                    if (data[i].key === "External Referal") {
                         personTypes.push(data[i]);
                     }
                 }
                 $scope.personTypeExternalReferal = personTypes;
                 return personTypes;
+            });
+
+            ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
+                $scope.contactMethodTypes = contactMethodTypes;
             });
 
             function dispositionTypeChanged() {
@@ -227,6 +234,7 @@ angular.module('complaints').controller(
             // -------------------  people --------------------------------------------------------------------
 
             var ExternalReferalType = 'External Referal';
+            var assocTypeLabel = $translate.instant("complaints.comp.people.type.label");
 
             var newPersonAssociation = function () {
                 return {
@@ -242,6 +250,8 @@ angular.module('complaints').controller(
                 };
             };
             $scope.addPerson = function () {
+                $scope.closeComplaintRequest.disposition.referExternalContactMethod = "";
+                $scope.closeComplaintRequest.contactType = "";
                 pickPerson(null);
             };
 
@@ -251,6 +261,7 @@ angular.module('complaints').controller(
                 params.types = $scope.personTypeExternalReferal;
                 params.type = ExternalReferalType;
                 params.typeEnabled = true;
+                params.assocTypeLabel = assocTypeLabel;
                 association = new newPersonAssociation();
 
                 var modalInstance = $modal.open({
@@ -272,21 +283,46 @@ angular.module('complaints').controller(
                         PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                             data.person = response.data;
                             $scope.closeComplaintRequest.disposition.referExternalContactPersonName = data.person.givenName + " " + data.person.familyName;
-                            $scope.contactTypes = data.person.contactMethods;
+                            $scope.personContactMethods = data.person.contactMethods;
+                            $scope.contactTypes = setContactMethodTypes($scope.personContactMethods);
                             $scope.closeComplaintRequest.referExternalPersonId = data.person.id;
                         });
                     } else {
                         PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                             $scope.closeComplaintRequest.disposition.referExternalContactPersonName = person.givenName + " " + person.familyName;
-                            $scope.contactTypes = person.contactMethods;
+                            $scope.personContactMethods = person.contactMethods;
+                            $scope.contactTypes = setContactMethodTypes($scope.personContactMethods);
                             $scope.closeComplaintRequest.referExternalPersonId = person.id;
                         });
                     }
+
                 });
+
+                var setContactMethodTypes = function (personContactTypes) {
+                    var contactTypes = [];
+                    for (var i = 0; i < $scope.contactMethodTypes.length; i++) {
+                        for (var j = 0; j < personContactTypes.length; j++) {
+                            if ($scope.contactMethodTypes[i].key == personContactTypes[j].type) {
+                                contactTypes.push($scope.contactMethodTypes[i]);
+                            }
+                        }
+                    }
+                    return contactTypes;
+                }
+            }
+
+            $scope.updateReferExternalContactMethod = function (contactType) {
+                for (var i = 0; i < $scope.personContactMethods.length; i++) {
+                    if ($scope.personContactMethods[i].type == contactType.key) {
+                        $scope.closeComplaintRequest.disposition.referExternalContactMethod = $scope.personContactMethods[i];
+                    }
+                }
             }
 
 
             //------------------------------- Organizations --------------------------------------------
+
+            var assocOrgTypeLabel = $translate.instant("complaints.comp.organizations.type.label");
 
             var newOrganizationAssociation = function () {
                 return {
@@ -307,6 +343,7 @@ angular.module('complaints').controller(
             function pickOrganization(association) {
                 var params = {};
                 params.types = $scope.personTypeExternalReferal;
+                params.assocTypeLabel = assocOrgTypeLabel;
 
                 if (association) {
                     angular.extend(params, {
@@ -345,6 +382,26 @@ angular.module('complaints').controller(
                         })
                     }
                 });
+
+                var setContactMethodTypes = function (personContactTypes) {
+                    var contactTypes = [];
+                    for (var i = 0; i < $scope.contactMethodTypes.length; i++) {
+                        for (var j = 0; j < personContactTypes.length; j++) {
+                            if ($scope.contactMethodTypes[i].key == personContactTypes[j].type) {
+                                contactTypes.push($scope.contactMethodTypes[i]);
+                            }
+                        }
+                    }
+                    return contactTypes;
+                }
+            }
+
+            $scope.updateReferExternalContactMethod = function (contactType) {
+                for (var i = 0; i < $scope.personContactMethods.length; i++) {
+                    if ($scope.personContactMethods[i].type == contactType.key) {
+                        $scope.closeComplaintRequest.disposition.referExternalContactMethod = $scope.personContactMethods[i];
+                    }
+                }
             }
 
             function searchCase() {
@@ -354,6 +411,7 @@ angular.module('complaints').controller(
                     $scope.closeComplaintRequest.disposition.existingCaseNumber = caseInfo.caseNumber;
                     $scope.closeComplaintRequest.disposition.existingCaseTitle = caseInfo.title;
                     $scope.closeComplaintRequest.disposition.existingCaseCreated = caseInfo.created;
+                    $scope.closeComplaintRequest.disposition.existingCaseCreatedFormatted = moment(caseInfo.created).format('YYYY-MM-DD h:mm A');
                     $scope.closeComplaintRequest.disposition.existingCasePriority = caseInfo.priority;
                 });
             }
@@ -361,10 +419,17 @@ angular.module('complaints').controller(
             function save() {
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                if($scope.closeComplaintRequest.closeComplaintStatusFlow) {
+                    $scope.closeComplaintRequest.status = 'IN APPROVAL';
+                }
+                else {
+                    $scope.closeComplaintRequest.status = 'CLOSED';
+                }
 
                 ComplaintInfoService.closeComplaint('create', $scope.closeComplaintRequest).then(function (data) {
                     MessageService.info(data.info);
-                    $modalInstance.dismiss();
+
+                    $modalInstance.close($scope.closeComplaintRequest);
                 });
             }
 

@@ -81,7 +81,7 @@ deploy_server:
     name: $ENVIRONMENT_NAME
     url: $ENVIRONMENT_URL
   script:
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''", "extra_vars": "{\"arkcase_version\": \"''$ARKCASE_VERSION''\", \"arkcase_configuration_version\":\"''$ARKCASE_VERSION''\", \"arkcase_config_server_version\":\"''$ARKCASE_VERSION''\", \"snowbound_arkcase_version\":\"''$ARKCASE_VERSION''\"}"}'' -k $TOWER_URL/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": ''$INVENTORY'', "job_tags": "''$TAGS''" }'' -k $TOWER_URL/api/v2/job_templates/12/launch/'
 
 deploy_backend_core_dev:
   stage: deploy
@@ -93,8 +93,7 @@ deploy_backend_core_dev:
   environment:
     name: Dev Core
   script:
-    # Dev Core repository ID on tower is 44
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 44, "job_tags": "core", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k $TOWER_URL/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "job_tags": "upgrade" }'' -k $APPDEV_TOWER_URL/api/v2/job_templates/12/launch/'
 
 deploy_backend_foia_dev:
   stage: deploy
@@ -106,8 +105,7 @@ deploy_backend_foia_dev:
   environment:
     name: Dev FOIA
   script:
-    # Dev Foia repository ID on tower is 45
-    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "inventory": 45, "job_tags": "core,foia", "extra_vars": "{\"arkcase_version\": \"\", \"arkcase_configuration_version\":\"\", \"arkcase_config_server_version\":\"\", \"snowbound_arkcase_version\":\"\"}"}'' -k $TOWER_URL/api/v2/job_templates/129/launch/'
+    - 'curl -H "Content-Type: application/json" -X POST -s -u gitlabci:$GITLABCI_TOWER_PASSWORD -d ''{ "job_tags": "upgrade,foia" }'' -k $APPDEV_TOWER_URL/api/v2/job_templates/13/launch/'
 
 .deploy_backend_privacy_dev:
   stage: deploy

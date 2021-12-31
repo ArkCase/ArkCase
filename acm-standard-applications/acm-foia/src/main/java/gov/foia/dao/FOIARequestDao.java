@@ -68,7 +68,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return getEm().createNamedQuery(REQUESTS_BY_STATUS, FOIARequest.class).setParameter("requestStatuses", statuses).getResultList();
     }
 
-    public List<FOIARequest> getAllRequestsInBillingBefore(LocalDate billingEnterDate)
+    public List<FOIARequest> getAllRequestsInBillingBefore(LocalDateTime billingEnterDate)
     {
         return getAllRequestsInQueueBefore(PURGE_BILLING_QUEUE, "Billing", "billingEnterDate", billingEnterDate);
     }
@@ -102,13 +102,23 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         }
     }
 
-    public List<FOIARequest> getAllRequestsInHoldBefore(LocalDate holdEnterDate)
+    public List<FOIARequest> findAllHoldRequestsBefore(LocalDateTime holdEnterDate)
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.queue.name = 'Hold' AND request.holdEnterDate < :holdEnterDate";
+        TypedQuery<FOIARequest> query = getEm().createQuery(queryText, FOIARequest.class);
+        query.setParameter("holdEnterDate", holdEnterDate);
+        List<FOIARequest> requests = query.getResultList();
+        return requests;
+    }
+
+    public List<FOIARequest> getAllRequestsInHoldBefore(LocalDateTime holdEnterDate)
     {
         return getAllRequestsInQueueBefore(PURGE_HOLD_QUEUE, "Hold", "holdEnterDate", holdEnterDate);
     }
 
     private List<FOIARequest> getAllRequestsInQueueBefore(String queryName, String queueName, String enterDateFieldName,
-            LocalDate enterDate)
+            LocalDateTime enterDate)
     {
 
         TypedQuery<FOIARequest> query = getEm().createNamedQuery(queryName, FOIARequest.class);
@@ -347,15 +357,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requests;
     }
 
-    public List<FOIARequest> findAllHeldAndAppealedRequests()
-    {
-        String queryText = "SELECT request FROM FOIARequest request"
-                + " WHERE request.queue.name = 'Hold'";
-        TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
-        List<FOIARequest> requests = allRecords.getResultList();
-        return requests;
-    }
-
     public FOIARequest findByExternalIdentifier(String externalIdentifier)
     {
         String queryText = "SELECT request FROM FOIARequest request "
@@ -377,5 +378,21 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         nextRequestQuery.setParameter("createdDate", createdDate);
 
         return nextRequestQuery.getResultList();
+    }
+    public List<PortalFOIARequestStatus> getExternalAnonymousRequests(String portalRequestTrackingId)
+    {
+        String queryText = "SELECT request FROM " + getPersistenceClass().getSimpleName() + " request"
+                + " WHERE request.portalRequestTrackingId = :portalRequestTrackingId";
+
+        TypedQuery<FOIARequest> query = getEm().createQuery(queryText, getPersistenceClass());
+        query.setParameter("portalRequestTrackingId", portalRequestTrackingId);
+        List<FOIARequest> requests = query.getResultList();
+
+        if (requests.isEmpty()) {
+            return new ArrayList<>();
+        }
+        else {
+            return populateRequestStatusList(requests);
+        }
     }
 }

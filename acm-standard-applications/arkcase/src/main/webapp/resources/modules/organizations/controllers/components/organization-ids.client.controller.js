@@ -58,7 +58,9 @@ angular.module('organizations').controller(
                     });
 
                     $scope.addNew = function() {
-                        var identification = {};
+                        var identification = {
+                            className: $scope.config.identificationClassName
+                        };
                         identification.created = Util.dateToIsoString(new Date());
                         identification.creator = $scope.userId;
 
@@ -68,7 +70,8 @@ angular.module('organizations').controller(
                             identificationType: '',
                             identificationNumber: '',
                             identificationIssuer: '',
-                            identificationYearIssued: ''
+                            identificationYearIssued: '',
+                            className: $scope.config.identificationClassName
                         };
                         showModal(item, false);
                     };
@@ -79,7 +82,8 @@ angular.module('organizations').controller(
                             identificationID: rowEntity.identificationID,
                             identificationType: rowEntity.identificationType,
                             identificationNumber: rowEntity.identificationNumber,
-                            identificationIssuer: rowEntity.identificationIssuer
+                            identificationIssuer: rowEntity.identificationIssuer,
+                            className: rowEntity.className
                         };
 
                         if (Util.isEmpty(rowEntity.identificationYearIssued)) {
@@ -105,7 +109,7 @@ angular.module('organizations').controller(
 
                     function showModal(identification, isEdit) {
                         var params = {};
-                        params.identification = identification || {};
+                        params.identification = identification || {className: $scope.config.identificationClassName};
                         params.isEdit = isEdit || false;
                         params.isDefault = $scope.isDefault(identification);
 

@@ -55,6 +55,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -64,7 +65,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -132,7 +133,25 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
+            /**
+             * com.sun.org.apache.xalan.internal.xsltc.trax - JDK
+             * org.apache.xalan.processor - Xalan
+             * org.apache.xalan.xsltc.trax - Xalan
+             * 
+             * those are TransformerFactory implementation providers and not sure which implementation doesn't support below XMLConstants 
+             * that's why suppressing IllegalArgumentException.
+             */
+         
+            try
+            {
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // TODO: handle exception
+            }
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
@@ -179,6 +198,7 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslStream));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));

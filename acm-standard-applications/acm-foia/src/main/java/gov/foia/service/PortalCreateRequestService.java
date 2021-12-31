@@ -41,6 +41,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
 
+import gov.foia.dao.FOIARequestDao;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -137,11 +139,11 @@ public class PortalCreateRequestService
 
         request.setRequestType(in.getRequestType());
         request.setRequestSubType("FOIA");
-        request.setComponentAgency("FOIA");
+        request.setComponentAgency(StringUtils.isNotEmpty(in.getComponentAgency()) ? in.getComponentAgency() : "FOIA");
         request.setOriginalRequestNumber(in.getOriginalRequestNumber());
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
-
+        request.setPortalRequestTrackingId(in.getPortalRequestTrackingId());
         if (in.getTitle() != null)
         {
             request.setTitle(in.getTitle());
@@ -165,12 +167,24 @@ public class PortalCreateRequestService
         requesterAssociation.setPersonType("Requester");
 
         FOIAPerson requester;
+        Optional<Person> existingPerson;
+        if(in.getAnonymousFlag()) {
+            Person anonymousPerson = getPersonDao().findAnonymousPerson();
+            if(anonymousPerson != null){
+                requester = (FOIAPerson) anonymousPerson;
+            }
+            else{
+                requester = populateRequesterAndOrganizationFromRequest(in);
+            }
+        }
+        else
+        {
+            existingPerson = getPersonDao().findByEmail(in.getEmail());
+            requester = existingPerson
+                    .map(portalFOIAPerson -> updatePersonInfo(in, (FOIAPerson) portalFOIAPerson))
+                    .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
+         }
 
-        Optional<Person> existingPerson = getPersonDao().findByEmail(in.getEmail());
-
-        requester = existingPerson
-                .map(portalFOIAPerson -> updatePersonInfo(in, (FOIAPerson) portalFOIAPerson))
-                .orElseGet(() -> populateRequesterAndOrganizationFromRequest(in));
 
         requesterAssociation.setPerson(requester);
         request.getPersonAssociations().add(requesterAssociation);
@@ -196,6 +210,7 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
+        requester.setAnonymousFlag(in.getAnonymousFlag());
 
         PostalAddress address = getPostalAddressFromPortalFOIARequest(in);
         if (addressHasData(address))

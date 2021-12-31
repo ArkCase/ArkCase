@@ -1,21 +1,27 @@
-<div class="input-group">
-    <input class="form-control" ng-click="toggleEditable()"
-            ng-value="today" />
-
-    <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="toggleEditable()"><i class="fa fa-calendar"></i></button>
+<div class="input-group input-group-md"
+     moment-picker="dateInPicker"
+     format="{{format}}"
+     disable="disable"
+     min-date="minDate"
+     max-date="maxDate"
+     autoclose="onSelectClose"
+     show-header="showHeader"
+     change="onDateChange(newValue, oldValue)"
+     selectable="selectable(date, type)"
+     start-view="month"
+     is-open="datepickerOptions.isOpen"
+>
+    <input class="form-control"
+           placeholder="{{placeholder}}"
+           ng-model="dateInPicker"
+           ng-required="isRequired"
+           ng-readonly="isReadonly"
+           ng-blur="onBlur($event)"
+    >
+    <span class="input-group-addon">
+          <i class="fa fa-calendar"></i>
     </span>
 </div>
-
-<div ng-show="editable" class="date-picker-popover">
-    <input type="text" id="{{datePickerId}}" />
-    <span>
-        <button ng-show="editable" type="button" class="btn btn-primary btn-sm" title="Submit" ng-mouseup="saveDate()"
-                ng-click="afterSave({dateType:property})">
-            <span class="glyphicon glyphicon-ok"></span>
-        </button>
-        <button ng-show="editable" type="button" class="btn btn-default btn-sm" title="Cancel" ng-click="cancel()">
-            <span class="glyphicon glyphicon-remove"></span>
-        </button>
-    </span>
-</div>
+<p class="text-danger" ng-if="message" style="padding-top: 5px;">
+    {{message}} <span ng-if="message === invalidFormatMessage"> Valid format: {{validFormat}}</span>
+</p>

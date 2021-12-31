@@ -41,10 +41,14 @@
                 <ref bean="acmGroupSolrReindexExecutor"/>
                 <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
                 <ref bean="createTaskFolderStructureInParentObjectUpdateExecutor"/>
+                <ref bean="updateDueDateOnTasksExecutor"/>
                 <ref bean="solrReindexCaseComplaintDocumentRepositoryExecutor"/>
                 <ref bean="solrReindexOrganizationExecutor"/>
                 <ref bean="createPersonFromExistingUsersExecutor"/>
                 <ref bean="solrReindexTaskExecutor" />
+                <ref bean="solrReindexCaseFileExecutor" />
+                <ref bean="solrReindexConsultationExecutor" />
+                <ref bean="createAlfrescoAndRmFoldersExecutor" />
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -160,6 +164,13 @@
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
+    <bean id="updateDueDateOnTasksExecutor"
+          class="com.armedia.acm.services.dataupdate.service.UpdateDueDateOnTasksExecutor">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
     <bean id="solrReindexCaseComplaintDocumentRepositoryExecutor"
           class="com.armedia.acm.services.dataupdate.service.SolrReindexCaseComplaintDocumentRepositoryExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
@@ -180,4 +191,19 @@
     <bean id="solrReindexTaskExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexTaskExecutor">
         <property name="solrReindexService" ref="solrReindexService" />
     </bean>
+
+    <bean id="solrReindexCaseFileExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexCaseFileExecutor">
+        <property name="solrReindexService" ref="solrReindexService" />
+    </bean>
+
+    <bean id="solrReindexConsultationExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexConsultationExecutor">
+          <property name="solrReindexService" ref="solrReindexService" />
+    </bean>
+
+    <bean id="createAlfrescoAndRmFoldersExecutor" class="com.armedia.acm.services.dataupdate.service.CreateAlfrescoAndRmFoldersExecutor">
+        <property name="ecmFileService" ref="ecmFileService" />
+        <property name="ecmFileConfig" ref="ecmFileConfig" />
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService" />
+    </bean>
+
 </beans>

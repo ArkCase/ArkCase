@@ -40,7 +40,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import org.apache.logging.log4j.LogManager;
@@ -74,35 +73,27 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(RecycleBinItem in)
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        log.debug("Creating Solr advanced search document for RECYCLE_BIN_ITEM.");
 
         solr.setId(in.getId() + "-" + RecycleBinConstants.OBJECT_TYPE_ITEM);
         solr.setObject_id_s(in.getSourceObjectId() + "");
         solr.setObject_id_i(in.getSourceObjectId());
         solr.setObject_type_s(RecycleBinConstants.OBJECT_TYPE_ITEM);
-
-        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
-
         solr.setCreate_date_tdt(in.getCreated());
+        solr.setAuthor(in.getCreator());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
+
+        mapAdditionalProperties(in, solr.getAdditionalProperties());
 
         return solr;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(RecycleBinItem in)
+    public void mapAdditionalProperties(RecycleBinItem in, Map<String, Object> additionalProperties)
     {
-        SolrDocument solr = new SolrDocument();
-
-        solr.setId(in.getId() + "-" + RecycleBinConstants.OBJECT_TYPE_ITEM);
-        solr.setObject_id_s(in.getSourceObjectId() + "");
-        solr.setObject_id_i(in.getSourceObjectId());
-        solr.setObject_type_s(RecycleBinConstants.OBJECT_TYPE_ITEM);
-        solr.setLast_modified_tdt(in.getModified());
-
-        mapAdditionalPropertiesForRecycleBinItem(in, solr.getAdditionalProperties());
-        return solr;
+        mapAdditionalPropertiesForRecycleBinItem(in, additionalProperties);
     }
 
     private void mapAdditionalPropertiesForRecycleBinItem(RecycleBinItem in, Map<String, Object> additionalProperties)

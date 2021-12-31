@@ -10,9 +10,7 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <div class="input-group">
-                        <date-time-picker data="config.data.receivedDate" property="receivedDate"
-                                          on-after-save="receivedDateChanged()"
-                                          date-picker-id="receivedDate"></date-time-picker>
+                        <date-time-picker data="config.data.receivedDate" show-time="true" max-date="maxDate"></date-time-picker>
                     </div>
                 </div>
             </div>
@@ -140,7 +138,7 @@
                                        ng-model="config.data.subject.person.defaultEmail.value"
                                        placeholder="{{'cases.newRequest.email.placeholder' | translate}}"
                                        name="subjectEmail"
-                                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
                                        required="required"
                                        ng-disabled="isExistingSubject && (existingSubject.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser))">
@@ -317,10 +315,7 @@
                             <div class="col-sm-4 form-group">
                                 <fieldset ng-disabled="isExistingSubject && existingSubject.dateOfBirth">
                                     <div class="form-group">
-                                        <date-time-picker data="config.data.subject.person.dateOfBirth" property="dateOfBirth"
-                                                          on-after-save="dateOfBirthChanged(config.data.subject.person.dateOfBirth)"
-                                                          date-picker-id="dateOfBirth"
-                                                          time-format-disabled="true"></date-time-picker>
+                                        <date-time-picker data="config.data.subject.person.dateOfBirth" min-date="minDate"></date-time-picker>
                                     </div>
                                 </fieldset>
                                 <span class="text-danger"
@@ -487,7 +482,7 @@
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="email" ng-model="config.data.originator.person.defaultEmail.value"
                                    placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
-                                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
                                    required="required"
                                    ng-disabled="subjectSameAsRequester || (isExistingOriginator && (existingOriginator.defaultEmail.value ||
                                     (config.data.deliveryMethodOfResponse != 'Web Portal'  && !config.data.createNewPortalUser)))">

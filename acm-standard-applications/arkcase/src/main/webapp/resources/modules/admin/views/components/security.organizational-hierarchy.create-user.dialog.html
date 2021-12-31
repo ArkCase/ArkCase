@@ -27,7 +27,7 @@
         </div>
         <div class="form-group required" ng-class="{ 'has-error' : emailError}">
             <label for="email">{{"admin.security.organizationalHierarchy.createUserDialog.email" | translate}}</label>
-            <input type="email" class="form-control" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            <input type="email" class="form-control" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
                     placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                     ng-model="user.mail" ng-disabled="editUserDisabled" required>
             <p class="help-block" ng-show="emailError">

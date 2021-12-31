@@ -69,8 +69,8 @@ public class BillingEventPublisher implements ApplicationEventPublisherAware
     public void publishTouchnetPaymentCreatedEvent(BillingInvoice source)
     {
         TouchnetPaymentCreatedEvent touchnetPaymentCreatedEvent = new TouchnetPaymentCreatedEvent(source);
-        touchnetPaymentCreatedEvent.setUserId(AuthenticationUtils.getUsername());
-        touchnetPaymentCreatedEvent.setIpAddress(AuthenticationUtils.getUserIpAddress());
+        touchnetPaymentCreatedEvent.setUserId("TOUCHNET-PAYMENT");
+        touchnetPaymentCreatedEvent.setIpAddress("");
         touchnetPaymentCreatedEvent.setParentObjectId(source.getParentObjectId());
         touchnetPaymentCreatedEvent.setParentObjectType(source.getParentObjectType());
         touchnetPaymentCreatedEvent.setSucceeded(true);

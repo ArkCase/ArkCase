@@ -274,6 +274,7 @@
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="foiaConfig" ref="foiaConfig"/>
             <beans:property name="objectAssociationService" ref="objectAssociationService"/>
+            <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
         <bean id="foiaRequestEventUtility" class="gov.foia.service.FOIARequestEventUtility"/>
@@ -362,6 +363,8 @@
             <beans:property name="applicationConfig" ref="applicationProperties"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="userOrgService" ref="acmUserOrgService"/>
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
+            <beans:property name="foiaTemplateModelExemption" ref="foiaTemplateModelExemption" />
         </beans:bean>
 
         <beans:bean id="foiaTaskRequestTemplateModelProvider" class="gov.foia.model.provider.FOIATaskRequestTemplateModelProvider">
@@ -381,7 +384,12 @@
             <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
             <beans:property name="userDao" ref="userJpaDao" />
             <beans:property name="billingService" ref="billingService" />
+            <beans:property name="foiaTemplateModelExemption" ref="foiaTemplateModelExemption" />
+        </beans:bean>
+
+        <beans:bean id="foiaTemplateModelExemption" class="gov.foia.model.provider.FOIATemplateModelExemption">
             <beans:property name="lookupDao" ref="lookupDao" />
+            <beans:property name="foiaExemptionService" ref="foiaExemptionService" />
         </beans:bean>
 
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">

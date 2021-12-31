@@ -8,6 +8,9 @@ angular.module('services').factory('PhoneValidationService', ['$http', function 
         return $http({
             method: 'GET',
             url: 'api/latest/plugin/phone/regex',
+            headers: {
+                'Accept': 'text/plain'
+            }
         });
     }
 

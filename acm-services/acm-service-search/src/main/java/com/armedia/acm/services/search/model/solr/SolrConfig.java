@@ -59,10 +59,6 @@ public class SolrConfig implements InitializingBean
     @Value("${solr.protocol}")
     private String protocol;
 
-    @JsonProperty("solr.quicksearch.core")
-    @Value("${solr.quicksearch.core}")
-    private String quickSearchCore;
-
     @JsonProperty("solr.advancedsearch.core")
     @Value("${solr.advancedsearch.core}")
     private String advancedSearchCore;
@@ -142,7 +138,6 @@ public class SolrConfig implements InitializingBean
         Assert.hasText(getProtocol(), "Invalid Solr configuration, no protocol specified");
         Assert.hasText(getHost(), "Invalid Solr configuration, no host specified");
         Assert.hasText(getContextRoot(), "Invalid Solr configuration, no context specified");
-        Assert.hasText(getQuickSearchCore(), "Invalid Solr configuration, no QuickSearch Core/Collection specified");
         Assert.hasText(getAdvancedSearchCore(), "Invalid Solr configuration, no AdvancedSearch Core/Collection specified");
         Assert.hasText(getSearchHandler(), "Invalid Solr configuration, no search handler specified");
         Assert.hasText(getUpdateHandler(), "Invalid Solr configuration, no update handler specified");
@@ -179,16 +174,6 @@ public class SolrConfig implements InitializingBean
     public void setContextRoot(String contextRoot)
     {
         this.contextRoot = contextRoot;
-    }
-
-    public String getQuickSearchCore()
-    {
-        return quickSearchCore;
-    }
-
-    public void setQuickSearchCore(String quickSearchCore)
-    {
-        this.quickSearchCore = quickSearchCore;
     }
 
     public String getAdvancedSearchCore()

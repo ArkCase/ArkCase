@@ -102,5 +102,18 @@
         </update>
     </changeSet>
 
+    <changeSet id="14-change-cm-case-file-datetime" author="marija.blazhevska">
+        <modifyDataType tableName="acm_case_file" columnName="fo_disposition_closed_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="fo_expedite_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="fo_feeWaived_date" newDataType="DATETIME"/>
+        <modifyDataType tableName="acm_case_file" columnName="fo_redirected_date" newDataType="DATETIME"/>
+    </changeSet>
+
+    <changeSet id="15-setting-made-public-date-to-public-files" author="martin.jovanovski">
+        <sql>
+            UPDATE acm_file SET fo_made_public_date=cm_file_modified WHERE fo_public_flag LIKE 'true' AND fo_made_public_date IS NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
 

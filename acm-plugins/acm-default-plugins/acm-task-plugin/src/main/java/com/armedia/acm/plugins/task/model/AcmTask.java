@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.model;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmParentObjectInfo;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -57,7 +58,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmParentObjectInfo, AcmNotifiableEntity
+public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmParentObjectInfo, AcmNotifiableEntity, AcmStatefulEntity
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
@@ -324,6 +325,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         return status;
     }
 
+    @Override
     public void setStatus(String status)
     {
         this.status = status;

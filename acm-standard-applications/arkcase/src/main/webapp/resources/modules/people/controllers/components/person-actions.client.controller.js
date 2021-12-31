@@ -58,13 +58,13 @@ angular.module('people').controller(
 
                     $scope.activate = function() {
                         $scope.objectInfo.status = 'ACTIVE';
-                        $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
+                        $scope.activationIcon = "fa fa-circle-o-notch";
                         saveObjectInfoAndRefresh();
                     };
 
                     $scope.deactivate = function() {
                         $scope.objectInfo.status = 'INACTIVE';
-                        $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
+                        $scope.activationIcon = "fa fa-circle-o-notch";
                         saveObjectInfoAndRefresh();
                     };
 

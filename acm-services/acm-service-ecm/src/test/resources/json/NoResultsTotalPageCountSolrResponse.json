@@ -7,7 +7,7 @@
             "sort": "",
             "indent": "true",
             "start": "0",
-            "q": "object_type_s:FILE AND type_s:(authorization OR abstract) AND mime_type_s:application/pdf AND parent_object_type_s:CASE_FILE AND parent_object_id_i:179",
+            "q": "object_type_s:FILE AND type_lcs:(authorization OR abstract) AND mime_type_s:application/pdf AND parent_type_s:CASE_FILE AND parent_object_id_i:179",
             "wt": "json",
             "topLevel": "if(exists(parent_ref_s), 0, 1)",
             "fq": [

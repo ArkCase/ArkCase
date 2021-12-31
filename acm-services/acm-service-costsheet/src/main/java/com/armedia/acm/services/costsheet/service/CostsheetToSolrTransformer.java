@@ -30,21 +30,31 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.DESCRIPTION_NO_HTML_TAGS_PARSEABLE;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_ID_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_REF_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.PARENT_TYPE_S;
+import static com.armedia.acm.services.search.model.solr.SolrAdditionalPropertiesConstants.TITLE_PARSEABLE;
+
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
  */
 public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmCostsheet>
 {
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmCostsheetDao acmCostsheetDao;
 
@@ -57,53 +67,26 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmCostsheet in)
     {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+        LOG.debug("Creating Solr advanced search document for COSTSHEET");
 
-        solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
-        solr.setTitle_parseable(in.getTitle());
-        solr.setDescription_no_html_tags_parseable(in.getDetails());
-        solr.setName(in.getCostsheetNumber());
+        mapRequiredProperties(solrDoc, in.getId(), in.getCreator(), in.getCreated(), in.getModifier(), in.getModified(),
+                CostsheetConstants.OBJECT_TYPE, in.getCostsheetNumber());
 
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
+        mapAdditionalProperties(in, solrDoc.getAdditionalProperties());
 
-        solr.setParent_id_s(Long.toString(in.getParentId()));
-        solr.setParent_type_s(in.getParentType());
-        solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
-
-        return solr;
+        return solrDoc;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmCostsheet in)
+    public void mapAdditionalProperties(AcmCostsheet in, Map<String, Object> additionalProperties)
     {
-        SolrDocument solr = new SolrDocument();
+        additionalProperties.put(TITLE_PARSEABLE, in.getTitle());
+        additionalProperties.put(DESCRIPTION_NO_HTML_TAGS_PARSEABLE, in.getDetails());
 
-        solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
-        solr.setName(in.getCostsheetNumber());
-        solr.setTitle_parseable(in.getTitle());
-        solr.setObject_id_s(Long.toString(in.getId()));
-        solr.setObject_id_i(in.getId());
-        solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
-        solr.setParent_object_id_s(Long.toString(in.getParentId()));
-        solr.setParent_object_type_s(in.getParentType());
-        solr.setAuthor_s(in.getUser().getUserId());
-
-        solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        return solr;
+        additionalProperties.put(PARENT_ID_S, Long.toString(in.getParentId()));
+        additionalProperties.put(PARENT_TYPE_S, in.getParentType());
+        additionalProperties.put(PARENT_REF_S, in.getParentId() + "-" + in.getParentType());
     }
 
     @Override

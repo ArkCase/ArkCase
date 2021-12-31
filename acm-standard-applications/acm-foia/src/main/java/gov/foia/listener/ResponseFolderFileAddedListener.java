@@ -27,19 +27,17 @@ package gov.foia.listener;
  * #L%
  */
 
-import static com.armedia.acm.plugins.casefile.model.CaseFileConstants.OBJECT_TYPE;
-
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFilePostUploadEvent;
-
+import gov.foia.model.FOIARequest;
+import gov.foia.service.ResponseFolderFileUpdateService;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Optional;
 
-import gov.foia.model.FOIARequest;
-import gov.foia.service.ResponseFolderFileUpdateService;
+import static com.armedia.acm.plugins.casefile.model.CaseFileConstants.OBJECT_TYPE;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 21, 2018
@@ -74,6 +72,13 @@ public class ResponseFolderFileAddedListener implements ApplicationListener<EcmF
         FOIARequest request = (FOIARequest) caseFileDao.find(file.getContainer().getContainerObjectId());
         if (!releaseQueueName.equals(request.getQueue().getName()))
         {
+            return;
+        }
+
+        if (request.getLegacySystemId() != null && !request.getLegacySystemId().trim().isEmpty())
+        {
+            // do not convert response folder documents in migrated requests, and do not compress the
+            // response folder.
             return;
         }
 

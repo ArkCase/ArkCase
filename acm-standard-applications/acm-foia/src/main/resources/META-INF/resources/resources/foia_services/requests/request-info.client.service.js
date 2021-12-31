@@ -21,12 +21,13 @@ angular.module('services').factory('Request.InfoService', [ '$resource', 'UtilSe
         })
     };
 
-    Service.saveNewPortalUser = function (user, portalId) {
+    Service.saveNewPortalUser = function (user, portalId, requestId) {
         return Util.serviceCall({
             service: Service._saveNewPortalUser,
             data: user,
             param: {
-                portalId: portalId
+                portalId: portalId,
+                requestId: requestId
             },
             headers: {
                 "Content-Type": "application/json"

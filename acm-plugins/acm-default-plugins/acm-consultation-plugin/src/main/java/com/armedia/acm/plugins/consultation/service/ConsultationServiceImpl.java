@@ -30,10 +30,7 @@ package com.armedia.acm.plugins.consultation.service;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.consultation.dao.ChangeConsultationStatusDao;
 import com.armedia.acm.plugins.consultation.dao.ConsultationDao;
-import com.armedia.acm.plugins.consultation.model.ChangeConsultationStatus;
-import com.armedia.acm.plugins.consultation.model.Consultation;
-import com.armedia.acm.plugins.consultation.model.ConsultationsByStatusDto;
-import com.armedia.acm.plugins.consultation.model.TimePeriod;
+import com.armedia.acm.plugins.consultation.model.*;
 import com.armedia.acm.plugins.consultation.pipeline.ConsultationPipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -150,6 +147,11 @@ public class ConsultationServiceImpl implements ConsultationService
         {
             pipelineContext.addProperty("attachmentFiles", files);
         }
+
+        if(consultation.getTitle() == null || consultation.getTitle().length() == 0){
+            consultation.setTitle(ConsultationConstants.OBJECT_TYPE);
+        }
+
 
         return pipelineManager.executeOperation(consultation, pipelineContext, () -> {
 
