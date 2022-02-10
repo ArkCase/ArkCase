@@ -102,7 +102,7 @@
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.4.7.Final</org.mvel.version>
         <pdfbox.version>2.0.22</pdfbox.version>
-        <postgresql.version>9.3-1100-jdbc41</postgresql.version>
+        <postgresql.version>42.2.25</postgresql.version>
         <powermock.version>2.0.9</powermock.version>
         <puppycrawl.version>8.44</puppycrawl.version>
         <reactor-netty.version>1.0.3</reactor-netty.version>
