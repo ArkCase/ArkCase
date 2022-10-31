@@ -29,6 +29,7 @@ package com.armedia.acm.activiti.services.dao;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,9 @@ public class AcmBpmnDao
     @PersistenceContext
     private EntityManager em;
 
+    @Value("${database.platform}")
+    private String databasePlatform;
+
     @Transactional(propagation = Propagation.REQUIRED)
     public AcmProcessDefinition save(AcmProcessDefinition toSave)
     {
@@ -69,28 +73,40 @@ public class AcmBpmnDao
 
     public List<AcmProcessDefinition> list(String orderBy, boolean isAsc)
     {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-
-        CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
-        Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
-        Subquery subquery = criteriaQuery.subquery(AcmProcessDefinition.class);
-        Root<AcmProcessDefinition> processDefinitionSubquery = subquery.from(AcmProcessDefinition.class);
-
-        criteriaQuery.select(processDefinition);
-        subquery.select(builder.min(processDefinitionSubquery.<Long> get("id")));
-        subquery.groupBy(processDefinitionSubquery.<String> get("key")).select(processDefinitionSubquery.<String> get("key"));
-
-        criteriaQuery.where(processDefinition.<Long> get("id").in(subquery.getSelection()));
-        if (isAsc)
+        if (!databasePlatform.endsWith("PostgreSQLPlatform"))
         {
-            criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
+            CriteriaBuilder builder = em.getCriteriaBuilder();
+
+            CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
+            Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
+            Subquery subquery = criteriaQuery.subquery(AcmProcessDefinition.class);
+            Root<AcmProcessDefinition> processDefinitionSubquery = subquery.from(AcmProcessDefinition.class);
+
+            criteriaQuery.select(processDefinition);
+            subquery.select(builder.min(processDefinitionSubquery.<Long>get("id")));
+            subquery.groupBy(processDefinitionSubquery.<String>get("key")).select(processDefinitionSubquery.<String>get("key"));
+
+            criteriaQuery.where(processDefinition.<Long>get("id").in(subquery.getSelection()));
+            if (isAsc)
+            {
+                criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
+            }
+            else
+            {
+                criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
+            }
+            TypedQuery<AcmProcessDefinition> query = getEm().createQuery(criteriaQuery);
+            return query.getResultList();
         }
         else
         {
-            criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
+            String queryText =
+                    "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key) ORDER BY apd."
+                            + orderBy + (isAsc ? " ASC" : " DESC");
+            TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
+
+            return query.getResultList();
         }
-        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(criteriaQuery);
-        return query.getResultList();
     }
 
     @Transactional
