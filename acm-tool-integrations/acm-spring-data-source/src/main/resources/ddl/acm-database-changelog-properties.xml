@@ -70,5 +70,8 @@
     <property name="classNameType" value="VARCHAR(400)" dbms="oracle,mysql,postgresql"/>
     <property name="classNameType" value="TEXT" dbms="mysql"/>
 
+    <property name="long" value="LONGINTEGER" dbms="oracle"/>
+    <property name="long" value="BIGINT" dbms="postgresql"/>
+    <property name="long" value="LONG" dbms="mysql,mssql"/>
 </databaseChangeLog>
 

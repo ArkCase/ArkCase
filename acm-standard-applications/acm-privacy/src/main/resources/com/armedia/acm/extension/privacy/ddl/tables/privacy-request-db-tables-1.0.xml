@@ -4,7 +4,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-alter-acm_case_file-for-subject-access-request" author="vladimir.cherepnalkovski"
-               dbms="oracle,mssql,postgres"
+               dbms="oracle,mssql,postgresql"
                logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="sar_received_date" type="${timestampType}"/>
@@ -86,7 +86,7 @@
     </changeSet>
 
     <changeSet id="04-acm_person-add-column-sar_position" author="vladimir.cherepnalkovski"
-               dbms="oracle,mssql,postgres"
+               dbms="oracle,mssql,postgresql"
                logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
         <addColumn tableName="acm_person">
             <column name="sar_position" type="VARCHAR(512)"/>
@@ -101,7 +101,7 @@
     </changeSet>
 
     <changeSet id="06-acm_file-add-column-sar_public_flag" author="vladimir.cherepnalkovski"
-               dbms="oracle,mssql,postgres"
+               dbms="oracle,mssql,postgresql"
                logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
         <addColumn tableName="acm_file">
             <column name="sar_public_flag" type="VARCHAR(10)"/>
@@ -116,7 +116,7 @@
     </changeSet>
 
     <changeSet id="08-privacy-file-version-review-status-column" author="vladimir.cherepnalkovski"
-               dbms="oracle,mssql,postgres"
+               dbms="oracle,mssql,postgresql"
                logicalFilePath="/ddl/tables/subject-access-request-db-tables-1.0.xml">
         <addColumn tableName="acm_file_version">
             <column name="sar_review_status" type="VARCHAR(512)"/>
@@ -154,7 +154,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="11-alter-acm_case_file-add-signature" author="vladimir.cherepnalkovski" dbms="oracle,mssql,postgres"
+    <changeSet id="11-alter-acm_case_file-add-signature" author="vladimir.cherepnalkovski" dbms="oracle,mssql,postgresql"
                logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
             <column name="sar_signature" type="VARCHAR(512)" defaultValueBoolean="false">
@@ -175,7 +175,7 @@
     </changeSet>
 
     <changeSet id="13-alter-acm_case_file-remove-signature-not-null-constraint" author="vladimir.cherepnalkovski"
-               dbms="oracle,mssql,postgres" logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
+               dbms="oracle,mssql,postgresql" logicalFilePath="/ddl/tables/privacy-request-db-tables-1.0.xml">
         <dropNotNullConstraint tableName="acm_case_file" columnName="sar_signature" columnDataType="VARCHAR"/>
     </changeSet>
 
