@@ -127,7 +127,7 @@
         <zt-exec.version>1.8</zt-exec.version>
         <docx4j.core>3.3.7</docx4j.core>
         <docx4j.export.fo>3.3.6</docx4j.export.fo>
-        <snakeyaml.version>1.27</snakeyaml.version>
+        <snakeyaml.version>1.32</snakeyaml.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <cdi-api.version>1.0</cdi-api.version>
         <hazelcast.version>3.11.2</hazelcast.version>
