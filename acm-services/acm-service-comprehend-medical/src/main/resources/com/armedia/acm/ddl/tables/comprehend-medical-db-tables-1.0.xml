@@ -2,7 +2,7 @@
                    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="1-create-comprehend-medical-table" author="riste.tutureski">
+    <changeSet id="1-create-comprehend-medical-table" author="riste.tutureski" dbms="oracle,mysql,mssql">
         <createTable tableName="acm_comprehend_medical">
             <column name="cm_comprehend_medical_id" type="${idType}">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transcribe"/>
@@ -18,6 +18,50 @@
             </column>
             <column name="cm_media_file_version_id" type="${idType}">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_media_file_version_id"/>
+            </column>
+            <column name="cm_comprehend_medical_file_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_comprehend_medical_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_process_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_comprehend_medical_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1-create-comprehend-medical-table" author="riste.tutureski" dbms="postgresql">
+        <createTable tableName="acm_comprehend_medical">
+            <column name="cm_comprehend_medical_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cm_comprehend_medical_remote_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_comprehend_medical_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_comprehend_medical_language" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_media_file_version_id" type="${idType}">
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="cm_comprehend_medical_file_id" type="${idType}">
                 <constraints nullable="true"/>
