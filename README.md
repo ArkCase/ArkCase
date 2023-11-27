@@ -20,142 +20,96 @@ This section documents how developers can build and run ArkCase.  (For non-devel
 
 ### Prerequisites
 
-* at least 16 GB RAM
-* at least 50 GB disk space (the Vagrant VM is 11G)
-* Java 8 (AdoptOpenJDK JVM works well).  Note, ArkCase is not tested on Java 9, Java 10, or Java 11.
-* Maven 3.5+ <https://maven.apache.org>
-* VirtualBox <https://www.virtualbox.org>
-* Vagrant <https://www.vagrantup.com>
-* Tomcat 9 <https://tomcat.apache.org>
-* git <https://git-scm.com/>
-* nodejs <https://nodejs.org>
-    * MacOS: install Node 6.  Node 8 and Node 11 do not work on MacOS.  
-    * Windows and Linux: use Node 8 or above.
-* npm (comes with NodeJS)
-* yarn <https://yarnpkg.com>
+- [Balena Etcher](https://balena.io/etcher) for creating bootable drives.
+- [Helm 3.12.1](https://helm.sh/docs/intro/install/) for managing Kubernetes applications.
+- A functioning [Kubernetes cluster](https://kubernetes.io/docs/setup/).
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for interacting with your Kubernetes cluster.
+- [Docker](https://docs.docker.com/get-docker/) for containerization.
 
-### Build the Vagrant VM
+### Setting Up ubuntu on your Laptop
 
-In this section you will build the Vagrant VM which will run the services ArkCase requires.  These services include Solr, ActiveMQ, MySQL, Alfresco, and Pentaho. 
+**Note:** If you already have Ubuntu installed or using an Ubuntu laptop, you can skip this step.
 
-First, install all the prerequisites (see Prerequisites section above).
+### Install Ubuntu
 
-Next, build the Vagrant VM according to the instructions in the `arkcase-ce` repository: <https://github.com/ArkCase/arkcase-ce>.
+1. **Download Ubuntu:**
+   - Obtain the Ubuntu ISO file [here](http://ubuntu.com/download/desktop).
 
-After the box is up, the following URLs should work from your browser; be aware that ArkCase uses a self-signed TLS certificate, so you will have to accept the browser warning about the unrecognized, self-signed certificate. 
+2. **Create Bootable USB:**
+   - Plug in your USB drive.
+   - Open Balena Etcher.
+   - Click `Flash from file` and select the downloaded ISO file.
+   - Choose your USB drive as the target.
+   - Click `Flash` to start the process.
+   - Safely eject the USB drive once the process is complete.
 
-https://arkcase-ce.local/solr
+### Setting Up Kubernetes on a Development Laptop (Ubuntu)
 
-https://arkcase-ce.local/share
+**Note:** If you already have a Kubernetes cluster, you can skip this step.
 
-https://arkcase-ce.local/pentaho
+To install Kubernetes on your Ubuntu laptop for development purposes, follow these steps:
 
-https://arkcase-ce.local/VirtualViewerJavaHTML5 (expect a 503 error from this URL)
+1. **Clone Repositories:**
+   - Clone the following repositories:
+     ```bash
+     git clone https//github.com/ArkCase/ark_k8s_init.git
+     git clone https://github.com/ArkCase/artifacts-dev.git
+     ```
 
-### Clone the repository and build the war file
+2. **Execute Init Script:**
+   - Navigate to the `ark_k8s_init` directory.
+   - Run the initialization script:
+     ```bash
+     cd path/to/ark_k8s_init
+     ./ubuntu-k8s-init
+     ```
 
-Clone this repository to a folder of your choice.
+3. **Verify Essential Commands:**
+   - Ensure the availability of essential commands:
+     - `helm`
+     - `kubectl`
+     - `docker`
 
-`cd` to the root folder of this repository; then run `mvn -DskipITs clean install`.  This will run the unit tests and build the war file.  It should take a few minutes.
+4. **Add User to Docker Group:**
+   - Run the following command to add your user to the docker group:
+     ```bash
+     sudo usermod -aG docker $USER
+     ```
 
-### Clone the configuration folder
+5. **Add Cluster Configuration:**
+   - Create a directory named `.kube` under the home directory:
+     ```bash
+     mkdir ~/.kube
+     ```
+   - Copy the cluster configuration to your user’s `.kube` directory:
+     ```bash
+     sudo cat /etc/Kubernetes/admin.conf > ~/.kube/config
+     ```
 
-ArkCase requires a configuration folder which is housed in another GitHub repository: https://github.com/ArkCase/.arkcase; follow the instructions at this link to setup the configuration folder.
+6. **Verify Cluster Pods:**
+   - Finally, verify the cluster pods' status using:
+     ```bash
+     sudo kubectl get pods -A
+     ```
+     Running this command should return all the cluster pods that are currently running.
+### Install ArkCase with helm chart
 
-### Run the Configuration Server
-
-Starting with version 3.3.1, ArkCase requires a separate configuration server, based on Spring Cloud Config Server (more info here: https://spring.io/projects/spring-cloud-config).  To start the config server, take these steps:
-
-* Download the most recent config-server.jar file from here: https://github.com/ArkCase/acm-config-server/releases
-* Start the server process with this command: `java -jar config-server-0.0.1.jar`, replacing `0.0.1` with the version you downloaded.
-
-The config server runs on port 9999 by default.  To run on a different port, add the server.port option to the command, like so: `java -Dserver.port=8888 -jar config-server-0.0.1.jar`, replacing `8888` with the desired port.
-
-### Configure Tomcat
-
-#### Tomcat Native Connector
-
-Make sure the Tomcat native connector library is being used.  
-
-* MacOS: open terminal, issue the command `brew install tomcat-native`, and follow any directions you see at the end... Of course you must already have `brew`; see <https://brew.sh/> if you don't already have it.
-* Windows: download from https://tomcat.apache.org/download-native.cgi. 
-* Linux: Information on building for Linux is available from the same URL (https://tomcat.apache.org/download-native.cgi).
-
-#### Tomcat TLS Configuration
-
-In your Tomcat 9 installation, edit the `conf/server.xml` file, and add the following connector, below the existing connector for port 8080:
-
-```xml
-    <Connector port="8843"
-           maxThreads="150" SSLEnabled="true" secure="true" scheme="https"
-           maxHttpHeaderSize="32768"
-           connectionTimeout="40000"
-           useBodyEncodingForURI="true"
-           address="0.0.0.0">
-      <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
-      <SSLHostConfig protocols="TLSv1.2" certificateVerification="none">
-        <Certificate certificateFile="${user.home}/.arkcase/acm/private/acm-arkcase.crt"
-                    certificateKeyFile="${user.home}/.arkcase/acm/private/acm-arkcase.rsa.pem"
-                    certificateChainFile="${user.home}/.arkcase/acm/private/arkcase-ca.crt"
-                    type="RSA" />
-      </SSLHostConfig>
-    </Connector>
-```
-
-Also, search for the text `Listener className="org.apache.catalina.core.AprLifecycleListener"`, and make sure to add the `useAprConnector="true"` attribute, so it ends like this:
-
-```xml
-<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" useAprConnector="true"/>
-``` 
-
-#### Tomcat setenv.sh file
-
-Create the file `bin/setenv.sh`, mark it executable, and set the contents as the following, *being careful to set the correct path to the Tomcat native library*:
-
+To install ArkCase using helm chart we need to add the helm chart to our local repository.
+* Run the following command to add arkcase to repository and to update it. 
 ```bash
-#!/bin/sh
-
-### MacOS X note: replace {user.home} with the actual path to your home folder, e.g. /Users/dmiller
-export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Duser.timezone=GMT  -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Dacm.configurationserver.propertyfile="${user.home}/.arkcase/acm/conf.yml -Xms1024M -Xmx1024M"
-
-export NODE_ENV=development
-
-export CATALINA_OPTS="$CATALINA_OPTS -Djava.library.path=(PATH TO THE TOMCAT NATIVE LIBRARY)
-# MacOS Example: export CATALINA_OPTS=/usr/local/opt/tomcat-native/lib"
-
-export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
+helm repo add arkcase https://arkcase.github.io/ark_helm_charts/
+helm repo update
 ```
-
-On MacOS X, you have to replace `file:${user.home}` in the above script, with the actual full path to your home folder.
-
-#### Start Tomcat
-
-Now you should be able to start Tomcat: `$TOMCAT_HOME/bin/startup.sh`.  
-
-To shutdown Tomcat: `$TOMCAT_HOME/bin/shutdown.sh -force`.
-
-### Deploy the ArkCase war file
-
-The result of the command `mvn -DskipITs clean install` (described above) is the war file `acm-standard-applications/arkcase/target/arkcase-(version).war`, where `(version)` is the Maven version string.
-
-Copy this file to `$TOMCAT_HOME`, rename it to `arkcase.war`, and move the `arkcase.war` to `$TOMCAT_HOME/webapps`.  Then, watch the Tomcat log file (`$TOMCAT_HOME/logs/catalina.out`).  The first startup will take 5 - 10 minutes. 
-
-If you see any errors that prevent application startup (in other words: if after Tomcat has started, you get a 404 error from `https://arkcase-ce.local/arkcase`, raise a GitHub issue in this repository.
-
-### Trusting the self-signed ArkCase certificate
-
-Once you see that Tomcat has started successfully, you should be able to open `https://arkcase-ce.local/arkcase` in your browser.
-
-When you open ArkCase in your browser, you will have to trust the self-signed cert.  The cert is signed by a self-signed ArkCase certificate authority.  Follow the right procedure for your operating system to trust this certificate.
-
-MacOS: A good guide is here, https://www.accuweaver.com/2014/09/19/make-chrome-accept-a-self-signed-certificate-on-osx/
+* Now that the repository is installed and updated we can proceed to deploy the ArkCase CE.
+```bash
+helm install arkcase arkcase/app
+```
+### Access ArkCase from browser
+To access ArkCase from browser we need to port forward the service. For that to be done, get the cluster IP of the `core` service.
+* Use this command to get the cluster IP: `kubectl get service core` (Note the CLUSTER-IP).
+* Port forward the service: `kubectl port-forward service/core 8443:8443`
+* Access ArkCase through `Cluster-IP:8443` in your browser.
 
 ### Logging into ArkCase
 
 Once you see the ArkCase login page, you can log in with the default administrator account.  User `arkcase-admin@arkcase.org`, password `@rKc@3e`.
-
-### IDE Integration
-
-ArkCase is a Maven project with a standard Maven folder layout.  You can load it into your chosen IDE or editor in whichever way is supported by your editor; if your IDE supports starting and launching a war file, this should work in the normal way.  Detailed steps to configure IDE integration is beyond the scope of this guide.
-
-ArkCase developers have used IntelliJ IDEA and Eclipse.  Visual Studio Code is usable as a code editor, but you have to deploy ArkCase manually as described above; so far VS Code seems unable to deploy ArkCase from within itself.
