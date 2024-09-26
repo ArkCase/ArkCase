@@ -65,6 +65,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -184,6 +185,8 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             acmProcessDefinition.setVersion(pd.getVersion());
             acmProcessDefinition.setFileName(fileName);
             acmProcessDefinition.setSha256Hash(digest);
+            acmProcessDefinition.setCreated(new Date());
+            acmProcessDefinition.setModified(new Date());
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null)

@@ -11,7 +11,7 @@
             <column name="cm_matter_name" type="TEXT">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_matter_name" />
             </column>
-            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_zylab_id" type="${long}"/>
             <column name="cm_last_updated" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
@@ -29,7 +29,7 @@
             <column name="cm_matter_name" type="VARCHAR(1024)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_matter_name" />
             </column>
-            <column name="cm_zylab_id" type="LONG"/>
+            <column name="cm_zylab_id" type="${long}"/>
             <column name="cm_last_updated" type="DATETIME">
                 <constraints nullable="false"/>
             </column>

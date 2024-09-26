@@ -4,10 +4,18 @@
 
     <!-- Update class name for existing Person in database for FOIA -->
     <changeSet id="38-foia-acm_person-update-cm-class-name" author="ana.serafmoska"
-               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml" dbms="oracle,mysql,mssql">
         <update tableName="acm_person">
             <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
             <where>cm_class_name = "com.armedia.acm.plugins.person.model.Person"</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="38-foia-acm_person-update-cm-class-name" author="ana.serafmoska"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml" dbms="postgresql">
+        <update tableName="acm_person">
+            <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
+            <where>cm_class_name = 'com.armedia.acm.plugins.person.model.Person'</where>
         </update>
     </changeSet>
 
@@ -90,7 +98,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="13-foia-acm_person-update-cm_class_name-and-cm_person_title" author="ana.serafimoska"
+    <changeSet id="13-foia-acm_person-update-cm_class_name-and-cm_person_title" author="ana.serafimoska" dbms="oracle,mssql,mysql"
                logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
         <update tableName="acm_person">
             <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
@@ -102,7 +110,19 @@
         </update>
     </changeSet>
 
-    <changeSet id="14-change-cm-case-file-datetime" author="marija.blazhevska">
+    <changeSet id="13-foia-acm_person-update-cm_class_name-and-cm_person_title" author="ana.serafimoska" dbms="postgresql"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <update tableName="acm_person">
+            <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
+            <where>cm_class_name = 'com.armedia.acm.plugins.person.model.Person'</where>
+        </update>
+        <update tableName="acm_person">
+            <column name="cm_person_title" value="-"/>
+            <where>cm_person_title is null</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="14-change-cm-case-file-datetime" author="marija.blazhevska" dbms="mysql">
         <modifyDataType tableName="acm_case_file" columnName="fo_disposition_closed_date" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_case_file" columnName="fo_expedite_date" newDataType="DATETIME"/>
         <modifyDataType tableName="acm_case_file" columnName="fo_feeWaived_date" newDataType="DATETIME"/>

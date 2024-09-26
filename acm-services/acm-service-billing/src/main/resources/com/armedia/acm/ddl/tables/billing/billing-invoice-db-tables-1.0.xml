@@ -37,7 +37,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="01-create-billing-invoice-table" author="sasko.tanaskoski" dbms="oracle,postgres">
+    <changeSet id="01-create-billing-invoice-table" author="sasko.tanaskoski" dbms="oracle,postgresql">
         <createTable tableName="acm_billing_invoice">
             <column name="cm_billing_invoice_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_billing_invoice"/>
@@ -72,7 +72,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="02-acm-billing-invoice-paid-flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgres">
+    <changeSet id="02-acm-billing-invoice-paid-flag" author="sasko.tanaskoski" dbms="oracle,mssql,postgresql">
         <addColumn tableName="acm_billing_invoice">
             <column name="cm_billing_invoice_paid_flag" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>

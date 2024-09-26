@@ -45,7 +45,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="01-create-billing-item-table" author="sasko.tanaskoski" dbms="oracle,postgres">
+    <changeSet id="01-create-billing-item-table" author="sasko.tanaskoski" dbms="oracle,postgresql">
         <createTable tableName="acm_billing_item">
             <column name="cm_billing_item_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_billing_item"/>

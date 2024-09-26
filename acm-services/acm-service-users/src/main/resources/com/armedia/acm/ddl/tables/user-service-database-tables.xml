@@ -660,7 +660,7 @@
             <column name="cm_user_email" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_expiration_in_sec" type="LONG">
+            <column name="cm_expiration_in_sec" type="${long}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_provider" type="VARCHAR(128)">
@@ -684,7 +684,7 @@
             <column name="cm_user_email" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_expiration_in_sex" type="LONG">
+            <column name="cm_expiration_in_sex" type="${long}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_provider" type="VARCHAR(128)">

@@ -239,7 +239,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime expediteDate;
 
-    @Column(name = "fo_feeWaived_date")
+    @Column(name = "fo_fee_waived_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime feeWaivedDate;
