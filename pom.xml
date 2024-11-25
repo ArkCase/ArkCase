@@ -97,7 +97,7 @@
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
         <org.apache.poi.version>4.1.2</org.apache.poi.version>
-        <com.itextpdf.version>5.5.10</com.itextpdf.version>
+        <com.itextpdf.version>5.5.12</com.itextpdf.version>
         <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.4.7.Final</org.mvel.version>
