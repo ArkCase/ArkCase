@@ -58,7 +58,7 @@
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.10.3</fasterxml-jackson-core.version>
-        <fop.version>2.0</fop.version>
+        <fop.version>2.2</fop.version>
         <freemarker.version>2.3.28</freemarker.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
         <google-collections.version>1.0</google-collections.version>
