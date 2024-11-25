@@ -122,7 +122,7 @@
         <sqlserver.version>4.0</sqlserver.version>
         <tomcat-jdbc.version>9.0.35</tomcat-jdbc.version>
         <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
-        <xmlgraphics.version>2.0.1</xmlgraphics.version>
+        <xmlgraphics.version>2.6</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
         <zt-exec.version>1.8</zt-exec.version>
         <docx4j.core>3.3.7</docx4j.core>
