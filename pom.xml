@@ -33,7 +33,7 @@
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-csv.version>1.8</apache-commons-csv.version>
-        <apache-commons-net.version>3.3</apache-commons-net.version>
+        <apache-commons-net.version>3.9.0</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-commons-validator.version>1.6</apache-commons-validator.version>
